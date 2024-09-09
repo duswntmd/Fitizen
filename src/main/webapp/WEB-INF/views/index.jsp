@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="true"%> <!-- 세션 사용을 위해 session="true"로 변경 -->
-<%-- "user" 객체가 세션에 있는지 확인하고, 로그인 상태 및 로그아웃 링크를 설정 --%>
+<%-- "user" 객체가 세션에 있는지 확인하고, 로그인 상태 및 로그아웃 링크를 설정. --%>
 <c:set var="user" value="${sessionScope.user}" />
 <c:set var="loginId" value="${user == null ? '' : user.id}" />
 <c:set var="loginOutLink" value="${user == null ? '/login/login' : '/login/logout'}" />
@@ -26,7 +26,7 @@
 <div id="menu">
     <ul>
         <li id="logo"><a href="/"><img src="img/logo.png" width="200" height="100"></a></li>
-        <li><a href="/">아직 기능없음</a></li>
+        <li><a href="/findME">맞춤 운동 찾기</a></li>
         <li><a href="/board/list">Boardlist</a></li>
         <li><a href="${loginOutLink}">${loginOut}</a></li> <!-- 로그인/로그아웃 링크 -->
         <li><a href="/register/add">회원가입</a></li>
