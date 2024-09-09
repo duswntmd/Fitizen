@@ -1,10 +1,12 @@
 package com.sku.fitizen.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.sku.fitizen.domain.Board;
 import com.sku.fitizen.domain.BoardFilesVO;
 import com.sku.fitizen.domain.User;
 import com.sku.fitizen.service.BoardService;
 import com.sku.fitizen.service.FileService;
+import com.sku.fitizen.service.PageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -34,12 +36,42 @@ public class BoardController {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private PageService pageService;
+
     // 게시글 목록 조회
     @GetMapping("/list")
-    public String list(Model model) {
-        List<Board> boardList = boardService.getBoardList();
-        model.addAttribute("boards", boardList);
+    public String list(
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "5") int pageSize,
+            Model model) {
+
+        PageInfo<Board> pageInfo = pageService.getBoardList(pageNum, pageSize);  // 게시글 목록 조회
+        model.addAttribute("pageInfo", pageInfo);  // 페이지 정보 모델에 추가
         return "th/board/list";
+    }
+
+    // 검색 결과 조회 (검색 + 페이지네이션)
+    @GetMapping("/search")
+    public String search(
+            @RequestParam String searchType,  // 제목 또는 작성자
+            @RequestParam String keyword,     // 검색어
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "5") int pageSize,
+            Model model) {
+
+        // 검색 조건에 따라 검색 수행
+        PageInfo<Board> pageInfo;
+        if ("title".equals(searchType)) {
+            pageInfo = boardService.searchBoardList(keyword, null, pageNum, pageSize);  // 제목으로 검색
+        } else if ("author".equals(searchType)) {
+            pageInfo = boardService.searchBoardList(null, keyword, pageNum, pageSize);  // 작성자로 검색
+        } else {
+            pageInfo = boardService.searchBoardList(null, null, pageNum, pageSize);  // 기본 목록
+        }
+
+        model.addAttribute("pageInfo", pageInfo);  // 검색된 결과 모델에 추가
+        return "th/board/list";  // 동일한 템플릿에서 결과를 표시
     }
 
     // 게시글 조회
