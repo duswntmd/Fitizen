@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -15,7 +16,7 @@ public class Message {
     private int roomId;
     private String senderId;
 
-    private Date sentAt;
+    private LocalDateTime sentAt;
     private String message;
 
 

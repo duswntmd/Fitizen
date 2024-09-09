@@ -1,11 +1,15 @@
 package com.sku.fitizen.controller.chetTest;
 
+import com.sku.fitizen.domain.Message;
+import com.sku.fitizen.mapper.ChatMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +17,8 @@ import java.util.Map;
 public class WebSocketHandler extends TextWebSocketHandler
 {   //리스트 보단 맵
     //private final List<WebSocketSession> webSocketSessions = new ArrayList<>();
-
+    @Autowired
+    ChatMapper mapper;
    // private static Map<String, WebSocketSession> userMap = new HashMap<>();
     private static Map<String, Map<String, WebSocketSession>> roomMap = new HashMap<>(); // roomId 별로 사용자 저장
     @Override  /* 클라이언트 접속시에 호출됨 */
@@ -37,6 +42,7 @@ public class WebSocketHandler extends TextWebSocketHandler
         roomMap.get(roomId).put(userid, session);
 
         log.info("사용자 {}가 방 {}에 연결되었습니다.", userid, roomId);
+        
     }
 
     @Override  /* 서버에 메시지 도착시 호출됨 */
@@ -46,12 +52,22 @@ public class WebSocketHandler extends TextWebSocketHandler
         // JSON 문자열을 파싱하여 JSONObject로 변환
 
         String roomId = (String) session.getAttributes().get("roomId");
-
+        String userid = (String) session.getAttributes().get("userid");
         // 동일한 roomId에 있는 사용자들에게만 메시지 전송
         if (roomId != null && roomMap.containsKey(roomId)) {
             for (WebSocketSession ss : roomMap.get(roomId).values()) {
                 if (ss.isOpen()) {  // 세션이 열려 있는지 확인
                     ss.sendMessage(message);
+
+                    Message msg= new Message();
+                    msg.setSenderId(userid);
+                    msg.setRoomId(Integer.parseInt(roomId));
+                    msg.setMessage(message.getPayload());
+                    msg.setSentAt(LocalDateTime.now());
+                    mapper.saveMessage(msg);
+
+
+
                 }
             }
         } else {
@@ -84,20 +100,23 @@ public class WebSocketHandler extends TextWebSocketHandler
 
     @Override   /* 접속 해제시 호출됨 */
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        /*
-        log.info("Connection Closed");
-        for(Entry<String, WebSocketSession> entry : userMap.entrySet())
-        {
-            if(entry.getValue()==session)
-            {
-                String userid = entry.getKey();
-                userMap.remove(userid);
-                log.info("퇴장:{}", userid);
-                break;
-            }
-        }
+        String userid = (String) session.getAttributes().get("userid");
+        String roomId = (String) session.getAttributes().get("roomId");
 
-         */
+        log.info("웹소켓 연결 종료: userid={}, roomId={}", userid, roomId);
+
+        // roomId에 해당하는 방에서 사용자 세션 제거
+        if (roomId != null && roomMap.containsKey(roomId)) {
+            Map<String, WebSocketSession> userSessions = roomMap.get(roomId);
+            if (userSessions != null) {
+                userSessions.remove(userid);
+                log.info("사용자 {}가 방 {}에서 나갔습니다.", userid, roomId);
+
+                // 방에는 유지, 사용자가 나간 것만 처리
+            }
+        } else {
+            log.warn("존재하지 않는 방 ID: {}", roomId);
+        }
     }
 
     @Override   /* 오류 발생시 호출됨 */
