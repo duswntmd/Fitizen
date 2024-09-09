@@ -1,0 +1,72 @@
+/* challList.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.challenge-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 각 항목 간의 간격을 조정합니다 */
+}
+
+.challenge-item {
+    display: flex;
+    justify-content: space-between; /* 항목을 좌우로 나눕니다 */
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 10px;
+    width: 100%; /* 각 항목이 전체 너비를 차지하게 합니다 */
+}
+
+.challenge-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.challenge-info .title {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+}
+
+.challenge-info .user-id,
+.challenge-info .date-range {
+    font-size: 14px;
+    color: #555;
+    margin-top: 5px;
+}
+
+.challenge-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.challenge-actions .button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.challenge-actions .button:hover {
+    background-color: #0056b3;
+}

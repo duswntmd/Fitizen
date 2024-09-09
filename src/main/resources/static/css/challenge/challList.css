@@ -1,0 +1,119 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+}
+
+.challenge-box {
+    width: 220px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin: 10px;
+    overflow: hidden;
+    text-align: left;
+    display: inline-block;
+    text-decoration: none; /* Remove underline from links */
+    color: inherit; /* Inherit text color */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transformation */
+}
+
+.challenge-box:hover {
+    transform: scale(1.05); /* Slightly enlarge the box */
+    box-shadow: 0 0 15px rgba(0,0,0,0.2); /* Increase shadow for better hover effect */
+}
+
+.challenge-box .image-placeholder {
+    width: 100%;
+    height: 150px;
+    background-color: #ccc; /* Placeholder background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #777;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.challenge-box .content {
+    padding: 10px;
+}
+
+.challenge-box .title {
+    font-weight: bold;
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.challenge-box .user-info {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.challenge-box .user-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+    background-color: #ddd; /* Placeholder for profile image */
+}
+
+.challenge-box .user-id {
+    color: #555;
+}
+
+.challenge-box .details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.challenge-box .details .participant-info {
+    font-size: 14px;
+    color: #777;
+}
+
+.challenge-box .details .participant-info .current-participants {
+    color: #000; /* Default color for current participants */
+}
+
+.challenge-box .details .participant-info .limit-user {
+    color: #ff0000; /* Red color for limit user */
+    margin-left: 2px; /* Small space between the numbers */
+}
+
+.challenge-box .details .button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.challenge-box .details .button:hover {
+    background-color: #0056b3;
+}
+
+.challenge-box .date-range {
+    font-size: 14px;
+    color: #777;
+    margin-top: 5px;
+}
+
+.challenge-list {
+    display: flex;
+    flex-wrap: wrap;
+}
