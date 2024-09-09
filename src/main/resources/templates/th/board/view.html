@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 보기</title>
+</head>
+<body>
+<h1>게시글 보기</h1>
+
+<div>
+    <label>번호:</label> <span th:text="${board.bno}"></span>
+</div>
+<div>
+    <label>제목:</label> <span th:text="${board.title}"></span>
+</div>
+<div>
+    <label>작성자:</label> <span th:text="${board.author}"></span>
+</div>
+<div>
+    <label>작성일:</label> <span th:text="${#dates.format(board.regDate, 'yyyy-MM-dd')}"></span>
+</div>
+<div>
+    <label>조회수:</label> <span th:text="${board.hits}"></span>
+</div>
+<div>
+    <label>내용:</label> <p th:text="${board.content}"></p>
+</div>
+
+<!-- 첨부 파일 목록 출력 -->
+<div>
+    <label>첨부 파일:</label>
+    <ul>
+        <li th:each="file : ${files}">
+            <!-- 이미지 파일 미리보기와 다운로드 -->
+            <div th:if="${file.ftype.startsWith('image/')}">
+                <img th:src="@{/board/download/{fnum}(fnum=${file.fnum})}" alt="이미지 미리보기" style="max-width: 400px;"/>
+                <br>
+                <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}">이미지 다운로드</a>
+            </div>
+
+            <!-- 비디오 파일 미리보기와 다운로드 -->
+            <div th:if="${file.ftype.startsWith('video/')}">
+                <video controls style="max-width: 400px;">
+                    <source th:src="@{/board/download/{fnum}(fnum=${file.fnum})}" th:type="${file.ftype}">
+                    동영상 재생을 지원하지 않는 브라우저입니다.
+                </video>
+                <br>
+                <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}">동영상 다운로드</a>
+            </div>
+
+            <!-- 이미지나 비디오가 아닌 파일은 다운로드 링크만 제공 -->
+            <div th:if="${!file.ftype.startsWith('image/') && !file.ftype.startsWith('video/')}">
+                <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}" th:text="${file.realName}"></a>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<a th:href="@{/board/edit/{bno}(bno=${board.bno})}"> <button>수정</button></a>
+<form th:action="@{/board/delete/{bno}(bno=${board.bno})}" method="post" style="display:inline">
+    <button type="submit">삭제</button>
+</form>
+<a href="/board/list">목록으로</a>
+</body>
+</html>

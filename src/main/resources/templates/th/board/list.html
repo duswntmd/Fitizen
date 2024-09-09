@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 목록</title>
+</head>
+<body>
+<h1>게시글 목록</h1>
+<div th:if="${#lists.isEmpty(boards)}">
+    게시글이 없습니다.
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>번호</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+        <th>조회수</th>
+        <th>좋아요</th>
+        <th>댓글수</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 게시글 목록을 반복해서 출력 -->
+    <tr th:each="board : ${boards}">
+        <td th:text="${board.bno}"></td> <!-- 게시글 번호 -->
+        <td>
+            <a th:href="@{/board/view/{bno}(bno=${board.bno})}" th:text="${board.title}"></a>
+        </td>
+        <td th:text="${board.author}"></td> <!-- 작성자 -->
+        <td th:text="${#dates.format(board.regDate, 'yyyy-MM-dd')}"></td>
+        <td th:text="${board.hits}"></td> <!-- 조회수 -->
+        <td th:text="${board.likes}"></td> <!-- 좋아요 수 -->
+        <td th:text="${board.commentCnt}"></td> <!-- 댓글 수 -->
+    </tr>
+    </tbody>
+</table>
+
+<a href="/board/write">글 작성</a>
+</body>
+</html>

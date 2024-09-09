@@ -5,6 +5,7 @@ import com.sku.fitizen.domain.User;
 public interface UserDao {
     // 사용자 추가
     int insertUser(User user);
+
     // 사용자 목록
     User selectUser(String id);
 

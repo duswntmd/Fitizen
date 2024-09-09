@@ -27,13 +27,12 @@
     <ul>
         <li id="logo"><a href="/"><img src="img/logo.png" width="200" height="100"></a></li>
         <li><a href="/">아직 기능없음</a></li>
-        <li><a href="/">Board들어갈예정</a></li>
+        <li><a href="/board/list">Boardlist</a></li>
         <li><a href="${loginOutLink}">${loginOut}</a></li> <!-- 로그인/로그아웃 링크 -->
         <li><a href="/register/add">회원가입</a></li>
         <li><a href="/register/updateuser">수정</a></li>
         <li><a href="/register/deleteuser">삭제</a></li>
         <li><a href="/kakao/map">지도</a></li>
-        <li><a href="/challenge">챌린지</a></li>
     </ul>
 </div>
 

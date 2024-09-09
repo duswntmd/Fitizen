@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 수정</title>
+</head>
+<body>
+<h1>게시글 수정</h1>
+
+<form action="/board/edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="bno" th:value="${board.bno}">
+
+    <div>
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" th:value="${board.title}" required>
+    </div>
+    <div>
+        <label for="content">내용:</label>
+        <textarea id="content" name="content" required th:text="${board.content}"></textarea>
+    </div>
+
+    <!-- 기존 파일 목록 표시 및 삭제 선택 옵션 -->
+    <div>
+        <label>기존 첨부파일:</label>
+        <ul>
+            <li th:each="file : ${files}">
+                <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}" th:text="${file.realName}"></a>
+                <input type="checkbox" name="deleteFiles" th:value="${file.fnum}"> 삭제
+            </li>
+        </ul>
+    </div>
+
+    <!-- 새로운 파일 업로드 필드 -->
+    <div>
+        <label for="files">새 파일 첨부:</label>
+        <input type="file" id="files" name="files" multiple>
+    </div>
+
+    <button type="submit">수정 완료</button>
+</form>
+
+<a href="/board/view/{bno}" th:href="@{/board/view/{bno}(bno=${board.bno})}">취소</a>
+</body>
+</html>
