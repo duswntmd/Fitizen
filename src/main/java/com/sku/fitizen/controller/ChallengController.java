@@ -85,7 +85,7 @@ public class ChallengController {
         String userId = user.getId();
 
         List<Challenge> myChall=service.getMyChallengeList(userId);
-
+        model.addAttribute("userId",userId);
         model.addAttribute("myChall",myChall);
         return "th/chall/myChallengePage";
     }

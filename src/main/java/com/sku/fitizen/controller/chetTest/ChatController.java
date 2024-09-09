@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 @Controller
 @RequestMapping("/ws")
-public class ChetController {
+public class ChatController {
     @GetMapping("")
     @ResponseBody
     public String index()

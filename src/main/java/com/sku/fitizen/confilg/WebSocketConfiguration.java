@@ -15,7 +15,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class WebSocketConfiguration implements WebSocketConfigurer
 {
     /* "ws://ip/ws/chat" 요청은 인터셉터를 거쳐 웹소켓 핸들러에 연결됨 */
-    private final static String CHAT_ENDPOINT="/ws/chat";
+    private final static String CHAT_ENDPOINT="/chat";
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
