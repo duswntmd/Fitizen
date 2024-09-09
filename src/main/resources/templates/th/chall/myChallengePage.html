@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>내 챌린지 목록</title>
+    <link th:href="@{/css/challenge/mychall.css}" rel="stylesheet" />
+    <link href="/css/challenge/challList.css" rel="stylesheet" />
+</head>
+<body>
+<h2>내 챌린지 목록</h2>
+
+<div class="container">
+    <div class="challenge-list">
+        <!-- th:each를 사용하여 List를 반복 -->
+        <div th:each="m : ${myChall}" class="challenge-item">
+            <div class="challenge-info">
+                <div class="title">[[${m.title}]]</div>
+                <div class="user-id">진행자: [[${m.creatorId}]]</div>
+                <div class="date-range">기간: [[${m.startDate}]] ~ [[${m.endDate}]]</div>
+            </div>
+            <div class="challenge-actions">
+                <!-- 링크는 적절한 URL로 수정 -->
+                <a class="button" th:href="@{/challenge/details/{id}(id=${m.challengeId})}">상세보기</a>
+                <a class="button" th:href="@{/ws/in(userid=${'smith'}, roomId=${m.challengeId})}">채팅</a>
+                <a class="button" th:href="@{/challenge/cancel/{id}(id=${m.challengeId})}">챌린지 취소</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

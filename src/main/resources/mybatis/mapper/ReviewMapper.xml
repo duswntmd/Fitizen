@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sku.fitizen.mapper.ReviewMapper">
+
+    <!-- Review ResultMap 정의 -->
+    <resultMap id="reviewResultMap" type="com.sku.fitizen.domain.Review">
+        <id property="id" column="ID"/>
+        <result property="content" column="CONTENT"/>
+        <result property="rating" column="RATING"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="placeId" column="PLACE_ID"/>
+        <result property="createdDate" column="CREATED_DATE"/>
+        <result property="userName" column="userName"/> <!-- U.NAME을 위한 매핑 -->
+    </resultMap>
+
+    <!-- 리뷰 추가 -->
+    <insert id="insertReview" parameterType="com.sku.fitizen.domain.Review" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
+        INSERT INTO REVIEWS (ID, CONTENT, RATING, USER_ID, PLACE_ID, CREATED_DATE)
+        VALUES (REVIEWS_SEQ.NEXTVAL, #{content}, #{rating}, #{userId}, #{placeId}, SYSDATE)
+    </insert>
+
+    <!-- 특정 매장의 리뷰 조회 -->
+    <select id="findReviewsByPlaceId" parameterType="long" resultType="com.sku.fitizen.domain.Review">
+        SELECT R.ID, R.CONTENT, R.RATING, R.USER_ID, R.PLACE_ID, R.CREATED_DATE, U.NAME AS userName
+        FROM REVIEWS R
+                 JOIN USERS U ON R.USER_ID = U.ID
+        WHERE R.PLACE_ID = #{placeId}
+    </select>
+
+    <!-- 리뷰 ID로 조회 -->
+    <select id="findReviewById" parameterType="Long" resultMap="reviewResultMap">
+        SELECT ID, CONTENT, RATING, USER_ID, PLACE_ID, CREATED_DATE
+        FROM REVIEWS
+        WHERE ID = #{reviewId}
+    </select>
+
+    <update id="updateReview" parameterType="com.sku.fitizen.domain.Review">
+        UPDATE REVIEWS
+        SET CONTENT = #{content}, RATING = #{rating}
+        WHERE ID = #{id}
+    </update>
+
+    <!-- 리뷰 삭제 -->
+    <delete id="deleteReview" parameterType="long">
+        DELETE FROM REVIEWS WHERE ID = #{reviewId}
+    </delete>
+
+</mapper>

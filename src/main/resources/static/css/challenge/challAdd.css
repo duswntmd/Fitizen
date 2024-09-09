@@ -1,0 +1,121 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.form-group select {
+    background-color: #fff;
+}
+
+.form-group textarea {
+    height: 300px; /* Set a fixed height for the description field */
+    resize: vertical;
+}
+
+.form-group button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.form-group button:hover {
+    background-color: #0056b3;
+}
+
+#coverImageWrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+#coverImage {
+    display: none; /* Hide the default file input */
+}
+
+#fileSelectButton {
+    margin-right: 10px;
+}
+
+#imagePreview {
+    display: block;
+    margin-top: 10px;
+    width: 100%; /* Full width of the container */
+    height: 300px; /* Set a fixed height for the image preview */
+    object-fit: cover; /* Ensure the image covers the box */
+    border: 1px solid #ccc; /* Optional border for the preview box */
+}
+
+.inline-dates,
+.inline-fields {
+    display: flex;
+    gap: 15px; /* Space between elements */
+}
+
+.inline-dates > div,
+.inline-fields > div {
+    flex: 1;
+}
+
+.inline-dates input {
+    width: 25%; /* Set date input width to 1/4 of container */
+}
+
+.inline-fields input {
+    width: 100%; /* Ensure the inputs take up the remaining space */
+}
+
+.form-group textarea {
+    height: 300px; /* Set fixed height for the description field */
+}
+
+.btn-back {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #6c757d;
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none; /* Remove underline from link */
+    margin-top: 10px; /* Add space above button */
+}
+
+.btn-back:hover {
+    background-color: #5a6268;
+}

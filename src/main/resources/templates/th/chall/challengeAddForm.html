@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>챌리지 추가하기</title>
+    <link th:href="@{/css/challenge/challAdd.css}" rel="stylesheet" />
+</head>
+<body>
+<h2>챌린지 추가하기</h2>
+<div class="container">
+    <form action="../challenge/save" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">챌린지 제목</label>
+            <input type="text" id="title" name="title">
+        </div>
+
+
+
+        <div class="form-group inline-fields">
+            <div>
+                <label for="startDate">시작일</label>
+                <input type="date" id="startDate" name="startDate">
+            </div>
+            <div>
+                <label for="endDate">종료일</label>
+                <input type="date" id="endDate" name="endDate" >
+            </div>
+            <div>
+                <label for="limitUser">인원수 제한:</label>
+                <input type="number" id="limitUser" name="limitUser" min="1">
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label for="content">챌린지 내용:</label>
+            <textarea id="content" name="content"></textarea>
+        </div>
+
+        <div class="form-group">
+            <button type="submit">등록하기</button>
+        </div>
+
+    </form>
+    <a href="/challenge/list">
+        <button class="btn-back">뒤로가기</button>
+    </a>
+</div>
+
+<script>
+    document.getElementById('coverImg').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('imagePreview');
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '';
+        }
+    });
+</script>
+</body>
+</html>
+
+<!--
+
+
+
+
+ <div class="form-group" id="coverImageWrapper">
+            <label for="coverImg">표지 이미지</label>
+            <input type="file" id="coverImg" name="coverImg" accept="image/*" >
+            <button type="button"  onclick="document.getElementById('coverImg').click();">파일 선택</button>
+        </div>
+
+        <img id="imagePreview">
+
+
+
+
+-->
