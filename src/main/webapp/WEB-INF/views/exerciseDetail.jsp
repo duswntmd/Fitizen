@@ -112,7 +112,7 @@
         badminton: {
             title: "배드민턴",
             description: "배드민턴은 실내외에서 즐길 수 있는 운동으로, 민첩성과 반사신경을 향상시킵니다.",
-            videoUrl: "https://www.youtube.com/embed/example8" // 예시 URL
+            videoUrl: "https://www.youtube.com/embed/example8" 
         }
     };
 
