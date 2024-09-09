@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="true"%> <!-- 세션 사용을 위해 session="true"로 변경 -->
-<%-- "user" 객체가 세션에 있는지 확인하고, 로그인 상태 및 로그아웃 링크를 설정 --%>
+<%-- "user" 객체가 세션에 있는지 확인하고, 로그인 상태 및 로그아웃 링크를 설정. --%>
 <c:set var="user" value="${sessionScope.user}" />
 <c:set var="loginId" value="${user == null ? '' : user.id}" />
 <c:set var="loginOutLink" value="${user == null ? '/login/login' : '/login/logout'}" />
