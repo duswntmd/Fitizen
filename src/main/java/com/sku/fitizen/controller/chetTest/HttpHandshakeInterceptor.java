@@ -1,18 +1,22 @@
 package com.sku.fitizen.controller.chetTest;
+import com.sku.fitizen.domain.User;
 import jakarta.servlet.ServletContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import java.util.Map;
+
 // 채팅 메소드에 포함할게 없으면  인터셉턱가 필요없음
 @Slf4j  //헨들러보다 먼저 돌아감
 public class HttpHandshakeInterceptor implements HandshakeInterceptor
 {
     @Override
-    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
+    public boolean beforeHandshake(
+            ServerHttpRequest request, ServerHttpResponse response,
                                    org.springframework.web.socket.WebSocketHandler wsHandler, Map<String, Object> attributes)
             throws Exception {
         if (request instanceof ServletServerHttpRequest) {
@@ -20,12 +24,12 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor
             // http://localhost/ws/chat?userid=smith 형식으로 웹소켓에 접속할 때, 파라미터를 처리하는 예
             // 아래의 방법을 사용하여 웹사이트에 로그인한 이용자의 ID를 웹소켓핸들러 안으로 전달할 수 있다
 
-            String userid = ((ServletServerHttpRequest) request).getServletRequest().getParameter("userid");
+            String userId = ((ServletServerHttpRequest) request).getServletRequest().getParameter("userId");
             String roomId = ((ServletServerHttpRequest) request).getServletRequest().getParameter("roomId");
 
-            log.info("인터셉터, userid={}, roomId={}", userid, roomId);
+            log.info("인터셉터, userId={}, roomId={}", userId, roomId);
 
-            attributes.put("userid", userid);  // 사용자 아이디 전달
+            attributes.put("userId", userId);  // 사용자 아이디 전달
             attributes.put("roomId", roomId);
 
 
