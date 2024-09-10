@@ -6,7 +6,7 @@
 <c:set var="loginId" value="${user == null ? '' : user.id}" />
 <c:set var="loginOutLink" value="${user == null ? '/login/login' : '/login/logout'}" />
 
-<%-- 문자열 결합을 명시적으로처리 --%>
+<%-- 문자열 결합을 명시적으로 처리 --%>
 <c:choose>
     <c:when test="${user == null}">
         <c:set var="loginOut" value="Login" />
@@ -25,6 +25,7 @@
 <body>
 <div id="menu">
     <ul>
+        <li><a href="/qna">Q&A</a></li>
         <li id="logo"><a href="/"><img src="img/logo.png" width="200" height="100"></a></li>
         <li><a href="/findME">맞춤 운동 찾기</a></li>
         <li><a href="/board/list">Boardlist</a></li>

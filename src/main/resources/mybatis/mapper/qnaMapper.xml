@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sku.fitizen.mapper.QnaMapper">
+
+
+    <select id="findAll" resultType="com.sku.fitizen.domain.QNA">
+        SELECT * FROM qnaboard
+    </select>
+
+    <select id="findById" parameterType="int" resultType="com.sku.fitizen.domain.QNA">
+        SELECT * FROM qnaboard WHERE qid = #{qid}
+    </select>
+
+
+    <insert id="save" parameterType="com.sku.fitizen.domain.QNA" useGeneratedKeys="false" >
+        INSERT INTO qnaboard (qid,title, author, contents, qdate)
+        VALUES (qna_seq.nextval, #{title}, #{author}, #{contents}, #{qdate})
+    </insert>
+
+    <update id="addComment" parameterType="com.sku.fitizen.domain.QNA">
+        UPDATE qnaboard
+        SET comments = #{comments}
+        WHERE qid = #{qid}
+    </update>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM qnaboard WHERE qid = #{qid}
+    </delete>
+
+</mapper>

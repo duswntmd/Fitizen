@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>QnA Detail</title>
+</head>
+<body>
+<h1>QnA 상세</h1>
+<table>
+    <tr>
+        <th>제목</th>
+        <td th:text="${qna.title}"></td>
+    </tr>
+    <tr>
+        <th>작성자</th>
+        <td th:text="${qna.author}"></td>
+    </tr>
+    <tr>
+        <th>내용</th>
+        <td th:text="${qna.contents}"></td>
+    </tr>
+    <tr>
+        <th>작성일</th>
+        <td th:text="${qna.qdate}"></td>
+    </tr>
+    <tr>
+        <th>답변</th>
+        <td th:text="${qna.comments}"></td>
+    </tr>
+</table>
+
+<div th:if="${session.user != null and session.user.id == 'psjae'}">
+    <form th:action="@{/qna/comment}" method="post">
+        <input type="hidden" name="qid" th:value="${qna.qid}" />
+        <textarea name="comment" rows="4" cols="50" placeholder="댓글을 입력하세요"></textarea>
+        <button type="submit">댓글 추가</button>
+    </form>
+</div>
+<div th:if="${session.user == null or session.user.id != 'psjae'}">
+    <p>관리자만 댓글을 추가할 수 있습니다</p>
+</div>
+
+<a href="/qna">목록으로 돌아가기</a>
+</body>
+</html>
