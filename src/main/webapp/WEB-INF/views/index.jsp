@@ -6,7 +6,7 @@
 <c:set var="loginId" value="${user == null ? '' : user.id}" />
 <c:set var="loginOutLink" value="${user == null ? '/login/login' : '/login/logout'}" />
 
-<%-- 문자열 결합을 명시적으로 처리 --%>
+<%-- 문자열 결합을 명시적으로처리 --%>
 <c:choose>
     <c:when test="${user == null}">
         <c:set var="loginOut" value="Login" />
@@ -34,6 +34,10 @@
         <li><a href="/register/deleteuser">삭제</a></li>
         <li><a href="/kakao/map">지도</a></li>
         <li><a href="/challenge">챌린지</a></li>
+        <c:if test="${user != null}">
+            <li><a href="/user/myPage">마이페이지</a></li>
+        </c:if>
+
     </ul>
 </div>
 
