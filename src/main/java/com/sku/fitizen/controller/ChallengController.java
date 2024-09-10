@@ -14,7 +14,6 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/challenge")
-@SessionAttributes("user")
 public class ChallengController {
 
     // 챌린지 서비스는 여기서만 사용하기에 변수를 service로

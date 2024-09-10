@@ -19,5 +19,7 @@ public class Message {
     private LocalDateTime sentAt;
     private String message;
 
+    private String img;
+
 
 }
