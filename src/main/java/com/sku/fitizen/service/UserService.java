@@ -12,4 +12,8 @@ public interface UserService {
     int deleteUser(String id, String name, String pwd);
 
     boolean isIdDuplicate(String id);
+
+    String findIdByEmailAndName(String email, String name);
+
+    String findPasswordByEmailAndId(String email, String id);
 }

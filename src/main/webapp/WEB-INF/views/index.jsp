@@ -25,6 +25,7 @@
 <body>
 <div id="menu">
     <ul>
+        <li><a href="/qna">Q&A</a></li>
         <li id="logo"><a href="/"><img src="img/logo.png" width="200" height="100"></a></li>
         <li><a href="/findME">맞춤 운동 찾기</a></li>
         <li><a href="/board/list">Boardlist</a></li>
@@ -34,6 +35,10 @@
         <li><a href="/register/deleteuser">삭제</a></li>
         <li><a href="/kakao/map">지도</a></li>
         <li><a href="/challenge">챌린지</a></li>
+        <c:if test="${user != null}">
+            <li><a href="/user/myPage">마이페이지</a></li>
+        </c:if>
+
     </ul>
 </div>
 

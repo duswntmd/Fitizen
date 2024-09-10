@@ -38,6 +38,7 @@ public class ChallengController {
         return "th/chall/challengeList";
     }
 
+
     // 챌린지 작성 폼 이동
     @GetMapping("/add")
     public String challAddForm( Model model)
@@ -88,5 +89,13 @@ public class ChallengController {
         model.addAttribute("myChall",myChall);
         return "th/chall/myChallengePage";
     }
+
+    @GetMapping("/challBoard/{roomId}")
+    public String boardlist(@PathVariable Integer roomId,Model model)
+    {
+
+        return "th/chall/challBoard";
+    }
+
 
 }

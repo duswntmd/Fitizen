@@ -30,8 +30,8 @@ public class UserValidator implements Validator {
         if(id==null || id.length() <  1 || id.length() > 10) {
             errors.rejectValue("id", "invalidLength", new String[]{"1","10"}, null);
         }
-        if(pwd==null || pwd.length() <  1 || pwd.length() > 10) {
-            errors.rejectValue("pwd", "invalidLength", new String[]{"1","10"}, null);
+        if(pwd==null || pwd.length() <  1 || pwd.length() > 15) {
+            errors.rejectValue("pwd", "invalidLength", new String[]{"1","15"}, null);
         }
 
     }

@@ -30,4 +30,6 @@ public class IndexController {
         model.addAttribute("sport", sport);  // 운동 이름을 모델에 추가
         return "exerciseDetail";  // exerciseDetail.jsp로 이동
     }
+
+
 }
