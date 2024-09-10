@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -98,21 +100,35 @@ public class BoardController {
 
     // 게시글 작성 처리
     @PostMapping("/write")
-    public String write(@ModelAttribute Board board,
-                        @SessionAttribute(value = "user", required = false) User user,
-                        @RequestParam("files") List<MultipartFile> files) throws IOException {
+    @ResponseBody  // JSON 응답을 위해 추가
+    public Map<String, Object> write(@ModelAttribute Board board,
+                                     @SessionAttribute(value = "user", required = false) User user,
+                                     @RequestParam("files") List<MultipartFile> files) throws IOException {
+
+        Map<String, Object> result = new HashMap<>();
 
         if (user == null) {
-            return "redirect:/login/login";  // user가 없을 경우 로그인 페이지로 리다이렉트
+            result.put("success", false);
+            result.put("message", "로그인이 필요합니다.");
+            return result;  // 로그인 페이지로 리다이렉트할 필요 없이 메시지 반환
         }
 
         // 세션에서 가져온 user의 id를 author에 설정
         board.setAuthor(user.getId());
 
-        // 게시글과 파일을 함께 저장
-        boardService.insertBoard(board, files);  // Board와 MultipartFile 리스트를 전달
-        return "redirect:/board/list";
+        try {
+            // 게시글과 파일을 함께 저장
+            boardService.insertBoard(board, files);
+            result.put("success", true);
+            result.put("message", "게시글이 성공적으로 작성되었습니다.");
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", "게시글 작성에 실패했습니다.");
+        }
+
+        return result;
     }
+
 
     // 게시글 수정 페이지로 이동
     @GetMapping("/edit/{bno}")
@@ -128,35 +144,57 @@ public class BoardController {
 
     // 게시글 수정 처리
     @PostMapping("/edit")
-    public String edit(@ModelAttribute Board board,
-                       @SessionAttribute(value = "user", required = false) User user,
-                       @RequestParam("files") List<MultipartFile> files,
-                       @RequestParam(value = "deleteFiles", required = false) List<Long> deleteFileIds) throws IOException {
+    @ResponseBody  // JSON 응답을 위해 추가
+    public Map<String, Object> edit(@ModelAttribute Board board,
+                                    @SessionAttribute(value = "user", required = false) User user,
+                                    @RequestParam("files") List<MultipartFile> files,
+                                    @RequestParam(value = "deleteFiles", required = false) List<Long> deleteFileIds) throws IOException {
+
+        Map<String, Object> result = new HashMap<>();
 
         if (user == null) {
-            return "redirect:/login/login";  // user가 없을 경우 로그인 페이지로 리다이렉트
+            result.put("success", false);
+            result.put("message", "로그인이 필요합니다.");
+            return result;
         }
 
         // 수정 시에도 author 정보가 유지되도록 설정
         board.setAuthor(user.getId());
 
-        // 삭제할 파일 처리
-        if (deleteFileIds != null && !deleteFileIds.isEmpty()) {
-            for (Long fnum : deleteFileIds) {
-                fileService.deleteFileByFnum(fnum);  // 파일 삭제
+        try {
+            // 삭제할 파일 처리
+            if (deleteFileIds != null && !deleteFileIds.isEmpty()) {
+                for (Long fnum : deleteFileIds) {
+                    fileService.deleteFileByFnum(fnum);  // 파일 삭제
+                }
             }
+
+            // 게시글과 파일 수정
+            boardService.updateBoard(board, files, deleteFileIds);
+            result.put("success", true);
+            result.put("message", "게시글이 성공적으로 수정되었습니다.");
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", "게시글 수정에 실패했습니다.");
         }
 
-        // 게시글과 파일 수정
-        boardService.updateBoard(board, files);
-        return "redirect:/board/view/" + board.getBno();
+        return result;
     }
 
     // 게시글 삭제
     @PostMapping("/delete/{bno}")
-    public String delete(@PathVariable("bno") Long bno) {
-        boardService.deleteBoard(bno);
-        return "redirect:/board/list";
+    @ResponseBody  // JSON 응답을 위해 추가
+    public Map<String, Object> delete(@PathVariable("bno") Long bno) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            boardService.deleteBoard(bno);
+            result.put("success", true);
+            result.put("message", "게시글이 성공적으로 삭제되었습니다.");
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", "게시글 삭제에 실패했습니다.");
+        }
+        return result;
     }
 
     @GetMapping("/download/{fnum}")

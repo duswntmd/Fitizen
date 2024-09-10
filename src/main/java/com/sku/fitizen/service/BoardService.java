@@ -6,6 +6,7 @@ import com.sku.fitizen.domain.Board;
 import com.sku.fitizen.mapper.BoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -32,36 +33,48 @@ public class BoardService {
     }
 
     // 게시글 생성 및 파일 저장
+    @Transactional
     public void insertBoard(Board board, List<MultipartFile> files) throws IOException {
         // 게시글 저장
         boardMapper.insertBoard(board);
 
-        // 게시글에 속한 파일 저장
+        // 파일 업로드 검사 및 저장
         if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
-                fileService.storeFile(file, board.getBno());  // 파일 저장
+                if (!file.isEmpty()) {  // 파일이 비어 있지 않을 때만 처리
+                    fileService.storeFile(file, board.getBno());
+                }
             }
         }
     }
 
     // 게시글 수정
-    public void updateBoard(Board board, List<MultipartFile> newFiles) throws IOException {
-        // 게시글 수정
-        boardMapper.updateBoard(board);
-
-        // 기존 파일 삭제 및 새로운 파일 저장
-        if (newFiles != null && !newFiles.isEmpty()) {
-            // 게시글에 속한 기존 파일 삭제
-            fileService.deleteFilesByBoard(board.getBno());
-
-            // 새로운 파일 저장
-            for (MultipartFile file : newFiles) {
-                fileService.storeFile(file, board.getBno());
+    @Transactional
+    public void updateBoard(Board board, List<MultipartFile> newFiles, List<Long> deleteFileIds) throws IOException {
+        // 1. 삭제할 파일 처리
+        if (deleteFileIds != null && !deleteFileIds.isEmpty()) {
+            for (Long fnum : deleteFileIds) {
+                boolean deleted = fileService.deleteFileByFnum(fnum);  // 파일 삭제
+                if (!deleted) {
+                    System.err.println("파일 삭제 실패: " + fnum);
+                    // 필요에 따라 추가 처리를 할 수 있음
+                }
             }
         }
+
+        // 2. 새로운 파일 저장
+        if (newFiles != null && !newFiles.isEmpty()) {
+            for (MultipartFile file : newFiles) {
+                fileService.storeFile(file, board.getBno());  // 새 파일 저장
+            }
+        }
+
+        // 게시글 정보 업데이트
+        boardMapper.updateBoard(board);
     }
 
     // 게시글 삭제 및 파일 삭제
+    @Transactional
     public void deleteBoard(Long bno) {
         // 1. 게시글에 속한 파일들 먼저 삭제
         fileService.deleteFilesByBoard(bno);
