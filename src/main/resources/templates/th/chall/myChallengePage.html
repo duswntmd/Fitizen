@@ -21,7 +21,7 @@
             <div class="challenge-actions">
                 <!-- 링크는 적절한 URL로 수정 -->
                 <a class="button" th:href="@{/challenge/details/{id}(id=${m.challengeId})}">상세보기</a>
-                <a class="button" th:href="@{/ws/in(userid=${userId}, roomId=${m.challengeId})}">채팅</a>
+                <a class="button" th:href="@{/ws/in(roomId=${m.challengeId})}">채팅</a>
                 <a class="button" th:href="@{/challenge/cancel/{id}(id=${m.challengeId})}">챌린지 취소</a>
             </div>
         </div>

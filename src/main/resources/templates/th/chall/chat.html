@@ -3,101 +3,51 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>WebSocket Test Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-            justify-content: center;
-        }
-        #chatContainer {
-            width: 360px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            height: 500px;
-            overflow: hidden;
-        }
-        #chatBoxArea {
-            width: 100%;
-            height: 100%;
-            border: none;
-            padding: 10px;
-            box-sizing: border-box;
-            overflow-y: auto;
-            background-color: #f0f0f0;
-            font-size: 14px;
-        }
-        #inputContainer {
-            display: flex;
-            align-items: center;
-            border-top: 1px solid #ddd;
-            padding: 10px;
-            background-color: white;
-        }
-        #inputMsgBox {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        #sendButton, #disconnectButton {
-            background-color: #0095f6;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin-left: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        #disconnectButton {
-            background-color: #f44336;
-        }
-        #sendButton:hover, #disconnectButton:hover {
-            opacity: 0.8;
-        }
-        #disconnectButton:hover {
-            background-color: #d32f2f;
-        }
-    </style>
+    <link th:href="@{/css/chat/chat.css}" rel="stylesheet" />
 </head>
 <body>
 <div id="chatContainer">
-    <textarea id="chatBoxArea" readonly="readonly"></textarea>
+    <!-- textarea 대신 div 사용 -->
+    <div id="chatBoxArea" style="border:1px solid #ccc; width:100%; height:300px; overflow-y:scroll;"></div>
     <div id="inputContainer">
         <input id="inputMsgBox" type="text" placeholder="Type a message...">
-        <input id="sendButton" type="button" value="Send" onclick="sendButton_onclick()">
+        <input id="sendButton" type="button" value="보내기" onclick="sendButton_onclick()">
         <input id="disconnectButton" type="button" value="Disconnect" onclick="disconnectButton_onclick()">
     </div>
+    <label id="fileButton" for="imgInputBox">사진보내기</label>
+    <input id="imgInputBox" type="file" accept="image/*">
 </div>
 <script type="text/javascript">
-    var userid = '[[${userid}]]';
+    var userId = '[[${userId}]]';
     var g_webSocket = null;
 
     window.onload = function() {
         var roomId = '[[${roomId}]]';
         var host = "localhost";
-        g_webSocket = new WebSocket("ws://" + host + "/chat"+ "&roomId=" + roomId);
+        g_webSocket = new WebSocket("ws://" + host +"/chat?"+"userId="+userId +"&roomId=" + roomId);
 
         g_webSocket.onopen = function(message) {
             addLineToChatBox("챌린지 참여 채팅방입니다.");
         };
 
         g_webSocket.onmessage = function(message) {
-            addLineToChatBox(message.data);
+            try {
+                var data = JSON.parse(message.data); // JSON 파싱
+
+                if (data.msg) {
+                    addLineToChatBox(data.msg); // 텍스트 메시지 추가
+                }
+                if (data.img) {
+                    displayImage(data.img); // 이미지 출력
+                }
+            } catch (e) {
+                console.error("메시지 파싱 오류:", e);
+                addLineToChatBox(message.data); // JSON이 아니면 그대로 출력
+            }
         };
 
         g_webSocket.onclose = function(message) {
-            addLineToChatBox("Server is disconnected.");
+            addLineToChatBox("disconnect");
         };
 
         g_webSocket.onerror = function(message) {
@@ -110,23 +60,59 @@
             _line = "";
         }
         var chatBoxArea = document.getElementById("chatBoxArea");
-        chatBoxArea.value += _line + "\n";
+        var messageDiv = document.createElement("div");
+        messageDiv.textContent = _line; // 메시지 추가
+        chatBoxArea.appendChild(messageDiv); // div에 추가
+        chatBoxArea.scrollTop = chatBoxArea.scrollHeight;
+    }
+
+    function displayImage(base64Image) {
+        var chatBoxArea = document.getElementById("chatBoxArea");
+        var imgElement = document.createElement("img");
+        imgElement.src = base64Image; // base64 이미지를 img 태그의 src로 설정
+        imgElement.style.maxWidth = "300px"; // 최대 너비 설정 (필요에 맞게 조정 가능)
+        imgElement.style.height = "auto"; // 자동으로 높이 비율 유지
+        imgElement.style.marginTop = "10px"; // 이미지 위쪽에 약간의 여백 추가
+
+        // 이미지 요소를 chatBoxArea에 추가
+        chatBoxArea.appendChild(imgElement);
         chatBoxArea.scrollTop = chatBoxArea.scrollHeight;
     }
 
     function sendButton_onclick() {
         var inputMsgBox = document.getElementById("inputMsgBox");
-        if (inputMsgBox == null || inputMsgBox.value == null || inputMsgBox.value.length == 0) {
-            return false;
+        var imgInputBox = document.getElementById("imgInputBox");
+        var currentTime = getCurrentFormattedTime();
+        // 메시지와 이미지를 전송할 객체를 준비
+        var obj = {
+            sender:userId,
+            msg: inputMsgBox.value || null,
+            img: null,
+            sentAt: currentTime
+        };
+
+        // 이미지 파일이 선택되었으면 base64로 인코딩하여 추가
+        if (imgInputBox.files.length > 0) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                obj.img = event.target.result;
+                // 메시지나 이미지 중 하나가 있으면 전송
+                if (obj.msg || obj.img) {
+                    g_webSocket.send(JSON.stringify(obj));
+                }
+            };
+            reader.readAsDataURL(imgInputBox.files[0]);
+        } else {
+            // 이미지가 없을 경우 메시지가 있는지 확인 후 전송
+            if (obj.msg) {
+                g_webSocket.send(JSON.stringify(obj));
+            }
         }
-        var chatBoxArea = document.getElementById("chatBoxArea");
-        if (g_webSocket == null || g_webSocket.readyState == 3) {
-            chatBoxArea.value += "Server is disconnected.\n";
-            return false;
-        }
-        g_webSocket.send('[' + userid + '] ' + inputMsgBox.value);
+
         inputMsgBox.value = "";
+        imgInputBox.value = "";
         inputMsgBox.focus();
+
         return true;
     }
 
@@ -144,6 +130,16 @@
         if (keyCode == 13) {
             sendButton_onclick(event);
         }
+    }
+    function getCurrentFormattedTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        return `${year}.${month}.${day} ${hours}:${minutes}`;
     }
 
     document.getElementById('inputMsgBox').addEventListener('keypress', inputMsgBox_onkeypress);
