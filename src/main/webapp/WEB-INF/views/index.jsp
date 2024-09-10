@@ -34,6 +34,7 @@
         <li><a href="/register/deleteuser">삭제</a></li>
         <li><a href="/kakao/map">지도</a></li>
         <li><a href="/challenge">챌린지</a></li>
+        <li><a href="/qna">Q&A</a></li>
     </ul>
 </div>
 

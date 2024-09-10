@@ -38,6 +38,14 @@ public class UserServiceImpl implements UserService {
         return userDao.isIdDuplicate(id);
     }
 
+    @Override
+    public String findIdByEmailAndName(String email, String name)  {
+        return userDao.findIdByEmailAndName(email, name);
+    }
+    @Override
+    public String findPasswordByEmailAndId(String email, String id)  {
+        return userDao.findPasswordByEmailAndId(email, id);
+    }
 //    public String findIdByEmailAndName(String email, String name) throws Exception {
 //        String id = userDao.findIdByEmailAndName(email, name);
 //
