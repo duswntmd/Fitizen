@@ -6,6 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>운동 검사 결과</title>
     <style>
+        .exercise-img {
+            width: 300px;   /* 원하는 너비로 설정 */
+            height: auto;   /* 비율에 맞게 높이 자동 조정 */
+            display: inline-block; /* 이미지를 가로로 정렬 */
+        }
+        .exercise-text {
+            font-size: 16px; /* 텍스트 크기 조정 */
+            color: #333; /* 텍스트 색상 */
+            display: block; /* 텍스트를 이미지 아래에 표시 */
+            margin-top: 5px; /* 이미지와 텍스트 사이에 간격 추가 */
+        }
+        .fade-in {
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        .fade-in.show {
+            opacity: 1;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -14,7 +34,7 @@
         }
 
         .container {
-            max-width: 700px;
+            max-width: 1000px;
             margin: 50px auto;
             padding: 20px;
             background-color: #fff;
@@ -53,7 +73,7 @@
 <body>
 
 <div class="container">
-    <h1>운동 검사 결과</h1>
+    <h1>운동 검사 결과(추천 운동)</h1>
     <p id="resultText"></p>
     <button onclick="window.location.href='/findME'">다시 검사하기</button>
 </div>
@@ -63,6 +83,12 @@
     const resultText = sessionStorage.getItem('exerciseResult');
     if (resultText) {
         document.getElementById('resultText').innerHTML = resultText; // HTML로 설정하여 링크 포함
+
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.fade-in').forEach((img) => {
+                img.classList.add('show');
+            });
+        });
     } else {
         document.getElementById('resultText').innerText = "결과가 없습니다. 검사를 다시 시도해주세요.";
     }

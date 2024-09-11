@@ -24,9 +24,11 @@
 </head>
 <body>
 <div id="menu">
+    <a href="/"><img src="img/logo.png" width="200" height="100"></a>
     <ul>
+
+
         <li><a href="/qna">Q&A</a></li>
-        <li id="logo"><a href="/"><img src="img/logo.png" width="200" height="100"></a></li>
         <li><a href="/findME">맞춤 운동 찾기</a></li>
         <li><a href="/board/list">Boardlist</a></li>
         <li><a href="${loginOutLink}">${loginOut}</a></li> <!-- 로그인/로그아웃 링크 -->
