@@ -6,9 +6,23 @@
 </head>
 <body>
 <h1>게시글 목록</h1>
-<div th:if="${#lists.isEmpty(boards)}">
-    게시글이 없습니다.
-</div>
+
+<!-- 검색 폼 -->
+<form action="/board/search" method="get">
+    <!-- 검색 조건 선택 -->
+    <label for="searchType">검색 기준:</label>
+    <select id="searchType" name="searchType">
+        <option value="title">제목</option>
+        <option value="author">작성자</option>
+    </select>
+
+    <!-- 검색어 입력 -->
+    <label for="keyword">검색어:</label>
+    <input type="text" id="keyword" name="keyword" placeholder="검색어" th:value="${param.keyword}">
+
+    <button type="submit">검색</button>
+</form>
+
 <table>
     <thead>
     <tr>
@@ -22,20 +36,43 @@
     </tr>
     </thead>
     <tbody>
-    <!-- 게시글 목록을 반복해서 출력 -->
-    <tr th:each="board : ${boards}">
-        <td th:text="${board.bno}"></td> <!-- 게시글 번호 -->
-        <td>
-            <a th:href="@{/board/view/{bno}(bno=${board.bno})}" th:text="${board.title}"></a>
-        </td>
-        <td th:text="${board.author}"></td> <!-- 작성자 -->
+    <tr th:each="board : ${pageInfo.list}">
+        <td th:text="${board.bno}"></td>
+        <td><a th:href="@{/board/view/{bno}(bno=${board.bno})}" th:text="${board.title}"></a></td>
+        <td th:text="${board.author}"></td>
         <td th:text="${#dates.format(board.regDate, 'yyyy-MM-dd')}"></td>
-        <td th:text="${board.hits}"></td> <!-- 조회수 -->
-        <td th:text="${board.likes}"></td> <!-- 좋아요 수 -->
-        <td th:text="${board.commentCnt}"></td> <!-- 댓글 수 -->
+        <td th:text="${board.hits}"></td>
+        <td th:text="${board.likes}"></td>
+        <td th:text="${board.commentCnt}"></td>
     </tr>
     </tbody>
 </table>
+
+<!-- 페이지 네비게이션 -->
+<div>
+    <!-- 첫 페이지로 이동 -->
+    <a th:if="${pageInfo.isFirstPage == false}" th:href="@{/board/search(searchType=${param.searchType}, keyword=${param.keyword}, pageNum=1, pageSize=${pageInfo.pageSize})}">처음</a>
+
+    <!-- 이전 페이지 -->
+    <a th:if="${pageInfo.hasPreviousPage}" th:href="@{/board/search(searchType=${param.searchType}, keyword=${param.keyword}, pageNum=${pageInfo.prePage}, pageSize=${pageInfo.pageSize})}">&lt;</a>
+
+    <!-- 페이지 번호 반복 출력 -->
+    <span th:each="i : ${#numbers.sequence(pageInfo.navigateFirstPage, pageInfo.navigateLastPage)}">
+        <a th:if="${i != pageInfo.pageNum}" th:href="@{/board/search(searchType=${param.searchType}, keyword=${param.keyword}, pageNum=${i}, pageSize=${pageInfo.pageSize})}" th:text="${i}"></a>
+        <span th:if="${i == pageInfo.pageNum}" th:text="${i}" style="font-weight:bold; color:red;"></span>
+    </span>
+
+    <!-- 다음 페이지 -->
+    <a th:if="${pageInfo.hasNextPage}" th:href="@{/board/search(searchType=${param.searchType}, keyword=${param.keyword}, pageNum=${pageInfo.nextPage}, pageSize=${pageInfo.pageSize})}">&gt;</a>
+
+    <!-- 마지막 페이지로 이동 -->
+    <a th:if="${pageInfo.isLastPage == false}" th:href="@{/board/search(searchType=${param.searchType}, keyword=${param.keyword}, pageNum=${pageInfo.pages}, pageSize=${pageInfo.pageSize})}">끝</a>
+</div>
+
+<!-- 현재 페이지 / 전체 페이지 수 출력 -->
+<div>
+    <p th:text="'현재 페이지: ' + ${pageInfo.pageNum} + ' / ' + ${pageInfo.pages}"></p>
+</div>
 
 <a href="/board/write">글 작성</a>
 </body>

@@ -14,7 +14,6 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/challenge")
-@SessionAttributes("user")
 public class ChallengController {
 
     // 챌린지 서비스는 여기서만 사용하기에 변수를 service로
@@ -38,6 +37,7 @@ public class ChallengController {
         model.addAttribute("list",list);
         return "th/chall/challengeList";
     }
+
 
     // 챌린지 작성 폼 이동
     @GetMapping("/add")
@@ -85,9 +85,17 @@ public class ChallengController {
         String userId = user.getId();
 
         List<Challenge> myChall=service.getMyChallengeList(userId);
-
+        model.addAttribute("userId",userId);
         model.addAttribute("myChall",myChall);
         return "th/chall/myChallengePage";
     }
+
+    @GetMapping("/challBoard/{roomId}")
+    public String boardlist(@PathVariable Integer roomId,Model model)
+    {
+
+        return "th/chall/challBoard";
+    }
+
 
 }

@@ -51,4 +51,18 @@
         WHERE bno = #{bno}
     </delete>
 
+    <!-- 제목과 작성자 기준으로 게시글 검색 -->
+    <select id="searchBoardList" resultType="com.sku.fitizen.domain.Board">
+        SELECT bno, title, content, reg_date, hits, up_date, likes, comment_cnt, author
+        FROM board
+        WHERE 1=1
+        <if test="title != null and title != ''">
+            AND title LIKE '%' || #{title} || '%'
+        </if>
+        <if test="author != null and author != ''">
+            AND author LIKE '%' || #{author} || '%'
+        </if>
+        ORDER BY bno DESC
+    </select>
+
 </mapper>

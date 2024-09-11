@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>QnA 질문 추가</title>
+</head>
+<body>
+<h1>질문 추가</h1>
+<form th:action="@{/qna/add}" th:object="${qna}" method="post">
+    <label for="title">제목:</label>
+    <input type="text" id="title" th:field="*{title}" required/><br/>
+
+    <label for="author">작성자:</label>
+    <input type="text" id="author" th:field="*{author}" required/><br/>
+
+    <label for="contents">질문 내용:</label>
+    <textarea id="contents" th:field="*{contents}" required></textarea><br/>
+
+    <input type="submit" value="질문 추가"/>
+</form>
+<a href="/qna">돌아가기</a>
+</body>
+</html>

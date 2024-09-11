@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 작성</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <h1>게시글 작성</h1>
 
-<form action="/board/write" method="post" enctype="multipart/form-data">
+<form id="writeForm" enctype="multipart/form-data">
     <div>
         <label for="title">제목:</label>
-        <input type="text" id="title" name="title" th:value="${board.title}" required>
+        <input type="text" id="title" name="title" required>
     </div>
     <div>
         <label for="content">내용:</label>
-        <textarea id="content" name="content" required th:text="${board.content}"></textarea>
+        <textarea id="content" name="content" required></textarea>
     </div>
     <div>
         <label for="files">파일 첨부:</label>
@@ -24,5 +25,33 @@
 </form>
 
 <a href="/board/list">목록으로</a>
+
+<script>
+    $(document).ready(function() {
+        $('#writeForm').on('submit', function(event) {
+            event.preventDefault();  // 폼 기본 제출 방지
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: '/board/write',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(res) {
+                    alert(res.success ? res.message : "게시글 작성 실패: " + res.message);
+                    if (res.success) {
+                        window.location.href = '/board/list';  // 성공하면 목록으로 이동
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('에러 발생: ' + error);
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>
