@@ -1,0 +1,20 @@
+html, body {
+    margin:0; height:100%; overflow:hidden;
+}
+
+.flex_container {
+    display: flex;
+    flex-direction: row;     /* 메인축(main axis) */
+    flex-wrap: wrap;         /* 디폴트인 nowrap 대신 wrap 설정 */
+    justify-content: space-around;
+    align-content:space-around ;
+    border:1px solid black;
+    padding: 0.1em;
+}
+
+.flex_item {
+    flex: 0 0 100px;
+    border:1px dashed black;
+    padding: 0.1em;
+    margin:0.2em;
+}
