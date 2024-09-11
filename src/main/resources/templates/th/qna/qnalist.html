@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>QnA List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            max-width: 1200px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+        }
+        a {
+            display: block;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 18px;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1>QnA 게시판</h1>
+    <a href="/qna/add">새 질문하기</a>
+    <table>
+        <thead>
+        <tr>
+            <th>질문번호</th>
+            <th>제목</th>
+            <th>질문자</th>
+            <th>질문 내용</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="l : ${list}">
+            <td th:text="${l.qid}"></td>
+            <td> <a th:href="@{/qna/detail(qid=${l.qid})}" th:text="${l.title}"></a></td>
+            <td th:text="${l.author}"></td>
+            <td th:text="${l.contents}"></td>
+            <td th:text="${l.qdate}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -5,7 +5,6 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
     <title>내 챌린지 목록</title>
     <link th:href="@{/css/challenge/mychall.css}" rel="stylesheet" />
-    <link href="/css/challenge/challList.css" rel="stylesheet" />
 </head>
 <body>
 <h2>내 챌린지 목록</h2>
@@ -21,8 +20,9 @@
             </div>
             <div class="challenge-actions">
                 <!-- 링크는 적절한 URL로 수정 -->
-                <a class="button" th:href="@{/challenge/details/{id}(id=${m.challengeId})}">상세보기</a>
-                <a class="button" th:href="@{/ws/in(userid=${'smith'}, roomId=${m.challengeId})}">채팅</a>
+                <a class="button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
+                <a class="button" th:href="@{/ws/in(roomId=${m.challengeId})}">채팅</a>
+                <a class="button" th:href="@{/challenge/proofShotBoard/{roomId}(roomId=${m.challengeId})}">인증 게시판</a>
                 <a class="button" th:href="@{/challenge/cancel/{id}(id=${m.challengeId})}">챌린지 취소</a>
             </div>
         </div>

@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 @Slf4j
 @Configuration
@@ -15,7 +17,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class WebSocketConfiguration implements WebSocketConfigurer
 {
     /* "ws://ip/ws/chat" 요청은 인터셉터를 거쳐 웹소켓 핸들러에 연결됨 */
-    private final static String CHAT_ENDPOINT="/ws/chat";
+    private final static String CHAT_ENDPOINT="/chat";
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -25,6 +27,15 @@ public class WebSocketConfiguration implements WebSocketConfigurer
                 .setAllowedOrigins("*");
         // 위에서 지정한 인터셉터를 통해 WebSocketHandler에게 필요한 속성들을 전달할 수 있다
         log.info("웹소켓 핸들러 등록 완료");
+    }
+
+    // 이미지 전송 때문에..........
+    @Bean
+    public ServletServerContainerFactoryBean createWebSocketContainer() {
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean(); // (3)
+        container.setMaxTextMessageBufferSize(500000); // (4)
+        container.setMaxBinaryMessageBufferSize(500000); // (5)
+        return container;
     }
 
     @Bean

@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
     <title>게시글 수정</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <h1>게시글 수정</h1>
 
-<form action="/board/edit" method="post" enctype="multipart/form-data">
+<form id="editForm" enctype="multipart/form-data">
     <input type="hidden" name="bno" th:value="${board.bno}">
 
     <div>
@@ -41,5 +42,33 @@
 </form>
 
 <a href="/board/view/{bno}" th:href="@{/board/view/{bno}(bno=${board.bno})}">취소</a>
+
+<script>
+    $(document).ready(function() {
+        $('#editForm').on('submit', function(event) {
+            event.preventDefault();  // 기본 폼 제출 방지
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: '/board/edit',
+                type: 'POST',
+                data: formData,
+                processData: false,  // 파일 전송을 위해 처리 방지
+                contentType: false,  // 파일 전송을 위해 contentType 설정 방지
+                success: function(res) {
+                    alert(res.success ? res.message : "게시글 수정 실패: " + res.message);
+                    if (res.success) {
+                        window.location.href = '/board/view/' + formData.get("bno");  // 성공 시 상세보기로 이동
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('에러 발생: ' + error);
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

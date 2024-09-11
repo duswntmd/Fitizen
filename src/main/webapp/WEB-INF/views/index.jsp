@@ -1,7 +1,9 @@
+g
+    <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png">
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="true"%> <!-- 세션 사용을 위해 session="true"로 변경 -->
-<%-- "user" 객체가 세션에 있는지 확인하고, 로그인 상태 및 로그아웃 링크를 설정 --%>
+<%-- "user" 객체가 세션에 있는지 확인하고, 로그인 상태 및 로그아웃 링크를 설정 수정수정 --%>
 <c:set var="user" value="${sessionScope.user}" />
 <c:set var="loginId" value="${user == null ? '' : user.id}" />
 <c:set var="loginOutLink" value="${user == null ? '/login/login' : '/login/logout'}" />
@@ -20,8 +22,38 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png">
     <title>FITIZEN</title>
+</head>
+<body>
+<div class="container" />
+<div class="flex_container">
+    <li id="logo"><a href="/"><img src="image/logo.png" width="300" height="100"></a></li>
+    <nav id="menu"><a href="/"><img src="image/MenuBar.png" width="38" height="38"></a></nav>
+</div>
+<ul class="nav">
+    <div class="flex_container">
+        <li class="flex_item"><a href="/board/list">게시판</a></li>
+        <li class="flex_item"><a href="${loginOutLink}">${loginOut}</a></li> <!-- 로그인/로그아웃 링크 -->
+        <li class="flex_item"><a href="/register/add">회원가입</a></li>
+        <li class="flex_item"><a href="/register/updateuser">수정</a></li>
+        <li class="flex_item"><a href="/register/deleteuser">삭제</a></li>
+        <li class="flex_item"><a href="/kakao/map">지도</a></li>
+        <li class="flex_item"><a href="/challenge">챌린지</a></li>
+    </div>
+    <div style="text-align:center">
+        <h1 style="line-height: 0.4; color:white">
+            <p style="line-height: 0;">FITNESS + CITIZEN</p>
+            <p style="line-height: 0; font-size: 150%;">FITIZEN</p>
+        </h1>
+        <h3 style="line-height: 50%; color:white">
+            <p style="line-height: 0;">피트니스를 애용하는 헬린이들을 위한 소통창구</p>
+            <p style="font-size: 135%;">피티즌 메인 페이지입니다.</p>
+        </h3>
+    </div>
+</ul>
+    </li>
+</body>
+</html>
     <style>
         @font-face {
             font-family: 'Pretendard-Bold';
@@ -138,34 +170,3 @@
             }
         }
     </style>
-</head>
-<body>
-<div class="container" />
-<div class="flex_container">
-<li id="logo"><a href="/"><img src="image/logo.png" width="300" height="100"></a></li>
-<nav id="menu"><a href="/"><img src="image/MenuBar.png" width="38" height="38"></a></nav>
-</div>
-<ul class="nav">
-<div class="flex_container">
-    <li class="flex_item"><a href="/board/list">게시판</a></li>
-    <li class="flex_item"><a href="${loginOutLink}">${loginOut}</a></li> <!-- 로그인/로그아웃 링크 -->
-    <li class="flex_item"><a href="/register/add">회원가입</a></li>
-    <li class="flex_item"><a href="/register/updateuser">수정</a></li>
-    <li class="flex_item"><a href="/register/deleteuser">삭제</a></li>
-    <li class="flex_item"><a href="/kakao/map">지도</a></li>
-    <li class="flex_item"><a href="/challenge">챌린지</a></li>
-</div>
-<div style="text-align:center">
-    <h1 style="line-height: 0.4; color:white">
-        <p style="line-height: 0;">FITNESS + CITIZEN</p>
-        <p style="line-height: 0; font-size: 150%;">FITIZEN</p>
-    </h1>
-    <h3 style="line-height: 50%; color:white">
-        <p style="line-height: 0;">피트니스를 애용하는 헬린이들을 위한 소통창구</p>
-        <p style="font-size: 135%;">피티즌 메인 페이지입니다.</p>
-    </h3>
-</div>
-
-</li>
-</body>
-</html>

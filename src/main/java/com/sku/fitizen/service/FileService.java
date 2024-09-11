@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -45,6 +46,12 @@ public class FileService {
 
     // 파일 업로드 처리
     public String storeFile(MultipartFile file, Long bno) {
+        // 파일이 비어 있는지 확인
+        if (file == null || file.isEmpty()) {
+            // 파일이 없으면 처리하지 않음
+            return null;
+        }
+
         String originalFilename = file.getOriginalFilename();
         String uuid = UUID.randomUUID().toString();
         String fileNameWithUUID = uuid + "_" + originalFilename;
@@ -96,6 +103,7 @@ public class FileService {
     }
 
     // 파일 삭제 처리
+    @Transactional
     public boolean deleteFileByFnum(Long fnum) {
         // 데이터베이스에서 파일 정보 조회
         BoardFilesVO fileToDelete = fileMapper.getFileByFnum(fnum);  // fnum에 해당하는 파일 정보 조회
