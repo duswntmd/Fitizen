@@ -27,6 +27,13 @@ g
     <title>FITIZEN</title>
 </head>
 <body>
+<<<<<<< HEAD
+<div id="menu">
+    <a href="/"><img src="img/logo.png" width="200" height="100"></a>
+    <ul>
+
+
+=======
 <div class="container" />
 <div class="flex_container">
     <li id="logo"><a href="/"><img src="image/logo.png" width="300" height="100"></a></li>
@@ -34,6 +41,7 @@ g
 </div>
 <ul class="nav">
     <div class="flex_container">
+>>>>>>> da21af37e3e290e7e1a15e054eb25f46cd11fb49
         <li><a href="/qna">Q&A</a></li>
         <li><a href="/findME">맞춤 운동 찾기</a></li>
         <li class="flex_item"><a href="/board/list">게시판</a></li>

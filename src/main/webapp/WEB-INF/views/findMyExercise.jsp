@@ -6,13 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>맞춤 운동 검사</title>
     <style>
+        .exercise-img {
+            width: 300px;   /* 원하는 너비로 설정 */
+            height: auto;   /* 비율에 맞게 높이 자동 조정 */
+        }
+
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
         }
-
+        .options input[type="radio"] {
+            display: none; /* 숨기기 */
+        }
+        .options input[type="radio"]:checked + img {
+            border: 3px solid #007bff; /* 파란색 테두리 */
+            opacity: 0.6; /* 투명도 */
+        }
         .container {
             max-width: 700px;
             margin: 50px auto;
@@ -39,6 +51,7 @@
         .options {
             margin: 10px 0;
         }
+
 
         .options label {
             display: block;
@@ -74,61 +87,131 @@
         <div class="question">
             <p>1. 운동을 얼마나 자주 하시나요?</p>
             <div class="options">
-                <label><input type="radio" name="frequency" value="never" required> 거의 하지 않음</label>
-                <label><input type="radio" name="frequency" value="sometimes"> 가끔 함</label>
-                <label><input type="radio" name="frequency" value="regularly"> 정기적으로 함</label>
-                <label><input type="radio" name="frequency" value="daily"> 매일 함</label>
+                <label><input type="radio" name="frequency" value="never" required>
+                    <img class="exercise-img fade-in" src="img/hardlyever.jpg" alt="거의안함">
+                    <span class="option-text">거의 안함</span>
+                </label>
+                <label><input type="radio" name="frequency" value="sometimes">
+                    <img class="exercise-img fade-in" src="img/sometimes.png" alt="가끔 함">
+                    <span class="option-text">가끔 함</span>
+                </label>
+                <label><input type="radio" name="frequency" value="regularly">
+                    <img class="exercise-img fade-in" src="img/often.jpg" alt="자주 함">
+                    <span class="option-text">자주 함</span>
+                </label>
+                <label><input type="radio" name="frequency" value="daily">
+                    <img class="exercise-img fade-in" src="img/everyday.jpg" alt="거의 매일 함">
+                    <span class="option-text">거의 매일함</span>
+                </label>
             </div>
-            <!-- 두 번째 질문 -->
-            <div class="question">
-                <p>2. 선호하는 운동 유형은 무엇인가요?</p>
-                <div class="options">
-                    <label><input type="radio" name="type" value="cardio" required> 유산소 운동 (예: 달리기, 자전거 타기)</label>
-                    <label><input type="radio" name="type" value="strength"> 근력 운동 (예: 웨이트 트레이닝)</label>
-                    <label><input type="radio" name="type" value="flexibility"> 유연성 운동 (예: 요가, 스트레칭)</label>
-                    <label><input type="radio" name="type" value="balance"> 균형 운동 (예: 필라테스)</label>
-                </div>
+        </div>
+
+        <!-- 두 번째 질문 -->
+        <div class="question">
+            <p>2. 선호하는 운동 유형은 무엇인가요?</p>
+            <div class="options">
+                <label><input type="radio" name="type" value="cardio" required>
+                    <img class="exercise-img fade-in" src="img/cardio.jpg" alt="유산소 운동">
+                    <span class="option-text">유산소 운동(ex.달리기, 자전거타기)</span></label>
+                <label><input type="radio" name="type" value="strength">
+                    <img class="exercise-img fade-in" src="img/health.jpg" alt="근력 운동">
+                    <span class="option-text">근력 운동</span>
+                </label>
+                <label><input type="radio" name="type" value="flexibility">
+                    <img class="exercise-img fade-in" src="img/yoga.jpg" alt="유연성 운동">
+                    <span class="option-text">유연성 운동</span>
+                </label>
+                <label><input type="radio" name="type" value="balance">
+                    <img class="exercise-img fade-in" src="img/pilates.jpg" alt="균형 운동">
+                    <span class="option-text">균형 운동</span>
+                </label>
             </div>
+        </div>
 
-            <!-- 세 번째 질문 -->
-            <div class="question">
-                <p>3. 운동을 통해 이루고 싶은 목표는 무엇인가요?</p>
-                <div class="options">
-                    <label><input type="radio" name="goal" value="lose_weight" required> 체중 감량</label>
-                    <label><input type="radio" name="goal" value="build_muscle"> 근육 증가</label>
-                    <label><input type="radio" name="goal" value="increase_endurance"> 지구력 향상</label>
-                    <label><input type="radio" name="goal" value="improve_flexibility"> 유연성 개선</label>
-                </div>
+        <!-- 세 번째 질문 -->
+        <div class="question">
+            <p>3. 운동을 통해 이루고 싶은 목표는 무엇인가요?</p>
+            <div class="options">
+                <label><input type="radio" name="goal" value="lose_weight" required>
+                    <img class="exercise-img fade-in" src="img/loseweight.jpg" alt="체중감량">
+                    <span class="option-text">체중 감량</span>
+                </label>
+                <label><input type="radio" name="goal" value="build_muscle">
+                    <img class="exercise-img fade-in" src="img/muscle.jpg" alt="근육 증가">
+                    <span class="option-text">근육 증가</span>
+                </label>
+                <label><input type="radio" name="goal" value="increase_endurance">
+                    <img class="exercise-img fade-in" src="img/endurance.jpg" alt="지구력 향상">
+                    <span class="option-text">지구력 향상</span>
+                </label>
+                <label><input type="radio" name="goal" value="improve_flexibility">
+                    <img class="exercise-img fade-in" src="img/flexibility.jpg" alt="유연성 증가">
+                    <span class="option-text">유연성 증가</span>
+                </label>
             </div>
+        </div>
 
-            <!-- 네 번째 질문 -->
-            <div class="question">
-                <p>4. 운동에 사용할 수 있는 시간은 얼마나 되나요?</p>
-                <div class="options">
-                    <label><input type="radio" name="time" value="short" required> 짧은 시간 (15-30분)</label>
-                    <label><input type="radio" name="time" value="medium"> 중간 시간 (30-60분)</label>
-                    <label><input type="radio" name="time" value="long"> 긴 시간 (60분 이상)</label>
-                </div>
+        <!-- 네 번째 질문 -->
+        <div class="question">
+            <p>4. 운동에 사용할 수 있는 시간은 얼마나 되나요?</p>
+            <div class="options">
+                <label><input type="radio" name="time" value="short" required>
+                    <img class="exercise-img fade-in" src="img/short.jpg" alt="15~30분">
+                    <span class="option-text">짧은시간(15~30분)</span>
+                </label>
+                <label><input type="radio" name="time" value="medium">
+                    <img class="exercise-img fade-in" src="img/medium.jpg" alt="중간 시간(30~60분)">
+                    <span class="option-text">중간 시간(30~60분)</span></label>
+                <label><input type="radio" name="time" value="long">
+                    <img class="exercise-img fade-in" src="img/long.jpg" alt="긴 시간(60분 이상)">
+                    <span class="option-text">긴 시간(60분 이상)</span></label>
             </div>
+        </div>
 
-            <!-- 다섯 번째 질문 -->
-            <div class="question">
-                <p>5. 운동을 할 때 주로 어떤 환경을 선호하나요?</p>
-                <div class="options">
-                    <label><input type="radio" name="environment" value="indoor" required> 실내</label>
-                    <label><input type="radio" name="environment" value="outdoor"> 실외</label>
-                    <label><input type="radio" name="environment" value="both"> 실내 및 실외 모두</label>
-                </div>
+        <!-- 다섯 번째 질문 -->
+        <div class="question">
+            <p>5. 운동을 할 때 주로 어떤 환경을 선호하나요?</p>
+            <div class="options">
+                <label><input type="radio" name="environment" value="indoor" required>
+                    <img class="exercise-img fade-in" src="img/inside.jpg" alt="실내">
+                    <span class="option-text">실내</span>
+                </label>
+                <label><input type="radio" name="environment" value="outdoor">
+                    <img class="exercise-img fade-in" src="img/outside.jpg" alt="실외">
+                    <span class="option-text">실외</span>
+                </label>
+                <label><input type="radio" name="environment" value="both">
+                    <img class="exercise-img fade-in" src="img/both.png" alt="실내,외 둘다">
+                    <span class="option-text">둘 다</span>
+                </label>
             </div>
+        </div>
 
-
-
-            <!-- 제출 버튼 -->
-            <button type="submit">결과 보기</button>
+        <button type="submit">제출</button>
     </form>
 </div>
 
 <script>
+    document.querySelectorAll('.exercise-img').forEach(img => {
+        img.addEventListener('click', (event) => {
+            const img = event.target;
+            const questionGroup = img.classList[1]; // 'frequency-img'와 같은 클래스를 가져옵니다
+
+            // 해당 질문의 이미지에서 'selected' 클래스 제거
+            document.querySelectorAll(`.${questionGroup}`).forEach(image => {
+                image.classList.remove('selected');
+            });
+            // 클릭된 이미지에 'selected' 클래스 추가
+            img.classList.add('selected');
+
+            // 해당 질문의 라디오 버튼 체크
+            const associatedRadio = img.parentElement.querySelector('input[type="radio"]');
+            if (associatedRadio) {
+                associatedRadio.checked = true;
+            }
+        });
+    });
+
     function saveResultAndRedirect() {
         // 사용자가 선택한 답변을 가져오기
         const form = document.getElementById('quizForm');
@@ -244,23 +327,29 @@
         const topThree = sortedScores.slice(0, 3).map(([key]) => key);
 
         // 결과 텍스트 생성
-        let resultText = "추천 운동: ";
+        let resultText = "";
         resultText += topThree.map((sport) => {
             switch (sport) {
 
-                //링크 다 바꿔야됨
-
-                case 'health': return "<a href='exerciseDetail?exercise=health'>헬스</a>";
-                case 'yoga': return "<a href='exerciseDetail?exercise=yoga'>요가</a>";
-                case 'pilates': return "<a href='exerciseDetail?exercise=pilates'>필라테스</a>";
-                case 'cardio': return "<a href='exerciseDetail?exercise=cardio'>유산소 운동</a>";
-                case 'swimming': return "<a href='exerciseDetail?exercise=swimming'>수영</a>";
-                case 'basketball': return "<a href='exerciseDetail?exercise=basketball'>농구</a>";
-                case 'tableTennis': return "<a href='exerciseDetail?exercise=tableTennis'>탁구</a>";
-                case 'badminton': return "<a href='exerciseDetail?exercise=badminton'>배드민턴</a>";
+                case 'health': return "<a href='exerciseDetail?exercise=health'><img class='exercise-img fade-in' src='/img/health.jpg' alt='헬스'  /></a>" +
+                    "<div class='exercise-text'>헬스</div>";
+                case 'yoga': return "<a href='exerciseDetail?exercise=yoga'><img class='exercise-img fade-in' src='/img/yoga.jpg' alt='요가' /></a>" +
+                    "     <div class='exercise-text'>요가</div>";
+                case 'pilates': return "<a href='exerciseDetail?exercise=pilates'><img class='exercise-img fade-in' src='/img/pilates.jpg' alt='필라테스' /></a>" +
+                    "     <div class='exercise-text'>필라테스</div>";
+                case 'cardio': return "<a href='exerciseDetail?exercise=cardio'><img class='exercise-img fade-in' src='/img/cardio.jpg' alt='유산소 운동' /></a>" +
+                    "     <div class='exercise-text'>유산소 운동</div>";
+                case 'swimming': return "<a href='exerciseDetail?exercise=swimming'><img class='exercise-img fade-in' src='/img/swimming.jpg' alt='수영' /></a>" +
+                    "     <div class='exercise-text'>수영</div>";
+                case 'basketball': return "<a href='exerciseDetail?exercise=basketball'><img class='exercise-img fade-in' src='/img/basketball.jpg' alt='농구' /></a>" +
+                    "     <div class='exercise-text'>농구</div>";
+                case 'tableTennis': return "<a href='exerciseDetail?exercise=tableTennis'><img class='exercise-img fade-in' src='/img/tabletennis.jpg' alt='탁구' /></a>" +
+                    "     <div class='exercise-text'>탁구</div>";
+                case 'badminton': return "<a href='exerciseDetail?exercise=badminton'><img class='exercise-img fade-in' src='/img/badminton.jpg' alt='배드민턴' /></a>" +
+                    "     <div class='exercise-text'>배드민턴</div>";
                 default: return "";
             }
-        }).join(", ");
+        }).join(" ");
 
         // 세션 스토리지에 결과 저장
         sessionStorage.setItem('exerciseResult', resultText);
