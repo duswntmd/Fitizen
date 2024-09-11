@@ -34,30 +34,35 @@ public class BoardService {
 
     // 게시글 생성 및 파일 저장
     @Transactional
-    public void insertBoard(Board board, List<MultipartFile> files) throws IOException {
+    public void insertBoard(Board board, List<MultipartFile> files, String youtubeUrl) throws IOException {
         // 게시글 저장
         boardMapper.insertBoard(board);
 
-        // 파일 업로드 검사 및 저장
+        // 파일 및 유튜브 URL 처리
         if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
-                if (!file.isEmpty()) {  // 파일이 비어 있지 않을 때만 처리
-                    fileService.storeFile(file, board.getBno());
+                if (!file.isEmpty()) {
+                    // 파일이 있을 경우 파일만 저장
+                    fileService.storeFileOrYoutube(null, file, board.getBno());
                 }
             }
+        }
+
+        // 유튜브 URL 저장
+        if (youtubeUrl != null && !youtubeUrl.isEmpty()) {
+            fileService.storeFileOrYoutube(youtubeUrl, null, board.getBno());
         }
     }
 
     // 게시글 수정
     @Transactional
-    public void updateBoard(Board board, List<MultipartFile> newFiles, List<Long> deleteFileIds) throws IOException {
+    public void updateBoard(Board board, List<MultipartFile> newFiles, List<Long> deleteFileIds, String youtubeUrl) throws IOException {
         // 1. 삭제할 파일 처리
         if (deleteFileIds != null && !deleteFileIds.isEmpty()) {
             for (Long fnum : deleteFileIds) {
                 boolean deleted = fileService.deleteFileByFnum(fnum);  // 파일 삭제
                 if (!deleted) {
                     System.err.println("파일 삭제 실패: " + fnum);
-                    // 필요에 따라 추가 처리를 할 수 있음
                 }
             }
         }
@@ -65,7 +70,7 @@ public class BoardService {
         // 2. 새로운 파일 저장
         if (newFiles != null && !newFiles.isEmpty()) {
             for (MultipartFile file : newFiles) {
-                fileService.storeFile(file, board.getBno());  // 새 파일 저장
+                fileService.storeFileOrYoutube(youtubeUrl, file, board.getBno());  // 새 파일 또는 유튜브 URL 저장
             }
         }
 

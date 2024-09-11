@@ -45,37 +45,40 @@ public class FileService {
     }
 
     // 파일 업로드 처리
-    public String storeFile(MultipartFile file, Long bno) {
-        // 파일이 비어 있는지 확인
-        if (file == null || file.isEmpty()) {
-            // 파일이 없으면 처리하지 않음
-            return null;
-        }
-
-        String originalFilename = file.getOriginalFilename();
-        String uuid = UUID.randomUUID().toString();
-        String fileNameWithUUID = uuid + "_" + originalFilename;
-
-        try {
-            // 파일 시스템에 저장
-            Path targetLocation = this.fileStorageLocation.resolve(fileNameWithUUID);
-            Files.copy(file.getInputStream(), targetLocation);
-
-            // 파일 정보를 데이터베이스에 저장
+    @Transactional
+    public void storeFileOrYoutube(String youtubeUrl, MultipartFile file, Long bno) {
+        if (youtubeUrl != null && !youtubeUrl.isEmpty()) {
+            // 유튜브 URL 저장
             BoardFilesVO fileEntity = new BoardFilesVO();
             fileEntity.setBno(bno);
-            fileEntity.setRealName(originalFilename);
-            fileEntity.setUuidName(fileNameWithUUID);
-            fileEntity.setFsize(file.getSize());
-            fileEntity.setFtype(file.getContentType());
-
+            fileEntity.setYoutubeUrl(youtubeUrl);
             fileMapper.insertFile(fileEntity);
+        }
 
-            return fileNameWithUUID;
-        } catch (IOException ex) {
-            throw new RuntimeException("파일을 저장할 수 없습니다. " + originalFilename, ex);
+        if (file != null && !file.isEmpty()) {
+            // 파일 저장
+            String originalFilename = file.getOriginalFilename();
+            String uuid = UUID.randomUUID().toString();
+            String fileNameWithUUID = uuid + "_" + originalFilename;
+
+            try {
+                Path targetLocation = this.fileStorageLocation.resolve(fileNameWithUUID);
+                Files.copy(file.getInputStream(), targetLocation);
+
+                BoardFilesVO fileEntity = new BoardFilesVO();
+                fileEntity.setBno(bno);
+                fileEntity.setRealName(originalFilename);
+                fileEntity.setUuidName(fileNameWithUUID);
+                fileEntity.setFsize(file.getSize());
+                fileEntity.setFtype(file.getContentType());
+
+                fileMapper.insertFile(fileEntity);
+            } catch (IOException ex) {
+                throw new RuntimeException("파일을 저장할 수 없습니다. " + originalFilename, ex);
+            }
         }
     }
+
 
     // 특정 게시글에 속한 파일 목록 조회
     public List<BoardFilesVO> getFilesByBoard(Long bno) {
@@ -105,30 +108,31 @@ public class FileService {
     // 파일 삭제 처리
     @Transactional
     public boolean deleteFileByFnum(Long fnum) {
-        // 데이터베이스에서 파일 정보 조회
-        BoardFilesVO fileToDelete = fileMapper.getFileByFnum(fnum);  // fnum에 해당하는 파일 정보 조회
+        BoardFilesVO fileToDelete = fileMapper.getFileByFnum(fnum);
 
         if (fileToDelete == null) {
-            return false;  // 파일 정보가 없는 경우 false 반환
+            return false;
         }
 
         try {
-            // 파일 시스템에서 실제 파일 경로 확인
+            // 유튜브 링크인 경우
+            if (fileToDelete.getYoutubeUrl() != null && !fileToDelete.getYoutubeUrl().isEmpty()) {
+                fileMapper.deleteFile(fnum);  // 데이터베이스에서 유튜브 링크만 삭제
+                return true;
+            }
+
+            // 파일인 경우
             Path filePath = this.fileStorageLocation.resolve(fileToDelete.getUuidName()).normalize();
             File file = filePath.toFile();
 
-            // 파일이 존재하는지 확인 후 삭제 시도
             if (file.exists()) {
                 if (file.delete()) {
-                    // 파일이 성공적으로 삭제된 경우
-                    fileMapper.deleteFile(fnum);  // 데이터베이스에서 파일 정보 삭제
+                    fileMapper.deleteFile(fnum);
                     return true;
                 } else {
-                    // 파일 삭제 실패
                     throw new IOException("파일 삭제 실패: " + fileToDelete.getUuidName());
                 }
             } else {
-                // 파일이 없는 경우에도 데이터베이스에서 파일 정보 삭제
                 fileMapper.deleteFile(fnum);
                 return true;
             }
@@ -137,6 +141,7 @@ public class FileService {
             return false;
         }
     }
+
 
     // 특정 게시글에 속한 모든 파일 삭제
     public void deleteFilesByBoard(Long bno) {

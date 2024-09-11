@@ -25,11 +25,27 @@
         <label>기존 첨부파일:</label>
         <ul>
             <li th:each="file : ${files}">
-                <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}" th:text="${file.realName}"></a>
+                <div th:if="${file.youtubeUrl != null}">
+                    <span>유튜브 링크:</span>
+                    <a th:href="'https://www.youtube.com/watch?v=' + ${file.youtubeUrl}" th:text="${file.youtubeUrl}"></a>
+                </div>
+                <div th:if="${file.youtubeUrl == null}">
+                    <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}" th:text="${file.realName}"></a>
+                </div>
                 <input type="checkbox" name="deleteFiles" th:value="${file.fnum}"> 삭제
             </li>
         </ul>
     </div>
+
+<!--    <div>-->
+<!--        <label>기존 첨부파일:</label>-->
+<!--        <ul>-->
+<!--            <li th:each="file : ${files}">-->
+<!--                <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}" th:text="${file.realName}"></a>-->
+<!--                <input type="checkbox" name="deleteFiles" th:value="${file.fnum}"> 삭제-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
 
     <!-- 새로운 파일 업로드 필드 -->
     <div>

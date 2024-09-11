@@ -33,33 +33,33 @@
     <ul>
         <li th:each="file : ${files}">
             <!-- 이미지 파일 미리보기와 다운로드 -->
-            <div th:if="${file.ftype.startsWith('image/')}">
+            <div th:if="${file.ftype != null and file.ftype.startsWith('image/')}">
                 <img th:src="@{/board/download/{fnum}(fnum=${file.fnum})}" alt="이미지 미리보기" style="max-width: 400px;"/>
                 <br>
                 <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}">이미지 다운로드</a>
             </div>
 
-            <!-- 비디오 파일 미리보기와 다운로드 -->
-<!--            <div th:if="${file.ftype.startsWith('video/')}">-->
-<!--                <video controls style="max-width: 400px;">-->
-<!--                    <source th:src="@{/board/download/{fnum}(fnum=${file.fnum})}" th:type="${file.ftype}">-->
-<!--                    동영상 재생을 지원하지 않는 브라우저입니다.-->
-<!--                </video>-->
-<!--                <br>-->
-<!--                <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}">동영상 다운로드</a>-->
-<!--            </div>-->
-
-            <!-- 이미지나 비디오가 아닌 파일은 다운로드 링크만 제공 -->
-<!--            <div th:if="${!file.ftype.startsWith('image/') && !file.ftype.startsWith('video/')}">-->
-            <div th:if="${!file.ftype.startsWith('image/')}">
+            <!-- 일반 파일 다운로드 링크 제공 -->
+            <div th:if="${file.ftype != null and !file.ftype.startsWith('image/')}">
                 <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}" th:text="${file.realName}"></a>
+            </div>
+
+            <!-- 유튜브 링크가 있는 경우 유튜브 영상 표시 -->
+            <div th:if="${file.youtubeUrl != null}">
+                <label>유튜브 영상:</label>
+                <iframe width="560" height="315"
+                        th:src="'https://www.youtube.com/embed/' + ${#strings.substring(file.youtubeUrl, file.youtubeUrl.indexOf('v=') + 1, file.youtubeUrl.indexOf('&') != -1 ? file.youtubeUrl.indexOf('&') : file.youtubeUrl.length())}"
+                        frameborder="0" allowfullscreen></iframe>
             </div>
         </li>
     </ul>
 </div>
 
-<a th:href="@{/board/edit/{bno}(bno=${board.bno})}"><button>수정</button></a>
-<a href="javascript:void(0);" th:onclick="'deleteBoard(' + ${board.bno} + ')'"><button>삭제</button></a>
+<!-- 수정 및 삭제 버튼: 작성자와 현재 로그인한 사용자가 일치하는 경우에만 보임 -->
+<div th:if="${session.user != null and session.user.id == board.author}">
+    <a th:href="@{/board/edit/{bno}(bno=${board.bno})}"><button>수정</button></a>
+    <a href="javascript:void(0);" th:onclick="'deleteBoard(' + ${board.bno} + ')'"><button>삭제</button></a>
+</div>
 <a href="/board/list">목록으로</a>
 
 <script>

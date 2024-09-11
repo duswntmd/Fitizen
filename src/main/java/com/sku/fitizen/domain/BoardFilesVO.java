@@ -14,4 +14,5 @@ public class BoardFilesVO {
     private String uuidName;
     private Long fsize;
     private String ftype;
+    private String youtubeUrl;
 }

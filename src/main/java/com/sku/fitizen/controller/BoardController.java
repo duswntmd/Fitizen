@@ -100,9 +100,10 @@ public class BoardController {
 
     // 게시글 작성 처리
     @PostMapping("/write")
-    @ResponseBody  // JSON 응답을 위해 추가
+    @ResponseBody
     public Map<String, Object> write(@ModelAttribute Board board,
                                      @SessionAttribute(value = "user", required = false) User user,
+                                     @RequestParam(value = "youtubeUrl", required = false) String youtubeUrl,
                                      @RequestParam("files") List<MultipartFile> files) throws IOException {
 
         Map<String, Object> result = new HashMap<>();
@@ -110,20 +111,21 @@ public class BoardController {
         if (user == null) {
             result.put("success", false);
             result.put("message", "로그인이 필요합니다.");
-            return result;  // 로그인 페이지로 리다이렉트할 필요 없이 메시지 반환
+            return result;
         }
 
-        // 세션에서 가져온 user의 id를 author에 설정
         board.setAuthor(user.getId());
 
         try {
-            // 게시글과 파일을 함께 저장
-            boardService.insertBoard(board, files);
+            // 게시글과 파일, 유튜브 URL을 함께 저장
+            boardService.insertBoard(board, files, youtubeUrl);
+
             result.put("success", true);
             result.put("message", "게시글이 성공적으로 작성되었습니다.");
         } catch (Exception e) {
             result.put("success", false);
             result.put("message", "게시글 작성에 실패했습니다.");
+
         }
 
         return result;
@@ -148,7 +150,8 @@ public class BoardController {
     public Map<String, Object> edit(@ModelAttribute Board board,
                                     @SessionAttribute(value = "user", required = false) User user,
                                     @RequestParam("files") List<MultipartFile> files,
-                                    @RequestParam(value = "deleteFiles", required = false) List<Long> deleteFileIds) throws IOException {
+                                    @RequestParam(value = "deleteFiles", required = false) List<Long> deleteFileIds,
+                                    @RequestParam(value = "youtubeUrl", required = false) String youtubeUrl) throws IOException {
 
         Map<String, Object> result = new HashMap<>();
 
@@ -170,7 +173,7 @@ public class BoardController {
             }
 
             // 게시글과 파일 수정
-            boardService.updateBoard(board, files, deleteFileIds);
+            boardService.updateBoard(board, files, deleteFileIds, youtubeUrl);
             result.put("success", true);
             result.put("message", "게시글이 성공적으로 수정되었습니다.");
         } catch (Exception e) {
@@ -193,6 +196,7 @@ public class BoardController {
         } catch (Exception e) {
             result.put("success", false);
             result.put("message", "게시글 삭제에 실패했습니다.");
+            e.printStackTrace();
         }
         return result;
     }
