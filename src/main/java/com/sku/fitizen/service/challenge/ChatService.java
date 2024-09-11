@@ -1,9 +1,9 @@
-package com.sku.fitizen.service;
+package com.sku.fitizen.service.challenge;
 
 
 import com.sku.fitizen.domain.Message;
 import com.sku.fitizen.domain.Participation;
-import com.sku.fitizen.mapper.ChatMapper;
+import com.sku.fitizen.mapper.challenge.ChatMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

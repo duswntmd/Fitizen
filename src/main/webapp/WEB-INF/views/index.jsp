@@ -34,6 +34,8 @@ g
 </div>
 <ul class="nav">
     <div class="flex_container">
+        <li><a href="/qna">Q&A</a></li>
+        <li><a href="/findME">맞춤 운동 찾기</a></li>
         <li class="flex_item"><a href="/board/list">게시판</a></li>
         <li class="flex_item"><a href="${loginOutLink}">${loginOut}</a></li> <!-- 로그인/로그아웃 링크 -->
         <li class="flex_item"><a href="/register/add">회원가입</a></li>
@@ -41,6 +43,11 @@ g
         <li class="flex_item"><a href="/register/deleteuser">삭제</a></li>
         <li class="flex_item"><a href="/kakao/map">지도</a></li>
         <li class="flex_item"><a href="/challenge">챌린지</a></li>
+        <li>
+            <c:if test="${user != null}">
+        <a href="/user/myPage">마이페이지</a>
+        </c:if>
+        </li>
     </div>
     <div style="text-align:center">
         <h1 style="line-height: 0.4; color:white">
