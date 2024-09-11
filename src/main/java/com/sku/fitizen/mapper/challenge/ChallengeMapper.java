@@ -1,4 +1,4 @@
-package com.sku.fitizen.mapper;
+package com.sku.fitizen.mapper.challenge;
 
 
 import com.sku.fitizen.domain.Challenge;

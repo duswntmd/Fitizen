@@ -1,21 +1,26 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>챌리지 추가하기</title>
+    <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
+    <title>챌린지 추가하기</title>
     <link th:href="@{/css/challenge/challAdd.css}" rel="stylesheet" />
 </head>
 <body>
 <h2>챌린지 추가하기</h2>
 <div class="container">
-    <form action="../challenge/save" method="POST" enctype="multipart/form-data">
+    <!-- 폼 시작 -->
+    <form id="addForm"  enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">챌린지 제목</label>
             <input type="text" id="title" name="title">
         </div>
 
-
+        <button type="button" onclick="document.getElementById('file').click();">파일 선택</button>
+        <div class="form-group" id="coverImageWrapper">
+            <input type="file" id="file" name="file" accept="image/*" style="display: none;">
+            <img id="imagePreview" src="">
+        </div>
 
         <div class="form-group inline-fields">
             <div>
@@ -24,13 +29,12 @@
             </div>
             <div>
                 <label for="endDate">종료일</label>
-                <input type="date" id="endDate" name="endDate" >
+                <input type="date" id="endDate" name="endDate">
             </div>
             <div>
                 <label for="limitUser">인원수 제한:</label>
                 <input type="number" id="limitUser" name="limitUser" min="1">
             </div>
-
         </div>
 
         <div class="form-group">
@@ -38,18 +42,19 @@
             <textarea id="content" name="content"></textarea>
         </div>
 
+        <!-- 폼 전송 버튼 -->
         <div class="form-group">
-            <button type="submit">등록하기</button>
+            <button type="button" onclick="submitChallenge()">등록하기</button>
         </div>
-
     </form>
     <a href="/challenge/list">
         <button class="btn-back">뒤로가기</button>
     </a>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.getElementById('coverImg').addEventListener('change', function(event) {
+
+    document.getElementById('file').addEventListener('change', function(event) {
         const file = event.target.files[0];
         const preview = document.getElementById('imagePreview');
 
@@ -61,26 +66,37 @@
             reader.readAsDataURL(file);
         } else {
             preview.src = '';
+            preview.style.display = 'none';
         }
     });
+
+    function submitChallenge() {
+        if(!confirm('작성된 글을 저장하시겠습니까?'))return;
+
+        var form = document.getElementById('addForm');
+        var formData = new FormData(form);
+
+        console.log(formData.get('file'))
+        $.ajax({
+            url: '/challenge/save',
+            method: 'POST', // POST 용
+            enctype:"multipart/form-data",
+            processData: false,
+            contentType: false,
+            data: formData,
+            dataType: 'json',
+            success: function(res) {
+                alert(res.saved ? '챌린지 등록 성공' : '챌린지 등록 실패');
+                if (res.saved) {
+                    location.href = ""; // 리다이렉트할 URL
+                }
+            },
+            error: function(err) {
+                alert('챌린지 작성 실패, 서버 오류');
+            }
+        });
+    }
+
 </script>
 </body>
 </html>
-
-<!--
-
-
-
-
- <div class="form-group" id="coverImageWrapper">
-            <label for="coverImg">표지 이미지</label>
-            <input type="file" id="coverImg" name="coverImg" accept="image/*" >
-            <button type="button"  onclick="document.getElementById('coverImg').click();">파일 선택</button>
-        </div>
-
-        <img id="imagePreview">
-
-
-
-
--->

@@ -7,7 +7,7 @@ body {
 
 .container {
     max-width: 800px;
-    margin: auto;
+    margin: auto; /* 중앙 정렬 */
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -53,6 +53,7 @@ h2 {
     background-color: #007bff;
     color: #fff;
     cursor: pointer;
+    font-size: 16px; /* Font size for better readability */
 }
 
 .form-group button:hover {
@@ -94,15 +95,11 @@ h2 {
 }
 
 .inline-dates input {
-    width: 25%; /* Set date input width to 1/4 of container */
+    width: 100%; /* Ensure date input takes up the full width */
 }
 
 .inline-fields input {
     width: 100%; /* Ensure the inputs take up the remaining space */
-}
-
-.form-group textarea {
-    height: 300px; /* Set fixed height for the description field */
 }
 
 .btn-back {
@@ -114,6 +111,7 @@ h2 {
     cursor: pointer;
     text-decoration: none; /* Remove underline from link */
     margin-top: 10px; /* Add space above button */
+    font-size: 16px; /* Font size for better readability */
 }
 
 .btn-back:hover {

@@ -3,37 +3,67 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
     <title>챌린지 상세보기</title>
-    <link th:href="@{/css/challenge/challAdd.css}" rel="stylesheet" />
+    <link th:href="@{/css/challenge/challDetail.css}" rel="stylesheet" />
 </head>
 <body>
 <h2>챌린지 상세정보</h2>
 <div class="container">
-        <div class="form-group">
-            <label >챌린지 제목:[[${challe.title}]]</label>
-        </div>
+    <div class="form-group">
+        <label>챌린지 제목:[[${challe.title}]]</label>
+    </div>
 
-       <div class="form-group inline-fields">
-            <div>
-                <p><strong>시작일:</strong> <span th:text="${challe.startDate}"></span></p>
-            </div>
-            <div>
-                <p><strong>종료일:</strong> <span th:text="${challe.endDate}"></span></p>
-            </div>
-            <div>
-                <label >인원수 제한:[[${challe.limitUser}]]</label>
-            </div>
+    <div class="form-group inline-fields">
+        <div>
+            <p><strong>시작일:</strong> <span th:text="${challe.startDate}"></span></p>
+        </div>
+        <div>
+            <p><strong>종료일:</strong> <span th:text="${challe.endDate}"></span></p>
+        </div>
+        <div>
+            <label>참여 인원수:[[${challe.members}]]</label>
+        </div>
+    </div>
+    <div class="image-wrapper">
+        <img th:src="@{'/files/' + ${challe.uCoverImg}}" alt="챌린지 이미지" class="challenge-image">
+    </div>
+    <div class="content-box">
+        <p>챌린지 내용:[[${challe.content}]]</p>
+    </div>
 
+
+    <!-- 댓글 작성 폼 -->
+    <div class="comment-form">
+        <h3>댓글 작성</h3>
+        <form action="#" method="post">
+            <textarea name="comment" placeholder="댓글을 작성하세요..."></textarea>
+            <button type="submit">댓글 등록</button>
+        </form>
+    </div>
+
+    <!-- 댓글 목록 -->
+    <div class="comment-list">
+        <h3>댓글 목록</h3>
+        <!-- 댓글 반복 처리 -->
+        <div th:each="c : ${list}" class="comment">
+            <div class="user-id" th:text="${c.userId}"></div>
+            <div class="date" th:text="${c.commentDate}"></div>
+            <div class="text">
+                <p th:text="${c.challComment}"></p>
+            </div>
         </div>
-        <div class="form-group">
-            <label >챌린지 내용:[[${challe.content}]]</label>
-        </div>
-        <div class="form-group">
-          <a th:href="@{../participate/{challengeId}(challengeId=${challe.challengeId})}"><button>챌린지 도전!</button></a>
-        </div>
-          <a href="/challenge/list">
+    </div>
+
+
+    <div class="form-group">
+        <a th:href="@{../participate/{challengeId}(challengeId=${challe.challengeId})}"><button>챌린지 도전!</button></a>
+        <a href="/challenge/list">
             <button class="btn-back">뒤로가기</button>
-          </a>
+        </a>
+    </div>
+
+
 </div>
 </body>
 </html>
