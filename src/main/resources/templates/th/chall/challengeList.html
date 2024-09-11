@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
     <title>챌린지 목록</title>
     <link th:href="@{/css/challenge/challList.css}" rel="stylesheet" />
 </head>
@@ -12,7 +13,7 @@
     <div class="challenge-list">
         <!-- Thymeleaf Loop for Challenge Items -->
         <div th:each="c : ${list}" class="challenge-box">
-            <div class="image-placeholder">이미지 공간</div>
+            <div class="image-placeholder"><img  th:src="@{'/files/' + ${c.uCoverImg}}">이미지 공간</div>
             <div class="content">
                 <div class="title">[[${c.title}]]</div>
                 <div class="user-info">
@@ -20,13 +21,26 @@
                     <div class="user-id">[[${c.creatorId}]]</div>
                 </div>
                 <div class="date-range" th:text="'기간: ' + ${c.startDate} + ' ~ ' + ${c.endDate}"></div>
+                <div class="challenge-content" th:text="${c.content}">챌린지 내용</div>
                 <div class="details">
                     <!-- Changed this to show participant count -->
                     <div class="participant-info">
                         참여인원수: <span class="current-participants" >[[${c.members}]]</span> /
                         <span class="limit-user" th:text="${c.limitUser}"></span>
                     </div>
-                    <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여하기</a>
+                    <!-- 버튼 상태 확인 -->
+                    <div th:if="${userChall.contains(c)}">
+                        <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여중</a>
+                    </div>
+                    <!-- 인원수 초과 시 버튼 비활성화 및 회색 스타일 적용 -->
+                    <div th:if="${userChall.contains(c) == false}">
+                        <div th:if="${c.members >= c.limitUser}">
+                            <a class="button" href="#" disabled>인원수 초과</a>
+                        </div>
+                        <div th:if="${c.members < c.limitUser}">
+                            <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여하기</a>
+                        </div>
+
                 </div>
             </div>
         </div>

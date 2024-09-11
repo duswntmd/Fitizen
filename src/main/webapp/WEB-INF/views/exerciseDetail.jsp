@@ -97,7 +97,7 @@
         swimming: {
             title: "수영",
             description: "전신을 사용해 효과적으로 칼로리를 소모하고 근육을 강화하는 운동으로, 물속에서의 자유를 만끽하세요.",
-            videoUrl: "https://www.youtube.com/embed/bPWqO20Xzco?si=_mOqsK9RCT6KBs46&amp;controls=0" // 예시 URL
+            videoUrl: "https://www.youtube.com/embed/DC8MYG6uzSs?si=29JYRUjD-iU_fs78" // 예시 URL
         },
         basketball: {
             title: "농구",

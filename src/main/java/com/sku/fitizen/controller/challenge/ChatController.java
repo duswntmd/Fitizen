@@ -1,7 +1,6 @@
-package com.sku.fitizen.controller.chetTest;
+package com.sku.fitizen.controller.challenge;
 
 import com.sku.fitizen.domain.User;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

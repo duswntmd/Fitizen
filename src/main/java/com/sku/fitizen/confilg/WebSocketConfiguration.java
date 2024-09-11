@@ -1,14 +1,13 @@
 package com.sku.fitizen.confilg;
 
-import com.sku.fitizen.controller.chetTest.HttpHandshakeInterceptor;
-import com.sku.fitizen.controller.chetTest.WebSocketHandler;
+import com.sku.fitizen.interceptor.HttpHandshakeInterceptor;
+import com.sku.fitizen.handler.WebSocketHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 @Slf4j

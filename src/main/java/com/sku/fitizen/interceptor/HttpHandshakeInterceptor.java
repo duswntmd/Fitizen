@@ -1,11 +1,9 @@
-package com.sku.fitizen.controller.chetTest;
-import com.sku.fitizen.domain.User;
+package com.sku.fitizen.interceptor;
 import jakarta.servlet.ServletContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import java.util.Map;

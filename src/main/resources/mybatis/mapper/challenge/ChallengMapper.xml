@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.sku.fitizen.mapper.ChallengeMapper">
+<mapper namespace="com.sku.fitizen.mapper.challenge.ChallengeMapper">
 
     <!-- 챌린지 등록 -->
     <insert id="saveChallenge" parameterType="com.sku.fitizen.domain.Challenge">
@@ -11,8 +11,8 @@
             SELECT CHALL_SEQ.NEXTVAL FROM DUAL
         </selectKey>
         <!-- 등록 -->
-        INSERT INTO challenge (challengeId, TITLE, COVERIMG, STARTDATE, ENDDATE, LIMITUSER, CONTENT, CREATORID)
-        VALUES (#{challengeId}, #{title}, 'aa', #{startDate}, #{endDate}, #{limitUser}, #{content}, #{creatorId})
+        INSERT INTO challenge (challengeId, TITLE, COVERIMG,UCOVERIMG, STARTDATE, ENDDATE, LIMITUSER, CONTENT, CREATORID)
+        VALUES (#{challengeId}, #{title},#{coverImg},#{uCoverImg}, #{startDate}, #{endDate}, #{limitUser}, #{content}, #{creatorId})
     </insert>
 
 

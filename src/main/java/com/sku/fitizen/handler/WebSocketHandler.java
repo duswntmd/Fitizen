@@ -1,8 +1,8 @@
-package com.sku.fitizen.controller.chetTest;
+package com.sku.fitizen.handler;
 
 import com.sku.fitizen.domain.Message;
-import com.sku.fitizen.mapper.ChatMapper;
-import com.sku.fitizen.service.ChatService;
+import com.sku.fitizen.mapper.challenge.ChatMapper;
+import com.sku.fitizen.service.challenge.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
