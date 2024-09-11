@@ -8,6 +8,10 @@ body {
 .container {
     width: 100%;
     max-width: 1200px;
+    margin: 0 auto; /* 페이지 가운데 정렬 */
+    padding: 20px;
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
 }
 
 .challenge-box {
@@ -116,4 +120,21 @@ body {
 .challenge-list {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center; /* 목록을 가운데 정렬 */
+}
+
+
+
+/* 비활성화된 버튼 스타일 */
+.challenge-box .details .button[disabled] {
+    background-color: #6c757d; /* 회색 배경 */
+    color: #fff; /* 흰색 텍스트 */
+    cursor: not-allowed; /* 클릭 불가 커서 */
+}
+
+/* 기존 CSS */
+.challenge-box .content .challenge-content {
+    font-size: 14px;
+    color: #333;
+    margin-top: 10px;
 }

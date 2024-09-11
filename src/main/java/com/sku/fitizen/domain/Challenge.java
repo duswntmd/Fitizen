@@ -16,8 +16,9 @@ public class Challenge {
     private int challengeId;
     // 챌린지 제목
     private String title;
-    // 표지 이미지 URL
+    // 표지 이미지
     private String coverImg;
+    private String uCoverImg;
     // 챌린지 기간: 시작일과 종료일
     private LocalDate startDate;
     private LocalDate endDate;
@@ -28,6 +29,5 @@ public class Challenge {
     // 챌린지 내용
     private String content;
 
-    //참여자 수
-    private String members;
+    private int members;
 }
