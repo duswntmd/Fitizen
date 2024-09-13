@@ -178,4 +178,8 @@
                 padding: 24px 30px;
             }
         }
+        html {
+            overflow-y: scroll;
+            height: 4500px;
+        }
     </style>

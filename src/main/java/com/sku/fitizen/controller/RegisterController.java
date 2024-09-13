@@ -16,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/register")
@@ -40,24 +42,29 @@ public class RegisterController {
     }
 
     @PostMapping("/add")
-    public String save(@Valid User user, BindingResult result, RedirectAttributes rattr, Model model) throws Exception {
+    @ResponseBody
+    public Map<String, Object> save(@Valid User user, BindingResult result, RedirectAttributes rattr, Model model) throws Exception {
+        Map<String, Object> response = new HashMap<>();
 
         if (!result.hasErrors()) {
-
             if (UserService.isIdDuplicate(user.getId())) {
-                model.addAttribute("message", "이미 사용 중인 아이디입니다.");
-                return "registerForm";
+                response.put("status", "error");
+                response.put("message", "이미 사용 중인 아이디입니다.");
+                return response;
             }
 
             int rowCnt = UserService.insertUser(user);
 
             if (rowCnt != FAIL) {
-                rattr.addFlashAttribute("msg", "WRT_OK");
-                return "redirect:/register/add";
+                response.put("status", "success");
+                response.put("message", "회원가입 성공");
+                return response;
             }
         }
 
-        return "registerForm";
+        response.put("status", "error");
+        response.put("message", "회원가입 실패. 다시 시도해주세요.");
+        return response;
     }
 
     @GetMapping("/updateuser")
