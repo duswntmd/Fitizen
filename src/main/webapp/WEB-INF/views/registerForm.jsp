@@ -11,9 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
-    <title>sungkyul</title>
-
-    <title>Register</title>
+    <title>회원가입</title>
     <style>
         @font-face {
             font-family: 'Pretendard-Bold';
@@ -103,58 +101,56 @@
         }
     </style>
 </head>
+
 <body>
 <div class="flex_container">
     <li id="logo"><a href="/"><img src="/image/logo.png" width="300" height="100"></a></li>
     <nav id="menu"><a href="/"><img src="/image/MenuBar.png" width="38" height="38"></a></nav>
 </div>
 
-
-<!-- form action="<c:url value="/register/save"/>" method="POST" onsubmit="return formCheck(this)"-->
-
-<form:form modelAttribute="user">
+<!-- Update the form tag to include id and onsubmit attribute -->
+<form:form modelAttribute="user" id="registerForm" onsubmit="return submitForm(event);">
     <div class="title">Register</div>
     <div id="msg" class="msg"><form:errors path="id"/></div>
     <div pwd="msg" class="msg"><form:errors path="pwd"/></div>
     <span style="color:red;">${message}</span>
+
     <label for="">아이디</label>
     <input class="input-field" type="text" name="id" placeholder="4~10자리의 영대소문자와 숫자 조합">
     <label for="">비밀번호</label>
-    <input class="input-field" type="text" name="pwd" placeholder="4~10자리의 영대소문자와 숫자 조합">
+    <input class="input-field" type="password" name="pwd" placeholder="4~10자리의 영대소문자와 숫자 조합">
     <label for="">이름</label>
     <input class="input-field" type="text" name="name" placeholder="홍길동">
     <label for="">이메일</label>
-    <input class="input-field" type="text" name="email" placeholder="example@gmail.co.kr">
-    <label for="">생일</label> <!-- text -->
+    <input class="input-field" type="email" name="email" placeholder="example@gmail.co.kr">
+    <label for="">생일</label>
     <input class="input-field" type="date" name="birth" placeholder="2020-12-31">
 
-    <button>회원 가입</button>
+    <button type="submit">회원 가입</button>
 </form:form>
-<%--</form>--%>
+
 <script>
-    let msg = "${msg}";
-    // 만약 msg 값이 "WRT_OK"라면 성공적으로 회원가입되었다는 알림창을 띄움
-    if(msg === "WRT_OK") {
-        alert("성공적으로 회원가입 되었습니다.");
+    // Updated submitForm function to prevent default form submission and handle via AJAX
+    function submitForm(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = new FormData(document.getElementById('registerForm'));
+
+        fetch('/register/add', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert("성공적으로 회원가입 되었습니다.");  // Show success alert
+                    window.location.href = '/login/login';  // Redirect on success
+                } else {
+                    document.getElementById('msg').textContent = data.message; // Show error message
+                }
+            })
+        .catch(error => console.error('Error:', error));
     }
-
-    function formCheck(frm) {
-        var msg ='';
-        if(frm.id.value.length<3) {
-            setMessage('id의 길이는 3이상이어야 합니다.', frm.id);
-            return false;
-        }
-        return true;
-    }
-    function setMessage(msg, element){
-        document.getElementById("msg").innerHTML = `<i class="fa fa-exclamation-circle"> ${'${msg}'}</i>`;
-        if(element) {
-            element.select();
-        }
-    }
-
-
-
 </script>
 </body>
 </html>
