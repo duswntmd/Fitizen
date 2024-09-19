@@ -50,6 +50,14 @@ public class UserServiceImpl implements UserService {
     public String findPasswordByEmailAndId(String email, String id)  {
         return userDao.findPasswordByEmailAndId(email, id);
     }
+
+    @Override
+    public int addPointsToUser(String userId, int points) {
+        return userDao.addPointsToUser(userId,points);
+    }
+
+
+//    public String findIdByEmailAndName(String email, String name) throws Exception {
     @Override
     public String findEmailByIdAndName(String id, String name){
         return userDao.findEmailByIdAndName(id,name);

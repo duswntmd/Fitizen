@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -34,23 +34,34 @@
 
 
     <!-- 댓글 작성 폼 -->
-    <div class="comment-form">
-        <h3>댓글 작성</h3>
-        <form action="#" method="post">
-            <textarea name="comment" placeholder="댓글을 작성하세요..."></textarea>
-            <button type="submit">댓글 등록</button>
-        </form>
-    </div>
+    <div th:if="${user !=null}">
+        <div class="comment-form">
+            <h3>질문 작성</h3>
+            <form id="commentForm" >
+                <input type="hidden" name="userId" th:value="${user.getId()}">
+                <input type="hidden" name="challengeId" th:value="${challe.challengeId}">
+                <textarea id="challComment"  name="challComment" placeholder="댓글을 작성하세요..."></textarea>
+                <button type="button" onclick="saveComment();">댓글 등록</button>
 
+            </form>
+        </div>
+    </div>
     <!-- 댓글 목록 -->
     <div class="comment-list">
-        <h3>댓글 목록</h3>
+        <h3> 질문 </h3>
         <!-- 댓글 반복 처리 -->
         <div th:each="c : ${list}" class="comment">
             <div class="user-id" th:text="${c.userId}"></div>
             <div class="date" th:text="${c.commentDate}"></div>
             <div class="text">
-                <p th:text="${c.challComment}"></p>
+                <p th:text="${c.challComment}" th:id="${c.commentId}"></p>
+                <!-- 현재 로그인한 사용자와 댓글 작성자가 동일할 때만 보임 -->
+                <div th:if="${user != null && user.getId() == c.userId}">
+                    <button type="button" th:onclick="|editComment(${c.commentId})|">수정</button>
+                    <button type="button" th:onclick="|deleteComment(${c.commentId})|">삭제</button>
+
+
+                </div>
             </div>
         </div>
     </div>
@@ -58,6 +69,7 @@
 
     <div class="form-group">
         <a th:href="@{../participate/{challengeId}(challengeId=${challe.challengeId})}"><button>챌린지 도전!</button></a>
+        <a th:href="@{../../proofShot/{challengeId}(challengeId=${challe.challengeId})}"><button>인증 게시판</button></a>
         <a href="/challenge/list">
             <button class="btn-back">뒤로가기</button>
         </a>
@@ -65,5 +77,76 @@
 
 
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+
+    function saveComment() {
+        {
+
+            var text = $('#challComment').val().trim();
+
+            // 댓글이 비어있으면 경고 메시지 출력
+            if (text === "") {
+                alert('댓글을 입력하세요.');
+                return false;  // AJAX 요청 중단
+            }
+
+            var obj = $('#commentForm').serialize();
+
+            $.ajax({
+                url: '/chellComment/addChallComment',
+                method: 'post',
+                cache: false,
+                data: obj,
+                dataType: 'json',
+                success: function (res) {
+                    // alert(res.success ? '작성 성공':'작성 실패');
+                    if (res.success) {
+                        // 페이지를 새로고침하거나 댓글 목록을 새로 불러오는 로직 추가 가능
+                        location.reload();  // 새로고침
+                    }
+
+                },
+                error: function (xhr, status, err) {
+                    alert('에러:' + err);
+                }
+
+            });
+        }
+    }
+
+    function editCommnet(commentId)
+    {
+
+
+
+
+    }
+    function deleteComment(commentId)
+    {
+        // 댓글 삭제 확인 메시지
+        if (confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
+            $.ajax({
+                url: '/chellComment/deleteChallComment/' + commentId, // 댓글 삭제 API
+                method: 'GET',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.deleted) {
+                        // 성공 시 댓글을 바로 삭제하거나 새로고침
+                        alert('댓글이 삭제되었습니다.');
+                        location.reload(); // 페이지 새로고침으로 삭제된 댓글 반영
+                    } else {
+                        alert('댓글 삭제에 실패했습니다.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert('에러 발생: ' + error);
+                }
+            });
+        }
+    }
+
+</script>
 </body>
 </html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Sample Payment</title>
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- iamport.payment.js -->
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+    <style>
+
+
+        .point-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 30px;
+        }
+
+        .point-box h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+            gap: 10px; /* 버튼 간격 */
+        }
+
+        .point-button {
+            padding: 12px;
+            width: 100px; /* 버튼 너비 */
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .point-button:hover {
+            background-color: #0056b3;
+        }
+
+        .point-button:active {
+            background-color: #003f7f;
+        }
+
+        .cancel-btn {
+            background-color: #dc3545;
+        }
+
+        .cancel-btn:hover {
+            background-color: #c82333;
+        }
+
+        .cancel-btn:active {
+            background-color: #a71d2a;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            var IMP = window.IMP;
+            IMP.init("imp38808434");  // 가맹점 식별코드로 초기화
+        });
+
+        function requestPay(amount) {
+            IMP.init("imp38808434");
+            IMP.request_pay(
+                {
+                    pg: 'html5_inicis',
+                    pay_method: "card",
+                    name: "FITIZEN POINT",
+                    amount: amount,
+                    buyer_email: "gildong@gmail.com",
+                    buyer_name: "홍길동",
+                    buyer_tel: "010-4242-4242",
+                    buyer_addr: "서울특별시 강남구 신사동",
+                    buyer_postcode: "01181"
+                },
+                function (rsp) {
+                    console.log(rsp);
+                    $.ajax({
+                        type: 'POST',
+                        url: '/verify/' + rsp.imp_uid
+                    }).done(function(data) {
+                        console.log(data);
+                        if (rsp.paid_amount === data.response.amount) {
+                            alert("imp_uid: " + data.imp_uid + " merchant_uid(orderKey) :" + data.merchant_uid);
+                            alert("결제 및 결제검증완료");
+                        } else {
+                            alert("결제 실패");
+                        }
+                    });
+                });
+        }
+
+        function cancelPay() {
+            jQuery.ajax({
+                url: "/cancel",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    merchant_uid: "nobody_1726503641151",
+                    cancel_request_amount: 100,
+                    reason: "테스트 결제 환불"
+                }),
+                dataType: "json",
+                success: function(response) {
+                    console.log("환불 성공", response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("환불 실패", error);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="point-box">
+    <h2>포인트 충전</h2>
+
+    <div class="button-container">
+        <button class="point-button" onclick="requestPay(10)">10 포인트</button>
+        <button class="point-button" onclick="requestPay(30)">30 포인트</button>
+        <button class="point-button" onclick="requestPay(50)">50 포인트</button>
+        <button class="point-button" onclick="requestPay(100)">100 포인트</button>
+    </div>
+
+    <div class="button-container">
+        <button class="point-button cancel-btn" onclick="cancelPay()">결제 취소</button>
+    </div>
+    테스트 결제이며 자동 환불 됩니다.
+</div>
+</body>
+</html>

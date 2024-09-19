@@ -24,6 +24,9 @@ public interface UserDao {
     // 사용자 비밀번호 찾기
     String findPasswordByEmailAndId(String email, String id);
 
+    // 포인트 충전
+    int  addPointsToUser(String userId,int points);
+
     String findEmailByIdAndName(String id, String name);
 
     boolean changePwd( String pwd,String id);

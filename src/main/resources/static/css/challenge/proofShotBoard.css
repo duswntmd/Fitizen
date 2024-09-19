@@ -1,89 +1,151 @@
+/* 기본 바디 스타일 */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #fafafa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f0f0f5;
     margin: 0;
+    padding: 0;
 }
 
-.container {
-    width: 100%;
-    max-width: 500px;
-    background-color: #fff;
-    border: 1px solid #e6e6e6;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+/* 헤더 텍스트 스타일 */
+h1, h3 {
+    color: #333;
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* 갤러리 컨테이너 */
+.gallery-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 업로드 버튼 스타일 */
+.upload-btn {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.upload-btn:hover {
+    background-color: #0056b3;
+}
+
+/* 사진 그리드 레이아웃 */
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-gap: 20px;
+    padding: 0;
+}
+
+/* 개별 사진 항목 스타일 */
+.photo-item {
+    position: relative;
     overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    transition: transform 0.3s ease-in-out;
 }
 
-.post {
-    display: flex;
-    flex-direction: column;
+.photo-item:hover {
+    transform: scale(1.05);
 }
 
-.post-header {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #e6e6e6;
-}
-
-.profile-pic {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.user-info {
-    display: flex;
-    flex-direction: column;
-}
-
-.username {
-    font-weight: bold;
-    margin: 0;
-}
-
-.location {
-    color: #8e8e8e;
-    font-size: 14px;
-}
-
-.post-image {
+/* 사진 이미지 스타일 */
+.photo-img {
     width: 100%;
     height: auto;
     display: block;
+    border-radius: 15px 15px 0 0;
 }
 
-.post-footer {
+/* 유저 아이디와 토글 버튼을 같은 줄에 정렬 */
+.photo-caption {
     padding: 10px;
+    background-color: #fff;
+    text-align: center;
+    border-radius: 0 0 15px 15px;
+    display: flex;
+    justify-content: space-between; /* 제목과 유저 아이디/버튼을 양쪽으로 배치 */
+    align-items: center; /* 버튼과 텍스트를 세로로 가운데 정렬 */
 }
 
-.caption {
+.photo-caption h3 {
+    font-size: 18px;
+    color: #000;
     margin: 10px 0;
-    font-size: 16px;
+    flex-grow: 1; /* 제목이 남는 공간을 차지하게 만듦 */
+    text-align: left;
 }
 
-.likes {
-    font-weight: bold;
-    margin: 5px 0;
-}
-
-.comments-title {
-    font-weight: bold;
-    margin-top: 10px;
+.photo-caption p {
     font-size: 14px;
+    color: #666;
+    margin: 0;
+    margin-right: 10px; /* 버튼과 간격을 유지하기 위해 오른쪽 마진 추가 */
 }
 
-.comment {
-    margin: 5px 0;
+/* 토글 버튼 스타일 */
+.toggle-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }
 
-.timestamp {
-    color: #8e8e8e;
-    font-size: 12px;
+.toggle-button img {
+    width: 24px;
+    height: 24px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 댓글 섹션 스타일 */
+.comments-section {
+    display: none;
     margin-top: 10px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
+.comments-section ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.comments-section li {
+    font-size: 14px;
+    color: #555;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+/* 반응형 디자인 - 화면 너비 768px 이하 */
+@media (max-width: 768px) {
+    .photo-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .photo-caption h3 {
+        font-size: 16px;
+    }
 }

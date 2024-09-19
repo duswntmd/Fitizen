@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사진 인증 게시판</title>
+    <link th:href="@{/css/challenge/proofShotBoard.css}" rel="stylesheet" />
+</head>
+<body>
+<h3>챌린지 제목</h3>
+<div th:if="${!readOnly}">
+    <a th:href="@{'/proofShot/addProofShotForm/'+${id}}"><button class="upload-btn">인증 사진 올리기</button></a>
+    <a th:href="@{'/proofShot/addProofShotForm/'+${id}}"><button class="upload-btn">내 인증 사진 </button></a>
+</div>
+
+<div class="gallery-container">
+    <h3>인증 사진 목록</h3>
+    <div class="photo-grid">
+        <div class="photo-item" th:each="p : ${list}">
+            <img th:src="@{'/files/proofShot/' + ${p.uPhoto}}" alt="인증 사진" class="photo-img">
+            <div class="photo-caption">
+                <h3 th:text="${p.title}">제목</h3>
+                <div th:if="${!readOnly} and (${user.id} != ${p.userId})">
+                    <!--해당 챌린지 참여자 이면서 로그인한 유저는 자신이 아닌 다른 사람의 사진만 인증버튼 활성화-->
+                <button type="button" th:onclick="|verifyProof(${p.proofNum},${p.challengeId})|">인증하기</button>
+                </div>
+                <p th:text="${p.userId}">작성자</p>
+                <button class="toggle-button" onclick="toggleComments(this)">
+                    <img src="/Assets/expand-down-light.png" alt="Expand" class="expand-icon">
+                </button>
+            </div>
+
+            <div class="comments-section" style="display: none">
+                <h4>참여자 댓글</h4>
+                <!-- 댓글 작성 폼 -->
+                <div th:if="${user != null}">
+                    <div th:if="${!readOnly}">
+                    <div class="comment-form">
+                        <form th:id="${p.proofNum}" >
+                            <input type="hidden" name="proofNo" th:value="${p.proofNum}">
+                            <input type="hidden" name="author" th:value="${user.getId()}">
+                            <input type="hidden" name="challId" th:value="${p.challengeId}">
+                            <textarea name="proofComment" placeholder="댓글을 작성하세요..."></textarea>
+                            <button type="button" th:onclick="|saveComment(${p.proofNum})|">댓글 등록</button>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                <div th:each="c : ${p.commentList}" class="comment-item">
+                    <p><strong th:text="${c.author}">작성자</strong>: <span th:text="${c.proofComment}">댓글 내용</span></p>
+                    <p th:text="${#dates.format(c.commentDate, 'yyyy-MM-dd HH:mm')}">작성일</p>
+                    <div th:if="${user != null && user.getId() == c.author}">
+                        <button type="button" th:onclick="|editComment(${c.proofCommentId})|">수정</button>
+                        <button type="button" th:onclick="|deleteComment(${c.proofCommentId})|">삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function saveComment(proofNum) {
+        var formId = '#'+proofNum;
+        var form = $(formId);
+        var text = form.find('textarea[name="proofComment"]').val().trim();
+
+        // 댓글이 비어있으면 경고 메시지 출력
+        if (text === "") {
+            alert('댓글을 입력하세요.');
+            return false;  // AJAX 요청 중단
+        }
+
+        var obj = form.serialize();
+
+
+        $.ajax({
+            url: '/proofComment/addComment',
+            method: 'post',
+            cache: false,
+            data: obj,
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    location.reload();  // 새로고침
+                }
+            },
+            error: function (xhr, status, err) {
+                alert('에러:' + err);
+            }
+        });
+    }
+
+    function deleteComment(proofCommentId)
+    {
+        // 댓글 삭제 확인 메시지
+        if (confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
+            $.ajax({
+                url: '/proofComment/deleteComment/' + proofCommentId, // 댓글 삭제 API
+                method: 'GET',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.deleted) {
+                        // 성공 시 댓글을 바로 삭제하거나 새로고침
+                        alert('댓글이 삭제되었습니다.');
+                        location.reload(); // 페이지 새로고침으로 삭제된 댓글 반영
+                    } else {
+                        alert('댓글 삭제에 실패했습니다.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert('에러 발생: ' + error);
+                }
+            });
+        }
+    }
+
+
+    function verifyProof(proofNum, challengeId) {
+        var participantCount = 5;  // 참가자 수, 실제로는 서버에서 가져와야 함
+        $.ajax({
+            url: '/proofShot/verify',
+            method: 'POST',
+            data:
+                {
+                proofNum: proofNum,
+                challengeId : challengeId
+               },
+            dataType: 'json',
+            success: function(res) {
+                if (res.success) {
+
+                    alert('사진을 인증하였습니다.');
+
+                    location.reload(); } // 새로고침
+
+            },
+            error: function(xhr, status, error) {
+                alert('에러 발생: ' + error);
+            }
+        });
+    }
+
+
+
+
+
+
+
+    function toggleComments(button) {
+        const commentsSection = button.parentElement.nextElementSibling;
+        const icon = button.querySelector('img');
+
+        if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
+            commentsSection.style.display = 'block';
+            icon.src = '/Assets/expand-up-light.png'; // 위로 펼침 아이콘
+        } else {
+            commentsSection.style.display = 'none';
+            icon.src = '/Assets/expand-down-light.png'; // 아래로 접힘 아이콘
+        }
+    }
+
+</script>
+</body>
+</html>

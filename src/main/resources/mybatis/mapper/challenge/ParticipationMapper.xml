@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sku.fitizen.mapper.challenge.ParticipationMapper">
+
+    <!-- 유저가 특정 챌린지에 참여자인지 확인 -->
+    <select id="existUser" parameterType="com.sku.fitizen.domain.challenge.Participation">
+        SELECT CASE
+                   WHEN COUNT(*) > 0 THEN 1
+                   ELSE 0
+                   END
+        FROM participation
+        WHERE userId = #{userId}
+          AND challengeId = #{challengeId}
+    </select>
+
+
+    <!-- 스캐쥴러 -->
+    <select id="getUserIdList" parameterType="int">
+        SELECT USERID FROM  PARTICIPATION WHERE  CHALLENGEID=#{challengId}
+    </select>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+

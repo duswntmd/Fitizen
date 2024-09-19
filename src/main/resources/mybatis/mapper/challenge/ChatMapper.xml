@@ -5,14 +5,14 @@
 <mapper namespace="com.sku.fitizen.mapper.challenge.ChatMapper">
 
     <!-- 메세지 저장 -->
-    <insert id="saveMessage" parameterType="com.sku.fitizen.domain.Message">
+    <insert id="saveMessage" parameterType="com.sku.fitizen.domain.challenge.Message">
 
         INSERT  INTO message
-        VALUES (msg_seq.NEXTVAL,#{senderId},#{message},#{sentAt},#{roomId})
+        VALUES (msg_seq.NEXTVAL,#{senderId},#{message},#{sentAt},#{roomId},#{img},#{uImg})
     </insert>
 
     <!--메세지 불러오기-->
-    <select id="getMessagesByRoomId" parameterType="com.sku.fitizen.domain.Participation"
+    <select id="getMessagesByRoomId" parameterType="com.sku.fitizen.domain.challenge.Participation"
             resultType="Message">
             SELECT * FROM  message
             WHERE roomId=#{ChallengeId}
@@ -27,7 +27,7 @@
 </select>
 
     <!--참여자 테이블에 유저가 존재하는지-->
-    <select id="checkParticipationExists" parameterType="com.sku.fitizen.domain.Participation">
+    <select id="checkParticipationExists" parameterType="com.sku.fitizen.domain.challenge.Participation">
             SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
             FROM participation
             WHERE userId = #{userId} AND challengeId = #{ChallengeId}

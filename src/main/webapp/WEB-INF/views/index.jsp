@@ -3,6 +3,9 @@
 <%@ page session="true"%>
 <%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
 
+
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">

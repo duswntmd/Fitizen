@@ -1,8 +1,8 @@
 package com.sku.fitizen.mapper.challenge;
 
 
-import com.sku.fitizen.domain.Challenge;
-import com.sku.fitizen.domain.Participation;
+import com.sku.fitizen.domain.challenge.Challenge;
+import com.sku.fitizen.domain.challenge.Participation;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -32,5 +32,7 @@ public interface ChallengeMapper {
   //내가 참여한 챌린지 리스트 (INNER JOIN)
   List<Challenge> getMyChallengeList(String userId);
 
+  // 종료 날짜가 오늘이 챌린지 아이디 리스트 가져오기
+  List<Integer> getChallengesEndingToday();
 }
 

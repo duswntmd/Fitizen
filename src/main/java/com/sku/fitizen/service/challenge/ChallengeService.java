@@ -1,8 +1,8 @@
 package com.sku.fitizen.service.challenge;
 
 
-import com.sku.fitizen.domain.Challenge;
-import com.sku.fitizen.domain.Participation;
+import com.sku.fitizen.domain.challenge.Challenge;
+import com.sku.fitizen.domain.challenge.Participation;
 import com.sku.fitizen.mapper.challenge.ChallengeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +40,7 @@ public class ChallengeService {
                 try {
                     // 파일 이름 및 경로 설정
                     String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-                    Path filePath = Paths.get(uploadDir, fileName);
+                    Path filePath = Paths.get(uploadDir+"challengeCover/", fileName);
 
                     // 파일 저장
                     file.transferTo(filePath.toFile());
@@ -104,6 +104,15 @@ public class ChallengeService {
             return myChall;
         }
 
+
+
+        //********스캐줄링 메서드********//
+
+        // 챌린지 종료날짜가 오늘이 챌린지 번호 가져오기
+        public List<Integer> getChallengesEndingToday()
+        {
+            return  mapper.getChallengesEndingToday();
+        }
 
 
 }

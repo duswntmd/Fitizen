@@ -18,13 +18,17 @@ public class ChatController {
     }
 
     @GetMapping("/in")   //  localhost/ws/in?userid=smith  형식으로 요청하여 로그인 테스트
-    public String chatForm(@SessionAttribute(value = "user") User user,@RequestParam("roomId")String roomId, Model model)
+    public String chatForm(@SessionAttribute(value = "user") User user,
+                           @RequestParam(value = "roomId" ,required = false)String roomId,
+                           @RequestParam(value = "trainerId",required = false)String trainerId,
+                           Model model)
     {
+        System.out.println("확인용@@"+trainerId);
         model.addAttribute("userId",user.getId());  // 이용자 아이디를 웹소켓 핸들러 안으로 전달하는 절차 시작부분
         // userid -> chat.jsp 로 전달 -> 인터셉터로 전달 -> 웹소켓핸들러에서 수신
         model.addAttribute("roomId", roomId);
         // HttpSession session = request.getSession();
-
+        model.addAttribute("trainerId", trainerId);
         // log.info("로그인 성공({}), session={}", userid, session.getId());
 
         return "th/chall/chat";  //chat.jsp 보여줌 프론트에서는 웹소캣 서버가 연결됨

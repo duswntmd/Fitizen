@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sku.fitizen.mapper.challenge.ProofCommentMapper">
+
+
+    <!--사진 인증 게시판 댓글 작성하기-->
+    <insert id="addComment" parameterType="com.sku.fitizen.domain.challenge.ProofComment">
+            INSERT INTO proofComment(proofCommentId, proofNo, proofComment, commentDate, author, challId)
+            VALUES (PROOFCOMMENT_SEQ.nextval,#{proofNo},#{proofComment},SYSDATE,#{author},#{challId})
+    </insert>
+
+    <!--사진 인증 게시판 댓글 수정하기-->
+
+    <!--사진 인증 게시판 댓글 삭제하기-->
+
+    <delete id="deleteProofComment" parameterType="int">
+
+        delete PROOFCOMMENT
+        where PROOFCOMMENTID =#{proofCommentId}
+
+    </delete>
+
+
+</mapper>
+
