@@ -48,6 +48,7 @@
         <a href="/user/myPage">마이페이지</a>
         </c:if>
         </li>
+        <li class="flex_item"><a href="/trainer">트레이너</a></li>
     </div>
     <div style="text-align:center">
         <h1 style="line-height: 0.4; color:white">

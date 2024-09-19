@@ -16,4 +16,9 @@ public interface UserService {
     String findIdByEmailAndName(String email, String name);
 
     String findPasswordByEmailAndId(String email, String id);
+
+
+
+
+   int addPointsToUser(String userId, int points);
 }

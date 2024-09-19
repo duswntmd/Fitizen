@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -35,7 +36,7 @@
                     <!-- 인원수 초과 시 버튼 비활성화 및 회색 스타일 적용 -->
                     <div th:if="${userChall.contains(c) == false}">
                         <div th:if="${c.members >= c.limitUser}">
-                            <a class="button" href="#" disabled>인원수 초과</a>
+                            <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여 불가</a>
                         </div>
                         <div th:if="${c.members < c.limitUser}">
                             <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여하기</a>

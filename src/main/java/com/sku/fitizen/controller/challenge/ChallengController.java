@@ -1,9 +1,9 @@
 package com.sku.fitizen.controller.challenge;
 
 
-import com.sku.fitizen.domain.ChallComment;
-import com.sku.fitizen.domain.Challenge;
-import com.sku.fitizen.domain.Participation;
+import com.sku.fitizen.domain.challenge.ChallComment;
+import com.sku.fitizen.domain.challenge.Challenge;
+import com.sku.fitizen.domain.challenge.Participation;
 import com.sku.fitizen.domain.User;
 import com.sku.fitizen.service.challenge.ChallCommentService;
 import com.sku.fitizen.service.challenge.ChallengeService;
@@ -34,6 +34,7 @@ public class ChallengController {
     @GetMapping("")
     public String mainPage(Model model)
     {
+
         return "th/chall/challengePage";
     }
 
@@ -57,9 +58,8 @@ public class ChallengController {
     @GetMapping("/add")
     public String challAddForm(@SessionAttribute(value = "user" ,required = false) User user, Model model)
     {
-        if(user == null)
-        {
-            return "th/chall/challengePage";
+        if (user == null || user.getId() == null) {
+            return "redirect:/login/login";
         }
         model.addAttribute("userId",user.getId());
         model.addAttribute("challenge",new Challenge());
@@ -85,12 +85,18 @@ public class ChallengController {
 
     // 챌린지 고유 번호로 챌린지 상세정보 로딩 ok?
     @GetMapping("/detail/{id}")
-    public String challDetailForm(@PathVariable("id") Integer id, Model model)
+    public String challDetailForm(@SessionAttribute(value = "user",required = false) User user,
+                                  @PathVariable("id") Integer id,
+                                  Model model
+                                 )
     {
         Challenge challe=service.getChallengeById(id);
+
         List<ChallComment> list =challCommentService.getChallCommentList(id);
+        model.addAttribute("user",user);
         model.addAttribute("list",list);
         model.addAttribute("challe",challe);
+
         return "th/chall/challengeDetail";
     }
 
@@ -108,20 +114,22 @@ public class ChallengController {
     @GetMapping("/myChall")
     public String myChallList(@SessionAttribute(value = "user", required = false) User user,Model model)
     {
-        String userId = user.getId();
+        if (user == null || user.getId() == null) {
+            return "redirect:/login/login";
+        }
 
+        String userId = user.getId();
         List<Challenge> myChall=service.getMyChallengeList(userId);
         model.addAttribute("userId",userId);
         model.addAttribute("myChall",myChall);
         return "th/chall/myChallengePage";
     }
 
-    @GetMapping("/challBoard/{roomId}")
-    public String boardlist(@PathVariable Integer roomId,Model model)
-    {
 
-        return "th/chall/challBoard";
-    }
+
+
+
+
 
 
 }

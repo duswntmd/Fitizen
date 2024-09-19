@@ -17,4 +17,9 @@ public class UserController {
         model.addAttribute("user", user);
         return "th/user/myPage";
     }
+    @GetMapping("/pay")
+    public String pay()
+    {
+        return "th/user/pay";
+    }
 }
