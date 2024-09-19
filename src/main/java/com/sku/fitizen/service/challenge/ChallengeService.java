@@ -40,7 +40,7 @@ public class ChallengeService {
                 try {
                     // 파일 이름 및 경로 설정
                     String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-                    Path filePath = Paths.get(uploadDir, fileName);
+                    Path filePath = Paths.get(uploadDir+"challengeCover/", fileName);
 
                     // 파일 저장
                     file.transferTo(filePath.toFile());
