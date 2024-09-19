@@ -95,16 +95,16 @@ public class LoginController {
     @PostMapping("/findId")
     @ResponseBody
     public Map<String,String> findId(@RequestParam("email") String email,
-                         @RequestParam("name") String name,
-                         Model model) {
+                                     @RequestParam("name") String name,
+                                     Model model) {
         // email과 phone을 이용하여 아이디 찾기 로직 구현
         String foundId = userService.findIdByEmailAndName(email, name);
         Map<String,String> map = new HashMap<>();
         if (foundId != null) {
 
-           map.put("id", foundId);
+            map.put("id", foundId);
         } else {
-                map.put("message", "해당 정보와 일치하는 아이디가 없습니다");
+            map.put("message", "해당 정보와 일치하는 아이디가 없습니다");
         }
 
         return map;
@@ -120,8 +120,8 @@ public class LoginController {
     @PostMapping("/findPwd")
     @ResponseBody
     public Map<String,String> findPwd(@RequestParam("email") String email,
-                                     @RequestParam("id") String id,
-                                     Model model) {
+                                      @RequestParam("id") String id,
+                                      Model model) {
         // email과 phone을 이용하여 아이디 찾기 로직 구현
         String foundpwd = userService.findPasswordByEmailAndId(email, id);
         Map<String,String> response = new HashMap<>();

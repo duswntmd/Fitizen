@@ -128,12 +128,12 @@
     <button type="submit">사용자 삭제</button>
 </form>
 
-
-
 <script>
     let msg = "${msg}";
-    if(msg=="DEL_OK")    alert("회원탈퇴가 성공적으로 삭제되었습니다.");
-
+    if(msg=="DEL_OK") {
+        alert("회원탈퇴가 성공적으로 삭제되었습니다.");
+        window.location.href = '/login/logout';  // 탈퇴 후 로그아웃 페이지로 리디렉션
+    }
 </script>
 </body>
 </html>

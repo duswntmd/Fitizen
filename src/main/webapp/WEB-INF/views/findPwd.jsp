@@ -3,6 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
     <title>비밀번호 찾기</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

@@ -3,6 +3,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>맞춤 운동 검사</title>
     <style>

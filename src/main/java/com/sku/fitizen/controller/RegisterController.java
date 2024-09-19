@@ -3,6 +3,7 @@ package com.sku.fitizen.controller;
 import com.sku.fitizen.domain.User;
 import com.sku.fitizen.domain.UserValidator;
 import com.sku.fitizen.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -43,7 +44,7 @@ public class RegisterController {
 
     @PostMapping("/add")
     @ResponseBody
-    public Map<String, Object> save(@Valid User user, BindingResult result, RedirectAttributes rattr, Model model) throws Exception {
+    public Map<String, Object> save(@Valid User user, BindingResult result, Model model) throws Exception {
         Map<String, Object> response = new HashMap<>();
 
         if (!result.hasErrors()) {
@@ -129,20 +130,24 @@ public class RegisterController {
     @PostMapping("/deleteuser")
     public String deleteUser(@ModelAttribute("user") User user,
                              RedirectAttributes rattr,
-                             Model model) {
+                             Model model,
+                             HttpSession session) {  // HttpSession 추가
         try {
             int rowsAffected = UserService.deleteUser(user.getId(), user.getName(), user.getPwd());
 
             if (rowsAffected > 0) {
                 model.addAttribute("message", "회원탈퇴가 성공했습니다.");
                 rattr.addFlashAttribute("msg", "DEL_OK");
+
+                session.invalidate();  // 회원 탈퇴 성공 시 세션 무효화
+
                 return "redirect:/register/deleteuser";
             } else {
                 model.addAttribute("error", "회원탈퇴가 실패했습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("error", "회원탈퇴중 오류가 발생했습니다.");
+            model.addAttribute("error", "회원탈퇴 중 오류가 발생했습니다.");
         }
         return "deleteUser";
     }
