@@ -7,19 +7,22 @@
     <link th:href="@{/css/challenge/mychall.css}" rel="stylesheet" />
 </head>
 <body>
-<h2>내 챌린지 목록</h2>
 
+<h2>내 챌린지 목록</h2>
 <div class="container">
     <div class="challenge-list">
+
         <!-- th:each를 사용하여 List를 반복 -->
         <div th:each="m : ${myChall}" class="challenge-item">
+            <div class="pie-chart-container">
+                <div class="pie-chart pie-chart1"><span class="center">80%</span></div>
+            </div>
             <div class="challenge-info">
-                <div class="title">[[${m.title}]]</div>
-                <div class="user-id">진행자: [[${m.creatorId}]]</div>
-                <div class="date-range">기간: [[${m.startDate}]] ~ [[${m.endDate}]]</div>
+                <div class="title" th:text="${m.title}">챌린지 제목</div>
+                <div class="user-id" th:text="'진행자: ' + ${m.creatorId}">진행자</div>
+                <div class="date-range" th:text="'기간: ' + ${m.startDate} + ' ~ ' + ${m.endDate}">기간</div>
             </div>
             <div class="challenge-actions">
-                <!-- 링크는 적절한 URL로 수정 -->
                 <a class="button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
                 <a class="button" th:href="@{/ws/in(roomId=${m.challengeId})}">채팅</a>
                 <a class="button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
@@ -28,5 +31,33 @@
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(window).ready(function(){
+        draw(80, '.pie-chart1','#28a745');
+        draw(50, '.pie-chart2', '#8b22ff');
+        draw(30, '.pie-chart3','#ff0');
+    });
+
+    function draw(max, classname, colorname){
+        var i = 1;
+        var func1 = setInterval(function(){
+            if(i < max){
+                color1(i, classname, colorname);
+                i++;
+            } else {
+                clearInterval(func1);
+            }
+        }, 10);
+    }
+
+    function color1(i, classname, colorname){
+        $(classname).css({
+            "background": "conic-gradient(" + colorname + " 0% " + i + "%, #ffffff " + i + "% 100%)"
+        });
+    }
+</script>
+
 </body>
 </html>

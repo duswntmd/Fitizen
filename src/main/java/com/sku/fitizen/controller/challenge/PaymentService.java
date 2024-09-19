@@ -1,5 +1,8 @@
 package com.sku.fitizen.controller.challenge;
 
+import com.sku.fitizen.domain.Payment;
+import com.sku.fitizen.mapper.PaymentMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -8,16 +11,43 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
-public class PortOneService {
+public class PaymentService {
 
-
+    @Autowired
+    PaymentMapper paymentMapper;
 
 
     private static final String API_KEY = "1503384544352203";
     private static final String API_SECRET = "oT90x1wAb37Xj64cfvnZEmMFA7GUqmQPAvuc1vgShf4Iab5ZWHyYB2Kq4WxAM9S5RDG1sQyGHJ1UxsJP";
+
+
+
+    // 결제 기록 저장
+    public  boolean savePayment(Payment payment)
+    {
+
+        int result =paymentMapper.savePayment(payment);
+
+        if(result == 1) return true;
+        return  false;
+    }
+
+    public List<Payment> getPaymentLsit(String userId)
+    {
+        List<Payment> Payments =paymentMapper.getPaymentList(userId);
+
+        return Payments;
+
+    }
+
+
+
+
+
 
     // 포트원 API 토큰 발급
     public String getPortOneToken() {
