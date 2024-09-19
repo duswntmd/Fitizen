@@ -26,4 +26,8 @@ public interface UserDao {
 
     // 포인트 충전
     int  addPointsToUser(String userId,int points);
+
+    String findEmailByIdAndName(String id, String name);
+
+    boolean changePwd( String pwd,String id);
 }

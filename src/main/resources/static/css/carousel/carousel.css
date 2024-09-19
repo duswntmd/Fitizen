@@ -1,0 +1,71 @@
+#wrapper {
+    width: 800px;
+    border: 1px solid olive;
+    margin: 48px auto;
+    overflow: hidden;
+
+    /* 글자 드래그 막기 */
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none
+}
+
+#carousel-list {
+    display: flex;
+    width: fit-content;
+}
+
+.carousel-list-transition {
+    transition: 0.6s ease-out;
+}
+
+.carousel-item {
+    width: 800px;
+    height: 400px; /* 높이 설정 */
+    display: flex;
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    background-size: cover;
+    background-position: center;
+    color: white; /* 기본 텍스트 색상 */
+    text-decoration: none; /* 링크 밑줄 제거 */
+}
+.carousel-text_1 {
+    font-size: 3em; /* 텍스트 크기 조정 */
+    color: #000000; /* 텍스트 색상 */
+    text-align: center; /* 텍스트 정렬 */
+    font-weight: bold; /* 텍스트 굵게 */
+    margin: 0; /* 기본 여백 제거 */
+}
+.carousel-text_2{
+    font-size: 3em; /* 텍스트 크기 조정 */
+    color: #FFF; /* 텍스트 색상 */
+    text-align: center; /* 텍스트 정렬 */
+    font-weight: bold; /* 텍스트 굵게 */
+    margin: 0; /* 기본 여백 제거 */
+}
+.carousel-text_3{
+    font-size: 3em; /* 텍스트 크기 조정 */
+    color: #FFF; /* 텍스트 색상 */
+    text-align: center; /* 텍스트 정렬 */
+    font-weight: bold; /* 텍스트 굵게 */
+    margin: 0; /* 기본 여백 제거 */
+}
+.carousel-item:nth-child(3n) {
+    background-image: url('/image/cycling.jpg');
+    background-size: cover; /* 이미지를 요소에 맞게 조정 */
+    background-position: center; /* 이미지의 중앙을 표시 */
+}
+
+.carousel-item:nth-child(3n + 1) {
+    background-image: url('/image/stretching.jpg');
+    background-size: cover; /* 이미지를 요소에 맞게 조정 */
+    background-position: center; /* 이미지의 중앙을 표시 */
+}
+
+.carousel-item:nth-child(3n + 2) {
+    background-image: url('/image/walking.jpg');
+    background-size: cover; /* 이미지를 요소에 맞게 조정 */
+    background-position: center; /* 이미지의 중앙을 표시 */
+}

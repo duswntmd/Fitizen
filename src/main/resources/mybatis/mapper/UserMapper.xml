@@ -54,4 +54,12 @@
     </update>
 
 
+    <!-- 아이디랑 이름 써서 이메일전송, 비밀번호 변경에 사용-->
+    <select id="findEmailByIdAndName" parameterType="User" resultType="String">
+        SELECT EMAIL FROM USERS WHERE ID= #{id} AND NAME=#{name}
+    </select>
+
+    <update id="changePwd" parameterType="map" >
+        update USERS set pwd=#{pwd} where id=#{id}
+    </update>
 </mapper>

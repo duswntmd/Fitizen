@@ -21,4 +21,8 @@ public interface UserService {
 
 
    int addPointsToUser(String userId, int points);
+
+    String findEmailByIdAndName(String id, String name);
+
+    boolean changePwd(String pwd, String id);
 }

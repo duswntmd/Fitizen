@@ -1,0 +1,97 @@
+@font-face {
+    font-family: 'Pretendard-Bold';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Pretendard-Black';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+}
+
+ body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+html {
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    height: 120%;
+}
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    background-color: #0E0F0D;
+    padding: 10px 20px;
+}
+
+#logo {
+    margin-right: 20px; /* 로고와 메뉴 사이의 간격 조정 */
+}
+
+.nav {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    margin-left: auto;
+}
+
+.nav li {
+    position: relative;
+    margin-right: 20px; /* 메뉴 항목 사이의 간격 조정 */
+}
+
+.nav a {
+    display: block;
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.nav a:hover {
+    background-color: #6b0c36;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #0E0F0D;  /*드롭다운 마우스안올렷을때 배경색*/
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #000;
+}
+
+.dropdown-menu li {
+    margin: 0;
+}
+
+.dropdown-menu a {
+    padding: 10px;
+    color: #fff;            /*밑에뜨는 애들 글씨 색*/
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: #6b0c36;  /* 글씨배경에 마우스올릴때 색*/
+}
+
+footer {
+    background-color: #0056b3; /* 푸터 배경 색상 */
+    color: white; /* 푸터 텍스트 색상 */
+    text-align: center; /* 푸터 내용 중앙 정렬 */
+    padding: 10px 0; /* 푸터 내부 여백 */
+}
