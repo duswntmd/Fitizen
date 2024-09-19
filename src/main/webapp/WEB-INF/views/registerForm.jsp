@@ -130,12 +130,26 @@
 </form:form>
 
 <script>
-    // Updated submitForm function to prevent default form submission and handle via AJAX
+    // Form validation for ID and Password
     function submitForm(event) {
-        event.preventDefault(); // Prevent the default form submission
+        event.preventDefault(); // 기본 폼 제출 방지
 
+        const id = document.querySelector('input[name="id"]').value;
+        const pwd = document.querySelector('input[name="pwd"]').value;
+        const idRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{4,10}$/;
+        const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{4,10}$/;
+
+        if (!idRegex.test(id)) {
+            alert("아이디는 4~10자리의 영대소문자와 숫자 조합이어야 합니다.");
+            return;
+        }
+        if (!pwdRegex.test(pwd)) {
+            alert("비밀번호는 4~10자리의 영대소문자와 숫자 조합이어야 합니다.");
+            return;
+        }
+
+        // 데이터 제출
         const formData = new FormData(document.getElementById('registerForm'));
-
         fetch('/register/add', {
             method: 'POST',
             body: formData
@@ -143,13 +157,13 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert("성공적으로 회원가입 되었습니다.");  // Show success alert
-                    window.location.href = '/login/login';  // Redirect on success
+                    alert("성공적으로 회원가입 되었습니다.");
+                    window.location.href = '/login/login'; // 성공 시 리디렉션
                 } else {
                     document.getElementById('msg').textContent = data.message; // Show error message
                 }
             })
-        .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error:', error));
     }
 </script>
 </body>

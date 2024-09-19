@@ -27,11 +27,13 @@ public class UserValidator implements Validator {
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "id",  "required");
 
-        if(id==null || id.length() <  1 || id.length() > 10) {
-            errors.rejectValue("id", "invalidLength", new String[]{"1","10"}, null);
+        if (!user.getId().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{4,10}$")) {
+            errors.rejectValue("id", "id.invalid", "아이디는 4~10자리의 영대소문자와 숫자 조합이어야 합니다.");
         }
-        if(pwd==null || pwd.length() <  1 || pwd.length() > 15) {
-            errors.rejectValue("pwd", "invalidLength", new String[]{"1","15"}, null);
+
+        // 비밀번호 정규식 검사 (4~10자리의 영대소문자와 숫자 조합)
+        if (!user.getPwd().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{4,10}$")) {
+            errors.rejectValue("pwd", "pwd.invalid", "비밀번호는 4~10자리의 영대소문자와 숫자 조합이어야 합니다.");
         }
 
     }

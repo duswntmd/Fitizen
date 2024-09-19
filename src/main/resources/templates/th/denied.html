@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://qwww.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>접근 거부됨</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+</head>
+<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+
+    @font-face {
+        font-family: 'Paperlogy-9Black';
+        src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2');
+        font-weight: 900;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Pretendard-ExtraBold';
+        src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff') format('woff');
+        font-weight: 800;
+        font-style: normal;
+    }
+    body {
+        font-family: 'Paperlogy-9Black';
+        font-size: 150%;
+        button {
+            font-family: 'Pretendard-ExtraBold';
+        }
+    }
+</style>
+<body>
+<main>
+    <p></p>
+    <h1 style="color:red;">접근 권한이 없음</h1>
+    <div>
+        <a href="/"><button type="button">메인 페이지로</button></a>
+    </div>
+</main>
+</body>
+</html>

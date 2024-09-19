@@ -45,141 +45,170 @@
         <li class="flex_item"><a href="/challenge">챌린지</a></li>
         <li>
             <c:if test="${user != null}">
-        <a href="/user/myPage">마이페이지</a>
-        </c:if>
+                <a href="/user/myPage">마이페이지</a>
+            </c:if>
         </li>
     </div>
     <div style="text-align:center">
-        <h1 style="line-height: 0.4; color:white">
+        <h1 style="line-height: 0.2; color:white">
+            <br>
             <p style="line-height: 0;">FITNESS + CITIZEN</p>
             <p style="line-height: 0; font-size: 150%;">FITIZEN</p>
         </h1>
-        <h3 style="line-height: 50%; color:white">
+        <h3 style="line-height: 60%; color:white">
             <p style="line-height: 0;">피트니스를 애용하는 헬린이들을 위한 소통창구</p>
-            <p style="font-size: 135%;">피티즌 메인 페이지입니다.</p>
+            <p style="font-size: 155%;">피티즌 메인 페이지입니다.</p>
         </h3>
     </div>
 </ul>
-    </li>
+</li>
 </body>
 </html>
-    <style>
-        @font-face {
-            font-family: 'Pretendard-Bold';
-            src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
-            font-weight: 700;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'Pretendard-Black';
-            src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Black.woff') format('woff');
-            font-weight: 900;
-            font-style: normal;
-        }
-        body {
-            font-family: 'Pretendard-Bold';
-        }
-        h1 {
-            font-family: 'Pretendard-Black';
-            font-size : 400%;
-        }
-        h2 {
-            font-family: 'Pretendard-Black';
-            font-size : 600%;
-        }
-        h3 {
-            font-family: 'Pretendard-Black';
-            font-size : 200%;
-        }
-        h4 {
-            font-family: 'Pretendard-Black';
-            font-size : 300%;
-        }
-        html, body {
-            margin:0; height:100%; overflow:hidden;
-        }
+<style>
+    @font-face {
+        font-family: 'Pretendard-Bold';
+        src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
+        font-weight: 700;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Pretendard-Black';
+        src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Black.woff') format('woff');
+        font-weight: 900;
+        font-style: normal;
+    }
+    body {
+        font-family: 'Pretendard-Bold';
+    }
+    h1 {
+        font-family: 'Pretendard-Black';
+        font-size : 500%;
+    }
+    h2 {
+        font-family: 'Pretendard-Black';
+        font-size : 700%;
+    }
+    h3 {
+        font-family: 'Pretendard-Black';
+        font-size : 280%;
+    }
+    h4 {
+        font-family: 'Pretendard-Black';
+        font-size : 350%;
+    }
+    html, body {
+        margin:0; height:100%; overflow:hidden;
+    }
 
-        .container {
-            width: 100%;
-            height: 200%;
-            background: url("./image/Fitizen-Background.png");
-        }
+    .container {
+        width: 100%;
+        height: 22%;
+        background: url("./image/Fitizen-Background.png");
+    }
 
-        .flex_container {
-            display: flex;
-            flex-direction: row;     /* 메인축(main axis) */
-            flex-wrap: wrap;         /* 디폴트인 nowrap 대신 wrap 설정 */
-            justify-content: space-around;
-            align-content:space-around ;
-            border:1px solid black;
-            background-color: black;
-            padding: 0.3em;
-        }
+    .flex_container {
+        display: flex;
+        flex-direction: row;     /* 메인축(main axis) */
+        flex-wrap: wrap;         /* 디폴트인 nowrap 대신 wrap 설정 */
+        justify-content: space-around;
+        align-content:space-around ;
+        border:1px solid black;
+        background-color: black;
+        padding: 0.3em;
+    }
 
-        .nav {
-            list-style: none;
-            font-weight: bold;
-            margin-bottom: 20px;
-            float: right; /* Clear floats */
-            width: 100%;
-            /* Bring the nav above everything else--uncomment if needed.
-            position: relative;
-            z-index: 5;
-            */
-        }
-        .nav li {
-            float: left;
-            margin-right: 0px;
-            position: relative;
-        }
-        .nav a {
-            display: block;
-            padding: 5px;
-            color: #fff;
-            background-color: #000;
-            text-decoration: none;
-        }
-        .nav a:hover {
-            color: #fff;
-            background-color: #000;
-            text-decoration: underline;
-        }
+    .nav {
+        list-style: none;
+        font-weight: bold;
+        margin-bottom: 20px;
+        float: right; /* Clear floats */
+        width: 100%;
+        /* Bring the nav above everything else--uncomment if needed.
+        position: relative;
+        z-index: 5;
+        */
+    }
+    .nav li {
+        float: left;
+        margin-right: 0px;
+        position: relative;
+    }
+    .nav a {
+        display: block;
+        padding: 5px;
+        color: #fff;
+        background-color: #000;
+        text-decoration: none;
+    }
+    .nav a:hover {
+        color: #fff;
+        background-color: #000;
+        text-decoration: underline;
+    }
 
-        /*--- DROPDOWN ---*/
-        .nav ul {
-            background-color: #fff; /* Adding a background makes the dropdown work properly in IE7+. Make this as close to your page's background as possible (i.e. white page == white background). */
-            background: rgba(255,255,255,0); /* But! Let's make the background fully transparent where we can, we don't actually want to see it if we can help it... */
-            list-style: none;
-            position: absolute;
-            left: -9999px; /* Hide off-screen when not needed (this is more accessible than display: none;) */
+    /*--- DROPDOWN ---*/
+    .nav ul {
+        background-color: #fff; /* Adding a background makes the dropdown work properly in IE7+. Make this as close to your page's background as possible (i.e. white page == white background). */
+        background: rgba(255,255,255,0); /* But! Let's make the background fully transparent where we can, we don't actually want to see it if we can help it... */
+        list-style: none;
+        position: absolute;
+        left: -9999px; /* Hide off-screen when not needed (this is more accessible than display: none;) */
+    }
+    .nav ul li {
+        padding-top: 1px; /* Introducing a padding between the li and the a give the illusion spaced items */
+        float: none;
+    }
+    .nav ul a {
+        white-space: nowrap; /* Stop text wrapping and creating multi-line dropdown items */
+    }
+    .nav li:hover ul { /* Display the dropdown on hover */
+        left: 1px;
+    }
+    .nav li:hover a { /* These create persistent hover states, meaning the top-most link stays 'hovered' even when your cursor has moved down the list. */
+        background-color: #000;
+        text-decoration: underline;
+    }
+    .nav li:hover ul a { /* The persistent hover state does however create a global style for links even before they're hovered. Here we undo these effects. */
+        text-decoration: none;
+    }
+    .nav li:hover ul li a:hover { /* Here we define the most explicit hover states--what happens when you hover each individual link. */
+        background-color: #333;
+    }
+    @media screen and (min-width: 300px) {
+        div > nav {
+            padding: 24px 30px;
         }
-        .nav ul li {
-            padding-top: 1px; /* Introducing a padding between the li and the a give the illusion spaced items */
-            float: none;
+    }
+    html {
+        overflow-y: scroll;
+        height: 4500px;
+    }
+
+    h1 {
+        position: relative;
+        opacity: 0;
+        animation: fade_up 1s;
+        animation-delay: 0.2s;
+        animation-fill-mode: forwards;
+    }
+
+    h3 {
+        position: relative;
+        opacity: 0;
+        animation: fade_up 1s;
+        animation-delay: 0.6s;
+        animation-fill-mode: forwards;
+    }
+
+    @keyframes fade_up {
+        0% {
+            opacity: 0;
+            transform: translateY(100%);
         }
-        .nav ul a {
-            white-space: nowrap; /* Stop text wrapping and creating multi-line dropdown items */
+        to {
+            opacity: 1;
+            transform: translateY(0%);
         }
-        .nav li:hover ul { /* Display the dropdown on hover */
-            left: 1px;
-        }
-        .nav li:hover a { /* These create persistent hover states, meaning the top-most link stays 'hovered' even when your cursor has moved down the list. */
-            background-color: #000;
-            text-decoration: underline;
-        }
-        .nav li:hover ul a { /* The persistent hover state does however create a global style for links even before they're hovered. Here we undo these effects. */
-            text-decoration: none;
-        }
-        .nav li:hover ul li a:hover { /* Here we define the most explicit hover states--what happens when you hover each individual link. */
-            background-color: #333;
-        }
-        @media screen and (min-width: 300px) {
-            div > nav {
-                padding: 24px 30px;
-            }
-        }
-        html {
-            overflow-y: scroll;
-            height: 4500px;
-        }
-    </style>
+    }
+
+</style>
