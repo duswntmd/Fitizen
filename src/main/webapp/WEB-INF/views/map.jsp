@@ -46,7 +46,7 @@
         <div class="option">
             <div>
                 <form onsubmit="searchPlaces(); return false;">
-                    키워드 : <input type="text" value="" id="keyword" size="15">
+                    키워드 : <input type="text" value="${keyword}" id="keyword" size="15">
                     <button type="submit">검색하기</button>
                 </form>
             </div>
@@ -101,7 +101,7 @@
 
     // 키워드로 장소를 검색합니다
     function searchPlaces() {
-        var keyword = document.getElementById('keyword').value || "헬스장";
+        var keyword = document.getElementById('keyword').value;
 
         if (!keyword.replace(/^\s+|\s+$/g, '')) {
             alert('키워드를 입력해주세요!');

@@ -1,123 +1,98 @@
-const carouselList = document.querySelector('#carousel-list');
-const width = document.querySelector('.carousel-item').clientWidth;
-const carouselItemCount = document.querySelectorAll('.carousel-item').length / 3;
-
-let moveTranslateX = 0;
-let currentTranslateX = 0;
-let nextTranslateX = 0;
-let isMove = false;
-let moveStartX = 0;
-const moveGap = 22;
-let dragEndTime = new Date().getTime();
+const prevButton = document.querySelector('#prev'); // 이전 버튼
+const nextButton = document.querySelector('#next'); // 다음 버튼
+const carouselList = document.querySelector('#carousel-list'); // 캐로셀 리스트
+const width = document.querySelector('.carousel-item').clientWidth; // 슬라이드 너비
+const carouselItems = document.querySelectorAll('.carousel-item');
+const carouselItemCount = carouselItems.length / 3; // 그룹당 슬라이드 개수 (3개 세트로 나누기)
+let currentIndex = 0; // 현재 슬라이드 인덱스
+let isAnimating = false; // 애니메이션 중인지 여부
 let interval;
-let timeout;
 
-// drag 시작 이벤트
-const dragStart = (clientX) => {
-    isMove = true;
-    moveStartX = clientX;
-    clearInterval(interval);
-    clearTimeout(timeout);
+const indicators = document.querySelectorAll('.indicator'); // 인디케이터들
 
-    carouselList.classList.remove('carousel-list-transition');
-
-    const dragEndStartGapTime = new Date().getTime() - dragEndTime;
-    let dragEndStartGapTranslateX = 0;
-    if (dragEndStartGapTime <= 600) {
-        dragEndStartGapTranslateX = (nextTranslateX - currentTranslateX) * ((600 - dragEndStartGapTime) / 600 / 1.5);
-    }
-
-    // 드래그 종료 시점에서 카루젤 위치 조정
-    currentTranslateX = -(((-currentTranslateX / width) % carouselItemCount) + carouselItemCount) * width + dragEndStartGapTranslateX;
-    nextTranslateX = currentTranslateX;
-    carouselList.style.transform = `translateX(${currentTranslateX}px)`;
-}
-
-// drag 중 이벤트
-const dragging = (clientX) => {
-    if (isMove) {
-        moveTranslateX = clientX - moveStartX;
-        nextTranslateX = currentTranslateX + moveTranslateX;
-
-        // 오른쪽으로 최대 이동한 경우
-        if (nextTranslateX < -width * (carouselItemCount * 3 - 1)) {
-            nextTranslateX = -width * (carouselItemCount * 3 - 1);
+// 현재 슬라이드 인덱스에 맞춰 인디케이터 업데이트
+const updateIndicators = (currentIndex) => {
+    const normalizedIndex = currentIndex % carouselItemCount; // 슬라이드를 3개 세트로 그룹화해서 인덱스 처리
+    indicators.forEach((indicator, index) => {
+        if (index === normalizedIndex) {
+            indicator.classList.add('active'); // 현재 인덱스에 해당하는 인디케이터 활성화
+        } else {
+            indicator.classList.remove('active'); // 나머지 인디케이터 비활성화
         }
-        // 왼쪽으로 최대 이동한 경우
-        else if (nextTranslateX > 0) {
-            nextTranslateX = 0;
+    });
+};
+
+// 슬라이드를 이동하는 함수
+const moveToSlide = (index) => {
+    if (isAnimating) return; // 애니메이션 중에 다른 명령을 실행하지 않음
+    isAnimating = true; // 애니메이션 시작
+
+    currentIndex = index; // 현재 인덱스 업데이트
+    carouselList.style.transition = 'transform 0.5s ease-out'; // 슬라이드 전환 효과 추가
+    carouselList.style.transform = `translateX(${-width * (currentIndex + 1)}px)`; // 슬라이드 이동
+
+    // 무한 스크롤 처리
+    setTimeout(() => {
+        if (currentIndex === -1) {
+            // 첫 슬라이드에서 왼쪽으로 이동 시 마지막 슬라이드로 이동
+            carouselList.style.transition = 'none';
+            currentIndex = carouselItemCount * 3 - 1; // 마지막 세트로 이동
+            carouselList.style.transform = `translateX(${-width * (currentIndex + 1)}px)`;
+        } else if (currentIndex === carouselItemCount * 3) {
+            // 마지막 슬라이드에서 오른쪽으로 이동 시 첫 번째 슬라이드로 이동
+            carouselList.style.transition = 'none';
+            currentIndex = 0; // 첫 번째 슬라이드로 이동
+            carouselList.style.transform = `translateX(${-width}px)`;
         }
+        updateIndicators(currentIndex % carouselItemCount); // 인디케이터 업데이트
+        isAnimating = false; // 애니메이션 완료
+    }, 500); // 애니메이션 시간 맞추기
+};
 
-        carouselList.style.transform = `translateX(${nextTranslateX}px)`;
-    }
-}
+// 이전 버튼 클릭 이벤트
+prevButton.addEventListener('click', () => {
+    moveToSlide((currentIndex - 1 + carouselItemCount * 3) % (carouselItemCount * 3)); // 슬라이드 이동
+});
 
-// drag 종료 이벤트
-const dragEnd = () => {
-    if (isMove) {
-        isMove = false;
-        moveStartX = 0;
-        carouselList.classList.add('carousel-list-transition');
-        dragEndTime = new Date().getTime();
-        timerConfig();
+// 다음 버튼 클릭 이벤트
+nextButton.addEventListener('click', () => {
+    moveToSlide((currentIndex + 1) % (carouselItemCount * 3)); // 슬라이드 이동
+});
 
-        // 드래그 후 카루젤 위치 조정
-        if (currentTranslateX > nextTranslateX) {
-            if ((currentTranslateX - nextTranslateX) % width > moveGap) {
-                currentTranslateX = -(Math.floor(-nextTranslateX / width) + 1) * width;
-            } else {
-                currentTranslateX = -(Math.floor(-nextTranslateX / width)) * width;
-            }
-        }
-        else if (currentTranslateX < nextTranslateX) {
-            if ((nextTranslateX - currentTranslateX) % width > moveGap) {
-                currentTranslateX = -(Math.floor(-nextTranslateX / width)) * width;
-            } else {
-                currentTranslateX = -(Math.floor(-nextTranslateX / width) + 1) * width;
-            }
-        }
-        else {
-            if (Math.abs(currentTranslateX) % width >= width / 2) {
-                currentTranslateX = -(Math.floor(-currentTranslateX / width) + 1) * width;
-            } else {
-                currentTranslateX = -(Math.floor(-currentTranslateX / width)) * width;
-            }
-        }
+// 인디케이터 클릭 시 슬라이드 이동
+indicators.forEach((indicator, index) => {
+    indicator.addEventListener('click', () => {
+        moveToSlide(index); // 해당 인디케이터에 맞는 슬라이드로 이동
+    });
+});
 
-        carouselList.style.transform = `translateX(${currentTranslateX}px)`;
-    }
-}
+// 슬라이드 아이템 복제
+const cloneItems = () => {
+    const firstItem = carouselItems[0].cloneNode(true); // 첫 번째 아이템 복제
+    const lastItem = carouselItems[carouselItems.length - 1].cloneNode(true); // 마지막 아이템 복제
+    carouselList.appendChild(firstItem); // 복제된 첫 번째 아이템을 마지막에 추가
+    carouselList.insertBefore(lastItem, carouselItems[0]); // 복제된 마지막 아이템을 처음에 추가
+};
+cloneItems(); // 슬라이드 복제 실행
 
-// carousel 자동 이동 설정
-const timer = () => {
-    timeout = setTimeout(() => {
-        carouselList.classList.remove('carousel-list-transition');
-        currentTranslateX = -(((-currentTranslateX / width) % carouselItemCount) + carouselItemCount) * width;
-        carouselList.style.transform = `translateX(${currentTranslateX}px)`;
-    }, 1500);
+// 초기 슬라이드 위치 설정 (복제된 첫 번째 아이템을 피하기 위해 위치 설정)
+carouselList.style.transform = `translateX(${-width}px)`;
 
-    carouselList.classList.add('carousel-list-transition');
-    currentTranslateX -= width;
-    carouselList.style.transform = `translateX(${currentTranslateX}px)`;
-
-    dragEndTime = new Date().getTime();
-}
-
-// 자동 이동 timer 설정
-const timerConfig = () => {
+// 자동 슬라이드 기능
+const startAutoSlide = () => {
     interval = setInterval(() => {
-        timer();
-    }, 3000);
-}
+        moveToSlide(currentIndex + 1); // 자동으로 다음 슬라이드로 이동
+    }, 3000); // 3초 간격
+};
 
-timerConfig();
+// 자동 슬라이드 중지 기능
+const stopAutoSlide = () => {
+    clearInterval(interval); // 자동 슬라이드 중지
+};
 
-// 이벤트 리스너 설정 (PC)
-carouselList.addEventListener('mousedown', (e) => dragStart(e.clientX));
-window.addEventListener('mousemove', (e) => dragging(e.clientX));
-window.addEventListener('mouseup', dragEnd);
+// 마우스 오버 시 자동 슬라이드 중지
+carouselList.addEventListener('mouseover', stopAutoSlide);
+carouselList.addEventListener('mouseout', startAutoSlide);
 
-// 이벤트 리스너 설정 (Mobile)
-carouselList.addEventListener('touchstart', (e) => dragStart(e.targetTouches[0].clientX));
-window.addEventListener('touchmove', (e) => dragging(e.targetTouches[0].clientX));
-window.addEventListener('touchend', dragEnd);
+// 초기화 시 인디케이터 업데이트
+updateIndicators(currentIndex);
