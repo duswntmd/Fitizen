@@ -19,5 +19,5 @@ public class Board {
     private int hits;
     private Date upDate;
     private int likes;
-    private int commentCnt;
+    private int commentCount;
 }

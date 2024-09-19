@@ -2,11 +2,16 @@ package com.sku.fitizen.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sku.fitizen.domain.Board;
+import com.sku.fitizen.domain.BoardComment;
 import com.sku.fitizen.domain.BoardFilesVO;
 import com.sku.fitizen.domain.User;
+import com.sku.fitizen.service.BoardCommentService;
 import com.sku.fitizen.service.BoardService;
 import com.sku.fitizen.service.FileService;
 import com.sku.fitizen.service.PageService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -41,6 +46,9 @@ public class BoardController {
     @Autowired
     private PageService pageService;
 
+    @Autowired
+    private BoardCommentService boardCommentService;
+
     // 게시글 목록 조회
     @GetMapping("/list")
     public String list(
@@ -49,15 +57,27 @@ public class BoardController {
             Model model) {
 
         PageInfo<Board> pageInfo = pageService.getBoardList(pageNum, pageSize);  // 게시글 목록 조회
+        Map<Long, Integer> likeCounts = new HashMap<>();
+
+        // 각 게시글에 대한 좋아요 수 계산
+        for (Board board : pageInfo.getList()) {
+            int likeCount = boardService.getLikeCount(board.getBno());
+            likeCounts.put(board.getBno(), likeCount);
+
+            int commentCount = boardCommentService.getCommentCount(board.getBno(), false);  // 논리적 삭제 제외한 댓글 수 조회
+            board.setCommentCount(commentCount);  // 댓글 수 설정
+        }
+
         model.addAttribute("pageInfo", pageInfo);  // 페이지 정보 모델에 추가
+        model.addAttribute("likeCounts", likeCounts);  // 좋아요 수 모델에 추가
         return "th/board/list";
     }
 
     // 검색 결과 조회 (검색 + 페이지네이션)
     @GetMapping("/search")
     public String search(
-            @RequestParam String searchType,  // 제목 또는 작성자
-            @RequestParam String keyword,     // 검색어
+            @RequestParam String searchType,
+            @RequestParam String keyword,
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "5") int pageSize,
             Model model) {
@@ -72,19 +92,60 @@ public class BoardController {
             pageInfo = boardService.searchBoardList(null, null, pageNum, pageSize);  // 기본 목록
         }
 
+        // 각 게시글에 대한 댓글 수와 좋아요 수 계산
+        Map<Long, Integer> likeCounts = new HashMap<>();
+        for (Board board : pageInfo.getList()) {
+            int likeCount = boardService.getLikeCount(board.getBno());
+            likeCounts.put(board.getBno(), likeCount);
+
+            int commentCount = boardCommentService.getCommentCount(board.getBno(), false);  // 논리적 삭제 제외한 댓글 수 조회
+            board.setCommentCount(commentCount);  // 댓글 수 설정
+        }
+
         model.addAttribute("pageInfo", pageInfo);  // 검색된 결과 모델에 추가
-        return "th/board/list";  // 동일한 템플릿에서 결과를 표시
+        model.addAttribute("likeCounts", likeCounts);  // 좋아요 수 모델에 추가
+
+        return "th/board/list";
     }
 
     // 게시글 조회
     @GetMapping("/view/{bno}")
-    public String view(@PathVariable("bno") Long bno, Model model) {
+    public String view(@PathVariable("bno") Long bno, HttpServletRequest request, HttpServletResponse response,
+                       @SessionAttribute(value = "user", required = false) User user, Model model) {
+        // 쿠키 확인
+        Cookie[] cookies = request.getCookies();
+        boolean hasViewed = false;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("viewedBoard_" + bno)) {
+                    hasViewed = true;
+                    break;
+                }
+            }
+        }
+
+        // 쿠키가 없으면 조회수 증가 중요한거면 세션을 사용해서 안전하게 사용
+        if (!hasViewed) {
+            boardService.increaseHits(bno);
+
+            // 쿠키 설정 (유효 시간: 600초 = 10분)
+            Cookie cookie = new Cookie("viewedBoard_" + bno, "true");
+            cookie.setMaxAge(600);  // 10분 동안 유지
+            cookie.setPath("/");  // 모든 경로에서 유효
+            response.addCookie(cookie);
+        }
+
         Board board = boardService.getBoard(bno);
 
         // 게시글에 첨부된 파일 목록 조회
         List<BoardFilesVO> files = fileService.getFilesByBoard(bno);
+        List<BoardComment> comments = boardCommentService.getCommentsByBoard(bno);
+        boolean likedByUser = boardService.isLikedByUser(bno, user.getId());
 
-        // 모델에 게시글과 파일 정보를 추가
+        // 모델에 게시글과 파일 정보를 추가 및 좋아요
+        model.addAttribute("comments", comments);
+        model.addAttribute("likedByUser", likedByUser);
         model.addAttribute("board", board);
         model.addAttribute("files", files);
 
@@ -115,6 +176,23 @@ public class BoardController {
         }
 
         board.setAuthor(user.getId());
+
+        // 파일 개수 제한 (최대 5개)
+        if (files.size() > 5) {
+            result.put("success", false);
+            result.put("message", "파일은 최대 5개까지 업로드할 수 있습니다.");
+            return result;
+        }
+
+        // 파일 타입 체크: 동영상 파일 업로드 차단
+        for (MultipartFile file : files) {
+            String contentType = file.getContentType();
+            if (contentType != null && contentType.startsWith("video/")) {
+                result.put("success", false);
+                result.put("message", "동영상 파일은 업로드할 수 없습니다.");
+                return result;
+            }
+        }
 
         try {
             // 게시글과 파일, 유튜브 URL을 함께 저장
@@ -223,4 +301,70 @@ public class BoardController {
             throw new IOException("파일을 찾을 수 없습니다.");
         }
     }
+
+    // 좋아요 추가
+    @PostMapping("/like")
+    @ResponseBody
+    public Map<String, Object> addLike(@RequestParam Long bno,
+                                       @SessionAttribute(value = "user", required = false) User user) {
+        Map<String, Object> result = new HashMap<>();
+
+        if (user == null) {
+            result.put("success", false);
+            result.put("message", "로그인이 필요합니다.");
+            return result;
+        }
+
+        boolean alreadyLiked = boardService.isLikedByUser(bno, user.getId());
+
+        if (alreadyLiked) {
+            result.put("success", false);
+            result.put("message", "이미 좋아요를 눌렀습니다.");
+        } else {
+            boardService.addLike(bno, user.getId());
+//            boardService.incrementLikes(bno);
+            result.put("success", true);
+            result.put("message", "좋아요를 눌렀습니다.");
+        }
+
+        return result;
+    }
+
+    // 좋아요 취소
+    @PostMapping("/unlike")
+    @ResponseBody
+    public Map<String, Object> removeLike(@RequestParam Long bno,
+                                          @SessionAttribute(value = "user", required = false) User user) {
+        Map<String, Object> result = new HashMap<>();
+
+        if (user == null) {
+            result.put("success", false);
+            result.put("message", "로그인이 필요합니다.");
+            return result;
+        }
+
+        boolean alreadyLiked = boardService.isLikedByUser(bno, user.getId());
+
+        if (!alreadyLiked) {
+            result.put("success", false);
+            result.put("message", "좋아요를 누르지 않았습니다.");
+        } else {
+            boardService.removeLike(bno, user.getId());
+//            boardService.decrementLikes(bno);
+            result.put("success", true);
+            result.put("message", "좋아요를 취소했습니다.");
+        }
+
+        return result;
+    }
+
+    // 특정 게시글 좋아요 수 조회
+    @GetMapping("/like-count")
+    public Map<String, Object> getLikeCount(@RequestParam Long bno) {
+        Map<String, Object> result = new HashMap<>();
+        int likeCount = boardService.getLikeCount(bno);
+        result.put("likeCount", likeCount);
+        return result;
+    }
+
 }

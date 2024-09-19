@@ -18,22 +18,24 @@
     </resultMap>
 
     <select id="getBoardList" resultMap="boardResultMap">
-        SELECT bno, title, content, reg_date, hits, up_date, likes, comment_cnt, author
-        FROM board
-        ORDER BY bno DESC
+        SELECT b.bno, b.title, b.content, b.reg_date, b.hits, b.up_date,
+               (SELECT COUNT(*) FROM board_likes bl WHERE bl.bno = b.bno) AS likes,
+               b.author
+        FROM board b
+        ORDER BY b.bno DESC
     </select>
 
     <!-- 게시글 조회 (bno 기준) -->
     <select id="getBoard" parameterType="long" resultMap="boardResultMap">
-        SELECT bno, title, content, reg_date, hits, up_date, likes, comment_cnt, author
+        SELECT bno, title, content, reg_date, hits, up_date, author
         FROM board
         WHERE bno = #{bno}
     </select>
 
     <!-- 게시글 삽입 -->
     <insert id="insertBoard" parameterType="com.sku.fitizen.domain.Board" useGeneratedKeys="true" keyProperty="bno" keyColumn="bno">
-        INSERT INTO board (bno, title, content, reg_date, hits, up_date, likes, comment_cnt, author)
-        VALUES (BOARD_SEQ.NEXTVAL, #{title}, #{content}, SYSDATE, 0, NULL, 0, 0, #{author})
+        INSERT INTO board (bno, title, content, reg_date, hits, up_date, author)
+        VALUES (BOARD_SEQ.NEXTVAL, #{title}, #{content}, SYSDATE, 0, NULL, #{author})
     </insert>
 
     <!-- 게시글 수정 -->
@@ -53,7 +55,7 @@
 
     <!-- 제목과 작성자 기준으로 게시글 검색 -->
     <select id="searchBoardList" resultType="com.sku.fitizen.domain.Board">
-        SELECT bno, title, content, reg_date, hits, up_date, likes, comment_cnt, author
+        SELECT bno, title, content, reg_date, hits, up_date, author
         FROM board
         WHERE 1=1
         <if test="title != null and title != ''">
@@ -64,5 +66,12 @@
         </if>
         ORDER BY bno DESC
     </select>
+
+    <!-- 조회수 증가 -->
+    <update id="updateHits" parameterType="long">
+        UPDATE board
+        SET hits = hits + 1
+        WHERE bno = #{bno}
+    </update>
 
 </mapper>

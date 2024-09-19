@@ -1,0 +1,113 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>-->
+<!--    <title>게시글 댓글</title>-->
+<!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2>댓글 섹션</h2>-->
+<!--<div class="comment-section">-->
+<!--    <input type="text" name="comment" id="commentInput" placeholder="댓글을 입력하세요"><br>-->
+<!--    <button id="sendBtn" type="button">댓글 등록</button>-->
+
+<!--    <div id="commentList"></div>-->
+
+<!--    &lt;!&ndash; 대댓글 폼 &ndash;&gt;-->
+<!--    <div id="replyForm" style="display:none">-->
+<!--        <input type="text" name="replyComment" id="replyCommentInput">-->
+<!--        <button id="wrtRepBtn" type="button">답글 등록</button>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<script>-->
+<!--    const bno = /*[[${board.bno}]]*/ 0;  // Thymeleaf로 게시글 번호를 설정-->
+
+<!--    const showList = function (bno) {-->
+<!--        $.ajax({-->
+<!--            type: 'GET',-->
+<!--            url: '/board/comments?bno=' + bno,-->
+<!--            success: function (result) {-->
+<!--                $("#commentList").html(toHtml(result));-->
+<!--            },-->
+<!--            error: function () {-->
+<!--                alert("댓글을 불러오는 중 오류 발생");-->
+<!--            }-->
+<!--        });-->
+<!--    };-->
+
+<!--    $(document).ready(function () {-->
+<!--        showList(bno);-->
+
+<!--        $("#sendBtn").click(function () {-->
+<!--            const comment = $("#commentInput").val();-->
+<!--            if (comment.trim() === '') {-->
+<!--                alert("댓글을 입력해주세요");-->
+<!--                return;-->
+<!--            }-->
+
+<!--            $.ajax({-->
+<!--                type: 'POST',-->
+<!--                url: '/board/comments',-->
+<!--                headers: { "Content-Type": "application/json" },-->
+<!--                data: JSON.stringify({ bno: bno, comment: comment }),-->
+<!--                success: function (result) {-->
+<!--                    alert("댓글이 등록되었습니다.");-->
+<!--                    showList(bno);-->
+<!--                    $("#commentInput").val('');  // 입력창 초기화-->
+<!--                },-->
+<!--                error: function () {-->
+<!--                    alert("댓글 등록에 실패했습니다.");-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+
+<!--        $("#commentList").on("click", ".replyBtn", function () {-->
+<!--            $("#replyForm").appendTo($(this).closest("li"));-->
+<!--            $("#replyForm").show();-->
+<!--        });-->
+
+<!--        $("#wrtRepBtn").click(function () {-->
+<!--            const replyComment = $("#replyCommentInput").val();-->
+<!--            const pcno = $("#replyForm").closest("li").data("cno");-->
+
+<!--            if (replyComment.trim() === '') {-->
+<!--                alert("답글을 입력해주세요");-->
+<!--                return;-->
+<!--            }-->
+
+<!--            $.ajax({-->
+<!--                type: 'POST',-->
+<!--                url: '/board/reply',-->
+<!--                headers: { "Content-Type": "application/json" },-->
+<!--                data: JSON.stringify({ bno: bno, pcno: pcno, comment: replyComment }),-->
+<!--                success: function (result) {-->
+<!--                    alert("답글이 등록되었습니다.");-->
+<!--                    showList(bno);-->
+<!--                },-->
+<!--                error: function () {-->
+<!--                    alert("답글 등록에 실패했습니다.");-->
+<!--                }-->
+<!--            });-->
+
+<!--            $("#replyForm").hide();-->
+<!--            $("#replyCommentInput").val('');-->
+<!--        });-->
+<!--    });-->
+
+<!--    const toHtml = function (comments) {-->
+<!--        let html = "<ul>";-->
+<!--        comments.forEach(comment => {-->
+<!--            html += `<li data-cno="${comment.cno}">-->
+<!--                        <div class="commenter">@${comment.commenter}</div>-->
+<!--                        <div class="comment-time">${new Date(comment.reg_date).toLocaleString()}</div>-->
+<!--                        <div class="comment">${comment.comment}</div>-->
+<!--                        <button class="replyBtn">답글</button>-->
+<!--                     </li>`;-->
+<!--        });-->
+<!--        return html + "</ul>";-->
+<!--    };-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sku.fitizen.mapper.BoardLikeMapper">
+
+    <!-- BoardLike 객체에 매핑되는 resultMap -->
+    <resultMap id="likeResultMap" type="com.sku.fitizen.domain.BoardLike">
+        <id property="id" column="id"/>
+        <result property="bno" column="bno"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <!-- 좋아요 추가 -->
+    <insert id="insertLike" parameterType="map">
+        INSERT INTO board_likes (id, bno, user_id)
+        VALUES (BOARD_LIKES_SEQ.NEXTVAL, #{bno}, #{userId})
+    </insert>
+
+    <!-- 좋아요 삭제 -->
+    <delete id="deleteLike" parameterType="map">
+        DELETE FROM board_likes
+        WHERE bno = #{bno} AND user_id = #{userId}
+    </delete>
+
+    <!-- 특정 게시글에 대한 유저의 좋아요 여부 확인 -->
+    <select id="checkLike" resultType="int" parameterType="map">
+        SELECT COUNT(*)
+        FROM board_likes
+        WHERE bno = #{bno} AND user_id = #{userId}
+    </select>
+
+    <!-- 게시글별 좋아요 수 -->
+    <select id="countLikes" resultType="int" parameterType="long">
+        SELECT COUNT(*)
+        FROM board_likes
+        WHERE bno = #{bno}
+    </select>
+
+</mapper>

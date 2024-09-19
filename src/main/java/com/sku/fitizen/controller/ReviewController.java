@@ -42,7 +42,7 @@ public class ReviewController {
 
     @GetMapping("/map")
     public String showMapPage() {
-        return "map";  // map.html이 템플릿 디렉토리에 위치해야 합니다.
+        return "map";
     }
 
     @PostMapping("/reviewDetail")

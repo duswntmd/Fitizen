@@ -3,6 +3,7 @@ package com.sku.fitizen.service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sku.fitizen.domain.Board;
+import com.sku.fitizen.mapper.BoardLikeMapper;
 import com.sku.fitizen.mapper.BoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ public class BoardService {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private BoardLikeMapper boardLikeMapper;
+
 
     // 게시글 목록 조회
     public List<Board> getBoardList() {
@@ -60,10 +65,7 @@ public class BoardService {
         // 1. 삭제할 파일 처리
         if (deleteFileIds != null && !deleteFileIds.isEmpty()) {
             for (Long fnum : deleteFileIds) {
-                boolean deleted = fileService.deleteFileByFnum(fnum);  // 파일 삭제
-                if (!deleted) {
-                    System.err.println("파일 삭제 실패: " + fnum);
-                }
+                fileService.deleteFileByFnum(fnum);  // 파일 삭제
             }
         }
 
@@ -92,5 +94,28 @@ public class BoardService {
         PageHelper.startPage(pageNum, pageSize);  // 페이지 설정
         List<Board> boards = boardMapper.searchBoardList(title, author);  // 조건에 맞는 게시글 조회
         return new PageInfo<>(boards);  // 페이지 정보 반환
+    }
+
+    @Transactional
+    public void increaseHits(Long bno) {
+        boardMapper.updateHits(bno);
+    }
+
+    public boolean isLikedByUser(Long bno, String userId) {
+        return boardLikeMapper.checkLike(bno, userId) > 0;
+    }
+
+    @Transactional
+    public void addLike(Long bno, String userId) {
+        boardLikeMapper.insertLike(bno, userId);
+    }
+
+    @Transactional
+    public void removeLike(Long bno, String userId) {
+        boardLikeMapper.deleteLike(bno, userId);
+    }
+
+    public int getLikeCount(Long bno) {
+        return boardLikeMapper.countLikes(bno);
     }
 }
