@@ -14,10 +14,7 @@ public class IndexController {
         return "index";
     }
 
-    @GetMapping("2")
-    public String index2() {
-        return "menutest";
-    }
+
 
     @GetMapping("/findME")
     public String findMyExercise() {
