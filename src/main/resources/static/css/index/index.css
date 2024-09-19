@@ -13,8 +13,10 @@ html, body {
 }
 
 .flex_item {
-    flex: 0 0 100px;
-    border:1px dashed black;
+    flex: 1 1 auto; /* 아이템들이 공간에 맞게 자동으로 크기를 조정 */
+    max-width: 150px; /* 최대 크기를 제한 */
+    border: 1px dashed black;
     padding: 0.1em;
-    margin:0.2em;
+    margin: 0.2em;
+    box-sizing: border-box; /* 패딩과 보더를 포함한 전체 크기 조정 */
 }

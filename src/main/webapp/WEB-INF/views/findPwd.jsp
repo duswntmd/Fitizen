@@ -1,5 +1,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
+<style>
+    /* 로딩 스피너 디자인 */
+.spinner {
+border: 4px solid rgba(0, 0, 0, 0.1);
+border-left-color: #4caf50; /* 스피너 색상 */
+border-radius: 50%;
+width: 40px;
+height: 40px;
+animation: spin 1s linear infinite;
+display: none; /* 기본적으로 숨김 */
+margin: 0 auto;
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+</style>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -10,25 +28,33 @@
             $('#findPwdForm').submit(function(event){
                 event.preventDefault(); // form 기본 동작 막기
 
-                var email = $('#email').val();
                 var id = $('#id').val();
+                var name = $('#name').val();
+                $('#spinner').show();
 
                 $.ajax({
-                    url: '/login/findPwd', // 컨트롤러의 매핑 URL
+                    url: '/mail/findPwd', // 컨트롤러의 매핑 URL
                     type: 'POST',
                     data: {
-                        email: email,
-                        id: id
+
+                        id: id,
+                        name: name
                     },
-                    success: function(response) {
-                        if (response.pwd) {
-                            $('#result').html("비밀번호는: " + response.pwd);
+                    dataType:'json',
+                    success: function(res) {
+                        $('#spinner').hide();
+                        console.log(res); // 객체 전체를 확인하기 위해 콘솔에 출력
+
+                        if (res.res) { // 응답의 "response" 필드 접근 확인
+                            alert("임시 비밀번호가 발급되었습니다.");
+                            window.location.href="/login/login"
                         } else {
-                            $('#result').html(response.message);
+                            alert("비밀번호 변경에 실패했습니다.");
                         }
                     },
                     error: function() {
-                        $('#result').html("오류가 발생했습니다.");
+                        $('#spinner').hide();
+                        alert("error:"+error);
                     }
                 });
             });
@@ -38,16 +64,18 @@
 <body>
 <h2>비밀번호 찾기</h2>
 <form id="findPwdForm">
-    <div>
-        <label for="email">이메일:</label>
-        <input type="email" id="email" name="email" required />
-    </div>
+
     <div>
         <label for="id">아이디:</label>
         <input type="text" id="id" name="id" required />
     </div>
     <div>
-        <button type="submit">비밀번호 찾기</button>
+        <label for="name">이름:</label>
+        <input type="text" id="name" name="name" required />
+    </div>
+    <div>
+        <button type="submit">임시 비밀번호 발급</button>
+        <div id="spinner" class="spinner"></div>
     </div>
 </form>
 

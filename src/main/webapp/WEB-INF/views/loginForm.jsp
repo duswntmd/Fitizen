@@ -5,6 +5,7 @@
 <c:set var="loginOutLink" value="${loginId=='' ? '/login/login' : '/login/logout'}"/>
 <c:set var="loginOut" value="${loginId=='' ? '로그인' : 'ID='+=loginId}"/>
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -116,10 +117,7 @@
     </style>
 </head>
 <body>
-<div class="flex_container">
-    <li id="logo"><a href="/"><img src="/image/logo.png" width="300" height="100"></a></li>
-    <nav id="menu"><a href="/"><img src="/image/MenuBar.png" width="40" height="40"></a></nav>
-</div>
+
 <form action="<c:url value="/login/login"/>" method="post" onsubmit="return formCheck(this);">
     <h3 style="text-align:center">Login</h3>
     <div id="msg">
@@ -137,9 +135,10 @@
         <p>
             <label><input type="checkbox" name="rememberId" value="on" ${empty cookie.id.value ? "":"checked"}> 아이디 기억</label>
         </p>
-        <a href="/">아이디 찾기</a> |
-        <a href="/">비밀번호 찾기</a>
+        <a href="/mail/findId">아이디 찾기</a> |
+        <a href="/mail/findPwd">비밀번호 찾기</a>
     </div>
+
     <script>
         function formCheck(frm) {
             let msg ='';
@@ -162,4 +161,5 @@
     </script>
 </form>
 </body>
+
 </html>

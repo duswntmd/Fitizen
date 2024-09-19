@@ -60,4 +60,19 @@ public class UserDaoImpl implements UserDao {
         map.put("id", id);
         return session.selectOne(namespace + "findPasswordByEmailAndId", map);
     }
+    @Override
+    public String findEmailByIdAndName(String id, String name) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("name", name);
+        return session.selectOne(namespace + "findEmailByIdAndName", map);
+    }
+
+    @Override
+    public boolean changePwd(String pwd, String id) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("pwd", pwd);
+        return session.update(namespace + "changePwd", map)>0;
+    }
 }

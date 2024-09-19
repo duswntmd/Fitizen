@@ -4,6 +4,7 @@ import com.sku.fitizen.domain.User;
 import com.sku.fitizen.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -85,56 +86,5 @@ public class LoginController {
         return user != null && user.getPwd().equals(pwd);
     }
 
-    @GetMapping("/findId")
-    public String findId(Model model) {
-        model.addAttribute("user", new User());
-        return "findId";
-    }
 
-
-    @PostMapping("/findId")
-    @ResponseBody
-    public Map<String,String> findId(@RequestParam("email") String email,
-                         @RequestParam("name") String name,
-                         Model model) {
-        // email과 phone을 이용하여 아이디 찾기 로직 구현
-        String foundId = userService.findIdByEmailAndName(email, name);
-        Map<String,String> map = new HashMap<>();
-        if (foundId != null) {
-
-           map.put("id", foundId);
-        } else {
-                map.put("message", "해당 정보와 일치하는 아이디가 없습니다");
-        }
-
-        return map;
-    }
-
-    @GetMapping("/findPwd")
-    public String findPwd(Model model) {
-        model.addAttribute("user", new User());
-        return "findPwd";
-    }
-
-
-    @PostMapping("/findPwd")
-    @ResponseBody
-    public Map<String,String> findPwd(@RequestParam("email") String email,
-                                     @RequestParam("id") String id,
-                                     Model model) {
-        // email과 phone을 이용하여 아이디 찾기 로직 구현
-        String foundpwd = userService.findPasswordByEmailAndId(email, id);
-        Map<String,String> response = new HashMap<>();
-        if (foundpwd != null) {
-            int maskLength = (int) Math.ceil(foundpwd.length() * 0.4);
-            int visibleLength = foundpwd.length() - maskLength;
-            String maskedPassword = foundpwd.substring(0, visibleLength) + "*".repeat(maskLength);
-
-            response.put("pwd", maskedPassword);
-        } else {
-            response.put("message", "해당 정보로 비밀번호를 찾을 수 없습니다.");
-        }
-        return response;
-
-    }
 }
