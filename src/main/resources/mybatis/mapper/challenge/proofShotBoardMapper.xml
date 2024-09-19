@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sku.fitizen.mapper.challenge.ProofShotBoardMapper">
+
+    <!-- 챌린지 별 인증 게시판 리스트와 각 인증 게시판에 대한 댓글을 가져오는 쿼리 -->
+    <select id="getProofShotListById" parameterType="int" resultMap="joinMap">
+        SELECT ps.proofNum,ps.CHALLENGEID,ps.userId, ps.title, ps.photo, ps.uPhoto,
+               pc.proofCommentId, pc.proofNo,
+               pc.proofComment, pc.commentDate, pc.author
+        FROM ProofShotBoard ps
+                 LEFT JOIN ProofComment pc ON ps.proofNum = pc.proofNo
+        WHERE ps.challengeId = #{id}
+        ORDER BY ps.proofNum, pc.commentDate
+    </select>
+
+    <resultMap id="joinMap" type="com.sku.fitizen.domain.challenge.ProofShotBoard">
+        <id property="proofNum" column="proofNum"/>
+        <result property="challengeId" column="challengeId"/>
+        <result property="userId" column="userId"/>
+        <result property="title" column="title"/>
+        <result property="photo" column="photo"/>
+        <result property="uPhoto" column="uPhoto"/>
+        <collection property="commentList" ofType="com.sku.fitizen.domain.challenge.ProofComment">
+            <id property="proofCommentId" column="proofCommentId"/>
+            <result property="proofNo" column="proofNo"/>
+            <result property="proofComment" column="proofComment"/>
+            <result property="commentDate" column="commentDate"/>
+            <result property="author" column="author"/>
+        </collection>
+    </resultMap>
+
+
+
+
+    <!--인증 사진 올리기 -->
+    <insert id="addProofShot" parameterType="com.sku.fitizen.domain.challenge.ProofShotBoard">
+        INSERT INTO proofShotBoard (proofNum, challengeId, userId, photo, title, uphoto)
+        VALUES (proof_seq.nextval, #{challengeId}, #{userId}, #{photo}, #{title}, #{uPhoto})
+    </insert>
+
+
+    <!-- 사용자 사진 인증 해주기 -->
+    <insert id="verifyProofShot" parameterType="com.sku.fitizen.domain.challenge.PhotoVerification">
+        INSERT INTO  PHOTOVERIFICATION (PROOFNUM, VERIFIERID, CHALLENGEID)
+        VALUES (#{proofNum},#{verifierId},#{challengeId})
+
+
+    </insert>
+
+</mapper>
+

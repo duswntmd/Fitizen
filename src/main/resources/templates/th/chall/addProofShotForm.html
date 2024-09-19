@@ -1,11 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
-    <title>Titlea</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인증샷 제출</title>
+    <link th:href="@{/css/challenge/addProofShotForm.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div class="form-container">
+    <h1>인증샷 제출</h1>
+    <form id="addForm" enctype="multipart/form-data">
 
+        <input type="hidden" id="challengeId" name="challengeId" th:value="${proofShotBoard.challengeId}">
+        <input type="hidden" id="userId" name="userId" th:value="${proofShotBoard.userId}">
+
+        <label for="title">제목:</label>
+        <input type="text" id="title" th:field="${proofShotBoard.title}" >
+
+        <label for="file">사진 업로드:</label>
+        <input type="file" id="file" name="file" accept="image/*" >
+
+        <div class="preview-container">
+            <img id="photoPreview" src="" alt="사진 미리보기">
+        </div>
+
+        <button type="button" onclick="submitProofShotBoard()">제출하기</button>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const photoInput = document.getElementById('file');
+        const photoPreview = document.getElementById('photoPreview');
+
+        photoInput.addEventListener('change', () => {
+            const file = photoInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    photoPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                photoPreview.src = '';
+            }
+        });
+    });
+
+    function submitProofShotBoard() {
+        if(!confirm('인증 사진을 올리시겠습니까?'))return;
+
+        var form = document.getElementById('addForm');
+        var formData = new FormData(form);
+
+        $.ajax({
+            url: '/proofShot/add',
+            method: 'POST', // POST 용
+            enctype:"multipart/form-data",
+            processData: false,
+            contentType: false,
+            data: formData,
+            dataType: 'json',
+            success: function(res) {
+                alert(res.saved ? '인증 사진 등록 성공' : '인증 사진 등록 실패');
+                if (res.saved) {
+                    location.href = "/"; // 리다이렉트할 URL
+                }
+            },
+            error: function(err) {
+                alert('서버 오류');
+            }
+        });
+    }
+
+
+
+</script>
 </body>
 </html>

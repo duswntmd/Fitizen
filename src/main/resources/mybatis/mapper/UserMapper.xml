@@ -43,4 +43,15 @@
         SELECT PWD FROM USERS WHERE EMAIL = #{email} AND ID = #{id}
     </select>
 
+
+
+    <!--사용자 포인트 적립 (챌린지)-->
+    <!-- 사용자 포인트 적립 -->
+    <update id="addPointsToUser" parameterType="map">
+        UPDATE USERS
+        SET POINTS = POINTS + #{points}
+        WHERE ID = #{userId}
+    </update>
+
+
 </mapper>
