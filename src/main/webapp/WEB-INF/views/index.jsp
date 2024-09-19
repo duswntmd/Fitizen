@@ -7,9 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>FITIZEN</title>
-
 </head>
-
 <body>
 <div class="content-wrapper">
     <!-- 페이지 컨텐츠 -->
