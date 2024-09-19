@@ -5,7 +5,7 @@
 <mapper namespace="com.sku.fitizen.mapper.challenge.ChallengeMapper">
 
     <!-- 챌린지 등록 -->
-    <insert id="saveChallenge" parameterType="com.sku.fitizen.domain.Challenge">
+    <insert id="saveChallenge" parameterType="com.sku.fitizen.domain.challenge.Challenge">
         <!-- 시퀀스를 사용하여 챌린지 ID를 가져오기 -->
         <selectKey keyProperty="challengeId" resultType="int" order="BEFORE">
             SELECT CHALL_SEQ.NEXTVAL FROM DUAL
@@ -17,26 +17,25 @@
 
 
     <!-- 챌린지 목록 조회 -->
-    <select id="getChallengeList"  resultType="com.sku.fitizen.domain.Challenge">
+    <select id="getChallengeList"  resultType="com.sku.fitizen.domain.challenge.Challenge">
            SELECT *FROM  challenge
     </select>
 
     <!-- 챌린지 참여자 등록   챌린지를 등록한 사람도 참여자에 포함된다  -->
-    <insert id="addCreatorToParticipation" parameterType="com.sku.fitizen.domain.Participation">
+    <insert id="addCreatorToParticipation" parameterType="com.sku.fitizen.domain.challenge.Participation">
                 INSERT  INTO participation
                 VALUES (#{userId},#{challengeId})
     </insert>
 
     <!--챌린지 고유 아이디로 조회 : 챌린지 상세정보 보기 위해-->
-
-    <select id="getChallengeById" parameterType="Integer" resultType="com.sku.fitizen.domain.Challenge">
+    <select id="getChallengeById" parameterType="Integer" resultType="com.sku.fitizen.domain.challenge.Challenge">
 
             SELECT * FROM challenge WHERE CHALLENGEID =#{id}
     </select>
 
     <!--챌린지 참여 등록  조건: 하나의 챌린지에 중복 참여 불가 -->
 
-    <insert id="participate" parameterType="com.sku.fitizen.domain.Participation">
+    <insert id="participate" parameterType="com.sku.fitizen.domain.challenge.Participation">
         INSERT INTO  participation (userid, challengeid)
         SELECT #{userId} ,#{challengeId}
         FROM DUAL
@@ -48,18 +47,27 @@
     </insert>
 
     <!--챌린지 참여자 수 증가  -->
-    <update id="increaseMembers" parameterType="com.sku.fitizen.domain.Challenge">
+    <update id="increaseMembers" parameterType="com.sku.fitizen.domain.challenge.Challenge">
         UPDATE challenge SET members=members+1
         WHERE challengeId=#{challengeId}
     </update>
 
     <!--내가 참여한 챌린지 목록 불러오기-->
-    <select id="getMyChallengeList" parameterType="com.sku.fitizen.domain.Challenge"
-            resultType="com.sku.fitizen.domain.Challenge">
+    <select id="getMyChallengeList" parameterType="com.sku.fitizen.domain.challenge.Challenge"
+            resultType="com.sku.fitizen.domain.challenge.Challenge">
         SELECT * FROM challenge  c
             INNER JOIN participation p on c.challengeId = p.challengeId
             WHERE p.userId =#{userId}
     </select>
+
+
+    <!--종료 날짜가 오늘이 챌린지 아이디 리스트 -->
+    <select id="getChallengesEndingToday" resultType="java.lang.Integer">
+        SELECT challengeId
+        FROM Challenge
+        WHERE TRUNC(endDate) = TRUNC(SYSDATE)
+    </select>
+
 
 </mapper>
 

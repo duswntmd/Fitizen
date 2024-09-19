@@ -1,6 +1,6 @@
 package com.sku.fitizen.handler;
 
-import com.sku.fitizen.domain.Message;
+import com.sku.fitizen.domain.challenge.Message;
 import com.sku.fitizen.mapper.challenge.ChatMapper;
 import com.sku.fitizen.service.challenge.ChatService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +11,12 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 public class WebSocketHandler extends TextWebSocketHandler
@@ -24,6 +26,10 @@ public class WebSocketHandler extends TextWebSocketHandler
     ChatMapper mapper;
     @Autowired
     ChatService chatService;
+
+    @Autowired
+    Base64Image base64Image;
+
 
    // private static Map<String, WebSocketSession> userMap = new HashMap<>();
     private static Map<String, Map<String, WebSocketSession>> roomMap = new HashMap<>(); // roomId 별로 사용자 저장
@@ -57,9 +63,13 @@ public class WebSocketHandler extends TextWebSocketHandler
             System.out.println(messages.size());
             for (Message m : messages) {
                 JSONObject jsonMessage = new JSONObject();
+                jsonMessage.put("sender", m.getSenderId());
                 jsonMessage.put("msg", m.getMessage());
-                jsonMessage.put("img", m.getImg());
-
+                if(m.getUImg() !=null) {
+                    String img ="data:image/jpeg;base64,"+ base64Image.imageToBase64(m.getUImg());
+                    jsonMessage.put("img", img);
+                    jsonMessage.put("fileName", m.getImg());
+                }
                 TextMessage textMessage = new TextMessage(jsonMessage.toString());
                 session.sendMessage(textMessage);
             }
@@ -69,18 +79,32 @@ public class WebSocketHandler extends TextWebSocketHandler
 
     @Override  /* 서버에 메시지 도착시 호출됨 */
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        log.info("서버에서 받은 메시지:{}", message.getPayload()); // getPayload: 문자열로 ,WebSocketSession session 메세지를 보낸사람
+       // log.info("서버에서 받은 메시지:{}", message.getPayload()); // getPayload: 문자열로 ,WebSocketSession session 메세지를 보낸사람
 
         // JSON 문자열을 파싱하여 JSONObject로 변환
         JSONObject jsObj = new JSONObject(message.getPayload());
+
         String msg = jsObj.optString("msg", null);
         String img = jsObj.optString("img", null);
+        String senderId = jsObj.optString("senderId");
+        String originImgName = jsObj.optString("fileName", null);
+
 
         String roomId = (String) session.getAttributes().get("roomId");
         String userId = (String) session.getAttributes().get("userId");
 
 
+        Message data= new Message();
+        String UUIDImgName =UUID.randomUUID().toString()+ "_" + originImgName;
 
+        if (img != null) {
+            try {
+                // 파일 이름 생성
+                base64Image.saveBase64ToImage(img, UUIDImgName);
+            } catch (IOException e) {
+                log.error("이미지 저장 오류: ", e);
+            }
+        }
 
 
 
@@ -90,11 +114,12 @@ public class WebSocketHandler extends TextWebSocketHandler
                 if (ss.isOpen()) {  // 세션이 열려 있는지 확인
                     ss.sendMessage(message);
 
-                    Message data= new Message();
+
                     data.setSenderId(userId);
                     data.setRoomId(Integer.parseInt(roomId));
                     data.setMessage(msg != null ? msg : "");
-                   // data.setImg(img != null ? img : "");
+                    data.setImg(img != null ?  originImgName: "");
+                    data.setUImg(img != null ? UUIDImgName: "");
                     data.setSentAt(LocalDateTime.now());
                     mapper.saveMessage(data);
 
@@ -105,28 +130,9 @@ public class WebSocketHandler extends TextWebSocketHandler
         } else {
             log.warn("존재하지 않는 방 ID: {}", roomId);
         }
-        /*
-        //채팅서비스에 접속된 모든 클라이언트에게 브로드캐스팅
-        Collection<WebSocketSession> coll = userMap.values(); // 세션의 집합
-        for(WebSocketSession ss : coll) {
-            ss.sendMessage(message); //브로드캐스팅
-        }
 
-         */
 
-		/* JSON 포맷으로 통신할 때는 아래처럼... 복잡한 메세지일 경우
-		JSONParser parser = new JSONParser();
-		JSONObject jsObj = (JSONObject) parser.parse( message.getPayload()); json 문자열이 jsonObject로
-		String receiver = (String)jsObj.get("receiver");
-
-		WebSocketSession wss = userMap.get(receiver);
-		wss.sendMessage(message);  // 특정 접속자에게만 메시지를 전달함
-		*/
     }
-
-
-
-
 
 
 

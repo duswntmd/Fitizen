@@ -1,11 +1,10 @@
-package com.sku.fitizen.domain;
+package com.sku.fitizen.domain.challenge;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -21,5 +20,6 @@ public class Message {
 
     private String img;
 
+    private String uImg;
 
 }

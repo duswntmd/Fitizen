@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>마이페이지</title>
     <style>
+
+
         body {
             font-family: Arial, sans-serif;
         }
@@ -80,6 +82,23 @@
             });
         });
 
+        $(document).ready(function() {
+            // 챌린지 목록을 클릭했을 때 AJAX 요청을 통해 우측에 목록을 로드
+            $('#point').on('click', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/user/pay',
+                    method: 'GET',
+                    success: function(response) {
+                        $('.content').html(response);
+                    },
+                    error: function() {
+                        alert('챌린지 목록을 불러오는 데 실패했습니다.');
+                    }
+                });
+            });
+        });
+
     </script>
 </head>
 <body>
@@ -100,9 +119,11 @@
         <a  id="myChallengeLink" >참여한 챌린지</a>
         <a href="/" >포인트 조회</a>
         <a href="/" >작성한 게시물,댓글</a>
-        <a href="/" >Q&A</a>
+        <a href="/qna" >Q&A</a>
         <a href="/" >기타</a>
-        <a href="/kakaoPay">포인트 충전하기</a>
+        <a id="point">포인트 충전하기</a>
+        <a href="/" >결제 내역</a>
+
 
 
     </div>

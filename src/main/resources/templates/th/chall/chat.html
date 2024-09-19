@@ -4,20 +4,22 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
     <title>WebSocket Test Page</title>
-    <link th:href="@{/css/chat/chat.css}" rel="stylesheet" />
+    <link th:href="@{/css/challenge/chat.css}" rel="stylesheet" />
+
 </head>
 <body>
 <div id="chatContainer">
     <!-- textarea 대신 div 사용 -->
-    <div id="chatBoxArea" style="border:1px solid #ccc; width:100%; height:300px; overflow-y:scroll;"></div>
+    <div id="chatBoxArea"></div>
     <div id="inputContainer">
         <input id="inputMsgBox" type="text" placeholder="Type a message...">
         <input id="sendButton" type="button" value="보내기" onclick="sendButton_onclick()">
-        <input id="disconnectButton" type="button" value="Disconnect" onclick="disconnectButton_onclick()">
+        <label id="fileButton" for="imgInputBox">사진보내기</label>
     </div>
-    <label id="fileButton" for="imgInputBox">사진보내기</label>
+
     <input id="imgInputBox" type="file" accept="image/*">
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
     var userId = '[[${userId}]]';
     var g_webSocket = null;
@@ -25,7 +27,7 @@
     window.onload = function() {
         var roomId = '[[${roomId}]]';
         var host = "localhost";
-        g_webSocket = new WebSocket("ws://" + host +"/chat?"+"userId="+userId +"&roomId=" + roomId);
+        g_webSocket = new WebSocket("ws://" + host + "/chat?" + "userId=" + userId + "&roomId=" + roomId);
 
         g_webSocket.onopen = function(message) {
             addLineToChatBox("챌린지 참여 채팅방입니다.");
@@ -35,11 +37,12 @@
             try {
                 var data = JSON.parse(message.data); // JSON 파싱
 
+
                 if (data.msg) {
-                    addLineToChatBox(data.msg); // 텍스트 메시지 추가
+                    addLineToChatBox(data.msg ,data.sender); // 텍스트 메시지 추가
                 }
                 if (data.img) {
-                    displayImage(data.img); // 이미지 출력
+                    displayImage(data.img, data.fileName , data.sender); // 이미지 출력
                 }
             } catch (e) {
                 console.error("메시지 파싱 오류:", e);
@@ -56,47 +59,182 @@
         };
     }
 
-    function addLineToChatBox(_line) {
+    function addLineToChatBox(_line, sender) {
         if (_line == null) {
             _line = "";
         }
         var chatBoxArea = document.getElementById("chatBoxArea");
         var messageDiv = document.createElement("div");
+        var senderIdDiv = document.createElement("div");
+
         messageDiv.textContent = _line; // 메시지 추가
+        senderIdDiv.textContent = sender; // 발신자 ID 추가
+
+        messageDiv.className = 'message';
+        senderIdDiv.className = 'sender-id';
+
+        // 보낸 사람에 따라 클래스를 다르게 설정
+        if (sender === userId) {
+            messageDiv.classList.add('sent');
+            senderIdDiv.style.display = 'none'; // 자신의 메시지에는 발신자 ID를 숨김
+        } else {
+            messageDiv.classList.add('received');
+        }
+
+        // 발신자 ID를 메시지 위에 추가
+        messageDiv.appendChild(senderIdDiv);
+
         chatBoxArea.appendChild(messageDiv); // div에 추가
         chatBoxArea.scrollTop = chatBoxArea.scrollHeight;
     }
 
-    function displayImage(base64Image) {
+    function displayImage(base64Image, fileName, sender) {
+
+
+
         var chatBoxArea = document.getElementById("chatBoxArea");
+
+        // 이미지와 버튼을 포함할 컨테이너 div 생성
+        var imageContainer = document.createElement("div");
+        imageContainer.className = "image-container"; // 기본 클래스 추가
+
         var imgElement = document.createElement("img");
         imgElement.src = base64Image; // base64 이미지를 img 태그의 src로 설정
-        imgElement.style.maxWidth = "300px"; // 최대 너비 설정 (필요에 맞게 조정 가능)
-        imgElement.style.height = "auto"; // 자동으로 높이 비율 유지
-        imgElement.style.marginTop = "10px"; // 이미지 위쪽에 약간의 여백 추가
 
-        // 이미지 요소를 chatBoxArea에 추가
-        chatBoxArea.appendChild(imgElement);
+        // 발신자 ID를 추가하는 div 생성
+        var senderIdDiv = document.createElement("div");
+        senderIdDiv.textContent = sender;
+        senderIdDiv.className = 'sender-id';
+
+
+        // "사진 저장" 버튼 생성
+        var saveButton = document.createElement("button");
+        saveButton.textContent = "사진 저장";
+        saveButton.onclick = function() {
+            downloadImage(base64Image, fileName);
+        };
+
+        // "따봉" 버튼 생성
+        var likeButton = document.createElement("button");
+        likeButton.textContent = "👍";
+        likeButton.onclick = function() {
+            alert("따봉 버튼 클릭됨!"); // 원하는 행동을 정의
+        };
+
+        // "인증게시판에 올리기" 버튼 생성
+        var uploadButton = document.createElement("button");
+        uploadButton.textContent = "인증게시판에 올리기";
+        uploadButton.onclick = function() {
+            uploadToBoard(base64Image, fileName);
+        };
+
+        // 이미지와 버튼을 컨테이너에 추가
+        imageContainer.appendChild(imgElement);
+
+
+
+
+        // 보낸 사람에 따라 클래스 추가
+        if (sender === userId) {
+            imageContainer.classList.add('sent'); // 오른쪽 정렬
+            senderIdDiv.style.display = 'none'; // 자신의 이미지에는 발신자 ID를 숨김
+            imageContainer.appendChild(uploadButton);
+        } else {
+            imageContainer.classList.add('received'); // 왼쪽 정렬
+            imageContainer.appendChild(likeButton);
+            imageContainer.appendChild(saveButton);
+        }
+
+        // 발신자 ID를 이미지 컨테이너 위에 추가
+        imageContainer.appendChild(senderIdDiv);
+
+        // 컨테이너를 chatBoxArea에 추가
+        chatBoxArea.appendChild(imageContainer);
         chatBoxArea.scrollTop = chatBoxArea.scrollHeight;
     }
 
-    function sendButton_onclick() {
+
+
+    function downloadImage(base64Image, fileName) {
+        var link = document.createElement("a");
+        link.href = base64Image;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function uploadToBoard(base64Image, fileName) {
+
+        var writeDate = getCurrentFormattedTime();
+        var formData = new FormData();
+        var roomId = '[[${roomId}]]';
+        console.log(roomId);
+        formData.append("base64Img", base64Image);
+        formData.append("photo", fileName);
+        formData.append("userId",userId);
+        formData.append("writeDate",writeDate);
+        formData.append("challengeId",roomId);
+
+        // 댓글 삭제 확인 메시지
+        if (confirm("인증 게시물로 올릴건가요 ? \n" +
+                    "제목은 임시 제목으로 올라가요! \n" +
+                    "나중에 수정하세요! \n" +
+                    "-FITIZEN 관리자-"))
+        {
+            $.ajax({
+                url: '../proofShot/addChatProof',
+                method: 'post',
+                cache: false,
+                data: formData,
+                processData: false,  // FormData 객체를 처리할 때는 false로 설정
+                contentType: false, // FormData 객체를 처리할 때는 false로 설정
+                dataType: 'json',
+                success: function (res) {
+
+                    if (res.success) {
+                        alert("인증 게시판에 등록 되었어요!")
+                        //location.reload();  // 새로고침
+                    }
+
+                },
+                error: function (xhr, status, err) {
+                    alert('에러:' + err);
+                }
+
+            });
+        }
+
+    }
+
+
+
+
+
+
+
+
+        function sendButton_onclick() {
         var inputMsgBox = document.getElementById("inputMsgBox");
         var imgInputBox = document.getElementById("imgInputBox");
         var currentTime = getCurrentFormattedTime();
+
         // 메시지와 이미지를 전송할 객체를 준비
         var obj = {
-            sender:userId,
+            sender: userId,
             msg: inputMsgBox.value || null,
             img: null,
-            sentAt: currentTime
+            sentAt: currentTime,
+            fileName: imgInputBox.files.length > 0 ? imgInputBox.files[0].name : null
         };
+
 
         // 이미지 파일이 선택되었으면 base64로 인코딩하여 추가
         if (imgInputBox.files.length > 0) {
             var reader = new FileReader();
             reader.onload = function(event) {
                 obj.img = event.target.result;
+
                 // 메시지나 이미지 중 하나가 있으면 전송
                 if (obj.msg || obj.img) {
                     g_webSocket.send(JSON.stringify(obj));
@@ -132,10 +270,11 @@
             sendButton_onclick(event);
         }
     }
+
     function getCurrentFormattedTime() {
         const now = new Date();
         const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const month = String(now.getMonth() + 1).padStart(2, '0');
         const day = String(now.getDate()).padStart(2, '0');
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');

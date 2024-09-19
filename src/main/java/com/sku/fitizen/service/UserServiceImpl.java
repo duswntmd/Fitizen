@@ -2,6 +2,10 @@ package com.sku.fitizen.service;
 
 import com.sku.fitizen.dao.UserDao;
 import com.sku.fitizen.domain.User;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +50,26 @@ public class UserServiceImpl implements UserService {
     public String findPasswordByEmailAndId(String email, String id)  {
         return userDao.findPasswordByEmailAndId(email, id);
     }
+
+    @Override
+    public int addPointsToUser(String userId, int points) {
+        return userDao.addPointsToUser(userId,points);
+    }
+
+
 //    public String findIdByEmailAndName(String email, String name) throws Exception {
+    @Override
+    public String findEmailByIdAndName(String id, String name){
+        return userDao.findEmailByIdAndName(id,name);
+
+    }
+    @Override
+    public boolean changePwd(String pwd, String id){
+        return userDao.changePwd(pwd,id);
+    }
+
+
+    //    public String findIdByEmailAndName(String email, String name) throws Exception {
 //        String id = userDao.findIdByEmailAndName(email, name);
 //
 //        if (id != null) {
