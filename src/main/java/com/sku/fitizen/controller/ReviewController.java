@@ -41,7 +41,31 @@ public class ReviewController {
 //    }
 
     @GetMapping("/map")
-    public String showMapPage() {
+    public String showMapPage(@RequestParam(value = "exercise",required = false) String exercise, Model model) {
+        String keyword="";
+        if (exercise.equals("swimming")) {
+            keyword = "수영장";
+        }else if (exercise.equals("cardio")) {
+            keyword="공원";
+        }
+        else if (exercise.equals("basketball")) {
+            keyword="농구";
+        }
+        else if (exercise.equals("health")) {
+            keyword="헬스";
+        }
+        else if (exercise.equals("yoga")) {
+            keyword="요가";
+        }
+        else if (exercise.equals("pilates")) {
+            keyword="필라테스";
+        }
+        else if (exercise.equals("tabletennis")) {
+            keyword="탁구";
+        }else if (exercise.equals("badminton")) {
+            keyword="배드민턴";
+        }
+        model.addAttribute("keyword", keyword);
         return "map";
     }
 

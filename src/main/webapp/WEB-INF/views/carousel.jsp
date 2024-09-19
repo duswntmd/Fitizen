@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}css/carousel/carousel.css">
 <script src="${pageContext.request.contextPath}js/carousel.js" defer></script>
 <div id="wrapper">
-
+    <button id="prev" class="carousel-arrow">‹</button>
     <div id="carousel-list">
         <!-- 동일한 carousel-item을 3번씩 그리기 -->
         <!-- 첫번째 carousel-item -->
@@ -45,4 +45,11 @@
             <div class="carousel-text_3">다른 사람들과 경쟁해보세요</div>
         </a>
     </div>
+    <button id="next" class="carousel-arrow">›</button>
+    <!-- 슬라이드 인디케이터 -->
+    <ul id="carousel-indicators">
+        <li class="indicator active"></li>
+        <li class="indicator"></li>
+        <li class="indicator"></li>
+    </ul>
 </div>

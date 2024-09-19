@@ -64,14 +64,16 @@
         <iframe id="exerciseVideo" width="100%" height="315" src="" frameborder="0" allowfullscreen></iframe>
     </div>
 
-    <button onclick="window.history.back()">이전 페이지로 돌아가기</button>
+    <button onclick="window.location.href='/findResult'">운동검사 결과로 돌아가기</button>
+    <button onclick="findExerciseFacility()">운동시설 찾기</button>
 </div>
 
 <script>
     // URL에서 운동 종목을 가져옴
     const urlParams = new URLSearchParams(window.location.search);
     const exercise = urlParams.get('exercise');
-
+    console.log('콘솔테스트');
+    console.log('저장된운동:'+exercise);
     // 운동 설명과 영상 URL 매핑
     const exerciseDetails = {
         health: {
@@ -124,6 +126,13 @@
     } else {
         document.getElementById('exerciseTitle').innerText = "운동 정보를 찾을 수 없습니다.";
         document.getElementById('exerciseDescription').innerText = "잘못된 운동 종목이 선택되었습니다.";
+    }
+
+    function findExerciseFacility() {
+        // 선택된 운동 종목을 URL에 추가하여 전송
+        if (exercise) {
+            window.location.href = `/kakao/map?exercise=`+exercise;
+        }
     }
 </script>
 
