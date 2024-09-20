@@ -107,7 +107,7 @@ public class ChallengController {
     {
         String userId = user.getId();
         service.participate(new Participation(userId,challengeId));
-        return "th/chall/myChallengePage";
+        return "redirect:/challenge/myChall";
     }
 
     // 내가 참여한 챌린지로 이동
