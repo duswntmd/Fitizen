@@ -99,4 +99,8 @@
         WHERE bno = #{bno} AND is_deleted = #{isDeleted}
     </select>
 
+    <delete id="deleteAllByBoard" parameterType="long">
+        DELETE FROM board_comment WHERE bno = #{bno}
+    </delete>
+
 </mapper>

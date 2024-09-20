@@ -18,4 +18,6 @@ public interface BoardLikeMapper {
     // 게시글별 좋아요 수 계산
     int countLikes(@Param("bno") Long bno);
 
+    void deleteAllByBoard(Long bno);
+
 }

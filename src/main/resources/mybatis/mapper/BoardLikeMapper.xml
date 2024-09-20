@@ -38,4 +38,8 @@
         WHERE bno = #{bno}
     </select>
 
+    <delete id="deleteAllByBoard" parameterType="long">
+        DELETE FROM board_likes WHERE bno = #{bno}
+    </delete>
+
 </mapper>

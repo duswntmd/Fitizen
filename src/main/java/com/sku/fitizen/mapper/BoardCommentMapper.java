@@ -38,4 +38,6 @@ public interface BoardCommentMapper {
     int countCommentsByBoard(@Param("bno") Long bno, @Param("isDeleted") boolean isDeleted);
 
     boolean isDeleted(Long cno);
+
+    void deleteAllByBoard(Long bno);
 }

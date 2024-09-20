@@ -3,6 +3,7 @@ package com.sku.fitizen.service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sku.fitizen.domain.Board;
+import com.sku.fitizen.mapper.BoardCommentMapper;
 import com.sku.fitizen.mapper.BoardLikeMapper;
 import com.sku.fitizen.mapper.BoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class BoardService {
 
     @Autowired
     private BoardLikeMapper boardLikeMapper;
+
+    @Autowired
+    private BoardCommentMapper boardCommentMapper;
 
 
     // 게시글 목록 조회
@@ -83,10 +87,16 @@ public class BoardService {
     // 게시글 삭제 및 파일 삭제
     @Transactional
     public void deleteBoard(Long bno) {
-        // 1. 게시글에 속한 파일들 먼저 삭제
+        // 1. 댓글 먼저 삭제
+        boardCommentMapper.deleteAllByBoard(bno);
+
+        // 2. 좋아요 삭제
+        boardLikeMapper.deleteAllByBoard(bno);
+
+        // 3. 게시글에 속한 파일들 먼저 삭제
         fileService.deleteFilesByBoard(bno);
 
-        // 2. 파일 삭제가 완료된 후 게시글 삭제
+        // 4. 파일 삭제가 완료된 후 게시글 삭제
         boardMapper.deleteBoard(bno);
     }
 

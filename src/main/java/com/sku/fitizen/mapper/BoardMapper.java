@@ -30,10 +30,4 @@ public interface BoardMapper {
     // 제목과 작성자 기준으로 게시글 검색 (페이징 적용 가능)
     List<Board> searchBoardList(@Param("title") String title, @Param("author") String author);
 
-    // 게시글 좋아요 증가
-    void incrementLikes(@Param("bno") Long bno);
-
-    // 게시글 좋아요 감소
-    void decrementLikes(@Param("bno") Long bno);
-
 }
