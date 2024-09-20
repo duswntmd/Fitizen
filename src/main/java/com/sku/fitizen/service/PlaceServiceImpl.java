@@ -22,7 +22,7 @@ public class PlaceServiceImpl implements PlaceService {
             place.setRoadaddress(roadaddress);
             place.setAddress(address);
             place.setPhone(phone);
-
+            place.setImageUrl(null);
             placeMapper.insertPlace(place);
 
 //            System.out.println("Created new Place: " + place);

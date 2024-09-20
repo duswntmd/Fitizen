@@ -32,7 +32,7 @@
     <div class="challenge-list">
         <!-- Thymeleaf Loop for Challenge Items -->
         <div th:each="c : ${list}" class="challenge-box">
-            <div class="image-placeholder"><img  th:src="@{'/files/' + ${c.uCoverImg}}">이미지 공간</div>
+            <div class="image-placeholder"><img  th:src="@{'/files/challengeCover/' + ${c.uCoverImg}}">이미지 공간</div>
             <div class="content">
                 <div class="title">[[${c.title}]]</div>
                 <div class="user-info">

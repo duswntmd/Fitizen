@@ -104,7 +104,7 @@
 
     // 키워드로 장소를 검색합니다
     function searchPlaces() {
-        var keyword = document.getElementById('keyword').value;
+        var keyword = document.getElementById('keyword').value || "";
 
         if (!keyword.replace(/^\s+|\s+$/g, '')) {
             alert('키워드를 입력해주세요!');

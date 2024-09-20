@@ -6,8 +6,8 @@
 
     <!-- 장소 삽입 -->
     <insert id="insertPlace" parameterType="com.sku.fitizen.domain.Place">
-        INSERT INTO PLACES (ID, NAME, ROADADDRESS, ADDRESS, PHONE)
-        VALUES (#{id}, #{name}, #{roadaddress}, #{address}, #{phone})
+        INSERT INTO PLACES (ID, NAME, ROADADDRESS, ADDRESS, PHONE, IMAGEURL)
+        VALUES (#{id}, #{name}, #{roadaddress}, #{address}, #{phone}, #{imageUrl, jdbcType=VARCHAR})
     </insert>
 
     <!-- 장소 조회 -->
