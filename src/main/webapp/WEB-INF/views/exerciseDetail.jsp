@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -27,7 +28,7 @@
             color: #333;
         }
 
-        p {
+        span {
             font-size: 18px;
             color: #555;
         }
@@ -58,7 +59,7 @@
 
 <div class="container">
     <h1 id="exerciseTitle">운동법</h1>
-    <p id="exerciseDescription"></p>
+    <span id="exerciseDescription"></span>
 
     <div class="video-container">
         <iframe id="exerciseVideo" width="100%" height="315" src="" frameborder="0" allowfullscreen></iframe>
@@ -135,6 +136,6 @@
         }
     }
 </script>
-
+<%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 </body>
 </html>

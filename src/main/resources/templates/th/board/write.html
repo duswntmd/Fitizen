@@ -4,9 +4,29 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
     <title>게시글 작성</title>
+    <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+<style>
+    .page-contents {
+        /*    font-family: Arial, sans-serif;*/
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        /*    height: 100vh;*/
+        /*    margin: 0;*/
+        min-height: 100vh;
+    }
+</style>
+
 <body>
+<div>
+    <th:block th:replace="~{th/header :: header}"></th:block>
+</div>
+
+<div class="page-contents">
+
 <h1>게시글 작성</h1>
 
 <form id="writeForm" enctype="multipart/form-data">
@@ -30,7 +50,8 @@
 </form>
 
 <a href="/board/list">목록으로</a>
-
+</div>
+<th:block th:replace="~{th/footer :: footer}"></th:block>
 <script>
     $(document).ready(function() {
         $('#writeForm').on('submit', function(event) {

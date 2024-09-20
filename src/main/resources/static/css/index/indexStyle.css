@@ -11,12 +11,7 @@
     font-style: normal;
 }
 
- body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-}
+
 html {
     margin: 0;
     padding: 0;
@@ -28,7 +23,10 @@ html {
     align-items: center;
     justify-content:space-between;
     background-color: #0E0F0D;
-    padding: 10px 20px;
+    margin: 0;
+    padding: 0;
+
+
 }
 
 #logo {
@@ -46,6 +44,7 @@ html {
 .nav li {
     position: relative;
     margin-right: 20px; /* 메뉴 항목 사이의 간격 조정 */
+    white-space: nowrap;
 }
 
 .nav a {
@@ -88,10 +87,22 @@ html {
 .dropdown-menu a:hover {
     background-color: #6b0c36;  /* 글씨배경에 마우스올릴때 색*/
 }
+.content{
+    flex:1;
+}
 
+
+header{
+    flex-shrink: 0;
+
+}
 footer {
+    flex-shrink: 0;
+    margin-top: auto;
     background-color: #0056b3; /* 푸터 배경 색상 */
     color: white; /* 푸터 텍스트 색상 */
     text-align: center; /* 푸터 내용 중앙 정렬 */
     padding: 10px 0; /* 푸터 내부 여백 */
+
+
 }
