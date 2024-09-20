@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -12,7 +14,7 @@
         }
 
 
-        body {
+        .container {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
@@ -359,6 +361,6 @@
         return false; // 폼 제출 방지
     }
 </script>
-
+<%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 </body>
 </html>

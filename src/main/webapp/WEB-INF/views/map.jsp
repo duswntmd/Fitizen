@@ -1,16 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
+<%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>MAP</title>
     <style>
-        .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
+        .map_wrap, .map_wrap * {margin:0;padding:0; flex:1; font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
         .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
-        .map_wrap {position:relative;width:100%;height:600px;}
+        .map_wrap {position:relative;width:100%;height:600px;min-height: calc(100vh - 100px);}
         #menu_wrap {position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
-        .bg_white {background:#fff;}
+        /*.bg_white {background:#fff;}*/
         #menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
         #menu_wrap .option{text-align: center;}
         #menu_wrap .option p {margin:10px 0;}
@@ -27,11 +28,12 @@
         #pagination {margin:10px auto;text-align: center;}
         #pagination a {display:inline-block;margin-right:10px;}
         #pagination .on {font-weight: bold; cursor: default;color:#777;}
+
     </style>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=be5e9a482ef1bcad0ca4d349481aac7a&libraries=services"></script>
 </head>
 <body>
-<h1>MAP</h1>
+<div class="page-contents">
 <form id="placeForm" action="/kakao/reviewDetail" method="post" style="display:none;">
     <input type="hidden" name="placeId" id="placeId">
     <input type="hidden" name="place_name" id="place_name">
@@ -56,7 +58,8 @@
         <div id="pagination"></div>
     </div>
 </div>
-
+</div>
+<%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 <script type="text/javascript">
     var map;
     var markers = [];
@@ -289,5 +292,6 @@
         }
     }
 </script>
+
 </body>
 </html>

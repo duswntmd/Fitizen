@@ -1,9 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false"%>
-<c:set var="loginId" value="${pageContext.request.getSession(false)==null ? '' : pageContext.request.session.getAttribute('id')}"/>
-<c:set var="loginOutLink" value="${loginId=='' ? '/login/login' : '/login/logout'}"/>
-<c:set var="loginOut" value="${loginId=='' ? '로그인' : 'ID='+=loginId}"/>
+
+
+<%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
+
 <!DOCTYPE html>
 
 <html lang="ko">
@@ -21,15 +20,25 @@
             font-weight: 700;
             font-style: normal;
         }
-        body, input, button {
+         input, button {
             font-family: 'Pretendard-Bold';
+        }
+        .page-contents {
+            display: flex;
+            flex-direction: column; /* 위에서 아래로 레이아웃을 설정 */
+            flex: 1; /* 컨텐츠 영역이 남은 공간을 차지하도록 설정 */
+            justify-content: center; /* 수직 중앙 정렬 */
+            align-items: center; /* 수평 중앙 정렬 */
+            min-height: calc(100vh - 100px); /* 푸터 높이 조정 필요 */
         }
         h3 {
             font-family: 'Pretendard-Bold';
             font-size: 250%;
         }
-        html, body {
-            margin:0; height:100%; overflow:hidden;
+        html {
+            margin:0;
+            height:100%;
+            overflow:hidden;
         }
 
         .flex_container {
@@ -43,68 +52,7 @@
             padding: 0.1em;
         }
 
-        .nav {
-            list-style: none;
-            font-weight: bold;
-            margin-bottom: 10px;
-            float: left; /* Clear floats */
-            width: 100%;
-            /* Bring the nav above everything else--uncomment if needed.
-            position: relative;
-            z-index: 5;
-            */
-        }
-        .nav li {
-            float: left;
-            margin-right: 10px;
-            position: relative;
-        }
-        .nav a {
-            display: block;
-            padding: 5px;
-            color: #fff;
-            background-color: #000;
-            text-decoration: none;
-        }
-        .nav a:hover {
-            color: #fff;
-            background-color: #6b0c36;
-            text-decoration: underline;
-        }
 
-        /*--- DROPDOWN ---*/
-        .nav ul {
-            background-color: #fff; /* Adding a background makes the dropdown work properly in IE7+. Make this as close to your page's background as possible (i.e. white page == white background). */
-            background: rgba(255,255,255,0); /* But! Let's make the background fully transparent where we can, we don't actually want to see it if we can help it... */
-            list-style: none;
-            position: absolute;
-            left: -9999px; /* Hide off-screen when not needed (this is more accessible than display: none;) */
-        }
-        .nav ul li {
-            padding-top: 1px; /* Introducing a padding between the li and the a give the illusion spaced items */
-            float: none;
-        }
-        .nav ul a {
-            white-space: nowrap; /* Stop text wrapping and creating multi-line dropdown items */
-        }
-        .nav li:hover ul { /* Display the dropdown on hover */
-            left: -40px; /* 리스트 안에 있는 하위 리스트는 40px 들여쓰기 되어 나타나므로 부모와 왼쪽을 정렬하기 위함 */
-        }
-        .nav li:hover a { /* These create persistent hover states, meaning the top-most link stays 'hovered' even when your cursor has moved down the list. */
-            background-color: #000;
-            text-decoration: underline;
-        }
-        .nav li:hover ul a { /* The persistent hover state does however create a global style for links even before they're hovered. Here we undo these effects. */
-            text-decoration: none;
-        }
-        .nav li:hover ul li a:hover { /* Here we define the most explicit hover states--what happens when you hover each individual link. */
-            background-color: #333;
-        }
-        @media screen and (min-width: 300px) {
-            div > nav {
-                padding: 24px 30px;
-            }
-        }
         form {
             position: absolute;
             padding: 20px;
@@ -117,7 +65,7 @@
     </style>
 </head>
 <body>
-
+<div class="page-contents">
 <form action="<c:url value="/login/login"/>" method="post" onsubmit="return formCheck(this);">
     <h3 style="text-align:center">Login</h3>
     <div id="msg">
@@ -160,6 +108,10 @@
         }
     </script>
 </form>
+</div>
+<div>
+    <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
+</div>
 </body>
 
 </html>

@@ -1,6 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="true"%>
+
+<c:set var="user" value="${sessionScope.user}" />
+<c:set var="loginId" value="${user == null ? '' : user.id}" />
+<c:set var="loginOutLink" value="${user == null ? '/login/login' : '/login/logout'}" />
+
+<c:choose>
+    <c:when test="${user == null}">
+        <c:set var="loginOut" value="Login" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="loginOut" value="${'Logout ('}${loginId}${')'}" />
+    </c:otherwise>
+</c:choose>
 <%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
 
 

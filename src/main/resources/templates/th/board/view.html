@@ -4,9 +4,29 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
     <title>게시글 보기</title>
+    <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .page-contents {
+            /*    font-family: Arial, sans-serif;*/
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            /*    height: 100vh;*/
+            /*    margin: 0;*/
+            min-height: 100vh;
+        }
+    </style>
+
 </head>
 <body>
+<div>
+    <th:block th:replace="~{th/header :: header}"></th:block>
+</div>
+
+<div class="page-contents">
+
 <h1>게시글 보기</h1>
 
 <div>
@@ -96,6 +116,8 @@
         </li>
     </ul>
 </div>
+</div>
+<th:block th:replace="~{th/footer :: footer}"></th:block>
 
 <script>
     function deleteBoard(bno) {

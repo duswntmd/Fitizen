@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
 <!DOCTYPE html>
 <style>
     /* 로딩 스피너 디자인 */
@@ -17,6 +18,31 @@ margin: 0 auto;
 0% { transform: rotate(0deg); }
 100% { transform: rotate(360deg); }
 }
+</style>
+<style>
+    /* 전체 페이지 레이아웃을 위한 설정 */
+    html, body {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+
+    }
+
+    /* 콘텐츠가 화면의 나머지 공간을 차지하도록 설정 */
+    .page-contents {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* 콘텐츠가 가운데 정렬되도록 설정 */
+        align-items: center;
+    }
+
+
+    button {
+        display: block;
+        margin-top: 20px;
+    }
 </style>
 <html>
 <head>
@@ -62,7 +88,9 @@ margin: 0 auto;
     </script>
 </head>
 <body>
+
 <h2>비밀번호 찾기</h2>
+<div class="page-contents">
 <form id="findPwdForm">
 
     <div>
@@ -80,5 +108,7 @@ margin: 0 auto;
 </form>
 
 <div id="result"></div>
+</div>
+<%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 </body>
 </html>
