@@ -14,6 +14,4 @@ public class User {
     private Date birth;
     private Date reg_date;
     private Date up_date;
-
-    private int webMoney;
 }

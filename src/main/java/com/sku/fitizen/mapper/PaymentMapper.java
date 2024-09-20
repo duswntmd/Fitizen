@@ -15,4 +15,9 @@ public interface PaymentMapper {
 
    // 결제 기록 (개인) 불러오기
    List<Payment> getPaymentList(String userId);
+
+   // 개인 보유 잔여 포인트 목록 조회
+   int getBalanceByUserId(String userId);
+
+
 }

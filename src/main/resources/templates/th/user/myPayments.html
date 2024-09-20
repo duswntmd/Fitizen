@@ -149,7 +149,7 @@
         <div class="payment-item"><span>결제 번호</span></div>
         <div class="payment-item"><span>결제 금액</span></div>
         <div class="payment-item"><span>날짜</span></div>
-        <div class="payment-item"><span>기타</span></div> <!-- 작업 열 추가 -->
+        <div class="payment-item"><span>문의</span></div> <!-- 작업 열 추가 -->
     </div>
     <div th:each="payment : ${payments}" class="payment-row">
         <div class="payment-item" th:text="${payment.impUid}"></div>
@@ -162,7 +162,7 @@
 </div>
 
 <h1>포인트 사용 현황</h1>
-<h3>보유 포인트 :100 원</h3>
+<h3>보유 포인트: [[${balance}]] P</h3>
 <div id="circle" style="min-height: 205px;"></div>
 
 </body>
