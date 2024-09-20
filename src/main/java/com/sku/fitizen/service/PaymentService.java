@@ -1,4 +1,4 @@
-package com.sku.fitizen.controller.challenge;
+package com.sku.fitizen.service;
 
 import com.sku.fitizen.domain.Payment;
 import com.sku.fitizen.mapper.PaymentMapper;
@@ -36,6 +36,7 @@ public class PaymentService {
         return  false;
     }
 
+    // 결제 기록 불러오기
     public List<Payment> getPaymentLsit(String userId)
     {
         List<Payment> Payments =paymentMapper.getPaymentList(userId);
@@ -44,6 +45,12 @@ public class PaymentService {
 
     }
 
+
+    // 잔액 포인트 불러오기
+    public  int  getBalanceBYUserId(String userId)
+    {
+        return paymentMapper.getBalanceByUserId(userId);
+    }
 
 
 
