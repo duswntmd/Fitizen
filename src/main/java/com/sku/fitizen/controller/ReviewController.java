@@ -40,6 +40,11 @@ public class ReviewController {
 //        return null;
 //    }
 
+    @GetMapping("/listmap")
+    public String showMapPage(Model model) {
+        return "map";
+    }
+
     @GetMapping("/map")
     public String showMapPage(@RequestParam(value = "exercise",required = false) String exercise, Model model) {
         String keyword="";
@@ -97,6 +102,11 @@ public class ReviewController {
         List<Review> reviews = reviewService.getReviewsByPlaceId(place.getId());
         model.addAttribute("place", place);
         model.addAttribute("reviews", reviews);
+
+        if (place.getImageUrl() != null) {
+            model.addAttribute("imageUrl", place.getImageUrl());
+        }
+
         return "th/reviewDetail";
     }
 
@@ -125,6 +135,11 @@ public class ReviewController {
         model.addAttribute("place", place);
         model.addAttribute("reviews", reviews);
         model.addAttribute("currentUser", currentUser);
+
+        if (place.getImageUrl() != null) {
+            model.addAttribute("imageUrl", place.getImageUrl());
+        }
+
         return "th/reviewDetail";
     }
 

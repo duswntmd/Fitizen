@@ -11,4 +11,5 @@ public class Place {
     private String roadaddress;
     private String address;
     private String phone;
+    private String imageUrl;
 }
