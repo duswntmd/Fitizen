@@ -1,7 +1,6 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="true"%>
-
 <c:set var="user" value="${sessionScope.user}" />
 <c:set var="loginId" value="${user == null ? '' : user.id}" />
 <c:set var="loginOutLink" value="${user == null ? '/login/login' : '/login/logout'}" />
@@ -17,22 +16,29 @@
 
 <!DOCTYPE html>
 <html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/css/index/indexStyle.css"> <!-- CSS 파일 링크 -->
 </head>
-<body>
+
 <header>
     <div class="header-container">
         <div id="logo">
             <a href="/"><img src="/image/logo.png" width="300" height="100" alt="Logo"></a>
         </div>
         <ul class="nav">
+            <li> <a href="/findME">맞춤 운동 찾기</a></li>
             <li><a href="/challenge">챌린지</a></li>
             <li class="dropdown">
-                <a href="/board/list">게시판</a>
+                <a href="/board/list">   게시판   </a>
                 <ul class="dropdown-menu">
+                    <li><a href="/board/list">자유게시판</a></li>
                     <li><a href="/qna">Q&A</a></li>
+
+
+
+
                 </ul>
             </li>
             <li><a href="${loginOutLink}">${loginOut}</a></li>
@@ -55,5 +61,5 @@
     </div>
 </header>
 <!-- 페이지 컨텐츠 -->
-</body>
+
 </html>

@@ -14,6 +14,7 @@ public class QnaController {
     public QnaController(QnaService qnaService) {
         this.qnaService = qnaService;
     }
+
     @GetMapping("")
     public String list(Model model) {
     model.addAttribute("list",qnaService.findAll());

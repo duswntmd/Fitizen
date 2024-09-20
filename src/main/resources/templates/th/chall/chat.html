@@ -4,10 +4,27 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
     <title>WebSocket Test Page</title>
+    <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
     <link th:href="@{/css/challenge/chat.css}" rel="stylesheet" />
-
+    <style>
+        .page-contents {
+            /*    font-family: Arial, sans-serif;*/
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            /*    height: 100vh;*/
+            /*    margin: 0;*/
+            min-height: 100vh;
+        }
+    </style>
 </head>
 <body>
+<div>
+    <th:block th:replace="~{th/header :: header}"></th:block>
+</div>
+<div class="page-contents">
+
 <div id="chatContainer">
     <!-- textarea 대신 div 사용 -->
     <div id="chatBoxArea"></div>
@@ -19,6 +36,8 @@
 
     <input id="imgInputBox" type="file" accept="image/*">
 </div>
+</div>
+<th:block th:replace="~{th/footer :: footer}"></th:block>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
     var userId = '[[${userId}]]';

@@ -5,8 +5,7 @@ import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import com.sku.fitizen.domain.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.sku.fitizen.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -104,6 +103,8 @@ public class PaymentController {
        List<com.sku.fitizen.domain.Payment> list =paymentService.getPaymentLsit(userId);
        model.addAttribute("payments", list);
 
+       int balance =paymentService.getBalanceBYUserId(userId);
+       model.addAttribute("balance", balance);
         return "th/user/myPayments";
     }
 

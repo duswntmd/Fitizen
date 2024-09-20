@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -47,7 +48,7 @@
             color: #333;
         }
 
-        p {
+        span{
             font-size: 18px;
             color: #555;
         }
@@ -74,7 +75,7 @@
 
 <div class="container">
     <h1>운동 검사 결과(추천 운동)</h1>
-    <p id="resultText"></p>
+    <span id="resultText"></span>
     <button onclick="window.location.href='/findME'">다시 검사하기</button>
 </div>
 
@@ -93,6 +94,6 @@
         document.getElementById('resultText').innerText = "결과가 없습니다. 검사를 다시 시도해주세요.";
     }
 </script>
-
+<%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 </body>
 </html>
