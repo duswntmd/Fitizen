@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
@@ -64,23 +65,26 @@
     </style>
     <script>
         $(document).ready(function() {
+
             var IMP = window.IMP;
-            IMP.init("imp38808434");  // 가맹점 식별코드로 초기화
+            IMP.init("imp38808434");// 가맹점 식별코드로 초기화
+
         });
 
         function requestPay(amount) {
+
+            const userEmail = '[[${user.email}]]';
+            const userId= '[[${user.id}]]';
+
             IMP.init("imp38808434");
             IMP.request_pay(
                 {
                     pg: 'html5_inicis',
-                    pay_method: "card",
                     name: "FITIZEN POINT",
                     amount: amount,
-                    buyer_email: "gildong@gmail.com",
-                    buyer_name: "홍길동",
-                    buyer_tel: "010-4242-4242",
-                    buyer_addr: "서울특별시 강남구 신사동",
-                    buyer_postcode: "01181"
+                    buyer_email:userEmail,
+                    buyer_name:userId
+
                 },
                 function (rsp) {
                     console.log(rsp);
@@ -90,8 +94,32 @@
                     }).done(function(data) {
                         console.log(data);
                         if (rsp.paid_amount === data.response.amount) {
-                            alert("imp_uid: " + data.imp_uid + " merchant_uid(orderKey) :" + data.merchant_uid);
-                            alert("결제 및 결제검증완료");
+                            alert("imp_uid: " + data.impUid + " merchant_uid(orderKey) :" + data.merchantUid);
+                            console.log("결제 및 결제검증완료")
+
+                            // 결제 검증 성공 후, 추가 데이터 전송
+                            $.ajax({
+                                type: 'POST',
+                                url: '/savePayment',
+                                contentType: 'application/json',
+                                data: JSON.stringify({
+                                    userId: userId,
+                                    userEmail: userEmail,
+                                    amount: rsp.paid_amount,
+                                    impUid: rsp.imp_uid,
+                                    merchantUid: rsp.merchant_uid,
+                                    paidAt:data.paidAt
+
+                                }),
+                                dataType: 'json',
+                                success: function(success) {
+                                    alert("결제 완료")
+                                    console.log("결제 정보 저장 성공",success);
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error("결제 정보 저장 실패", error);
+                                }
+                            });
                         } else {
                             alert("결제 실패");
                         }
@@ -105,8 +133,9 @@
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({
-                    merchant_uid: "nobody_1726726496126",
-                    cancel_request_amount: 100,
+                    merchant_uid:"",
+                    imp_uid:"imp_225364953329",
+                    cancel_request_amount:0,
                     reason: "테스트 결제 환불"
                 }),
                 dataType: "json",
@@ -125,10 +154,10 @@
     <h2>포인트 충전</h2>
 
     <div class="button-container">
-        <button class="point-button" onclick="requestPay(10)">10 포인트</button>
-        <button class="point-button" onclick="requestPay(30)">30 포인트</button>
-        <button class="point-button" onclick="requestPay(50)">50 포인트</button>
-        <button class="point-button" onclick="requestPay(100)">100 포인트</button>
+        <button class="point-button" onclick="requestPay(100)">100포인트</button>
+        <button class="point-button" onclick="requestPay(300)">300포인트</button>
+        <button class="point-button" onclick="requestPay(500)">500 포인트</button>
+        <button class="point-button" onclick="requestPay(1000)">1000 포인트</button>
     </div>
 
     <div class="button-container">
