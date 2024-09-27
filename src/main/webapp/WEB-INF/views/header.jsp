@@ -37,13 +37,14 @@
                     <li><a href="/qna">Q&A</a></li>
 
 
-
-
                 </ul>
             </li>
             <li><a href="${loginOutLink}">${loginOut}</a></li>
-            <li><a href="/register/add">회원가입</a></li>
+            <c:if test="${user == null}">
+             <li>   <a href="/register/add">회원가입</a></li>
+            </c:if>
             <li class="dropdown">
+
                 <c:if test="${user != null}">
 
                     <a href="/user/myPage">마이페이지</a>

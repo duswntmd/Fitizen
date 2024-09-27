@@ -9,7 +9,7 @@
     <title>맞춤 운동 검사</title>
     <style>
         .exercise-img {
-            width: 300px;   /* 원하는 너비로 설정 */
+            width: 200px;   /* 원하는 너비로 설정 */
             height: auto;   /* 비율에 맞게 높이 자동 조정 */
         }
 
@@ -19,6 +19,7 @@
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+
         }
         .options input[type="radio"] {
             display: none; /* 숨기기 */
@@ -28,7 +29,7 @@
             opacity: 0.6; /* 투명도 */
         }
         .container {
-            max-width: 700px;
+            max-width: 1500px;
             margin: 50px auto;
             padding: 20px;
             background-color: #fff;
@@ -46,17 +47,27 @@
         }
 
         .question p {
-            font-size: 18px;
+            font-size: 25px;
             color: #555;
+            font-weight:bold;
         }
 
         .options {
+            display: flex;
+            justify-content: space-around; /* 항목 간격을 일정하게 배치 */
+            align-items: center;
             margin: 10px 0;
+            flex-wrap: wrap; /* 화면 크기에 따라 자동으로 줄바꿈 */
         }
 
+        .option-text {
+            display: block; /* 텍스트를 이미지 아래에 표시 */
+            margin-top: 10px; /* 이미지와 텍스트 간격 */
+            font-size: 16px;
+        }
 
         .options label {
-            display: block;
+            display: inline-block;
             font-size: 16px;
             margin-bottom: 8px;
             color: #333;
