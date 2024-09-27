@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sku.fitizen.mapper.board.FileMapper">
+
+    <!-- resultMap 정의: files 테이블의 컬럼과 BoardFilesVO 필드를 명시적으로 매핑 -->
+    <resultMap id="FileResultMap" type="com.sku.fitizen.domain.board.BoardFilesVO">
+        <id property="fnum" column="fnum"/>
+        <result property="bno" column="bno"/>
+        <result property="realName" column="realName"/>
+        <result property="uuidName" column="uuidName"/>
+        <result property="fsize" column="fsize"/>
+        <result property="ftype" column="ftype"/>
+        <result property="youtubeUrl" column="youtube_url"/> <!-- youtube_url을 youtubeUrl로 매핑 -->
+    </resultMap>
+
+    <!-- 특정 게시글에 속한 파일 목록 조회 -->
+    <select id="getFilesByBoard" parameterType="long" resultMap="FileResultMap">
+        SELECT fnum, bno, realName, uuidName, fsize, ftype, youtube_url
+        FROM files
+        WHERE bno = #{bno}
+    </select>
+
+    <!-- 특정 파일 번호(fnum)에 해당하는 파일 정보 조회 -->
+    <select id="getFileByFnum" parameterType="long" resultMap="FileResultMap">
+        SELECT *
+        FROM files
+        WHERE fnum = #{fnum}
+    </select>
+
+    <!-- 파일 삽입 -->
+    <insert id="insertFile" parameterType="com.sku.fitizen.domain.board.BoardFilesVO">
+        INSERT INTO files (fnum, bno, realName, uuidName, fsize, ftype, youtube_url)
+        VALUES (FILES_SEQ.NEXTVAL, #{bno}, #{realName, jdbcType=VARCHAR}, #{uuidName, jdbcType=VARCHAR}, #{fsize, jdbcType=INTEGER}, #{ftype, jdbcType=VARCHAR}, #{youtubeUrl, jdbcType=VARCHAR})
+    </insert>
+
+    <!-- 파일 삭제 -->
+    <delete id="deleteFile" parameterType="long">
+        DELETE FROM files
+        WHERE fnum = #{fnum}
+    </delete>
+
+    <!-- 특정 게시글에 속한 모든 파일 삭제 -->
+    <delete id="deleteFilesByBoard" parameterType="long">
+        DELETE FROM files
+        WHERE bno = #{bno}
+    </delete>
+
+</mapper>

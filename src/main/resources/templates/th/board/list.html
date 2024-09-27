@@ -31,7 +31,7 @@
             text-align: center;
         }
         table {
-            width: 100%;
+            width: 80%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
@@ -90,6 +90,37 @@
         .pagination a:hover {
             background-color: #ddd;
         }
+
+        .search-form-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            width: 79%;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .search-input {
+            display: flex;
+            margin-top: 25px;
+            margin-left: 430px;
+            gap: 10px;
+        }
+
+        .button-container {
+            margin-top: 10px;
+            margin-right: 130px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -102,26 +133,33 @@
 <h1>게시글 목록</h1>
 
 <!-- 검색 폼 -->
-<form action="/board/search" method="get">
-    <!-- 검색 조건 선택 -->
-    <label for="searchType">검색 기준:</label>
-    <select id="searchType" name="searchType">
-        <option value="title">제목</option>
-        <option value="author">작성자</option>
-    </select>
-
-    <!-- 검색어 입력 -->
-    <label for="keyword">검색어:</label>
-    <input type="text" id="keyword" name="keyword" placeholder="검색어" th:value="${param.keyword}">
-
-    <button type="submit">검색</button>
-</form>
+    <div class="search-form-container">
+        <div class="search-input">
+            <!-- 검색 폼 -->
+            <form action="/board/search" method="get">
+                <!-- 검색 조건 선택 -->
+                <label for="searchType">검색 기준:</label>
+                <select id="searchType" name="searchType">
+                    <option value="">선택 항목</option>
+                    <option value="title">제목</option>
+                    <option value="author">작성자</option>
+                </select>
+                <!-- 검색어 입력 -->
+                <label for="keyword">검색어:</label>
+                <input type="text" id="keyword" name="keyword" placeholder="검색어" th:value="${param.keyword}">
+                <button type="submit">검색</button>
+            </form>
+        </div>
+        <div class="button-container">
+            <a href="/board/write"><button>글 작성</button></a>
+        </div>
+    </div>
 
 <table>
     <thead>
     <tr>
         <th>번호</th>
-        <th>제목</th>
+        <th style="width: 50%;">제목</th>
         <th>작성자</th>
         <th>작성일</th>
         <th>조회수</th>
@@ -169,7 +207,6 @@
     <p th:text="'현재 페이지: ' + ${pageInfo.pageNum} + ' / ' + ${pageInfo.pages}"></p>
 </div>
 
-<a href="/board/write"><button>글 작성</button></a>
 </div>
 <th:block th:replace="~{th/footer :: footer}"></th:block>
 </body>

@@ -6,17 +6,103 @@
     <title>게시글 작성</title>
     <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <style>
+    body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
     .page-contents {
-        /*    font-family: Arial, sans-serif;*/
         display: flex;
         justify-content: center;
-        flex-direction: column;
         align-items: center;
-        /*    height: 100vh;*/
-        /*    margin: 0;*/
+        flex-direction: column;
         min-height: 100vh;
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
+
+    form {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 30px;
+        max-width: 1200px;
+        width: 100%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        font-weight: bold;
+        margin-top: 15px;
+        display: block;
+    }
+
+    input[type="text"],
+    input[type="file"],
+    textarea {
+        width: 100%;
+        padding: 15px;
+        margin-top: 8px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    input[type="file"] {
+        margin-bottom: 15px;
+    }
+
+    button[type="submit"] {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        font-size: 18px;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+        margin-top: 15px;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    #content {
+        width: 97.5%;
+        height: 600px;
+        border: 1px solid #ccc;
+        padding: 15px;
+        border-radius: 6px;
+        background-color: #fff;
+        font-size: 16px;
+    }
+
+    /* Header & Footer Style */
+    th:block th:replace {
+        margin: 30px 0;
     }
 </style>
 
@@ -36,8 +122,13 @@
     </div>
     <div>
         <label for="content">내용:</label>
-        <textarea id="content" name="content" required></textarea>
+        <div id="content" contenteditable="true" required></div>
+        <input type="hidden" id="contentInput" name="content">
     </div>
+<!--    <div>-->
+<!--        <label for="contentImages">내용에 들어갈 이미지:</label>-->
+<!--        <input type="file" id="contentImages" name="contentImages" multiple>-->
+<!--    </div>-->
     <div>
         <label for="files">파일 첨부:</label>
         <input type="file" id="files" name="files" multiple>
@@ -54,8 +145,82 @@
 <th:block th:replace="~{th/footer :: footer}"></th:block>
 <script>
     $(document).ready(function() {
+
+        // $('#insertYoutube').on('click', function() {
+        //     let youtubeUrl = $('#youtubeUrl').val();
+        //
+        //     if (youtubeUrl) {
+        //         // 유튜브 URL에서 watch?v=를 embed/로 변환
+        //         let youtubeEmbedUrl = youtubeUrl.replace("watch?v=", "embed/");
+        //
+        //         // 불필요한 쿼리 파라미터 제거 (예: &list=, &start_radio= 등)
+        //         youtubeEmbedUrl = youtubeEmbedUrl.split('&')[0];
+        //
+        //         const iframe = `<iframe width="560" height="315" src="${youtubeEmbedUrl}" frameborder="0" allowfullscreen></iframe>`;
+        //         $('#content').append(iframe);
+        //     } else {
+        //         alert('유튜브 링크를 입력하세요.');
+        //     }
+        // });
+
+        // $('#files').on('change', function() {
+        //     let fileInput = this.files;
+        //     for (let i = 0; i < fileInput.length; i++) {
+        //         let file = fileInput[i];  // 현재 파일
+        //
+        //         let reader = new FileReader();
+        //         reader.onload = function(e) {
+        //             $('#content').append(`<img src="${e.target.result}" style="max-width: 100%;"><br>`);  // base64로 미리보기
+        //         };
+        //
+        //         reader.readAsDataURL(file);  // 파일을 base64로 읽기
+        //     }
+        // });
+
+        // $('#youtubeUrl').on('change', function() {
+        //     let youtubeUrl = $(this).val();
+        //     if (youtubeUrl) {
+        //         let youtubeEmbedUrl = youtubeUrl.replace("watch?v=", "embed/");
+        //         $('#content').append(`<iframe width="560" height="315" src="${youtubeEmbedUrl}" frameborder="0" allowfullscreen></iframe><br>`);
+        //     } else {
+        //         alert('유튜브 링크를 입력하세요.');
+        //     }
+        // });
+
+        // $('#contentImages').on('change', function() {
+        //     let fileInput = this.files;
+        //     for (let i = 0; i < fileInput.length; i++) {
+        //         let file = fileInput[i];  // 현재 파일
+        //         let formData = new FormData();
+        //         formData.append('file', file);  // 폼데이터에 파일 추가
+        //
+        //         // 서버로 파일을 전송
+        //         $.ajax({
+        //             url: '/board/uploadImage',  // 서버의 파일 업로드 엔드포인트
+        //             type: 'POST',
+        //             data: formData,
+        //             processData: false,  // 파일 데이터를 처리하지 않도록 설정
+        //             contentType: false,  // contentType을 false로 설정하여 파일을 전송
+        //             success: function(response) {
+        //                 if (response.success) {
+        //                     // 서버에서 반환된 URL을 사용하여 이미지 미리보기
+        //                     let imageUrl = response.url;
+        //                     $('#content').append(`<img src="${imageUrl}" style="max-width: 100%;"><br>`);
+        //                 } else {
+        //                     alert('이미지 업로드 실패: ' + response.message);
+        //                 }
+        //             },
+        //             error: function() {
+        //                 alert('이미지 업로드 중 오류가 발생했습니다.');
+        //             }
+        //         });
+        //     }
+        // });
+
         $('#writeForm').on('submit', function(event) {
             event.preventDefault();  // 폼 기본 제출 방지
+
+            $('#contentInput').val($('#content').html());
 
             var formData = new FormData(this);
 
