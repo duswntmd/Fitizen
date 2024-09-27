@@ -16,8 +16,6 @@ public class UserController {
     @GetMapping("/myPage")
     public String myPage(@SessionAttribute(value = "user") User user , Model model ) {
         model.addAttribute("user", user);
-
-        System.out.println(user.getId());
         return "th/user/myPage";
     }
 

@@ -7,9 +7,16 @@
 
     <!-- 사용자 추가 -->
     <insert id="insertUser" parameterType="User">
-        INSERT INTO USERS (ID, PWD, NAME, EMAIL, BIRTH, REG_DATE, UP_DATE)
-        VALUES (#{id}, #{pwd}, #{name}, #{email}, #{birth}, SYSDATE, NULL)
+        INSERT INTO USERS (ID, PWD, NAME, EMAIL, BIRTH, REG_DATE, UP_DATE,IS_TRAINER)
+        VALUES (#{id}, #{pwd}, #{name}, #{email}, #{birth}, SYSDATE, NULL,#{is_trainer})
     </insert>
+
+    <!-- 트레이너 추가 -->
+    <insert id="insertTrainer" parameterType="User">
+        INSERT INTO TRAINERS (TRAINERNO,USERID,WORKPLACENAME,LOCATION,WORKYEARS,ZIPCODE,LOCATIONDETAIL)
+        VALUES (TRAINER_SEQ.nextval,#{id}, #{workPlaceName},#{location},#{workYears},#{zipCode},#{locationDetail})
+    </insert>
+
 
     <!-- 사용자 목록 찾기 (로그인 등) -->
     <select id="selectUser" parameterType="String" resultType="User">

@@ -25,12 +25,27 @@
 
 
     <!-- 결제 내역 -->
-<select id="getPaymentList" parameterType="com.sku.fitizen.domain.Payment">
+    <select id="getPaymentList" parameterType="com.sku.fitizen.domain.Payment">
 
-    SELECT  * FROM  PAYMENT
-    WHERE  USERID =#{userId}
+         SELECT  * FROM  PAYMENT
+         WHERE  USERID =#{userId}
 
-</select>
+    </select>
+
+
+    <!--개인 보유 잔액(포인트)-->
+    <select id="getBalanceByUserId" parameterType="String" resultType="Integer">
+        SELECT
+            NVL((SELECT SUM(AMOUNT) FROM PAYMENT WHERE USERID = #{userId}), 0)
+                - NVL((SELECT SUM(SPENT_AMOUNT) FROM SPENDINGPOINT WHERE USERID = #{userId}), 0)
+                AS balance
+        FROM DUAL
+    </select>
+
+
+
+
+
 
 
 </mapper>

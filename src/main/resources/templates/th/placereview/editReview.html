@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
+    <title>리뷰 수정</title>
+    <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
+    <style>
+        .page-contents {
+            /*    font-family: Arial, sans-serif;*/
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            /*    height: 100vh;*/
+            /*    margin: 0;*/
+            min-height: 100vh;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#editReviewForm').on('submit', function(event) {
+                event.preventDefault(); // 폼의 기본 제출을 방지
+
+                const placeId = $('#placeIdInput').val(); // Ensure these inputs have correct values
+                const reviewId = $('#reviewIdInput').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/kakao/editReview',
+                    data: {
+                        placeId: placeId,
+                        reviewId: reviewId,
+                        content: $('#content').val(),
+                        rating: $('#rating').val()
+                    },
+                    success: function(response) {
+                        if (response.status === 'redirect') {
+                            window.location.href = response.url; // 리다이렉트 URL로 이동
+                        } else if (response.status === 'success') {
+                            alert('리뷰목록 수정 성공');
+                            window.location.href = response.url; // 성공 후 리다이렉트
+                        } else if (response.status === 'error') {
+                            alert(response.message); // 오류 메시지를 경고창으로 표시
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error occurred: ' + error);
+                        alert('리뷰 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
+                    }
+                });
+            });
+
+            // 평점 별 클릭 이벤트 처리
+            $('.star').on('click', function() {
+                const rating = $(this).data('value'); // 클릭한 별의 값(1~5)
+                $('#rating').val(rating); // 선택한 평점을 input hidden에 설정
+
+                // 모든 별을 빈 별로 초기화
+                $('.star').text('☆');
+
+                // 선택한 평점까지의 별을 채워진 별로 표시
+                $('.star').each(function(index) {
+                    if (index < rating) {
+                        $(this).text('★');
+                    }
+                });
+            });
+
+            // 페이지 로드 시 초기 별 표시
+            const initialRating = parseInt($('#rating').val());
+            $('.star').each(function(index) {
+                if (index < initialRating) {
+                    $(this).text('★'); // 기존 평점에 따라 채워진 별 표시
+                } else {
+                    $(this).text('☆'); // 나머지는 빈 별로 표시
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<div>
+    <th:block th:replace="~{th/header :: header}"></th:block>
+</div>
+<div class="page-contents">
+<h1>리뷰 수정</h1>
+
+<form id="editReviewForm">
+    <input type="hidden" id="placeIdInput" name="placeId" th:value="${place.id}" />
+    <input type="hidden" id="reviewIdInput" name="reviewId" th:value="${review.id}" />
+    <input type="hidden" id="rating" name="rating" th:value="${review.rating}" />
+    <div>
+        <label for="content">리뷰 내용:</label>
+        <textarea id="content" name="content" required th:text="${review.content}"></textarea>
+    </div>
+    <div>
+        <label for="rating">평점 (1~5):</label>
+        <div id="starContainer">
+            <span class="star" data-value="1">☆</span>
+            <span class="star" data-value="2">☆</span>
+            <span class="star" data-value="3">☆</span>
+            <span class="star" data-value="4">☆</span>
+            <span class="star" data-value="5">☆</span>
+        </div>
+    </div>
+    <button type="submit">수정</button>
+</form>
+
+
+</div>
+<th:block th:replace="~{th/footer :: footer}"></th:block>
+
+</body>
+</html>

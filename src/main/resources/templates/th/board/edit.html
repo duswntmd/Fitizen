@@ -7,18 +7,118 @@
     <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+
         .page-contents {
-            /*    font-family: Arial, sans-serif;*/
             display: flex;
             justify-content: center;
             flex-direction: column;
             align-items: center;
-            /*    height: 100vh;*/
-            /*    margin: 0;*/
             min-height: 100vh;
+            width: 100%;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        textarea {
+            height: 250px;
+            resize: vertical;
+        }
+
+        input[type="file"] {
+            margin-bottom: 15px;
+        }
+
+        div[id="send"] button  {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+            text-decoration: none;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        ul li a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        ul li a:hover {
+            text-decoration: underline;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        @media (max-width: 1024px) {
+            form {
+                max-width: 100%;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            form {
+                padding: 20px;
+                max-width: 100%;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
         }
     </style>
-
 </head>
 <body>
 <div>
@@ -26,53 +126,55 @@
 </div>
 
 <div class="page-contents">
-<h1>게시글 수정</h1>
+    <h1>게시글 수정</h1>
 
-<form id="editForm" enctype="multipart/form-data">
-    <input type="hidden" name="bno" th:value="${board.bno}">
+    <form id="editForm" enctype="multipart/form-data">
+        <input type="hidden" name="bno" th:value="${board.bno}">
 
-    <div>
-        <label for="title">제목:</label>
-        <input type="text" id="title" name="title" th:value="${board.title}" required>
-    </div>
-    <div>
-        <label for="content">내용:</label>
-        <textarea id="content" name="content" required th:text="${board.content}"></textarea>
-    </div>
+        <div>
+            <label for="title">제목:</label>
+            <input type="text" id="title" name="title" th:value="${board.title}" required>
+        </div>
+        <div>
+            <label for="content">내용:</label>
+            <textarea id="content" name="content" required th:text="${board.content}"></textarea>
+        </div>
 
-    <!-- 기존 파일 목록 표시 및 삭제 선택 옵션 -->
-    <div>
-        <label>기존 첨부파일:</label>
-        <ul>
-            <li th:each="file : ${files}">
-                <div th:if="${file.youtubeUrl != null}">
-                    <span>유튜브 링크:</span>
-                    <a th:href="'https://www.youtube.com/watch?v=' + ${file.youtubeUrl}" th:text="${file.youtubeUrl}"></a>
-                </div>
-                <div th:if="${file.youtubeUrl == null}">
-                    <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}" th:text="${file.realName}"></a>
-                </div>
-                <input type="checkbox" name="deleteFiles" th:value="${file.fnum}"> 삭제
-            </li>
-        </ul>
-    </div>
+        <!-- 기존 파일 목록 표시 및 삭제 선택 옵션 -->
+        <div>
+            <label>기존 첨부파일:</label>
+            <ul>
+                <li th:each="file : ${files}">
+                    <div th:if="${file.youtubeUrl != null}">
+                        <span>유튜브 링크:</span>
+                        <a th:href="'https://www.youtube.com/watch?v=' + ${file.youtubeUrl}" th:text="${file.youtubeUrl}"></a>
+                    </div>
+                    <div th:if="${file.youtubeUrl == null}">
+                        <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}" th:text="${file.realName}"></a>
+                    </div>
+                    <input type="checkbox" name="deleteFiles" th:value="${file.fnum}"> 삭제
+                </li>
+            </ul>
+        </div>
 
-    <div>
-        <label for="youtubeUrl">유튜브 링크:</label>
-        <input type="text" id="youtubeUrl" name="youtubeUrl" placeholder="유튜브 링크를 입력하세요">
-    </div>
-    <!-- 새로운 파일 업로드 필드 -->
-    <div>
-        <label for="files">새 파일 첨부:</label>
-        <input type="file" id="files" name="files" multiple>
-    </div>
+        <div>
+            <label for="youtubeUrl">유튜브 링크:</label>
+            <input type="text" id="youtubeUrl" name="youtubeUrl" placeholder="유튜브 링크를 입력하세요">
+        </div>
+        <!-- 새로운 파일 업로드 필드 -->
+        <div>
+            <label for="files">새 파일 첨부:</label>
+            <input type="file" id="files" name="files" multiple>
+        </div>
+        <div id="send">
+            <button type="submit">수정 완료</button>
+            <button type="button" th:onclick="'window.location.href=\'/board/view/' + ${board.bno} + '\';'">취소</button>
 
-    <button type="submit">수정 완료</button>
-</form>
-
-<a href="/board/view/{bno}" th:href="@{/board/view/{bno}(bno=${board.bno})}">취소</a>
+        </div>
+    </form>
 </div>
 <th:block th:replace="~{th/footer :: footer}"></th:block>
+
 <script>
     $(document).ready(function() {
         $('#editForm').on('submit', function(event) {
