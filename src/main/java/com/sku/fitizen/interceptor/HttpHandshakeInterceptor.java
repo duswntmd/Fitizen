@@ -25,11 +25,15 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor
             String userId = ((ServletServerHttpRequest) request).getServletRequest().getParameter("userId");
             String roomId = ((ServletServerHttpRequest) request).getServletRequest().getParameter("roomId");
 
+            String consultId = ((ServletServerHttpRequest) request).getServletRequest().getParameter("consultId");
+
+
             log.info("인터셉터, userId={}, roomId={}", userId, roomId);
 
             attributes.put("userId", userId);  // 사용자 아이디 전달
             attributes.put("roomId", roomId);
-
+            attributes.put("consultId",consultId);
+            System.err.println(consultId);
 
             //String userid = ((ServletServerHttpRequest) request).getServletRequest().getParameter("userid"); // 서블릿 api에 접근하여 파라미터를 가져오는 . http 가 아니기에  프로토콜이 다르기에
             //log.info("인터셉터, URI={}", request.getURI());

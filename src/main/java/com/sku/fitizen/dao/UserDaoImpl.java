@@ -21,6 +21,11 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public int insertTrainer(User user) {
+        return session.insert(namespace + "insertTrainer", user);
+    }
+
+    @Override
     public User selectUser(String id) {
         return session.selectOne(namespace + "selectUser", id);
     }

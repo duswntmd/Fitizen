@@ -8,6 +8,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,8 +19,23 @@ public class UserServiceImpl implements UserService {
     //EmailService emailService; // 이메일 서비스 주입
 
     @Override
+    @Transactional
     public int insertUser(User user) {
-        return userDao.insertUser(user);
+        int userInsertResult = userDao.insertUser(user); // 사용자 삽입
+
+        if ("Y".equals(user.getIs_trainer())) {
+            // 트레이너일 경우 트레이너 테이블에 삽입
+            int trainerInsertResult = userDao.insertTrainer(user);
+
+
+            if (userInsertResult > 0 && trainerInsertResult > 0) {
+                return trainerInsertResult;
+            } else {
+                return -1;
+            }
+        }
+
+        return userInsertResult; // 일반 유저 경우 사용자 삽입 결과 반환
     }
 
     @Override

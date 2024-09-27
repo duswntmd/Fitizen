@@ -33,6 +33,17 @@ public class UserValidator implements Validator {
         if(pwd==null || pwd.length() <  1 || pwd.length() > 15) {
             errors.rejectValue("pwd", "invalidLength", new String[]{"1","15"}, null);
         }
+        /*
+        // 트레이너일 경우 추가 필드 검사
+        if ("Y".equals(user.getIs_trainer())) {
+            // 예를 들어 workPlaceName 필드 검사
+            if (user.getWorkPlaceName() == null || user.getWorkPlaceName().isEmpty()) {
+                errors.rejectValue("workPlaceName", "required");
+            }
+            // 다른 필드에 대한 검사 추가...
+        }
+
+         */
 
     }
 }

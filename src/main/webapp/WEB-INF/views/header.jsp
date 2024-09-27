@@ -29,6 +29,7 @@
         </div>
         <ul class="nav">
             <li> <a href="/findME">맞춤 운동 찾기</a></li>
+            <li><a href="/trainer">트레이너</a></li>
             <li><a href="/challenge">챌린지</a></li>
             <li class="dropdown">
                 <a href="/board/list">   게시판   </a>

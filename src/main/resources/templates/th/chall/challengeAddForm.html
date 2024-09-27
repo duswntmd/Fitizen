@@ -17,6 +17,9 @@
             /*    margin: 0;*/
             min-height: 100vh;
         }
+
+
+
     </style>
 
 </head>
@@ -42,6 +45,9 @@
         </div>
 
         <div class="form-group inline-fields">
+
+            <!--
+
             <div>
                 <label for="startDate">시작일</label>
                 <input type="date" id="startDate" name="startDate">
@@ -50,6 +56,23 @@
                 <label for="endDate">종료일</label>
                 <input type="date" id="endDate" name="endDate">
             </div>
+
+            -->
+
+            <div class="acontainer px-1 px-sm-5 mx-auto">
+                <form autocomplete="off">
+                    <div class="flex-row d-flex justify-content-center">
+                        <div class="col-xl-5 col-lg-6 col-11 px-1">
+                            <div class="input-group input-daterange">
+                                <label class="">주 선택:</label>
+                                <input type="text" name="daterange"   readonly />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
             <div>
                 <label for="limitUser">인원수 제한:</label>
                 <input type="number" id="limitUser" name="limitUser" min="1">
@@ -71,10 +94,50 @@
     </a>
 </div>
 </div>
+
+
+
 <th:block th:replace="~{th/footer :: footer}"></th:block>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link
+        rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+/>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<!--에이터 -->
 <script>
+
+
+
+
+
+
+
+    $(document).ready(function(){
+        var today = new Date();
+
+        $(function() {
+            $('input[name="daterange"]').daterangepicker({
+                startDate: today,
+                endDate:today,
+                opens: 'center',
+                autoUpdateInput: false,
+                locale: {
+                    format:'YYYY-MM-DD HH:mm:ss',
+                    language: "ko",
+                    applyLabel:"확인",
+                    cancelLabel: "취소",
+                    daysOfWeek: ["일","월","화","수","목","금","토"],
+                    monthNames:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"]
+                },
+
+            });
+        });
+    });
+
 
     document.getElementById('file').addEventListener('change', function(event) {
         const file = event.target.files[0];
@@ -122,3 +185,4 @@
 </script>
 </body>
 </html>
+
