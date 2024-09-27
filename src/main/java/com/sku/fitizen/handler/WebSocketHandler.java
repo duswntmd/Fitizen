@@ -45,7 +45,9 @@ public class WebSocketHandler extends TextWebSocketHandler
 
 
         String userId = (String) session.getAttributes().get("userId");
-        String roomId = (String) session.getAttributes().get("roomId");
+        String roomId = (String) session.getAttributes().get("roomId"); // 나중에 int ....로 바꿀껏
+        String consultId =(String)session.getAttributes().get("consultId");
+
 
         log.info("웹소켓 연결: userid={}, roomId={}", userId, roomId);
 
@@ -55,18 +57,16 @@ public class WebSocketHandler extends TextWebSocketHandler
 
         log.info("사용자 {}가 방 {}에 연결되었습니다.", userId, roomId);
 
-
+        if(roomId !=null) {
         boolean exists = chatService.checkParticipationExists(userId, roomId);
-        if(exists)
-        {
+        if (exists) {
             List<Message> messages = chatService.getMessages(userId, roomId);
-            System.out.println(messages.size());
             for (Message m : messages) {
                 JSONObject jsonMessage = new JSONObject();
                 jsonMessage.put("sender", m.getSenderId());
                 jsonMessage.put("msg", m.getMessage());
-                if(m.getUImg() !=null) {
-                    String img ="data:image/jpeg;base64,"+ base64Image.imageToBase64(m.getUImg());
+                if (m.getUImg() != null) {
+                    String img = "data:image/jpeg;base64," + base64Image.imageToBase64(m.getUImg());
                     jsonMessage.put("img", img);
                     jsonMessage.put("fileName", m.getImg());
                 }
@@ -74,7 +74,7 @@ public class WebSocketHandler extends TextWebSocketHandler
                 session.sendMessage(textMessage);
             }
         }
-        
+    }
     }
 
     @Override  /* 서버에 메시지 도착시 호출됨 */

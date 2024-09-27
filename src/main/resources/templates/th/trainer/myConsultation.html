@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>상담</title>
+</head>
+<body>
+<div class="container">
+
+    <h1>상담 목록</h1>
+
+    <div class="consultation-list">
+        <!--유저인 경우-->
+        <div th:if="${user.getIs_trainer().equals('N')}">
+            <table>
+                <thead>
+                <tr>
+                    <th>트레이너 이름</th>
+                    <th>상담 상태</th>
+                    <th>결제 여부</th>
+                    <th>근무지</th>
+                    <th>위치</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="c : ${list}">
+                    <td th:text="${c.trainerName}">이름</td>
+                    <td th:text="${c.status}">상담 상태</td>
+                    <td th:text="${c.isPaid == 'Y' ? '결제 완료' : '결제 미완료'}">결제 여부</td>
+                    <td th:text="${c.workPlaceName}">근무지</td>
+                    <td th:text="${c.location}">위치</td>
+                    <td>
+                        <div th:if="${c.status=='APPROVED'}">
+                            <a class="button" th:href="@{/ws/tin(consultId=${c.consultId})}">채팅</a>
+                        </div>
+                        <div th:if="${c.status=='REQUESTED'}">
+                            <button th:data-trainer-no="${c.trainerNo}" onclick="cancel(this.dataset.trainerNo)">상담취소</button>
+                        </div>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <!--트레이너인 경우-->
+        <div th:if="${user.getIs_trainer().equals('Y')}">
+
+            <table>
+                <thead>
+                <tr>
+                    <th>유저 이름</th>
+                    <th>상담 상태</th>
+                    <th>결제 여부</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="c : ${list}">
+                    <td th:text="${c.userName}">이름</td>
+                    <td th:text="${c.status}">상담 상태</td>
+                    <td th:text="${c.isPaid == 'Y' ? '결제 완료' : '결제 미완료'}">결제 여부</td>
+                    <td>
+                        <div th:if="${c.status=='REQUESTED'}">
+                        <button th:data-user-id="${c.userId}" onclick="approve(this.dataset.userId)">상담 승인</button>
+                        <button th:data-user-id="${c.userId}" onclick="reject(this.dataset.userId)">상담 거절</button>
+                        </div>
+                        <div th:if="${c.status=='APPROVED'}">
+                            <a class="button" th:href="@{/ws/in}">채팅</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script >
+    function cancel(trainerNo) {
+        $.ajax({
+            url: '/consultation/cancel/' + trainerNo,
+            method: 'get',
+            cache: false,
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    alert("상담 취소되었습니다");
+
+                    $('#myTrainers').click();
+                }
+            },
+            error: function (xhr, status, err) {
+                alert('에러:' + err);
+            }
+        });
+    }
+
+    function approve(userId) {
+        $.ajax({
+            url: '/consultation/approve/' + userId,
+            method: 'get',
+            cache: false,
+            dataType: 'json',
+            success: function (res) {
+                if (res.approved) {
+                    alert("상담이 승인처리 되었습니다");
+
+                    $('#myUsers').click();
+                }
+            },
+            error: function (xhr, status, err) {
+                alert('에러:' + err);
+            }
+        });
+    }
+
+    function reject(userId) {
+        $.ajax({
+            url: '/consultation/reject/' + userId,
+            method: 'get',
+            cache: false,
+            dataType: 'json',
+            success: function (res) {
+                if (res.rejected) {
+                    alert("상담이 거절 처리 되었습니다");
+
+                    $('#myUsers').click();
+                }
+            },
+            error: function (xhr, status, err) {
+                alert('에러:' + err);
+            }
+        });
+    }
+</script>

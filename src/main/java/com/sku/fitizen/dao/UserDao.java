@@ -6,6 +6,7 @@ public interface UserDao {
     // 사용자 추가
     int insertUser(User user);
 
+    int insertTrainer(User user);
     // 사용자 목록
     User selectUser(String id);
 

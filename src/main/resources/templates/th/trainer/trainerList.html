@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>온라인 트레이너 상담</title>
+    <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .page-contents {
+            display: flex;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .trainer-card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            text-align: center;
+            background-color: #fff;
+            height: 300px; /* 카드의 고정된 높이 설정 */
+            overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* 내용이 고르게 배치되도록 설정 */
+        }
+        .trainer-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .trainer-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 5px 0; /* 여백 축소 */
+        }
+        .trainer-store, .trainer-location {
+            font-size: 12px;
+            color: #555;
+            margin: 5px 0; /* 여백 축소 */
+        }
+        .trainer-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        .btn {
+            padding: 8px 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .btn-free {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-info {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn-free:hover, .btn-info:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <th:block th:replace="~{th/header :: header}"></th:block>
+</div>
+
+<div class="page-contents">
+    <div class="trainer-card" th:each="trainer : ${trainers}">
+        <img src="https://via.placeholder.com/100" alt="트레이너" />
+        <div class="trainer-name" th:text="${trainer.userId}"></div>
+        <div class="trainer-store" th:text="'매장 이름: ' + ${trainer.workPlaceName}"></div>
+        <div class="trainer-location" th:text="'위치: ' + ${trainer.location}"></div>
+        <div class="trainer-buttons">
+            <button class="btn btn-free"  th:onclick="|consultation(${trainer.trainerNo})|">상담 신청</button>
+            <a th:href="@{/trainer/detail/{trainerNo}(trainerNo=${trainer.trainerNo})}" class="btn btn-info">정보 보기</a>
+        </div>
+    </div>
+</div>
+
+<div>
+    <th:block th:replace="~{th/footer :: footer}"></th:block>
+</div>
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script >
+    function consultation(trainerNo) {
+        $.ajax({
+            url: '/consultation/' + trainerNo,
+            method: 'GET',
+            cache: false,
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    alert("상담 신청 완료!");
+                    alert("트레이너 승인 시 비용이 지불됩니다.");
+                } else {
+                    alert(res.message);  // 서버에서 전달된 메시지 표시
+                }
+            },
+            error: function (xhr, status, err) {
+                alert("상담 신청 중 오류가 발생했습니다. 다시 시도해주세요.");
+            }
+        });
+    }
+
+</script>

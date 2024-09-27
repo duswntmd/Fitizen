@@ -43,7 +43,8 @@ public class RegisterController {
 
     @PostMapping("/add")
     @ResponseBody
-    public Map<String, Object> save(@Valid User user, BindingResult result, RedirectAttributes rattr, Model model) throws Exception {
+    public Map<String, Object> save( @Valid User user,
+                                    BindingResult result) throws Exception {
         Map<String, Object> response = new HashMap<>();
 
         if (!result.hasErrors()) {
@@ -57,13 +58,20 @@ public class RegisterController {
 
             if (rowCnt != FAIL) {
                 response.put("status", "success");
-                response.put("message", "회원가입 성공");
+                if(user.getIs_trainer().equals("N")) {
+                    response.put("message", "회원가입이 완료 되었습니다.");
+                }
+                else if(user.getIs_trainer().equals("Y"))
+                response.put("message","트레이너 가입이 완료되었습니다.");
+
                 return response;
             }
         }
 
         response.put("status", "error");
-        response.put("message", "회원가입 실패. 다시 시도해주세요.");
+       // response.put("message", "회원가입 실패. 다시 시도해주세요.");
+        response.put("message", result.getAllErrors().toString()); // 모든 오류를 출력
+
         return response;
     }
 
