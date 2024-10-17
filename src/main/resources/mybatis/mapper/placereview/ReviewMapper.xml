@@ -22,10 +22,10 @@
     </insert>
 
     <!-- 특정 매장의 리뷰 조회 -->
-    <select id="findReviewsByPlaceId" parameterType="long" resultType="com.sku.fitizen.domain.placereview.Review">
+    <select id="findReviewsByPlaceId" parameterType="long" resultMap="reviewResultMap">
         SELECT R.ID, R.CONTENT, R.RATING, R.USER_ID, R.PLACE_ID, R.CREATED_DATE, U.NAME AS userName
         FROM REVIEWS R
-                 JOIN USERS U ON R.USER_ID = U.ID
+        JOIN USERS U ON R.USER_ID = U.ID
         WHERE R.PLACE_ID = #{placeId}
     </select>
 
@@ -38,7 +38,7 @@
 
     <update id="updateReview" parameterType="com.sku.fitizen.domain.placereview.Review">
         UPDATE REVIEWS
-        SET CONTENT = #{content}, RATING = #{rating}
+        SET CONTENT = #{content}, RATING = #{rating}, CREATED_DATE = SYSDATE
         WHERE ID = #{id}
     </update>
 
@@ -47,4 +47,19 @@
         DELETE FROM REVIEWS WHERE ID = #{reviewId}
     </delete>
 
+    <!-- 평균 별점 계산 -->
+    <select id="getAverageRating" parameterType="long" resultType="double">
+        SELECT ROUND(AVG(rating), 2) AS average_rating
+        FROM REVIEWS
+        WHERE PLACE_ID = #{placeId}
+    </select>
+
+    <!-- 별점별 카운트 계산 -->
+    <select id="getRatingCounts" parameterType="long" resultType="map">
+        SELECT rating, COUNT(*) AS count
+        FROM REVIEWS
+        WHERE PLACE_ID = #{placeId}
+        GROUP BY rating
+        ORDER BY rating DESC
+    </select>
 </mapper>

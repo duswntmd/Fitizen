@@ -31,15 +31,6 @@ public class ReviewController {
     @Autowired
     private UserService userService;
 
-//    @ModelAttribute("user")
-//    public User getCurrentUser(HttpSession session) {
-//        String userId = (String) session.getAttribute("id");
-//        if (userId != null) {
-//            return userService.selectUser(userId);
-//        }
-//        return null;
-//    }
-
     @GetMapping("/listmap")
     public String showMapPage(Model model) {
         return "map";
@@ -80,7 +71,7 @@ public class ReviewController {
                                @RequestParam(required = false) String road_address_name,
                                @RequestParam String address_name,
                                @RequestParam(required = false) String phone,
-                               @SessionAttribute(value = "user", required = false) User currentUser, // 세션에서 사용자 객체를 가져옴
+                               @SessionAttribute(value = "user", required = false) User currentUser,
                                Model model) {
 
         if (currentUser == null) {
@@ -100,8 +91,13 @@ public class ReviewController {
         }
 
         List<Review> reviews = reviewService.getReviewsByPlaceId(place.getId());
+        Double averageRating = reviewService.getAverageRating(placeId);
+        List<Map<String, Object>> ratingCounts = reviewService.getRatingCounts(placeId);
+
         model.addAttribute("place", place);
         model.addAttribute("reviews", reviews);
+        model.addAttribute("averageRating", averageRating);
+        model.addAttribute("ratingCounts", ratingCounts);
 
         if (place.getImageUrl() != null) {
             model.addAttribute("imageUrl", place.getImageUrl());
@@ -112,8 +108,7 @@ public class ReviewController {
 
     @GetMapping("/reviewDetail/{placeId}")
     public String reviewDetail(@PathVariable Long placeId,
-                               @SessionAttribute(value = "user", required = false)
-                               User currentUser,  // 세션에서 사용자 객체를 가져옴
+                               @SessionAttribute(value = "user", required = false) User currentUser,
                                Model model) {
 
         if (currentUser == null) {
@@ -134,6 +129,11 @@ public class ReviewController {
         List<Review> reviews = reviewService.getReviewsByPlaceId(placeId);
         model.addAttribute("place", place);
         model.addAttribute("reviews", reviews);
+        Double averageRating = reviewService.getAverageRating(placeId);
+        List<Map<String, Object>> ratingCounts = reviewService.getRatingCounts(placeId);
+
+        model.addAttribute("averageRating", averageRating);
+        model.addAttribute("ratingCounts", ratingCounts);
         model.addAttribute("currentUser", currentUser);
 
         if (place.getImageUrl() != null) {

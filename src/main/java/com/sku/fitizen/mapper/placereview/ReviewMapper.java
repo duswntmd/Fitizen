@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ReviewMapper {
@@ -18,5 +19,9 @@ public interface ReviewMapper {
     void updateReview(Review review);
 
     void deleteReview(Long reviewId);
+
+    Double getAverageRating(Long placeId);
+
+    List<Map<String, Object>> getRatingCounts(Long placeId);
 
 }
