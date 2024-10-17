@@ -156,6 +156,43 @@
         #cancelBtn:hover {
             background-color: #c82333;
         }
+
+        /*.content-box {*/
+        /*    display: block;*/
+        /*    width: 100%;*/
+        /*    padding: 15px;*/
+        /*    border: 1px solid #ced4da; !* 회색 테두리 *!*/
+        /*    border-radius: 5px; !* 모서리를 둥글게 *!*/
+        /*    background-color: #f8f9fa; !* 배경색 *!*/
+        /*    font-size: 16px;*/
+        /*    color: #495057; !* 텍스트 색상 *!*/
+        /*    box-sizing: border-box;*/
+        /*    margin-bottom: 15px;*/
+        /*}*/
+
+        .file-preview {
+            margin-top: 20px;
+        }
+
+        .image-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start; /* 왼쪽 정렬 */
+        }
+
+        .image-grid div {
+            flex: 1 0 200px; /* 각 이미지의 최소 너비 */
+            max-width: 200px; /* 최대 너비 */
+            text-align: center; /* 이미지 아래 텍스트 중앙 정렬 */
+        }
+
+        .image-grid img {
+            width: 100%; /* div의 크기에 맞게 이미지 조정 */
+            height: auto;
+            object-fit: cover; /* 비율을 유지하면서 이미지 크기 조정 */
+        }
+
         .video-wrapper {
             position: relative;
             width: 100%;
@@ -170,6 +207,16 @@
             width: 100%;
             height: 100%;
         }
+
+        /*#content {*/
+        /*    width: 97.5%;*/
+        /*    height: 600px;*/
+        /*    border: 1px solid #ccc;*/
+        /*    padding: 15px;*/
+        /*    border-radius: 6px;*/
+        /*    background-color: #fff;*/
+        /*    font-size: 16px;*/
+        /*}*/
     </style>
 </head>
 
@@ -182,46 +229,33 @@
     <h1>게시글 보기</h1>
 
     <div class="content-container">
+<!--        <div>-->
+<!--            <label>번호:</label> <span th:text="${board.bno}"></span>-->
+<!--        </div>-->
         <div>
-            <label>번호:</label> <span th:text="${board.bno}"></span>
-        </div>
-        <div>
-            <label>제목:</label> <span th:text="${board.title}"></span>
-        </div>
-        <div>
-            <label>작성자:</label> <span th:text="${board.author}"></span>
-        </div>
-        <div>
-            <label>작성일:</label> <span th:text="${#dates.format(board.regDate, 'yyyy-MM-dd')}"></span>
-        </div>
-        <div>
-            <label>조회수:</label> <span th:text="${board.hits}"></span>
+            <label>제목:</label> <span class="content-box" th:text="${board.title}"></span>
         </div>
 
-        <div>
-            <button th:if="${!likedByUser}" th:onclick="'addLike(' + ${board.bno} + ')'" >좋아요</button>
-            <button th:if="${likedByUser}" th:onclick="'removeLike(' + ${board.bno} + ')'" >좋아요 취소</button>
+        <div style="display: flex; align-items: center;">
+            <div style="margin-right: 20px;">
+                <label>작성자:</label> <span th:text="${board.author}"></span>
+            </div>
+
+            <div style="margin-right: 20px;">
+                <label>작성일:</label> <span th:text="${board.upDate == null ? #dates.format(board.regDate, 'yyyy-MM-dd') : #dates.format(board.upDate, 'yyyy-MM-dd')}"></span>
+            </div>
+
+            <div>
+                <label>조회수:</label> <span th:text="${board.hits}"></span>
+            </div>
         </div>
 
-        <div>
-            <label>내용:</label> <p th:utext="${board.content}"></p>
-        </div>
-
-        <!-- 첨부 파일 목록 출력 -->
+        <!-- 유튜브 영상 섹션 -->
         <div class="file-preview">
-            <label>첨부 파일:</label>
+            <label>유튜브 영상:</label>
             <ul>
                 <li th:each="file : ${files}">
-                    <div th:if="${file.ftype != null and file.ftype.startsWith('image/')}">
-                        <img th:src="@{/board/download/{fnum}(fnum=${file.fnum})}" alt="이미지 미리보기"/>
-                        <br>
-                        <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}">이미지 다운로드</a>
-                    </div>
-                    <div th:if="${file.ftype != null and !file.ftype.startsWith('image/')}">
-                        <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}" th:text="${file.realName}"></a>
-                    </div>
                     <div th:if="${file.youtubeUrl != null}" class="video-wrapper">
-                        <label>유튜브 영상:</label>
                         <iframe width="560" height="315"
                                 th:src="'https://www.youtube.com/embed/' + ${#strings.substring(file.youtubeUrl, file.youtubeUrl.indexOf('v=') + 2, file.youtubeUrl.indexOf('&') != -1 ? file.youtubeUrl.indexOf('&') : file.youtubeUrl.length())}"
                                 frameborder="0" allowfullscreen></iframe>
@@ -229,13 +263,44 @@
                 </li>
             </ul>
         </div>
+        <!-- 이미지 섹션 -->
+        <div class="file-preview" th:if="${files != null and files.size() > 0}">
+            <label>이미지 파일:</label>
+            <div class="image-grid">
+                <!-- 이미지 파일에 대해서만 반복 -->
+                <div th:each="file : ${files}" th:if="${file.ftype != null and file.ftype.startsWith('image/')}">
+                    <img th:src="@{/board/download/{fnum}(fnum=${file.fnum})}" alt="이미지 미리보기" />
+                    <br>
+                    <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}">이미지 다운로드</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 기타 파일 (이미지 및 유튜브 링크 제외) 섹션 -->
+        <div class="file-preview" th:if="${files != null and files.size() > 0}">
+            <label>기타 파일:</label>
+            <ul>
+                <li th:each="file : ${files}">
+                    <div th:if="${file.ftype != null and !file.ftype.startsWith('image/') and file.youtubeUrl == null}">
+                        <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}" th:text="${file.realName}"></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <label>내용:</label> <p id="content" th:utext="${board.content}"></p>
+        </div>
 
         <!-- 수정 및 삭제 버튼: 작성자와 현재 로그인한 사용자가 일치하는 경우에만 보임 -->
         <div th:if="${session.user != null and session.user.id == board.author}">
+            <button th:if="${!likedByUser}" th:onclick="'addLike(' + ${board.bno} + ')'" >좋아요</button>
+            <button th:if="${likedByUser}" th:onclick="'removeLike(' + ${board.bno} + ')'" >좋아요 취소</button>
+            <a href="/board/list"><button>목록</button></a>
             <a th:href="@{/board/edit/{bno}(bno=${board.bno})}"><button>수정</button></a>
             <a href="javascript:void(0);" th:onclick="'deleteBoard(' + ${board.bno} + ')'"><button>삭제</button></a>
         </div>
-        <a href="/board/list">목록으로</a>
+
 
         <!-- 댓글 작성 -->
         <div class="comment-section">

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
-    <title>게시글 목록</title>
+    <title>자유게시판</title>
     <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
     <style>
         .page-contents {
@@ -19,6 +19,65 @@
     </style>
 
     <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover, .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .notice-header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .notice-content {
+            padding: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            background-color: yellow;
+        }
+
+        .highlightred {
+            color: red;
+        }
+
+        .right-align {
+            float: right;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -151,6 +210,7 @@
             </form>
         </div>
         <div class="button-container">
+            <button id="noticeBtn">공지사항 보기</button>
             <a href="/board/write"><button>글 작성</button></a>
         </div>
     </div>
@@ -207,7 +267,92 @@
     <p th:text="'현재 페이지: ' + ${pageInfo.pageNum} + ' / ' + ${pageInfo.pages}"></p>
 </div>
 
+
+
+<!-- 모달 창 -->
+<div id="noticeModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="notice-header">[사용자] 자유게시판 사용 안내</div>
+        <div class="notice-content">
+            <p><span class="highlightred">반드시 읽어주세요!</span></p>
+            <p>2024년 10월 xx일부터 서비스를 시작한 자유게시판입니다.</p>
+            <p>말 그대로 자유게시판! <span class="highlight">일상 운동 등</span>자유롭게 작성하시면 됩니다.</p>
+            <p><strong>주의사항:</strong>게시판의 <span class="highlight">영상은 최대 3개까지</span> 가능하고 <span class="highlight">이미지는 5개까지</span> 가능합니다.</p>
+            <p>일정한 사진은 사이즈를 맞춰서 넣어주시면 됩니다. </p>
+        </div>
+        <div class="modal-buttons">
+            <button id="noMoreToday">하루 동안 보지 않기</button>
+            <button id="noMorePopup" class="right-align" >더 이상 보지 않기</button>
+        </div>
+    </div>
+</div>
+
 </div>
 <th:block th:replace="~{th/footer :: footer}"></th:block>
+<script>
+    // 쿠키 생성 함수
+    function setCookie(name, value, days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + date.toUTCString();
+        document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    }
+
+    // 쿠키 가져오기 함수
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
+
+    // 모달 창 및 버튼 가져오기
+    var modal = document.getElementById("noticeModal");
+    var btn = document.getElementById("noticeBtn");
+    var span = document.getElementsByClassName("close")[0];
+    var noMoreTodayBtn = document.getElementById("noMoreToday");
+    var noMorePopupBtn = document.getElementById("noMorePopup");
+
+    // 페이지 로드 시 쿠키 체크
+    window.onload = function() {
+        if (getCookie("noMorePopup") !== "true" && getCookie("noMoreToday") !== "true") {
+            modal.style.display = "block";
+        }
+    };
+
+    // "공지사항 보기" 버튼 클릭 시 언제든지 모달 창 열기
+    btn.onclick = function() {
+        modal.style.display = "block";
+    };
+
+    // 닫기 버튼 클릭 시 모달 창 닫기
+    span.onclick = function() {
+        modal.style.display = "none";
+    };
+
+    // 하루 동안 보지 않기 버튼 클릭 시 쿠키 설정
+    noMoreTodayBtn.onclick = function() {
+        setCookie("noMoreToday", "true", 1); // 하루 동안 쿠키 저장
+        modal.style.display = "none";
+    };
+
+    // 더 이상 보지 않기 버튼 클릭 시 쿠키 설정
+    noMorePopupBtn.onclick = function() {
+        setCookie("noMorePopup", "true", 365); // 1년 동안 쿠키 저장
+        modal.style.display = "none";
+    };
+
+    // 모달 창 외부 클릭 시 창 닫기
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+</script>
 </body>
 </html>
