@@ -6,6 +6,7 @@ import com.sku.fitizen.domain.board.Board;
 import com.sku.fitizen.mapper.board.BoardCommentMapper;
 import com.sku.fitizen.mapper.board.BoardLikeMapper;
 import com.sku.fitizen.mapper.board.BoardMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @Service
 public class BoardService {
 
@@ -47,45 +49,54 @@ public class BoardService {
 
     // 게시글 생성 및 파일 저장
     @Transactional
-    public void insertBoard(Board board, List<MultipartFile> files, String youtubeUrl) throws IOException {
+    public Long insertBoard(Board board, List<MultipartFile> files, List<String> youtubeUrls) throws IOException {
         // 게시글 저장
         boardMapper.insertBoard(board);
 
-        // 파일 및 유튜브 URL 처리
+        Long bno = board.getBno();
+
+        // 파일 저장
         if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
                 if (!file.isEmpty()) {
-                    // 파일이 있을 경우 파일만 저장
+                    // 파일 저장 로직
                     fileService.storeFileOrYoutube(null, file, board.getBno());
                 }
             }
         }
 
         // 유튜브 URL 저장
-        if (youtubeUrl != null && !youtubeUrl.isEmpty()) {
-            fileService.storeFileOrYoutube(youtubeUrl, null, board.getBno());
+        if (youtubeUrls != null && !youtubeUrls.isEmpty()) {
+            for (String youtubeUrl : youtubeUrls) {
+                fileService.storeFileOrYoutube(youtubeUrl, null, board.getBno());
+            }
         }
+        return bno;
     }
 
     // 게시글 수정
     @Transactional
-    public void updateBoard(Board board, List<MultipartFile> newFiles, List<Long> deleteFileIds, String youtubeUrl) throws IOException {
-        // 1. 삭제할 파일 처리
-        if (deleteFileIds != null && !deleteFileIds.isEmpty()) {
-            for (Long fnum : deleteFileIds) {
-                fileService.deleteFileByFnum(fnum);  // 파일 삭제
-            }
-        }
-
-        // 2. 새로운 파일 저장
-        if (newFiles != null && !newFiles.isEmpty()) {
-            for (MultipartFile file : newFiles) {
-                fileService.storeFileOrYoutube(youtubeUrl, file, board.getBno());  // 새 파일 또는 유튜브 URL 저장
-            }
-        }
-
-        // 게시글 정보 업데이트
+    public void updateBoard(Board board, List<MultipartFile> files, List<Long> deleteFileIds, List<String> youtubeUrls) throws IOException {
+        // 게시글 수정
         boardMapper.updateBoard(board);
+
+        // 파일 처리
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    fileService.storeFileOrYoutube(null, file, board.getBno());
+                }
+            }
+        }
+
+        // 유튜브 URL 처리 (기존 유튜브 URL 삭제 후 새로 추가하는 방식)
+        if (youtubeUrls != null && !youtubeUrls.isEmpty()) {
+            for (String youtubeUrl : youtubeUrls) {
+                if (youtubeUrl != null && !youtubeUrl.isEmpty()) {
+                    fileService.storeFileOrYoutube(youtubeUrl, null, board.getBno());
+                }
+            }
+        }
     }
 
     // 게시글 삭제 및 파일 삭제
