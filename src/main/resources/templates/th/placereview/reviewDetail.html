@@ -2,25 +2,91 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
-    <title>Map Detail</title>
+    <title>Place Detail</title>
     <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        .page-contents {
-            /*    font-family: Arial, sans-serif;*/
+        /* 컨텐츠를 감싸는 전체 컨테이너 */
+        .content-wrapper {
             display: flex;
             justify-content: center;
-            flex-direction: column;
-            align-items: center;
-            /*    height: 100vh;*/
-            /*    margin: 0;*/
-            min-height: 100vh;
+            align-items: flex-start;
+            margin: 0;
+            padding: 0;
+            width: 100%;
         }
-    </style>
 
-    <style>
+        .container {
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .left-column {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .right-column {
+            width: 50%;
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .info, .image, .rating-distribution, .review-form {
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+
+        .rating-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .bar {
+            width: 60%;
+            background-color: #ddd;
+            height: 10px;
+            margin-left: 10px;
+        }
+
+        .bar-fill {
+            background-color: #ffc107;
+            height: 100%;
+        }
+
+        .image img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .review-list-box {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .review-item {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
         .star-rating {
-            direction: rtl; /* 오른쪽에서 왼쪽으로 정렬 */
+            direction: rtl;
             display: inline-flex;
             font-size: 2rem;
             justify-content: center;
@@ -28,11 +94,11 @@
         }
 
         .star-rating input[type="radio"] {
-            display: none; /* 라디오 버튼 숨기기 */
+            display: none;
         }
 
         .star-rating label {
-            color: #ddd; /* 기본 별 색상 */
+            color: #ddd;
             cursor: pointer;
             padding: 0 5px;
             transition: color 0.3s;
@@ -41,7 +107,13 @@
         .star-rating input[type="radio"]:checked ~ label,
         .star-rating label:hover,
         .star-rating label:hover ~ label {
-            color: #ffca08; /* 선택된 별 색상 */
+            color: #ffca08;
+        }
+
+        textarea {
+            width: 100%;  /* 너비를 100%로 고정 (부모 요소 기준) */
+            height: 150px;  /* 높이를 150px로 고정 */
+            resize: none;  /* 사용자가 크기를 조절하지 못하도록 설정 */
         }
     </style>
     <script>
@@ -111,61 +183,106 @@
 <div>
     <th:block th:replace="~{th/header :: header}"></th:block>
 </div>
-<div class="page-contents">
 
-<h1>Place Detail</h1>
-<p><strong>Place Id:</strong> <span th:text="${placeId}"></span></p>
-<p><strong>Place Name:</strong> <span th:text="${place_name}"></span></p>
-<p><strong>Road Address:</strong> <span th:text="${road_address_name}"></span></p>
-<p><strong>Address:</strong> <span th:text="${address_name}"></span></p>
-<p><strong>Phone:</strong> <span th:text="${phone}"></span></p>
+<!-- 컨텐츠를 감싸는 content-wrapper -->
+<div class="content-wrapper">
+    <div class="container">
+        <!-- Left column -->
+        <div class="left-column">
+            <!-- 가게 정보 -->
+            <div class="info">
+                <h2>가게 정보</h2>
+<!--                <p><strong>Place Id:</strong> <span th:text="${placeId}"></span></p>-->
+                <p><strong>Place Name:</strong> <span th:text="${place_name}"></span></p>
+                <p><strong>Road Address:</strong> <span th:text="${road_address_name}"></span></p>
+                <p><strong>Address:</strong> <span th:text="${address_name}"></span></p>
+                <p><strong>Phone:</strong> <span th:text="${phone}"></span></p>
+            </div>
 
-<div th:if="${imageUrl != null}">
-    <img th:src="${imageUrl}" alt="Place Image" />
-</div>
+            <!-- 가게 사진 -->
+            <div class="image">
+                <h2>사진</h2>
+                <div th:if="${imageUrl != null}">
+                    <img th:src="${imageUrl}" alt="Place Image" />
+                </div>
+            </div>
 
-<h3>리뷰 목록</h3>
-<ul>
-    <th:block th:each="review : ${reviews}">
-        <li>
-            <strong th:text="${review.userName}">작성자 이름</strong>: <!-- 리뷰 작성자 이름 -->
-            <span th:text="${review.content}">리뷰 내용</span>
-            <!-- 별로 평점 표시 -->
-            <span>
-                <span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span>
-                <!-- 빈 별 표시 -->
-                <span th:if="${review.rating < 5}" th:each="emptyStar : ${#numbers.sequence(review.rating + 1, 5)}">☆</span>
-            </span>
-            <!-- 수정 버튼 -->
-            <a th:href="@{'/kakao/editReview/' + ${review.id}}">수정</a>
-            <!-- 삭제 버튼 -->
-            <button class="deleteReviewButton" th:data-review-id="${review.id}">삭제</button>
-        </li>
-    </th:block>
-</ul>
+            <!-- 평점 분포 -->
+            <div class="rating-distribution">
+                <h2>평균 평점: <span th:text="${averageRating}">0.0</span></h2>
+                <h2>평점 분포</h2>
+                <div th:each="ratingCount : ${ratingCounts}">
+                    <div class="rating-bar">
+                        <span th:text="${ratingCount['RATING']} + '점'"></span>
+                        <div class="bar">
+                            <div class="bar-fill" th:style="'width:' + (${ratingCount['COUNT']} / 10) * 100 + '%'"></div>
+                        </div>
+                        <span th:text="${ratingCount['COUNT']}"></span>
+                    </div>
+                </div>
+            </div>
 
-<form id="reviewForm">
-    <input type="hidden" id="placeIdInput" name="placeId" th:value="${placeId}" />
-    <input type="hidden" name="userId" th:value="${currentUser.id}" />
+            <!-- 리뷰 작성 -->
+            <div class="review-form">
+                <h2>리뷰 작성</h2>
+                <form id="reviewForm">
+                    <input type="hidden" id="placeIdInput" name="placeId" th:value="${placeId}" />
+                    <input type="hidden" name="userId" th:value="${currentUser.id}" />
 
-    <div>
-        <label for="content">리뷰 내용:</label>
-        <textarea id="content" name="content" required></textarea>
-    </div>
-    <div>
-        <label>평점 (1~5):</label>
-        <div class="star-rating">
-            <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
-            <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
-            <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
-            <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
-            <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+                    <div>
+                        <label>평점 (1~5):</label>
+                        <div class="star-rating">
+                            <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+                            <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+                            <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+                            <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+                            <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="content">리뷰 내용:</label>
+                        <textarea id="content" name="content" required></textarea>
+                    </div>
+                    <button type="submit">리뷰 작성</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right column (리뷰 리스트) -->
+        <div class="right-column">
+            <h2>리뷰 목록</h2>
+            <div class="review-list-box">
+                <ul>
+                    <th:block th:each="review : ${reviews}">
+                        <li class="review-item">
+                            <strong th:text="${review.userName}" style="margin-right: 20px;">작성자 이름</strong> <!-- 리뷰 작성자 이름 -->
+
+                            <!-- 별로 평점 표시 -->
+                            <span>
+                                <span th:each="star : ${#numbers.sequence(1, review.rating)}">
+                                    <i class="fas fa-star" style="color: #ffca08;"></i> <!-- 노란색으로 설정 -->
+                                </span>
+                                <span th:if="${review.rating < 5}" th:each="emptyStar : ${#numbers.sequence(review.rating + 1, 5)}">
+                                    <i class="far fa-star" style="color: #ddd;"></i> <!-- 비어있는 별 -->
+                                </span>
+                            </span>
+                            <p th:text="${#dates.format(review.createdDate, 'yyyy-MM-dd HH:mm')}">작성일</p>
+                            <span th:text="${review.content}">리뷰 내용</span>
+                            <p>
+                            <!-- 수정 버튼 -->
+                            <a th:href="@{'/kakao/editReview/' + ${review.id}}"><button>수정</button></a>
+                            <!-- 삭제 버튼 -->
+                            <button class="deleteReviewButton" th:data-review-id="${review.id}">삭제</button>
+                        </li>
+                    </th:block>
+                </ul>
+            </div>
         </div>
     </div>
-    <button type="submit">리뷰 작성</button>
-</form>
-
 </div>
-<th:block th:replace="~{th/footer :: footer}"></th:block>
+
+<div>
+    <th:block th:replace="~{th/footer :: footer}"></th:block>
+</div>
 </body>
 </html>
