@@ -116,10 +116,23 @@
 <h1>게시글 작성</h1>
 
 <form id="writeForm" enctype="multipart/form-data">
+
     <div>
         <label for="title">제목:</label>
         <input type="text" id="title" name="title" required>
     </div>
+
+    <div id="youtube-url-container">
+        <label for="youtubeUrls[0]">유튜브 링크:</label>
+        <input type="text" id="youtubeUrls[0]" name="youtubeUrls[]" placeholder="유튜브 링크를 입력하세요">
+        <button type="button" id="addYoutubeUrlBtn">유튜브 링크 추가</button>
+    </div>
+
+    <div>
+        <label for="files">파일 첨부:</label>
+        <input type="file" id="files" name="files" multiple>
+    </div>
+
     <div>
         <label for="content">내용:</label>
         <div id="content" contenteditable="true" required></div>
@@ -129,21 +142,15 @@
 <!--        <label for="contentImages">내용에 들어갈 이미지:</label>-->
 <!--        <input type="file" id="contentImages" name="contentImages" multiple>-->
 <!--    </div>-->
-    <div>
-        <label for="files">파일 첨부:</label>
-        <input type="file" id="files" name="files" multiple>
-    </div>
-    <div>
-        <label for="youtubeUrl">유튜브 링크:</label>
-        <input type="text" id="youtubeUrl" name="youtubeUrl" placeholder="유튜브 링크를 입력하세요">
-    </div>
+
+
     <button type="submit">작성 완료</button>
 </form>
 
 <a href="/board/list">목록으로</a>
 </div>
 <th:block th:replace="~{th/footer :: footer}"></th:block>
-<script>
+<script type="text/javascript">
     $(document).ready(function() {
 
         // $('#insertYoutube').on('click', function() {
@@ -217,6 +224,33 @@
         //     }
         // });
 
+        let youtubeUrlIndex = 1;
+
+        $('#addYoutubeUrlBtn').on('click', function() {
+
+            const currentUrlCount = $('#youtube-url-container input[type="text"]').length;
+
+            // URL 입력 필드가 3개 이상이면 추가 불가
+            if (currentUrlCount >= 3) {
+                alert('유튜브 링크는 최대 3개까지 추가할 수 있습니다.');
+                return;
+            }
+
+            const newInput = `
+        <div>
+            <label for="youtubeUrls[${youtubeUrlIndex}]">유튜브 링크:</label>
+            <input type="text" id="youtubeUrls[${youtubeUrlIndex}]" name="youtubeUrls[]" placeholder="유튜브 링크를 입력하세요">
+            <button type="button" class="removeYoutubeUrlBtn">삭제</button>
+        </div>`;
+            $('#youtube-url-container').append(newInput);
+            youtubeUrlIndex++;
+        });
+
+        // 유튜브 URL 삭제 버튼 클릭 시 해당 입력 필드 제거
+        $(document).on('click', '.removeYoutubeUrlBtn', function() {
+            $(this).parent().remove();
+        });
+
         $('#writeForm').on('submit', function(event) {
             event.preventDefault();  // 폼 기본 제출 방지
 
@@ -233,7 +267,7 @@
                 success: function(res) {
                     alert(res.success ? res.message : "게시글 작성 실패: " + res.message);
                     if (res.success) {
-                        window.location.href = '/board/list';  // 성공하면 목록으로 이동
+                        window.location.href = '/board/view/' + res.bno;  // 성공하면 목록으로 이동
                     }
                 },
                 error: function(xhr, status, error) {

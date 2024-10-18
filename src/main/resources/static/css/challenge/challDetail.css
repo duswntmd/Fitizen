@@ -1,49 +1,230 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
     margin: 0;
-    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+}
+ /**********챌린지 박스**********/
+* {
+    box-sizing: border-box; /* 모든 요소에 테두리와 패딩 포함하여 크기 계산 */
 }
 
+.challenge-title {
+    font-size: 24px;
+    margin-top:0 ;
+    margin-bottom: 10px;
+}
+
+.info-box {
+    background-color: white; /* 화이트 박스 배경 */
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 15px; /* 박스 간격 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 선택적 그림자 효과 */
+    width: 100%; /* 가로 길이 100% */
+}
+
+.challenge-content-title {
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.content-box {
+    background-color: white; /* 화이트 박스 배경 */
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 10px; /* 내용 간격 */
+    border: 1px solid #ccc; /* 선택적 테두리 */
+    width: 100%; /* 가로 길이 100% */
+}
 
 .image-wrapper {
-    margin-top: 20px; /* Add space above image */
-    text-align: center; /* Center-align image */
+    max-height: 250px; /* 이미지 최대 높이 설정 */
+    overflow: hidden; /* 넘치는 부분 숨기기 */
+    border-radius: 5px; /* 둥근 모서리 */
+    margin-bottom: 15px; /* 하단 여백 */
+    width: 100%; /* 가로 길이 100% */
 }
 
 .image-wrapper img {
-    width: 100%; /* Ensure the image does not exceed the container width */
-    height: auto; /* Maintain aspect ratio */
-    max-height: 500px;
-    border: 1px solid #ccc; /* Optional border for the image */
-    border-radius: 5px; /* Optional border radius for rounded corners */
+    width: 100%; /* 이미지가 컨테이너 너비를 초과하지 않도록 */
+    height: 100%; /* 높이를 100%로 설정하여 컨테이너 채우기 */
+    object-fit: cover; /* 비율 유지하며 가득 채우기 */
+    border-radius: 5px; /* 둥근 모서리 */
 }
+
+/* 챌린지 문구 스타일 */
+.challenge-banner {
+    width: 100%;
+    padding: 50px 0;
+    background-color: #f8f9fa;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+}
+
+.challenge-banner span {
+    color: #007bff;
+}
+
+.red-text {
+    color: red; /* 빨간색 텍스트 */
+}
+
+
+
+/******댓글 박스********/
+
+.comment-section{
+    position: relative;
+    z-index: 2;
+}
+
+.comment-title {
+    margin-top: -1px; /* 여기에 값을 추가하여 위치 조정 */
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.comment-form {
+    position: absolute; /* 절대 위치 */
+    bottom: 0; /* 부모 요소의 하단에 위치 */
+    left: 0; /* 왼쪽 정렬 */
+    right: 0; /* 오른쪽 정렬 */
+    padding: 10px; /* 여백 설정 */
+}
+/* 각 댓글 스타일 */
+.comment {
+    background-color: #f9f9f9; /* 댓글 배경색 */
+    border: 1px solid #ddd; /* 댓글 테두리 */
+    border-radius: 5px; /* 둥근 모서리 */
+    padding: 10px; /* 패딩 */
+    margin-bottom: 10px; /* 각 댓글 간격 */
+    position: relative; /* 자식 요소의 절대 위치를 기준으로 설정 */
+
+}
+.user-id {
+    font-weight: bold; /* 사용자 ID 굵게 표시 */
+}
+.date {
+    color: #888; /* 날짜 색상 */
+    font-size: 12px; /* 작은 글씨 */
+    margin-left: 10px; /* 사용자 ID와 간격 */
+}
+.comment-info {
+    display: flex; /* Flexbox로 수평 정렬 */
+    justify-content: space-between; /* 양쪽 끝으로 정렬 */
+    margin-bottom: 5px; /* 댓글 텍스트와 간격 */
+}
+
+.comment-actions {
+    position: absolute; /* 절대 위치 */
+    bottom: 10px; /* 하단에서 10px 위 */
+    right: 10px; /* 오른쪽에서 10px 위 */
+}
+
+.comment-actions button {
+    margin-left: 5px; /* 버튼 간격 */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.page-contents {
+
+    position: relative;
+    display: flex;
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    justify-content: space-between; /* 콘텐츠와 하단 버튼 사이 공간 확보 */
+    min-height: 100vh; /* 전체 높이 유지 */
+    padding: 20px; /* 페이지 여백 추가 */
+}
+
+
+
 
 .container {
-    max-width: 800px;
+    position: relative;
+    display: flex;
+    width: 100%;
+    max-width: 1400px; /* 늘어난 최대 너비 */
     margin: auto; /* 중앙 정렬 */
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-h2 {
-    margin-bottom: 20px;
+.challenge-details{
+    z-index: 1;
 }
 
-.form-group {
-    margin-bottom: 15px;
+
+
+.clip-image {
+    position: absolute; /* 이미지의 위치를 절대적으로 설정 */
+    top: -60px; /* 상단에서의 위치 */
+    right: -30px; /* 우측에서의 위치 */
+    max-width: 95px; /* 이미지 최대 너비 조정 */
+    height: auto;
+    transform: rotate(30deg); /* 오른쪽으로 기울이기 */
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
+.paper-image {
+    position: absolute; /* 이미지의 위치를 절대적으로 설정 */
+    top: -30px; /* 상단에서의 위치 */
+    right: -20px; /* 우측에서의 위치 */
+    max-width: 134px; /* 이미지 최대 너비 조정 */
+    height: auto;
+
 }
+
+.challenge-details, .comment-section {
+    flex: 1; /* 가능한 공간에 맞게 성장 */
+    padding: 30px; /* 패딩 줄임 */
+    background-color: #f0f0f0; /* 대비를 위한 밝은 배경 */
+    margin: 15px; /* 섹션 사이의 여백 추가 */
+    border-radius: 15px; /* 더 부드러운 모서리 */
+    //box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* 더 부드러운 그림자 */
+    height: calc(100vh - 100px); /* 패딩을 뺀 전체 높이 줄임 */
+    box-shadow: 20px 12px 10px rgba(0, 0, 0, 0.1); /* 오른쪽 및 하단에 그림자 */
+}
+
+.image-wrapper {
+    margin-top: 15px; /* 이미지 위 여백 줄임 */
+    text-align: center; /* 이미지 중앙 정렬 */
+}
+
+.image-wrapper img {
+    width: 100%; /* 이미지가 컨테이너 너비를 초과하지 않도록 */
+    height: auto; /* 비율 유지 */
+    max-height: 350px; /* 줄인 최대 높이 */
+    border: 2px solid #ccc; /* 선택적 이미지 테두리 */
+    border-radius: 5px; /* 선택적 둥근 모서리 */
+}
+
 
 /* 챌린지 내용 박스 스타일 */
 .content-box {
-    padding: 15px;
+    padding: 20px; /* 내용 박스 패딩 증가 */
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #fff;
@@ -54,35 +235,57 @@ h2 {
     margin: 0;
     font-size: 16px;
     line-height: 1.5;
-
 }
+
 .form-group input,
 .form-group textarea,
 .form-group select {
     width: 100%;
-    padding: 8px;
+    padding: 10px; /* 패딩 증가 */
     border: 1px solid #ddd;
     border-radius: 5px;
     box-sizing: border-box;
 }
+
+/* 버튼 스타일 */
+.form-group a button {
+    background-color: #f0f0f0; /* 버튼 배경색을 회색으로 설정 */
+    color: #333; /* 텍스트 색상 */
+    padding: 10px 20px; /* 패딩 */
+    font-size: 16px;
+    cursor: pointer;
+    border: 2px solid #333; /* 검정색 테두리 추가 */
+    border-radius: 50px; /* 타원형 버튼 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 */
+    transition: background-color 0.3s ease; /* 부드러운 호버 효과 */
+}
+
+/* 호버 시 버튼 배경색 */
+.form-group a button:hover {
+    background-color: #d1d1d1; /* 호버 시 배경색 변화 */
+}
+
+
 
 .form-group select {
     background-color: #fff;
 }
 
 .form-group textarea {
-    height: 100px; /* 댓글 작성 폼의 높이 */
+    height: 80px; /* 댓글 작성 폼의 높이 줄임 */
     resize: vertical;
 }
 
 .form-group button {
-    padding: 10px 20px;
+    margin: 0 10px; /* 버튼 사이에 여백 추가 */
+
+    padding: 12px 20px; /* 버튼 패딩 증가 */
     border: none;
     border-radius: 5px;
     background-color: #007bff;
     color: #fff;
     cursor: pointer;
-    font-size: 16px; /* Font size for better readability */
+    font-size: 16px;
 }
 
 .form-group button:hover {
@@ -96,9 +299,9 @@ h2 {
     background-color: #6c757d;
     color: #fff;
     cursor: pointer;
-    text-decoration: none; /* Remove underline from link */
-    margin-top: 10px; /* Add space above button */
-    font-size: 16px; /* Font size for better readability */
+    text-decoration: none;
+    margin-top: 10px;
+    font-size: 16px;
 }
 
 .btn-back:hover {
@@ -111,9 +314,9 @@ h2 {
 
 .comment-form textarea {
     width: 100%;
-    height: 100px;
+    height: 80px; /* 댓글 작성 폼의 높이 줄임 */
     margin-bottom: 10px;
-    padding: 8px;
+    padding: 10px; /* 패딩 증가 */
     border: 1px solid #ddd;
     border-radius: 5px;
     box-sizing: border-box;
@@ -133,13 +336,9 @@ h2 {
 }
 
 .comment-list {
-    margin-top: 20px;
+    margin-top: 50px;
 }
 
-.comment {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
-}
 
 .comment .user-id {
     font-weight: bold;
@@ -156,4 +355,75 @@ h2 {
 
 .comment .text p {
     margin: 0;
+}
+
+
+
+
+
+.spring-container {
+    display: flex;
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    align-items: center; /* 가운데 정렬 */
+    overflow: hidden; /* 내용이 넘칠 경우 가리기 */
+    position: absolute; /* 양옆 요소 가리기 */
+    top: 20px; /* 위쪽 위치 조정 */
+    left: 50%; /* 중앙 정렬 */
+    transform: translateX(-50%); /* 중앙으로 이동 */
+    z-index: 1;
+}
+.spring-image {
+    opacity: 0.7; /* 투명도 조절 (0은 완전히 투명, 1은 완전히 불투명) */
+    margin-top: 150px;
+    max-width: 125px; /* 이미지 최대 너비 조정 */
+    height: auto;
+}
+
+
+.form-actions {
+    display: flex; /* Flexbox 사용 */
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    margin-top: 10px; /* 상단 여백 */
+}
+
+.form-actions button {
+    background-color: #f0f0f0; /* 버튼 배경색을 회색으로 설정 */
+    color: #333; /* 텍스트 색상 */
+    border: 2px solid #333; /* 검정색 테두리 추가 */
+    padding: 10px 20px; /* 패딩 */
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 50px; /* 타원형 버튼 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 */
+    transition: background-color 0.3s ease; /* 부드러운 호버 효과 */
+}
+
+/* 호버 시 버튼 배경색 */
+.form-actions button:hover {
+    background-color: #d1d1d1; /* 호버 시 배경색 변화 */
+}
+
+
+.no-comments {
+    text-align: center; /* 중앙 정렬 */
+    color: red; /* 글자 색상 빨간색 */
+    font-size: 18px; /* 글자 크기 */
+    font-weight: bold; /* 굵은 글씨 */
+    margin-top: 250px;
+}
+
+.comment-textarea {
+    resize: none; /* 크기 조절 기능 비활성화 */
+    width: 300px; /* 고정 너비 */
+    height: 50px; /* 고정 높이 */
+    outline: none; /* 포커스 시 테두리 제거 */
+}
+
+
+#challComment {
+    width: 100%;
+    resize: none; /* 크기 조절 기능 비활성화 */
+    max-width: 650px; /* 고정 너비 */
+    height: 100px; /* 고정 높이 */
+    outline: none; /* 포커스 시 테두리 제거 */
 }

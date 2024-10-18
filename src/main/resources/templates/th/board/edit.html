@@ -135,48 +135,101 @@
             <label for="title">제목:</label>
             <input type="text" id="title" name="title" th:value="${board.title}" required>
         </div>
+        <!-- 기존 유튜브 링크 표시 및 삭제 선택 -->
         <div>
-            <label for="content">내용:</label>
-            <textarea id="content" name="content" required th:text="${board.content}"></textarea>
-        </div>
-
-        <!-- 기존 파일 목록 표시 및 삭제 선택 옵션 -->
-        <div>
-            <label>기존 첨부파일:</label>
+            <label>기존 유튜브 링크:</label>
             <ul>
                 <li th:each="file : ${files}">
                     <div th:if="${file.youtubeUrl != null}">
                         <span>유튜브 링크:</span>
                         <a th:href="'https://www.youtube.com/watch?v=' + ${file.youtubeUrl}" th:text="${file.youtubeUrl}"></a>
+                        <input type="checkbox" name="deleteFiles" th:value="${file.fnum}"> 삭제
                     </div>
-                    <div th:if="${file.youtubeUrl == null}">
-                        <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}" th:text="${file.realName}"></a>
-                    </div>
-                    <input type="checkbox" name="deleteFiles" th:value="${file.fnum}"> 삭제
                 </li>
             </ul>
         </div>
 
+        <!-- 기존 이미지 파일 표시 및 삭제 선택 -->
         <div>
-            <label for="youtubeUrl">유튜브 링크:</label>
-            <input type="text" id="youtubeUrl" name="youtubeUrl" placeholder="유튜브 링크를 입력하세요">
+            <label>기존 이미지 파일:</label>
+            <ul>
+                <li th:each="file : ${files}">
+                    <div th:if="${file.ftype != null and file.ftype.startsWith('image/')}">
+                        <img th:src="@{/board/download/{fnum}(fnum=${file.fnum})}" alt="이미지 미리보기" style="max-width: 100px;"/>
+                        <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}" th:text="${file.realName}"></a>
+                        <input type="checkbox" name="deleteFiles" th:value="${file.fnum}"> 삭제
+                    </div>
+                </li>
+            </ul>
         </div>
-        <!-- 새로운 파일 업로드 필드 -->
+
+        <!-- 기존 기타 파일 표시 및 삭제 선택 -->
         <div>
-            <label for="files">새 파일 첨부:</label>
-            <input type="file" id="files" name="files" multiple>
+            <label>기타 파일:</label>
+            <ul>
+                <li th:each="file : ${files}">
+                    <div th:if="${file.ftype != null and !file.ftype.startsWith('image/') and file.youtubeUrl == null}">
+                        <a th:href="@{/board/download/{fnum}(fnum=${file.fnum})}" th:text="${file.realName}"></a>
+                        <input type="checkbox" name="deleteFiles" th:value="${file.fnum}"> 삭제
+                    </div>
+                </li>
+            </ul>
         </div>
+
+        <!-- 새로운 유튜브 링크 추가 필드 -->
+        <div id="youtube-url-container">
+            <label for="youtubeUrls[0]">유튜브 링크:</label>
+            <input type="text" id="youtubeUrls[0]" name="youtubeUrls[]" placeholder="유튜브 링크를 입력하세요">
+            <button type="button" id="addYoutubeUrlBtn">유튜브 링크 추가</button>
+        </div>
+
+        <!-- 새로운 이미지 업로드 필드 -->
+        <div>
+            <label for="files">새 이미지 파일 첨부:</label>
+            <input type="file" id="files" name="files" multiple accept="image/*">
+        </div>
+        <div>
+            <label for="content">내용:</label>
+            <textarea id="content" name="content" required th:text="${board.content}"></textarea>
+        </div>
+
         <div id="send">
             <button type="submit">수정 완료</button>
             <button type="button" th:onclick="'window.location.href=\'/board/view/' + ${board.bno} + '\';'">취소</button>
-
         </div>
     </form>
 </div>
-<th:block th:replace="~{th/footer :: footer}"></th:block>
 
 <script>
     $(document).ready(function() {
+        let youtubeUrlIndex = 1;
+
+        // 유튜브 링크 추가 버튼
+        $('#addYoutubeUrlBtn').on('click', function() {
+            let currentYoutubeUrlCount = $('#youtube-url-container input[type="text"]').length;
+            let maxYoutubeCount = 3; // 최대 3개의 URL만 허용
+
+            if (currentYoutubeUrlCount >= maxYoutubeCount) {
+                alert("유튜브 영상은 최대 3개까지 추가할 수 있습니다.");
+                return;
+            }
+
+            const newInput = `
+            <div>
+                <label for="youtubeUrls[${youtubeUrlIndex}]">유튜브 링크:</label>
+                <input type="text" id="youtubeUrls[${youtubeUrlIndex}]" name="youtubeUrls[]" placeholder="유튜브 링크를 입력하세요">
+                <button type="button" class="removeYoutubeUrlBtn">삭제</button>
+            </div>`;
+            $('#youtube-url-container').append(newInput);
+            youtubeUrlIndex++;
+        });
+
+        // 유튜브 URL 삭제 버튼 클릭 시 해당 입력 필드 제거
+        $(document).on('click', '.removeYoutubeUrlBtn', function() {
+            $(this).parent().remove();
+        });
+
+        // 폼 제출
         $('#editForm').on('submit', function(event) {
             event.preventDefault();  // 기본 폼 제출 방지
 

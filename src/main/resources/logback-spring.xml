@@ -1,0 +1,32 @@
+<configuration>
+    <!-- 콘솔 출력용 Appender 설정 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%thread]  %cyan(%logger{36}) : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- BoardController 전용 로그 파일 설정 -->
+    <appender name="BOARD" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/BOARD.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/board.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}  %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- BoardController 로그를 BOARD.log에만 기록 (additivity를 false로 설정) -->
+    <logger name="com.sku.fitizen.controller.board.BoardController" level="info">
+        <appender-ref ref="BOARD"/>
+    </logger>
+
+<!--    additivity="false"-->
+
+    <!-- 전체 시스템 로그는 콘솔에만 기록 -->
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

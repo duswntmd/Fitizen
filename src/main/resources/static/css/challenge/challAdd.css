@@ -5,27 +5,50 @@ body {
     padding: 20px;
 }
 
+input[type="text"] {
+    text-align: center; /* 텍스트 가운데 정렬 */
+}
+
+
 .container {
+
+    position: relative;
+
     max-width: 800px;
     margin: auto; /* 중앙 정렬 */
-    background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #f0f0f0; /* 회색 배경색 추가 */
 }
 
 h2 {
     margin-bottom: 20px;
 }
 
-.form-group {
-    margin-bottom: 15px;
-}
-
 .form-group label {
     display: block;
     margin-bottom: 5px;
+    font-weight: bold; /* 레이블 두껍게 */
+    color: #333; /* 텍스트 색상 */
+    font-size: 1.1em; /* 폰트 크기 조정 */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* 약간의 텍스트 그림자 추가 */
 }
+
+.form-group {
+
+    z-index: 1; /* 기본 z-index 설정 */
+
+    margin: 15px 0; /* 폼 그룹 간격 */
+    text-align: center; /* 가운데 정렬 */
+    position: relative; /* 상대 위치 설정 */
+    padding: 10px; /* 패딩 추가 */
+    border: 1px solid #ddd; /* 경계선 추가 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    background-color: #fff; /* 흰색 배경 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+
 
 .form-group input,
 .form-group textarea,
@@ -46,25 +69,16 @@ h2 {
     resize: vertical;
 }
 
-.form-group button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-    font-size: 16px; /* Font size for better readability */
-}
-
-.form-group button:hover {
-    background-color: #0056b3;
-}
-
 #coverImageWrapper {
+    position: relative;
+    width: 100%;
+    height: 300px; /* 고정된 높이 설정 */
+    border: 1px solid #ccc;
     display: flex;
+    justify-content: center;
     align-items: center;
-    margin-bottom: 15px;
 }
+
 
 #coverImage {
     display: none; /* Hide the default file input */
@@ -75,12 +89,12 @@ h2 {
 }
 
 #imagePreview {
-    display: block;
     margin-top: 10px;
     width: 100%; /* Full width of the container */
     height: 300px; /* Set a fixed height for the image preview */
     object-fit: cover; /* Ensure the image covers the box */
     border: 1px solid #ccc; /* Optional border for the preview box */
+    display: none; /* 기본적으로 이미지는 숨김 */
 }
 
 .inline-dates,
@@ -94,26 +108,108 @@ h2 {
     flex: 1;
 }
 
-.inline-dates input {
-    width: 100%; /* Ensure date input takes up the full width */
-}
-
+.inline-dates input,
 .inline-fields input {
-    width: 100%; /* Ensure the inputs take up the remaining space */
+    width: 100%; /* Ensure input takes up the full width */
 }
 
-.btn-back {
-    padding: 10px 20px;
+#category-buttons {
+    display: flex; /* Flexbox로 설정 */
+    flex-wrap: wrap; /* 줄바꿈 허용 */
+    justify-content: center; /* 가운데 정렬 */
+    gap: 10px; /* 버튼 간의 간격 */
+    margin-top: 10px; /* 위쪽 여백 */
+}
+
+.custom-radio {
+    display: none; /* 기본 라디오 버튼 숨김 */
+}
+
+.category-button ,.day-button{
+    background-color: #f0f0f0;  /* 버튼 배경색 */
+    color: #333;                /* 텍스트 색상 */
     border: none;
-    border-radius: 5px;
-    background-color: #6c757d;
-    color: #fff;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
     cursor: pointer;
-    text-decoration: none; /* Remove underline from link */
-    margin-top: 10px; /* Add space above button */
-    font-size: 16px; /* Font size for better readability */
+    border-radius: 50px;        /* 타원형 버튼 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 */
+    transition: background-color 0.3s ease;
 }
 
-.btn-back:hover {
-    background-color: #5a6268;
+/* 호버 시 버튼 배경색 */
+.category-button:hover {
+    background-color: #d1d1d1;  /* 호버 시 버튼 배경색 */
+}
+
+/* 선택된 버튼에 대한 스타일 */
+.custom-radio:checked + .category-button {
+    background-color: #007bff; /* 선택된 버튼의 배경색 */
+    color: white;              /* 선택된 버튼의 텍스트 색상 */
+}
+
+
+.category-button:focus {
+    outline: none;              /* 포커스 시 외곽선 제거 */
+}
+
+.day-buttons {
+    margin: 20px 0; /* 버튼 그룹 위아래 여백 */
+    display: flex; /* 버튼을 가로로 나열 */
+    justify-content: center; /* 중앙 정렬 */
+    flex-wrap: wrap; /* 버튼이 공간이 부족할 경우 줄 바꿈 */
+}
+
+.btn-back-container {
+    z-index: 2;
+    position: absolute; /* 절대 위치 */
+    top: 10px; /* 상단으로부터의 거리 */
+    right: 15px; /* 우측으로부터의 거리 */
+}
+
+/* 통일된 버튼 스타일 */
+.btn-back, .category-button ,.btn-register{
+    padding: 10px 20px;
+    border-radius: 50px; /* 타원형 버튼 */
+    border: none; /* 테두리 없애기 */
+    background-color: #f0f0f0; /* 버튼 배경색 */
+    color: #333; /* 텍스트 색상 */
+    cursor: pointer;
+    font-size: 16px; /* 글자 크기 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 */
+    transition: background-color 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+.btn-back:hover,
+.category-button:hover {
+    background-color: #d1d1d1; /* 호버 시 버튼 배경색 */
+}
+
+.btn-back:focus,
+.category-button:focus {
+    outline: none; /* 포커스 시 외곽선 제거 */
+}
+
+
+.btn-register:hover {
+    background-color: #d1d1d1; /* 호버 시 배경색 변화 */
+}
+
+
+
+/* 챌린지 문구 스타일 */
+.challenge-banner {
+    width: 100%;
+    padding: 20px 0;
+    background-color: #f8f9fa;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+}
+
+.challenge-banner span {
+    color: #007bff;
 }

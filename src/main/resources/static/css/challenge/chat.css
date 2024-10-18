@@ -11,7 +11,7 @@ body {
 }
 
 #chatContainer {
-    width: 1200px; /* 너비 늘림 */
+    width: 800px; /* 너비 늘림 */
     height: 800px; /* 높이 늘림 */
     background: white;
     border-radius: 8px;

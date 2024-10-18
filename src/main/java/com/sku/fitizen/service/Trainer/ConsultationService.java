@@ -23,8 +23,13 @@ public class ConsultationService {
        else return false;
     }
 
+
+
+
+
     // 이미 신청한 상담인지
-    public List<Consultation> existByUserId(String userId) {return mapper.existByUserId(userId);}
+    public int existByUserId(Consultation consult) {return mapper.existByUserId(consult);}
+
 
     // 트레이너에게 신청된 상담 목록 조회
     public List<Map<String, Object>> getMyUsers(int trainerNo) {return mapper.getMyUsers(trainerNo);}

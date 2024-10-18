@@ -1,4 +1,4 @@
-package com.sku.fitizen.controller.challenge;
+package com.sku.fitizen.controller;
 
 import com.sku.fitizen.domain.User;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +41,6 @@ public class ChatController {
         model.addAttribute("userId",user.getId());
         model.addAttribute("consultId", consultId);
 
-        return "th/trainer/trainerChat";
+        return "th/chall/chat";
     }
 }

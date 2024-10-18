@@ -1,42 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png">
     <title>챌린지</title>
     <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
-    <style>
-        .page-contents {
-            /*    font-family: Arial, sans-serif;*/
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-            /*    height: 100vh;*/
-            /*    margin: 0;*/
-            min-height: 100vh;
-        }
-
-
-    </style>
+    <link th:href="@{/css/challenge/challList.css}" rel="stylesheet" />
 </head>
 <body>
 <div>
     <th:block th:replace="~{th/header :: header}"></th:block>
 </div>
-<div class="page-contents">
-
-    <h2>챌린지</h2>
-    <a href="/challenge/list"><button>챌린지 목록</button></a>
-    <a href="/challenge/add"><button>챌린지 등록</button></a>
-    <a href="/challenge/myChall"><button>참여 중인 챌린지</button></a>
+<div>
+    <th:block th:replace="~{th/chall/challCarousel :: challCarousel}"></th:block>
 </div>
+<div class="challenge-banner">
+    이번달<span> 공식 </span>챌린지
+    <img src="/Assets/check.png" alt="아이콘" style="width: 30px; height: 30px; vertical-align: middle;">
+</div>
+<div class="challenge-banner">
+    <span>인기 </span>챌린지 TOP3
+</div>
+<div class="container">
+    <div class="challenge-list">
+        <!-- Thymeleaf Loop for Challenge Items -->
+        <div th:each="c : ${top3}" class="challenge-box">
+            <div class="icon-container">
+                <img src="/Assets/iconbest.png" alt="아이콘" style="width: 50px; height: 50px; vertical-align: middle;">
+            </div>
+            <div class="image-placeholder">
+                <img th:src="@{'/files/challengeCover/' + ${c.uCoverImg}}" alt="챌린지 이미지">
+                <div class="remaining-time" th:attr="data-start-date=${c.startDate}">
+                    마감: <span class="time"></span>
+                </div>
+            </div>
+            <div class="content">
+                <div class="title">[[${c.title}]]</div>
+                <div class="user-info">
+                    <img alt="프로필 이미지">
+                    <div class="user-id">[[${c.creatorId}]]</div>
+                </div>
+                <div class="date-range" th:text="'기간: ' + ${c.startDate} + ' ~ ' + ${c.endDate}"></div>
+                <div class="details">
+                    <div class="participant-info">
+                        참여인원수: <span class="current-participants">[[${c.members}]]</span> /
+                        <span class="limit-user" th:text="${c.limitUser}"></span>
+                    </div>
+                    <div th:if="${userChall.contains(c)}">
+                        <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여중</a>
+                    </div>
+                    <div th:if="${userChall.contains(c) == false}">
+                        <div th:if="${c.members == c.limitUser}">
+                            <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여 불가</a>
+                        </div>
+                        <div th:if="${c.members < c.limitUser}">
+                            <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여하기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="category-buttons">
+        <form action="../challenge/search" method="GET" onsubmit="saveScrollPosition()">
+            <input type="radio" id="title" name="searchType" value="title" checked>
+            <label for="title">제목</label>
+
+            <input type="radio" id="creatorId" name="searchType" value="creatorId">
+            <label for="creatorId">저자</label>
+
+            <input type="radio" id="content" name="searchType" value="content">
+            <label for="content">내용</label>
+
+            <input type="text" name="keyword" placeholder="검색어 입력">
+            <button class="category-button"  type="submit">검색</button>
+        </form>
+    </div>
+    <!--
+        <button class="category-button">전체보기</button>
+        <button class="category-button">마감</button>
+    -->
+    <div class="category-buttons">
+        <button class="category-button" id="0" onclick="filterChallenges(0)">전체보기</button>
+        <div th:each="c : ${c}">
+            <button class="category-button" id="${c.categoryId}" th:onclick="|filterChallenges(${c.categoryId})|">[[${c.categoryName}]]</button>
+        </div>
+        <button class="category-button" id="-1" onclick="filterChallenges(-1)">마감</button>
+    </div>
+
+</div>
+
+<div class="container">
+    <div class="challenge-list">
+        <!-- 목록이 비어 있을 경우 메시지 표시 -->
+        <div th:if="${isEmpty}" class="empty-message">
+            <p class="message-text">등록된 챌린지가 없습니다.</p>
+            <p class="encouragement-text">첫 번째로 등록해서 사람들과 함께해요!</p>
+        </div>
+        <!-- Thymeleaf Loop for Challenge Items -->
+        <div th:each="c : ${list}" class="challenge-box">
+            <div class="image-placeholder">
+                <img th:src="@{'/files/challengeCover/' + ${c.uCoverImg}}" alt="챌린지 이미지">
+                <div class="remaining-time" th:attr="data-start-date=${c.startDate}">
+                    마감: <span class="time"></span>
+                </div>
+            </div>
+            <div class="content">
+                <div class="title">[[${c.title}]]</div>
+                <div class="user-info">
+                    <img alt="프로필 이미지">
+                    <div class="user-id">[[${c.creatorId}]]</div>
+                </div>
+                <div class="date-range" th:text="'기간: ' + ${c.startDate} + ' ~ ' + ${c.endDate}"></div>
+                <div class="details">
+                    <div class="participant-info">
+                        참여인원수: <span class="current-participants">[[${c.members}]]</span> /
+                        <span class="limit-user" th:text="${c.limitUser}"></span>
+                    </div>
+                    <div th:if="${userChall.contains(c)}">
+                        <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여중</a>
+                    </div>
+                    <div th:if="${userChall.contains(c) == false}">
+                        <div th:if="${c.members == c.limitUser}">
+                            <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여 불가</a>
+                        </div>
+                        <div th:if="${c.members < c.limitUser}">
+                            <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여하기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <th:block th:replace="~{th/footer :: footer}"></th:block>
 
-</body>
-</html>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const challengeBoxes = document.querySelectorAll('.challenge-box');
+
+        function updateRemainingTime() {
+            challengeBoxes.forEach(box => {
+                const remainingTimeElement = box.querySelector('.remaining-time .time');
+                const startDate = box.querySelector('.remaining-time').getAttribute('data-start-date');
+                const startDateTime = new Date(startDate);
+                const now = new Date();
+
+                const timeDiff = startDateTime - now;
+
+                if (timeDiff > 0) {
+                    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000); // 초 계산 추가
+
+                    remainingTimeElement.innerHTML = `${days}일 ${hours}시간 ${minutes}분 ${seconds}초 전`;
+                }
+            });
+        }
+
+        // 처음 로드할 때 남은 시간 업데이트
+        updateRemainingTime();
+
+        // 1초마다 남은 시간 업데이트
+        setInterval(updateRemainingTime, 1000);
+    });
+    function saveScrollPosition() {
+        localStorage.setItem('scrollPosition', window.scrollY);
+    }
+
+    window.onload = function() {
+        const scrollPosition = localStorage.getItem('scrollPosition');
+        if (scrollPosition) {
+            window.scrollTo(0, parseInt(scrollPosition, 10));
+            localStorage.removeItem('scrollPosition'); // 위치를 사용한 후 삭제
+        }
+    };
+
+    function filterChallenges(categoryId) {
+        // 현재 스크롤 위치 저장
+        localStorage.setItem('scrollPosition', window.scrollY);
+        window.location.href = '/challenge?categoryId=' + categoryId;
+    }
+
+
+
 </script>
+</body>
+</html>

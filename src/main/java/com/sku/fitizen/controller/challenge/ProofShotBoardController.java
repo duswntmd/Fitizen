@@ -52,6 +52,8 @@ public class ProofShotBoardController {
         }
         // 챌린지마다 인증 게시물이 존재   챌린지에 해당하는 인증 게시물 불러오기
         List<ProofShotBoard> list =service.getProofShotListById(id);
+        List<String> userIds = partiService.getUserIdsByChallengeId(id);
+        model.addAttribute("userIds", userIds);
         model.addAttribute("user",user);
         model.addAttribute("id",id);
         model.addAttribute("list",list);

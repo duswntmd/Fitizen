@@ -11,15 +11,107 @@
             SELECT CHALL_SEQ.NEXTVAL FROM DUAL
         </selectKey>
         <!-- 등록 -->
-        INSERT INTO challenge (challengeId, TITLE, COVERIMG,UCOVERIMG, STARTDATE, ENDDATE, LIMITUSER, CONTENT, CREATORID)
-        VALUES (#{challengeId}, #{title},#{coverImg},#{uCoverImg}, #{startDate}, #{endDate}, #{limitUser}, #{content}, #{creatorId})
+        INSERT INTO challenge (challengeId, TITLE, COVERIMG,UCOVERIMG, STARTDATE, ENDDATE, LIMITUSER, CONTENT, CREATORID,WEEK,PROOFCOUNT,PROOFDAYS,CATEGORYID)
+        VALUES (#{challengeId}, #{title},#{coverImg},#{uCoverImg}, #{startDate}, #{endDate}, #{limitUser}, #{content}, #{creatorId},#{week},#{proofCount},#{proofDays},#{categoryId})
     </insert>
 
 
-    <!-- 챌린지 목록 조회 -->
+    <!--챌린지 카테고리들-->
+    <select id="getChallCategories" resultType="com.sku.fitizen.domain.challenge.ChallCategory">
+        SELECT * FROM  CHALLCATEGORY
+    </select>
+
+    <!-- 특정 카테고리에 속해있는 챌린지 -->
+    <select id="getChallByCategory" parameterType="Integer" resultType="com.sku.fitizen.domain.challenge.Challenge">
+        SELECT * FROM  CHALLENGE
+        WHERE CATEGORYID =#{categoryId}
+    </select>
+
+
+    <!-- top3 챌린지 -->
+
+    <select id="getTop3Challenge" resultType="com.sku.fitizen.domain.challenge.Challenge">
+        <![CDATA[
+        SELECT * FROM (
+                          SELECT *
+                          FROM CHALLENGE
+                          WHERE members < limitUser
+                          ORDER BY members DESC, challengeId
+                      ) WHERE ROWNUM <= 3
+        ]]>
+    </select>
+
+
+
+    <!--전체 챌린지 목록 조회 -->
     <select id="getChallengeList"  resultType="com.sku.fitizen.domain.challenge.Challenge">
            SELECT *FROM  challenge
     </select>
+
+    <!-- 카테고리별 챌린지 목록 조회
+    <select id="getCategoryByChallenges" resultMap="joinMap">
+        SELECT
+            c.CATEGORYID AS categoryId,
+            c.CATEGORYNAME AS categoryName,
+            ch.CHALLENGEID AS challengeId,
+            ch.TITLE AS title,
+            ch.COVERIMG AS coverImg,
+            ch.UCOVERIMG AS uCoverImg,
+            ch.STARTDATE AS startDate,
+            ch.ENDDATE AS endDate,
+            ch.LIMITUSER AS limitUser,
+            ch.CREATORID AS creatorId,
+            ch.CONTENT AS content,
+            ch.MEMBERS AS members,
+            ch.WEEK AS week,
+            ch.PROOFCOUNT AS proofCount,
+            ch.PROOFDAYS AS proofDays
+        FROM
+            CHALLCATEGORY c
+                LEFT JOIN
+            CHALLENGE ch ON c.CATEGORYID = ch.CATEGORYID
+        ORDER BY
+            c.CATEGORYID
+    </select>
+
+    <resultMap id="joinMap" type="com.sku.fitizen.domain.challenge.ChallCategory">
+        <id property="categoryId" column="categoryId"/>
+        <result property="categoryName" column="categoryName"/>
+        <collection property="challenges" ofType="com.sku.fitizen.domain.challenge.Challenge">
+            <id property="challengeId" column="challengeId"/>
+            <result property="title" column="title"/>
+            <result property="coverImg" column="coverImg"/>
+            <result property="uCoverImg" column="uCoverImg"/>
+            <result property="startDate" column="startDate"/>
+            <result property="endDate" column="endDate"/>
+            <result property="limitUser" column="limitUser"/>
+            <result property="creatorId" column="creatorId"/>
+            <result property="content" column="content"/>
+            <result property="members" column="members"/>
+            <result property="week" column="week"/>
+            <result property="proofCount" column="proofCount"/>
+            <result property="proofDays" column="proofDays"/>
+        </collection>
+    </resultMap>
+-->
+
+    <select id="searchChallenges"
+            resultType="com.sku.fitizen.domain.challenge.Challenge"
+            parameterType="map">
+        SELECT * FROM CHALLENGE
+
+        <where>  <!-- CONCAT 함수는 두 개의 인수만 허용-->
+            <if test= "searchType.equalsIgnoreCase('title')">        AND LOWER(title) LIKE LOWER(CONCAT('%' || #{keyword}, '%')) </if>
+
+            <if  test= "searchType.equalsIgnoreCase('creatorId')" >  AND LOWER(creatorId)=LOWER(#{keyword})</if>
+
+            <if test="searchType.equalsIgnoreCase('content')" >      AND LOWER(content) LIKE LOWER(CONCAT('%' || #{keyword},'%'))</if>
+
+        </where>
+    </select>
+
+
+
 
     <!-- 챌린지 참여자 등록   챌린지를 등록한 사람도 참여자에 포함된다  -->
     <insert id="addCreatorToParticipation" parameterType="com.sku.fitizen.domain.challenge.Participation">

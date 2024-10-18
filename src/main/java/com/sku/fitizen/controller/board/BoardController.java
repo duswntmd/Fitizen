@@ -72,6 +72,7 @@ public class BoardController {
 
         model.addAttribute("pageInfo", pageInfo);  // 페이지 정보 모델에 추가
         model.addAttribute("likeCounts", likeCounts);  // 좋아요 수 모델에 추가
+
         return "th/board/list";
     }
 
@@ -194,7 +195,7 @@ public class BoardController {
     @ResponseBody
     public Map<String, Object> write(@ModelAttribute Board board,
                                      @SessionAttribute(value = "user", required = false) User user,
-                                     @RequestParam(value = "youtubeUrl", required = false) String youtubeUrl,
+                                     @RequestParam(value = "youtubeUrls", required = false) List<String> youtubeUrls, // 리스트로 받음
                                      @RequestParam("files") List<MultipartFile> files) throws IOException {
 
         Map<String, Object> result = new HashMap<>();
@@ -210,7 +211,7 @@ public class BoardController {
         // 파일 개수 제한 (최대 5개)
         if (files.size() > 5) {
             result.put("success", false);
-            result.put("message", "파일은 최대 5개까지 업로드할 수 있습니다.");
+            result.put("message", "파일은 최대 5개까지 업로드할 수 없습니다.");
             return result;
         }
 
@@ -224,18 +225,17 @@ public class BoardController {
             }
         }
 
-
         try {
             // 게시글과 파일, 유튜브 URL을 함께 저장
-            boardService.insertBoard(board, files, youtubeUrl);
+            Long bno = boardService.insertBoard(board, files, youtubeUrls);  // List<String>으로 전달
 
             result.put("success", true);
             result.put("message", "게시글이 성공적으로 작성되었습니다.");
+            result.put("bno", bno);
         } catch (Exception e) {
             result.put("success", false);
             result.put("message", "게시글 작성에 실패했습니다.");
             e.printStackTrace();
-
         }
 
         return result;
@@ -256,12 +256,12 @@ public class BoardController {
 
     // 게시글 수정 처리
     @PostMapping("/edit")
-    @ResponseBody  // JSON 응답을 위해 추가
+    @ResponseBody
     public Map<String, Object> edit(@ModelAttribute Board board,
                                     @SessionAttribute(value = "user", required = false) User user,
                                     @RequestParam("files") List<MultipartFile> files,
                                     @RequestParam(value = "deleteFiles", required = false) List<Long> deleteFileIds,
-                                    @RequestParam(value = "youtubeUrl", required = false) String youtubeUrl) throws IOException {
+                                    @RequestParam(value = "youtubeUrls", required = false) List<String> youtubeUrls) throws IOException {
 
         Map<String, Object> result = new HashMap<>();
 
@@ -271,19 +271,57 @@ public class BoardController {
             return result;
         }
 
-        // 수정 시에도 author 정보가 유지되도록 설정
+        // 기존 파일 목록 조회
+        List<BoardFilesVO> existingFiles = fileService.getFilesByBoard(board.getBno());
+
+        // 삭제되지 않은 이미지 개수
+        long remainingImageCount = existingFiles.stream()
+                .filter(file -> file.getFtype() != null && file.getFtype().startsWith("image/") &&
+                        (deleteFileIds == null || !deleteFileIds.contains(file.getFnum())))
+                .count();
+
+// 최대 이미지 개수 제한 (예: 5개)
+        int maxImageCount = 5;
+
+// 새로 추가할 파일이 있는 경우 처리
+        if (files != null && !files.isEmpty()) {
+            long imageFileCount = files.stream()
+                    .filter(file -> file.getContentType() != null && file.getContentType().startsWith("image/"))
+                    .count();
+
+            // 추가할 이미지 파일과 기존 이미지 파일의 합이 최대 개수를 초과하는지 확인
+            if (remainingImageCount + imageFileCount > maxImageCount) {
+                result.put("success", false);
+                result.put("message", "이미지는 최대 5개까지 추가할 수 있습니다. 현재 추가 가능한 이미지 수: " + (maxImageCount - remainingImageCount));
+                return result;
+            }
+        }
+
+        // 삭제되지 않은 유튜브 URL 개수
+        long remainingYoutubeCount = existingFiles.stream()
+                .filter(file -> file.getYoutubeUrl() != null && !file.getYoutubeUrl().isEmpty() && (deleteFileIds == null || !deleteFileIds.contains(file.getFnum())))
+                .count();
+
+        // 최대 유튜브 URL 개수 제한 (예: 3개)
+        int maxYoutubeCount = 3;
+        if (youtubeUrls != null && remainingYoutubeCount + youtubeUrls.size() > maxYoutubeCount) {
+            result.put("success", false);
+            result.put("message", "유튜브 영상은 최대 3개까지 추가할 수 있습니다. 현재 추가 가능한 영상 수: " + (maxYoutubeCount - remainingYoutubeCount));
+            return result;
+        }
+
         board.setAuthor(user.getId());
 
         try {
             // 삭제할 파일 처리
             if (deleteFileIds != null && !deleteFileIds.isEmpty()) {
                 for (Long fnum : deleteFileIds) {
-                    fileService.deleteFileByFnum(fnum);  // 파일 삭제
+                    fileService.deleteFileByFnum(fnum);
                 }
             }
 
-            // 게시글과 파일 수정
-            boardService.updateBoard(board, files, deleteFileIds, youtubeUrl);
+            // 게시글과 파일 수정, 유튜브 URL 저장
+            boardService.updateBoard(board, files, deleteFileIds, youtubeUrls); // youtubeUrls를 List로 전달
             result.put("success", true);
             result.put("message", "게시글이 성공적으로 수정되었습니다.");
         } catch (Exception e) {
