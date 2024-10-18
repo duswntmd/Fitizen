@@ -2,16 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.sku.fitizen.mapper.challenge.ChatMapper">
+<mapper namespace="com.sku.fitizen.mapper.ChatMapper">
 
-    <!-- 메세지 저장 -->
-    <insert id="saveMessage" parameterType="com.sku.fitizen.domain.challenge.Message">
+    <!--챌린지 메세지 저장 -->
+    <insert id="saveChallMessage" parameterType="com.sku.fitizen.domain.challenge.Message">
 
-        INSERT  INTO message
+        INSERT  INTO MESSAGE
         VALUES (msg_seq.NEXTVAL,#{senderId},#{message},#{sentAt},#{roomId},#{img},#{uImg})
     </insert>
 
-    <!--메세지 불러오기-->
+    <!--상담 채팅 메세지 저장 -->
+    <insert id="saveConsultMessage" parameterType="com.sku.fitizen.domain.Trainer.ConsultMessage">
+        INSERT  INTO CONSULTMESSAGE
+        VALUES (TMSG_SEQ.nextval,#{senderId},#{message},SYSDATE,#{consultId},#{img},#{uImg})
+
+    </insert>
+
+    <!--챌린지 메세지 불러오기-->
     <select id="getMessagesByRoomId" parameterType="com.sku.fitizen.domain.challenge.Participation"
             resultType="Message">
             SELECT * FROM  message
@@ -24,7 +31,16 @@
                 )
             ORDER BY sentAt,messageId
 
-</select>
+
+    </select>
+    <!-- 트레이너 상담 메세지 불러오기 -->
+    <select id="getMessagesByConsultId" parameterType="Integer"
+            resultType="ConsultMessage">
+        SELECT * FROM  CONSULTMESSAGE
+        WHERE CONSULTID=#{consultId}
+        ORDER BY sentAt,messageId
+
+    </select>
 
     <!--참여자 테이블에 유저가 존재하는지-->
     <select id="checkParticipationExists" parameterType="com.sku.fitizen.domain.challenge.Participation">

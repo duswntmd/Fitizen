@@ -1,0 +1,32 @@
+<div id="chat-button-container">
+  <button id="chat-button" onclick="openChat()">Chat</button>
+</div>
+<script>
+  function openChat() {
+    // 채팅창 열기 로직
+    window.location.href = '/chat';
+  }
+</script>
+<style>
+  #chat-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+
+  #chat-button {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  #chat-button:hover {
+    background-color: #333;
+  }
+</style>

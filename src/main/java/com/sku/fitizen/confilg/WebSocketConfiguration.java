@@ -47,7 +47,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer
                 .addInterceptors(new HttpHandshakeInterceptor())
                 .setAllowedOrigins("*");
 
-        log.info("웹소켓 핸들러 등록 완료: 채팅 및 트레이너");
+        log.info("웹소켓 핸들러 등록 완료: 챌린지 채팅 및 트레이너 상담 채팅");
 
     }
 

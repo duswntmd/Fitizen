@@ -7,100 +7,200 @@
     <title>챌린지 상세보기</title>
     <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
     <link th:href="@{/css/challenge/challDetail.css}" rel="stylesheet" />
-    <style>
-        .page-contents {
-            /*    font-family: Arial, sans-serif;*/
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-            /*    height: 100vh;*/
-            /*    margin: 0;*/
-            min-height: 100vh;
-        }
-    </style>
-
 </head>
 <body>
 <div>
     <th:block th:replace="~{th/header :: header}"></th:block>
 </div>
 
+<div class="challenge-banner">
+    <span>챌린지</span>에 도전하세요!
+</div>
 <div class="page-contents">
+    <div class="container">
+        <div class="challenge-details">
+            <!-- 챌린지 주제 타이틀 -->
+            <div class="form-group">
+                <h2 class="challenge-title">챌린지 주제</h2>
+                <div class="info-box">
+                    <p th:text="${challe.title}"></p>
+                </div>
+            </div>
+            <div class="image-wrapper">
+                <img th:src="@{'/files/challengeCover/' + ${challe.uCoverImg}}" alt="챌린지 이미지" class="challenge-image">
+            </div>
+            <!-- 챌린지 정보 박스 -->
+            <div class="form-group">
+                <h3 class="challenge-content-title">기간 <span th:text="${challe.week}" class="red-text">주</span> 주</h3>
 
-<h2>챌린지 상세정보</h2>
-<div class="container">
-    <div class="form-group">
-        <label>챌린지 제목:[[${challe.title}]]</label>
-    </div>
+            <div class="info-box">
+                <p>
+                    <strong>시작일:</strong> <span th:text="${challe.startDate}"></span>
+                    <strong>종료일:</strong> <span th:text="${challe.endDate}"></span>
+                </p>
+                <p>
+                    <strong>참여 인원수:</strong> [[${challe.members}]] / <span class="red-text">[[${challe.limitUser}]]</span>
+                </p>
+                <p>
+                    <strong>인증 요일:</strong><span class="red-text"> [[${challe.proofDays}]]</span>
+                </p>
 
-    <div class="form-group inline-fields">
-        <div>
-            <p><strong>시작일:</strong> <span th:text="${challe.startDate}"></span></p>
-        </div>
-        <div>
-            <p><strong>종료일:</strong> <span th:text="${challe.endDate}"></span></p>
-        </div>
-        <div>
-            <label>참여 인원수:[[${challe.members}]]</label>
-        </div>
-    </div>
-    <div class="image-wrapper">
-        <img th:src="@{'/files/' + ${challe.uCoverImg}}" alt="챌린지 이미지" class="challenge-image">
-    </div>
-    <div class="content-box">
-        <p>챌린지 내용:[[${challe.content}]]</p>
-    </div>
-
-
-    <!-- 댓글 작성 폼 -->
-    <div th:if="${user !=null}">
-        <div class="comment-form">
-            <h3>질문 작성</h3>
-            <form id="commentForm" >
-                <input type="hidden" name="userId" th:value="${user.getId()}">
-                <input type="hidden" name="challengeId" th:value="${challe.challengeId}">
-                <textarea id="challComment"  name="challComment" placeholder="댓글을 작성하세요..."></textarea>
-                <button type="button" onclick="saveComment();">댓글 등록</button>
-
-            </form>
-        </div>
-    </div>
-    <!-- 댓글 목록 -->
-    <div class="comment-list">
-        <h3> 질문 </h3>
-        <!-- 댓글 반복 처리 -->
-        <div th:each="c : ${list}" class="comment">
-            <div class="user-id" th:text="${c.userId}"></div>
-            <div class="date" th:text="${c.commentDate}"></div>
-            <div class="text">
-                <p th:text="${c.challComment}" th:id="${c.commentId}"></p>
-                <!-- 현재 로그인한 사용자와 댓글 작성자가 동일할 때만 보임 -->
-                <div th:if="${user != null && user.getId() == c.userId}">
-                    <button type="button" th:onclick="|editComment(${c.commentId})|">수정</button>
-                    <button type="button" th:onclick="|deleteComment(${c.commentId})|">삭제</button>
-
-
+            </div>
+            </div>
+            <!-- 챌린지 내용 -->
+            <div class="form-group">
+                <h3 class="challenge-content-title">챌린지 내용</h3>
+                <div class="content-box">
+                    <p th:text="${challe.content}"></p>
                 </div>
             </div>
         </div>
+        <div class="spring-container">
+                <img src="/Assets/2.png" alt="스프링 이미지" class="spring-image">
+                <img src="/Assets/2.png" alt="스프링 이미지" class="spring-image">
+        </div>
+        <div class="comment-section">
+            <img src="/Assets/paper.png" alt="스프링 이미지" class="paper-image">
+            <img src="/Assets/clip.png" alt="스프링 이미지" class="clip-image">
+
+            <!-- 댓글 목록 -->
+            <div class="form-group">
+                <h2 class="comment-title">댓글</h2>
+            </div>
+
+            <div class="comment-list">
+                <div th:if="${list == null || list.isEmpty()}" class="no-comments">
+                    <p>등록된 댓글이 없습니다....</p>
+                </div>
+                <div th:each="c : ${list}" class="comment">
+                    <div class="comment-info">
+                        <span class="user-id" th:text="${c.userId}"></span>
+                        <span class="date" th:text="${c.commentDate}"></span>
+                    </div>
+                    <div class="text" th:id="'comment-' + ${c.commentId}">
+                        <form th:id="'editComment-' + ${c.commentId}" >
+                            <p th:text="${c.challComment}" th:id="${c.commentId}" class="comment-text"></p>
+                            <input type="hidden" name="challengeId" th:value="${challe.challengeId}">
+                            <input type="hidden" name="commentId" th:value="${c.commentId}">
+                            <textarea th:id="'edit-' + ${c.commentId}" name="challComment" class="comment-textarea" style="display: none;" th:text="${c.challComment}"></textarea>
+                        </form>
+                    </div>
+
+                    <div class="comment-actions" th:if="${user != null && user.getId() == c.userId}">
+                        <button type="button" th:onclick="|editComment(${c.commentId})|" class="edit-button">수정</button>
+                        <button type="button" th:onclick="|deleteComment(${c.commentId})|" class="delete-button">삭제</button>
+                        <button type="button" th:onclick="|saveEdit(${c.commentId})|" class="save-button" style="display: none;">수정하기</button>
+                        <button type="button" th:onclick="|cancelEdit(${c.commentId})|" class="cancel-button" style="display: none;">취소</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 댓글 작성 폼 -->
+            <div th:if="${user !=null}">
+                    <form id="commentForm" class="comment-form">
+                        <h3>댓글 작성</h3>
+                        <input type="hidden" name="challengeId" th:value="${challe.challengeId}">
+                        <textarea id="challComment" name="challComment" placeholder="댓글을 작성하세요..."></textarea>
+                        <div class="form-actions">
+                            <button type="button" onclick="saveComment();">댓글 등록</button>
+                        </div>
+                    </form>
+            </div>
+        </div>
+
     </div>
-
-
-    <div class="form-group">
+    <div class="form-group" style="text-align: center; ">
         <a th:href="@{../participate/{challengeId}(challengeId=${challe.challengeId})}"><button>챌린지 도전!</button></a>
         <a th:href="@{../../proofShot/{challengeId}(challengeId=${challe.challengeId})}"><button>인증 게시판</button></a>
-        <a href="/challenge/list">
+        <a href="/challenge">
             <button class="btn-back">뒤로가기</button>
         </a>
     </div>
-
-
-</div>
 </div>
 <th:block th:replace="~{th/footer :: footer}"></th:block>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
+
+
+
+    function editComment(commentId) {
+        const commentText = document.getElementById(`comment-${commentId}`);
+        const commentContent = commentText.querySelector('.comment-text');
+        const textarea = commentText.querySelector('textarea');
+
+        // 현재 텍스트를 textarea에 설정
+        textarea.value = commentContent.innerText;
+
+        // 텍스트와 버튼 숨기기/보이기
+        commentContent.style.display = 'none';
+        textarea.style.display = 'block';
+
+        // 버튼 표시
+        document.querySelector(`.delete-button[onclick*="${commentId}"]`).style.display = 'none'; // 삭제 버튼 숨기기
+        document.querySelector(`.edit-button[onclick*="${commentId}"]`).style.display = 'none';
+        document.querySelector(`.save-button[onclick*="${commentId}"]`).style.display = 'inline';
+        document.querySelector(`.cancel-button[onclick*="${commentId}"]`).style.display = 'inline';
+    }
+
+    function saveEdit(commentId) {
+        const textarea = document.getElementById(`edit-${commentId}`);
+        const commentText = document.getElementById(`comment-${commentId}`);
+        const commentContent = commentText.querySelector('.comment-text');
+
+        // 수정된 내용을 설정
+        commentContent.innerText = textarea.value;
+
+        // 텍스트와 버튼 숨기기/보이기
+        commentContent.style.display = 'block';
+        textarea.style.display = 'none';
+
+        // 버튼 표시
+        document.querySelector(`.edit-button[onclick*="${commentId}"]`).style.display = 'inline';
+        document.querySelector(`.save-button[onclick*="${commentId}"]`).style.display = 'none';
+        document.querySelector(`.delete-button[onclick*="${commentId}"]`).style.display = 'inline'; // 삭제 버튼 보이기
+        document.querySelector(`.cancel-button[onclick*="${commentId}"]`).style.display = 'none';
+
+        // 특정 댓글에 대한 폼을 가져옵니다.
+        const form = document.getElementById(`editComment-${commentId}`);
+
+        // 폼 데이터를 직렬화합니다.
+        var obj = $(form).serialize();
+
+        // AJAX 요청
+        $.ajax({
+            url: '/chellComment/editChallComment',
+            method: 'POST',
+            data: obj,
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    alert("댓글 수정 완료");
+                    location.reload();  // 새로고침
+                }
+            },
+            error: function (xhr, status, err) {
+                alert('에러: ' + err);
+            }
+        });
+    }
+    function cancelEdit(commentId) {
+        const commentText = document.getElementById(`comment-${commentId}`);
+        const commentContent = commentText.querySelector('.comment-text');
+        const textarea = commentText.querySelector('textarea');
+
+        // 텍스트와 버튼 숨기기/보이기
+        commentContent.style.display = 'block';
+        textarea.style.display = 'none';
+
+        // 버튼 표시
+        document.querySelector(`.delete-button[onclick*="${commentId}"]`).style.display = 'inline'; // 삭제 버튼 보이기
+        document.querySelector(`.edit-button[onclick*="${commentId}"]`).style.display = 'inline';
+        document.querySelector(`.save-button[onclick*="${commentId}"]`).style.display = 'none';
+        document.querySelector(`.cancel-button[onclick*="${commentId}"]`).style.display = 'none';
+    }
+
 
 
     function saveComment() {

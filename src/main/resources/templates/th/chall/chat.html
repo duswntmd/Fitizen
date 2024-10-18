@@ -42,9 +42,10 @@
     var g_webSocket = null;
 
     window.onload = function() {
+        var consultId='[[${consultId}]]';
         var roomId = '[[${roomId}]]';
         var host = "localhost";
-        g_webSocket = new WebSocket("ws://" + host + "/chat?" + "userId=" + userId + "&roomId=" + roomId);
+        g_webSocket = new WebSocket("ws://" + host + "/chat?" + "roomId=" + roomId +"&consultId="+consultId);
 
         g_webSocket.onopen = function(message) {
             addLineToChatBox("챌린지 참여 채팅방입니다.");
