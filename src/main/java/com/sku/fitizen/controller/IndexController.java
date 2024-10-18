@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/")
@@ -21,11 +22,13 @@ public class IndexController {
 
         return "findMyExercise";
     }
+
     @GetMapping("/findResult")
     public String findResult() {
         return "findResult";
     }
 
+  
     @GetMapping("/exerciseDetail")
     public String exerciseDetail(@RequestParam("exercise") String sport, Model model) {
         System.out.println("선택된 운동:"+sport);
