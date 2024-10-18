@@ -1,12 +1,15 @@
 package com.sku.fitizen.controller.challenge;
 
-
+import com.github.pagehelper.PageInfo;
+import com.sku.fitizen.domain.challenge.ChallCategory;
 import com.sku.fitizen.domain.challenge.ChallComment;
 import com.sku.fitizen.domain.challenge.Challenge;
 import com.sku.fitizen.domain.challenge.Participation;
 import com.sku.fitizen.domain.User;
+import com.sku.fitizen.service.board.PageService;
 import com.sku.fitizen.service.challenge.ChallCommentService;
 import com.sku.fitizen.service.challenge.ChallengeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +23,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/challenge")
+@Slf4j
 public class ChallengController {
 
 
@@ -30,28 +34,68 @@ public class ChallengController {
     @Autowired
     ChallCommentService challCommentService;
 
-    // 챌린지 페이지  버튼(챌린지 목록, 챌린지 작성, 내가 참여한 챌린지)
+    @Autowired
+    private PageService pageService;
+
+
     @GetMapping("")
-    public String mainPage(Model model)
-    {
+    public String mainPage(@SessionAttribute(value = "user", required = false) User user,
+                           @RequestParam(value = "categoryId",defaultValue ="0") int categoryId,
+                           Model model) {
 
-        return "th/chall/challengePage";
-    }
+        List<Challenge> list;
 
-    // 전체 첼린지 목록 조회
-    @GetMapping("/list")
-    public String challList(@SessionAttribute(value = "user", required = false) User user,Model model)
-    {
-        List<Challenge> list = service.getChallengeList();
+        // 카테고리에 따라 챌린지 목록을 가져옴
+
+        if (categoryId == 0) {
+
+            list= service.getChallengeList();
+        } else if (categoryId == -1) {
+            list = service.getChallByCategory(categoryId);
+        } else {
+            list = service.getChallByCategory(categoryId);
+        }
+
         List<Challenge> userChall = new ArrayList<>();
-        // 로그인된 사용자일 경우, 참여 중인 챌린지 목록을 가져옴
         if (user != null) {
             userChall = service.getMyChallengeList(user.getId());
         }
+
+
+        List<Challenge> top3 = service.getTop3Challenge(); // 일단 임시로 참여자 수 많은 순으로(제한유저 꽉찬거 말고)
+        model.addAttribute("top3", top3);
+        List<ChallCategory> c = service.getChallCategories();
+        model.addAttribute("c", c);
         model.addAttribute("userChall", userChall);
         model.addAttribute("list", list);
-        return "th/chall/challengeList";
+        // 목록이 비어있는지 여부를 모델에 추가
+        model.addAttribute("isEmpty", list.isEmpty());
+        return "th/chall/challengePage";
     }
+
+
+
+
+    @GetMapping("/search")
+    public String searchChallenges(@SessionAttribute(value = "user", required = false) User user,
+                                   @RequestParam Map<String, String> info,
+
+                                   Model model) {
+
+        List<Challenge> userChall = new ArrayList<>();
+        if (user != null) {
+            userChall = service.getMyChallengeList(user.getId());
+        }
+
+        List<ChallCategory> c = service.getChallCategories();
+        List<Challenge>searchResults = service.searchChallenges(info);
+
+        model.addAttribute("c", c);
+        model.addAttribute("userChall", userChall);
+        model.addAttribute("list", searchResults);
+        return "th/chall//challengePage"; // 검색 결과를 보여줄 페이지로 이동
+    }
+
 
 
     // 챌린지 작성 폼 이동
@@ -63,6 +107,8 @@ public class ChallengController {
         }
         model.addAttribute("userId",user.getId());
         model.addAttribute("challenge",new Challenge());
+        List<ChallCategory> list = service.getChallCategories();
+        model.addAttribute("category", list);
         return "th/chall/challengeAddForm";
     }
 
@@ -76,6 +122,7 @@ public class ChallengController {
     {
 
         challenge.setCreatorId(user.getId());
+        log.info(challenge.toString());
         boolean saved=  service.saveChallenge(challenge,file);
         Map<String,Boolean> map =new HashMap<>();
         map.put("saved",saved);
@@ -124,11 +171,6 @@ public class ChallengController {
         model.addAttribute("myChall",myChall);
         return "th/chall/myChallengePage";
     }
-
-
-
-
-
 
 
 

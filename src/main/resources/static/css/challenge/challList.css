@@ -8,46 +8,88 @@ body {
 .container {
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto; /* 페이지 가운데 정렬 */
+    margin: 0 auto;
     padding: 20px;
     display: flex;
-    justify-content: center; /* 수평 가운데 정렬 */
+    justify-content: center;
+}
+
+.challenge-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .challenge-box {
-    width: 220px;
+    position: relative;
+    width: 230px;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin: 10px;
     overflow: hidden;
     text-align: left;
-    display: inline-block;
-    text-decoration: none; /* Remove underline from links */
-    color: inherit; /* Inherit text color */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transformation */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/*베스트 */
+.icon-container {
+    position: absolute; /* 절대적 위치 설정 */
+    top: -8px; /* 상단에서의 위치 (조정) */
+    left: -5px; /* 좌측에서의 위치 */
+    font-size: 50px; /* 아이콘 크기 조정 (더 크게 설정) */
+    color: #FFD700; /* 아이콘 색상 설정 */
+    z-index: 1; /* 아이콘이 다른 요소 위에 보이도록 설정 */
+}
 .challenge-box:hover {
-    transform: scale(1.05); /* Slightly enlarge the box */
-    box-shadow: 0 0 15px rgba(0,0,0,0.2); /* Increase shadow for better hover effect */
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 .challenge-box .image-placeholder {
+    overflow: hidden; /* 이미지가 부모 요소를 넘어가지 않도록 설정 */
+
+    position: relative;
     width: 100%;
     height: 150px;
-    background-color: #ccc; /* Placeholder background color */
+    background-color: #ccc;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #777;
     font-size: 16px;
     font-weight: bold;
+
+
+}
+
+.challenge-box .image-placeholder img {
+    width: 100%; /* 이미지가 가로로 100% 차지하도록 설정 */
+    height: 100%; /* 세로로 100% 차지하도록 설정 */
+    object-fit: cover; /* 비율 유지하면서 잘림 */
+}
+
+
+.challenge-box .remaining-time {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    font-size: 14px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 배경 */
+    text-align: center;
+    padding: 5px;
+    border-radius: 0 0 10px 10px;
 }
 
 .challenge-box .content {
     padding: 10px;
+    flex-grow: 1;
 }
 
 .challenge-box .title {
@@ -68,11 +110,6 @@ body {
     height: 30px;
     border-radius: 50%;
     margin-right: 10px;
-    background-color: #ddd; /* Placeholder for profile image */
-}
-
-.challenge-box .user-id {
-    color: #555;
 }
 
 .challenge-box .details {
@@ -80,20 +117,6 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
-}
-
-.challenge-box .details .participant-info {
-    font-size: 14px;
-    color: #777;
-}
-
-.challenge-box .details .participant-info .current-participants {
-    color: #000; /* Default color for current participants */
-}
-
-.challenge-box .details .participant-info .limit-user {
-    color: #ff0000; /* Red color for limit user */
-    margin-left: 2px; /* Small space between the numbers */
 }
 
 .challenge-box .details .button {
@@ -104,7 +127,6 @@ body {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
-    text-decoration: none;
 }
 
 .challenge-box .details .button:hover {
@@ -117,24 +139,326 @@ body {
     margin-top: 5px;
 }
 
-.challenge-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* 목록을 가운데 정렬 */
-}
-
-
-
 /* 비활성화된 버튼 스타일 */
 .challenge-box .details .button[disabled] {
-    background-color: #6c757d; /* 회색 배경 */
-    color: #fff; /* 흰색 텍스트 */
-    cursor: not-allowed; /* 클릭 불가 커서 */
+    background-color: #6c757d;
+    color: #fff;
+    cursor: not-allowed;
 }
 
-/* 기존 CSS */
-.challenge-box .content .challenge-content {
-    font-size: 14px;
+
+
+
+
+/* 챌린지 문구 스타일 */
+.challenge-banner {
+    width: 100%;
+    padding: 20px 0;
+    background-color: #f8f9fa;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
     color: #333;
-    margin-top: 10px;
+    border-bottom: 2px solid #ddd;
+}
+
+.challenge-banner span {
+    color: #007bff;
+}
+
+/* 두 섹션을 나누기 위한 레이아웃 */
+.content-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 90%; /* 양쪽에 여백을 주기 위해 */
+    max-width: 1200px;
+}
+
+/* 왼쪽 이미지 섹션 */
+.left-image {
+    flex: 1;
+    margin-right: 20px; /* 오른쪽과 간격을 줍니다 */
+}
+
+.left-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px; /* 이미지를 조금 둥글게 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 이미지에 약간의 그림자 */
+}
+
+/* 오른쪽 설명 섹션 */
+.right-description {
+    flex: 1;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left; /* 설명 텍스트를 왼쪽 정렬 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start; /* 라인에 맞춰서 왼쪽으로 정렬 */
+}
+
+.right-description h3 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.right-description p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* 전체 섹션을 페이지 우측에 맞추기 위한 스타일 */
+.content-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin: 0 auto;
+    padding-right: 5%; /* 오른쪽으로 여백 추가 */
+    max-width: 1200px;
+}
+
+
+.category-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap; /* 버튼이 화면에 맞게 줄 바꿈 */
+}
+
+.category-button {
+
+    background-color: #f0f0f0;  /* 버튼 배경색 */
+    color: #333;                /* 텍스트 색상 */
+    border: none;
+    padding: 10px 20px;
+    margin:5px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 50px;        /* 타원형 버튼 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 */
+    transition: background-color 0.3s ease;
+}
+
+.category-button:hover {
+    background-color: #d1d1d1;  /* 호버 시 버튼 배경색 */
+}
+
+.category-button:focus {
+    outline: none;              /* 포커스 시 외곽선 제거 */
+}
+
+
+
+/* 검색 입력창 */
+input[type="text"] {
+    padding: 10px;
+    border: 2px solid #333;
+    border-radius: 20px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: #007BFF;
+}
+
+
+
+
+/* 라디오 버튼 숨기기 */
+input[type="radio"] {
+    display: none;
+}
+
+/* 라벨 디자인 */
+input[type="radio"] + label {
+    display: inline-flex;
+    align-items: center;
+    font-size: 1.2rem;
+    color: #555;
+    padding-left: 35px;
+    position: relative;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+/* 라벨에 호버 효과 추가 */
+input[type="radio"] + label:hover {
+    color: #007BFF;
+}
+
+/* 커스터마이징된 라디오 버튼 원형 */
+input[type="radio"] + label:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 25px;
+    height: 25px;
+    border: 2px solid #333;
+    border-radius: 50%;
+    background-color: white;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+/* 선택된 라디오 버튼 디자인 (체크 표시로 변경) */
+input[type="radio"]:checked + label:before {
+    background-color: #5a6268;
+    border-color: #5a6268;
+}
+
+/* 체크 모양 추가 */
+input[type="radio"]:checked + label:after {
+    content: "\2713"; /* 체크 표시 유니코드 */
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: white;
+}
+
+
+
+
+
+.carousel-wrapper {
+    overflow: hidden; /* 화면 넘침 방지 */
+    width: 1000px; /* 너비를 1000px로 설정 */
+    margin: auto; /* 중앙 정렬 */
+    border: 4px solid transparent; /* 테두리 두께를 설정하고, 기본 색상을 투명으로 */
+    border-radius: 0; /* 직각으로 설정 (모서리 둥글기 없음) */
+    box-shadow: none; /* 그림자 제거 */
+}
+
+
+
+.carousel {
+    display: flex; /* Flexbox 사용 */
+    transition: transform 0.5s ease; /* 슬라이드 전환 효과 */
+}
+.content-section {
+    min-width: 100%; /* 각 섹션의 최소 너비를 100%로 설정 */
+    box-sizing: border-box; /* 테두리 및 패딩을 너비에 포함 */
+}
+
+
+.left-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-image img {
+    max-width: 80%; /* 이미지의 최대 너비 설정 */
+    height: auto;   /* 비율 유지 */
+    border-radius: 10px; /* 이미지 모서리 둥글게 */
+}
+
+
+
+.right-description {
+    padding: 20px;
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+    background-color: #ffffff; /* 배경 색상 */
+    border-radius: 0 10px 10px 0; /* 오른쪽 모서리 둥글게 */
+}
+
+.prev,
+.next {
+    position: absolute; /* 절대 위치 설정 */
+    top: 50%; /* 수직 중앙 */
+    transform: translateY(-50%); /* 수직 중앙 정렬 */
+    background-color: rgba(255, 255, 255, 0.8); /* 배경 색상 */
+    border: none;
+    border-radius: 50%; /* 둥근 버튼 */
+    width: 40px; /* 버튼 크기 */
+    height: 40px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+}
+
+.prev:hover,
+.next:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* 호버 시 배경 색상 */
+}
+
+.prev {
+    left: 300px; /* 왼쪽 버튼 위치 */
+}
+
+.next {
+    right: 300px; /* 오른쪽 버튼 위치 */
+}
+
+.carousel-container {
+    display: flex; /* Flexbox 사용 */
+    align-items: center; /* 수직 중앙 정렬 */
+}
+
+
+.dots {
+    text-align: center; /* 점들을 중앙 정렬 */
+    margin-top: 10px; /* 위쪽 여백 추가 */
+}
+
+.dot {
+    height: 10px; /* 점의 높이 */
+    width: 10px; /* 점의 너비 */
+    margin: 0 5px; /* 점들 간의 간격 */
+    background-color: #bbb; /* 기본 점 색상 */
+    border-radius: 50%; /* 점 모양을 원형으로 */
+    display: inline-block; /* 인라인 블록으로 설정 */
+    cursor: pointer; /* 커서를 포인터로 설정 */
+    transition: background-color 0.3s; /* 색상 변화에 애니메이션 추가 */
+}
+
+.dot.active {
+    background-color: #717171; /* 활성화된 점의 색상 */
+}
+
+
+.empty-message {
+    text-align: center; /* 중앙 정렬 */
+    font-size: 1.5rem; /* 기본 글자 크기 */
+    color: #333; /* 기본 글자 색상 */
+    margin: 40px 0; /* 상하 여백 */
+    padding: 20px; /* 패딩 */
+    background: transparent; /* 배경 없음 */
+}
+
+.message-text {
+    font-weight: bold; /* 글자 두껍게 */
+    color: #d9534f; /* 강조 색상 */
+}
+
+.encouragement-text {
+    font-size: 1.2rem; /* 좀 더 작은 글자 크기 */
+    color: #5bc0de; /* 부드러운 색상 */
+    margin-top: 10px; /* 위쪽 여백 */
+}
+
+/* 애니메이션 효과 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* 로딩 애니메이션 */
+.empty-message {
+    animation: fadeIn 0.5s; /* 페이드 인 효과 */
 }

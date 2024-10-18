@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ public class ChallCommentController {
         public Map<String,Boolean> challComment(@SessionAttribute(value = "user" ,required = false) User user  ,
                                                 ChallComment challComment)
         {
+            challComment.setUserId(user.getId());
             boolean success = service.addChallComment(challComment);
             Map<String,Boolean> map = new HashMap<>();
             map.put("success",success);
@@ -54,8 +56,10 @@ public class ChallCommentController {
         // 댓글 수정
         @PostMapping("/editChallComment")
         @ResponseBody
-        public Map<String,Boolean> editChallComment(ChallComment challComment,@SessionAttribute(value = "user") User user)
+        public Map<String,Boolean> editChallComment(ChallComment challComment,
+                                                    @SessionAttribute(value = "user") User user)
         {
+
             challComment.setUserId(user.getId());
             Map<String,Boolean> map = new HashMap<>();
             boolean success  = service.editChallComment(challComment);

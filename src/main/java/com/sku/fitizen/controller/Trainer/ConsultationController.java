@@ -38,7 +38,7 @@ public class ConsultationController {
 
 
         // 이미 신청한 상담인지
-       if(!cService.existByUserId(user.getId()).isEmpty())
+       if(cService.existByUserId(new Consultation(user.getId(),trainerNo))>0)
         {
             result.put("success", false);
             result.put("message","이미 상담신청된 트레이너입니다. ");

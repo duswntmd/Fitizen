@@ -18,4 +18,11 @@ public class ChallComment {
         private String challComment;
         private LocalDate commentDate;
         private Integer parentCommentId;
+
+        @Override
+        public String toString() {
+                return "ChallComment [commentId=" + commentId + ", challengeId=" + challengeId
+                        + ", userId=" + userId + ", challComment=" + challComment + ", commentDate="
+                        + commentDate + ", parentCommentId=" + parentCommentId + "]";
+        }
 }

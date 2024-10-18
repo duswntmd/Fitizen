@@ -13,7 +13,7 @@ public interface ConsultationMapper {
     int saveConsultation(Consultation consult);
 
     // 이미 신청한 상담인지
-    List<Consultation> existByUserId(String userId);
+    int existByUserId(Consultation consult);
 
     // 트레이너의 상담 유저 목록
     List<Map<String, Object>>  getMyUsers(int trainerNo);

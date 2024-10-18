@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 public class Consultation {
 
 
+    private  int consultId;
     private String userId;
     private int trainerNo;
     private String status; //'REQUESTED'(기본값), 'APPROVED', 'REJECTED', 'EXPIRED'

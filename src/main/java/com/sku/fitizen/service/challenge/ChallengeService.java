@@ -1,7 +1,7 @@
 package com.sku.fitizen.service.challenge;
 
-
 import com.sku.fitizen.domain.challenge.Challenge;
+import com.sku.fitizen.domain.challenge.ChallCategory;
 import com.sku.fitizen.domain.challenge.Participation;
 import com.sku.fitizen.mapper.challenge.ChallengeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -28,13 +29,10 @@ public class ChallengeService {
 
     //챌린지 등록, 및  참여 테이블에 만든사람 아이디 추가
         //이유: 챌린지 등록한 사람도 하나의 참여자이기 때문에
-
         @Transactional
         public boolean saveChallenge(Challenge challenge , MultipartFile file){
             //saveChallenge를 @Transactional 할경우  챌린지 등록이 커밋 안된상태라 참여목록에서 FK를 참조 못함
             String creatorId = challenge.getCreatorId(); //참여자에 작성자 아이디도 넣기 위해
-
-            System.err.println(file.getOriginalFilename());
 
             if (!file.isEmpty()) {
                 try {
@@ -72,6 +70,43 @@ public class ChallengeService {
 
             return false;
         }
+
+        // 카테고리 정보만 가져오기 (작성폼에서 사용하려고)
+        public  List<ChallCategory> getChallCategories()
+        {
+            List<ChallCategory> list =mapper.getChallCategories();
+
+            return list ;
+        }
+
+        // 카테고리별 챌린지정보들
+        public List<Challenge> getChallByCategory(int categoryId)
+        {
+
+            return mapper.getChallByCategory(categoryId);
+        }
+        /*
+        public  List<ChallCategory> getCategoryByChallenges()
+        {
+            List<ChallCategory> list =mapper.getCategoryByChallenges();
+            return list;
+        }
+        */
+
+        // 챌린지 검색: 저자 , 제목 ,내용
+        public List<Challenge> searchChallenges(Map<String,String> info)
+        {
+
+            return  mapper.searchChallenges(info);
+        }
+
+
+        // 챌린지 top3
+        public List<Challenge> getTop3Challenge()
+        {
+            return mapper.getTop3Challenge();
+        }
+
         //챌린지 전체 목록
         public List<Challenge> getChallengeList()
         {

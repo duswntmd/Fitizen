@@ -4,6 +4,7 @@ package com.sku.fitizen.domain.challenge;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.eclipse.tags.shaded.org.apache.xalan.xsltc.compiler.Stylesheet;
 
 import java.time.LocalDate;
 
@@ -30,4 +31,20 @@ public class Challenge {
     private String content;
 
     private int members;
+
+    private int week;
+
+    private int proofCount;
+
+    private String proofDays;
+
+    private int  categoryId;
+
+    @Override
+    public String toString() {
+        return "Challenge [challengeId=" + challengeId + ", title=" + title + ", startDate="+ startDate +
+                ", endDate="+ endDate + ", limitUser="+limitUser+", creatorId=" + creatorId + ", content="
+                + content + ", members="+ ",week=" + week + ", poofCount="
+                + proofCount + ", proofDays="+proofDays + ", categoryId=" + categoryId + "]";
+    }
 }

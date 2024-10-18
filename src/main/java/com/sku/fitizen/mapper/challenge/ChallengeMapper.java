@@ -1,11 +1,14 @@
 package com.sku.fitizen.mapper.challenge;
 
 
+import com.sku.fitizen.domain.challenge.ChallCategory;
 import com.sku.fitizen.domain.challenge.Challenge;
 import com.sku.fitizen.domain.challenge.Participation;
+import jdk.jfr.Category;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ChallengeMapper {
@@ -13,8 +16,24 @@ public interface ChallengeMapper {
   // 챌린지 등록
   int saveChallenge(Challenge challenge);
 
-  // 챌린지 전체 목록
+  // 카테고리 정보만
+  List<ChallCategory> getChallCategories();
+
+  // top3 챌린지
+  List<Challenge> getTop3Challenge();
+
+  // 챌린지 전체 목록    카테고리별- 챌린지 리스트
   List<Challenge> getChallengeList();
+
+  // 카테고리에 속해 있는 챌린지
+  List<Challenge>getChallByCategory(int categoryId);
+
+  // 카테고리별 챌리지 리스트
+ // List<ChallCategory> getCategoryByChallenges();
+
+  // 챌린지 검색
+  List<Challenge> searchChallenges(Map<String, String> obj);
+
   // 챌린지 참여자 등록
   int addCreatorToParticipation(Participation participation);
 

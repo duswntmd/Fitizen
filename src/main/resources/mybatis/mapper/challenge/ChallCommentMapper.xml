@@ -57,8 +57,7 @@
     <update id="editChallComment" parameterType="com.sku.fitizen.domain.challenge.ChallComment">
 
      UPDATE challComment
-        SET CHALLCOMMENT = #{challComment},COMMENTDATE=#{commentDate}
-          WHERE commentId = #{commentId}
+        SET CHALLCOMMENT = #{challComment},COMMENTDATE=SYSDATE          WHERE commentId = #{commentId}
           AND userId = #{userId}
     </update>
 

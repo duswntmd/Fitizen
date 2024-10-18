@@ -7,8 +7,8 @@ body, html {
 
 /* 폼 컨테이너 스타일 */
 .form-container {
-    max-width: 600px;
-    margin: 0 auto;
+    width:  800px;
+    height: 600px;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
