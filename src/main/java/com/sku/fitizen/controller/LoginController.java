@@ -42,6 +42,7 @@ public class LoginController {
                         @RequestParam(required = false) String toURL,
                         @RequestParam(defaultValue = "false") boolean rememberId,
                         HttpServletResponse response,
+                        HttpSession session,
                         Model model) throws Exception {
 
         // 1. id와 pwd를 확인
@@ -54,7 +55,8 @@ public class LoginController {
         // 2-2. id와 pwd가 일치하면, User 객체를 세션에 저장
         User user = userService.selectUser(id);
         model.addAttribute("user", user);  // Model에 user 추가, 이때 'user'가 세션에 저장됨
-
+        session.setAttribute("userId", user.getId());  // 세션에 userId 저장
+        session.setAttribute("user", user);  // 세션에 User 객체 저장 (필요하다면)
         if (rememberId) {
             // 1. 쿠키를 생성
             Cookie cookie = new Cookie("id", id);

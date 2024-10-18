@@ -8,38 +8,101 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
+    <link rel="stylesheet" type="text/css" href="/resources/static/css/indexStyle.css">
     <title>회원가입</title>
     <style>
-        /* 전체 페이지 레이아웃을 위한 설정 */
-        html, body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-        }
+
 
         /* 콘텐츠가 화면의 나머지 공간을 차지하도록 설정 */
         .page-contents {
+            height: 100%;
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center; /* 콘텐츠가 가운데 정렬되도록 설정 */
             align-items: center;
+            padding-bottom: 0;
+            margin-bottom: 0;
         }
 
-        .input-field {
-            display: block;
-            margin-bottom: 10px;
+        html, body {
+            height:100%;
+            font-family: 'Pretendard', sans-serif; /* 사용자가 설정한 Pretendard 폰트 사용 */
+            background-color: #f4f4f9; /* 전체 배경을 은은한 회색으로 */
+            color: #333; /* 텍스트 색상을 다크 그레이로 */
+            line-height: 1.6; /* 가독성을 위한 라인 높이 설정 */
+            margin:0;
+
         }
 
-        .title {
-            font-size: 24px;
-            margin-bottom: 20px;
+        input[type="text"], input[type="password"], input[type="email"], input[type="date"], input[type="number"], select {
+            width: 100%; /* 입력 필드 너비를 100%로 */
+            padding: 10px; /* 적절한 패딩 */
+            margin: 8px 0; /* 위아래 여백 */
+            border: 1px solid #ccc; /* 기본 회색 테두리 */
+            border-radius: 4px; /* 부드러운 모서리 */
+            box-sizing: border-box; /* 박스 크기 설정 */
+            font-size: 16px; /* 기본 글자 크기 */
         }
 
         button {
-            display: block;
-            margin-top: 20px;
+            background-color: #007bff; /* 버튼의 배경색을 파란색으로 */
+            color: white; /* 텍스트 색상을 흰색으로 */
+            border: none; /* 테두리 제거 */
+            padding: 10px 20px; /* 패딩 설정 */
+            border-radius: 4px; /* 부드러운 모서리 */
+            cursor: pointer; /* 커서를 포인터로 변경 */
+            font-size: 16px; /* 기본 글자 크기 */
+            transition: background-color 0.3s ease; /* 배경색 변환 효과 */
+        }
+
+        button:hover {
+            background-color: #0056b3; /* 마우스를 올렸을 때 진한 파란색으로 변경 */
+        }
+
+        .label {
+            font-weight: bold; /* 라벨을 볼드체로 */
+            margin-bottom: 4px; /* 라벨 아래 약간의 여백 */
+        }
+
+        #trainerFields {
+            background-color: #ffffff; /* 배경을 흰색으로 */
+            border: 1px solid #e0e0e0; /* 약간의 회색 테두리 */
+            padding: 15px; /* 여백 추가 */
+            margin-top: 20px; /* 상단 여백 */
+            border-radius: 8px; /* 부드러운 모서리 */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+        }
+
+        input::placeholder {
+            color: #aaa; /* 플레이스홀더 색상을 회색으로 변경 */
+        }
+
+        select {
+            appearance: none; /* 기본 드롭다운 화살표 제거 */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2210%22%20height%3D%2210%22%3E%3Cpath%20d%3D%22M0%200%20L5%205%20L10%200%22%20fill%3D%22%23000000%22%3E%3C/path%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px; /* 화살표가 들어갈 공간 추가 */
+        }
+
+        input[type="button"] {
+            background-color: #f0f0f0; /* 밝은 회색 배경 */
+            border: 1px solid #ccc; /* 회색 테두리 */
+            padding: 8px 12px; /* 패딩 추가 */
+            cursor: pointer; /* 커서를 포인터로 변경 */
+            font-size: 14px; /* 글자 크기 설정 */
+            border-radius: 4px; /* 모서리 둥글게 */
+            transition: background-color 0.3s ease; /* 배경색 변환 효과 */
+        }
+
+        input[type="button"]:hover {
+            background-color: #e0e0e0; /* 마우스를 올렸을 때 약간 진한 회색 */
+        }
+
+        .msg {
+            color: red; /* 오류 메시지를 빨간색으로 */
+            margin-bottom: 10px; /* 메시지 아래 여백 추가 */
         }
     </style>
 </head>

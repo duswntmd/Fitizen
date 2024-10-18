@@ -107,6 +107,6 @@ footer {
     color: white; /* 푸터 텍스트 색상 */
     text-align: center; /* 푸터 내용 중앙 정렬 */
     padding: 10px 0; /* 푸터 내부 여백 */
-
+    width:100%;
 
 }
