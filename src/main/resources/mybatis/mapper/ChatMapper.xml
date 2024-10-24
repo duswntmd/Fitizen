@@ -5,10 +5,17 @@
 <mapper namespace="com.sku.fitizen.mapper.ChatMapper">
 
     <!--챌린지 메세지 저장 -->
-    <insert id="saveChallMessage" parameterType="com.sku.fitizen.domain.challenge.Message">
+    <insert id="saveChallMessage" parameterType="com.sku.fitizen.domain.challenge.Message" useGeneratedKeys="true" keyProperty="messageId" keyColumn="messageId">
 
         INSERT  INTO MESSAGE
         VALUES (msg_seq.NEXTVAL,#{senderId},#{message},#{sentAt},#{roomId},#{img},#{uImg})
+    </insert>
+
+    <!-- 알림 저장 -->
+    <insert id="saveChallAlim" parameterType="com.sku.fitizen.domain.challenge.ChallAlim">
+        INSERT INTO CHALLALIM
+            (ALIMID, USERID, MESSAGEID, SEEN)
+        VALUES (alim_seq.NEXTVAL, #{userId}, #{messageId}, #{seen})
     </insert>
 
     <!--상담 채팅 메세지 저장 -->
@@ -48,6 +55,13 @@
             FROM participation
             WHERE userId = #{userId} AND challengeId = #{ChallengeId}
 
+    </select>
+    <!-- 알림 테이블에서 확인 여부 조회 -->
+    <select id="checkIfSee" parameterType="map" resultType="integer">
+        SELECT SEEN
+        FROM CHALLALIM
+        WHERE MESSAGEID = #{messageId}
+          AND USERID = #{userId}
     </select>
 
 </mapper>

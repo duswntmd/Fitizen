@@ -7,6 +7,7 @@ import com.sku.fitizen.domain.challenge.Message;
 import com.sku.fitizen.service.ChatService;
 import com.sku.fitizen.service.Trainer.ConsultationService;
 import com.sku.fitizen.service.Trainer.TrainerService;
+import com.sku.fitizen.service.challenge.ParticipationService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,8 @@ public class WebSocketHandler extends TextWebSocketHandler
     TrainerService trainerService;
     @Autowired
     ConsultationService consultationService;
-
+    @Autowired
+    ParticipationService pService;
     @Autowired
     Base64Image base64Image;
 
@@ -98,11 +100,14 @@ public class WebSocketHandler extends TextWebSocketHandler
         boolean exists = chatService.checkParticipationExists(user.getId(), roomId);
         if (exists) {
             List<Message> messages = chatService.getMessages(user.getId(), roomId);
-            System.err.println("2"+messages.size());
             for (Message m : messages) {
                 JSONObject jsonMessage = new JSONObject();
                 jsonMessage.put("sender", m.getSenderId());
                 jsonMessage.put("msg", m.getMessage());
+                /*
+                boolean seen = chatService.checkIfSeen(m.getMessageId(),user.getId());
+                jsonMessage.put("seen", seen);  // 읽음 여부 추가
+                 */
                 if (m.getUImg() != null) {
                     String img = "data:image/jpeg;base64," + base64Image.imageToBase64(m.getUImg());
                     jsonMessage.put("img", img);
@@ -169,12 +174,12 @@ public class WebSocketHandler extends TextWebSocketHandler
             }
         }
 
+        // 챌린지
         // 동일한 roomId에 있는 사용자들에게만 메시지 전송
         if (StringUtils.hasText(roomId) && roomMap.containsKey(roomId)) {
             for (WebSocketSession ss : roomMap.get(roomId).values()) {
                 if (ss.isOpen()) {  // 세션이 열려 있는지 확인
                     ss.sendMessage(message);
-
 
                     data.setSenderId(user.getId());
                     data.setRoomId(Integer.parseInt(roomId));
@@ -182,7 +187,11 @@ public class WebSocketHandler extends TextWebSocketHandler
                     data.setImg(img != null ?  originImgName: "");
                     data.setUImg(img != null ? UUIDImgName: "");
                     data.setSentAt(LocalDateTime.now());
-                    chatService.saveChallMessage(data);
+
+                    // 알림 서비스 도입
+                    List<String> users =pService.getUserIdsByChallengeId(Integer.parseInt(roomId));
+                    chatService.saveChallMessage(data,users);
+
 
                 }
             }

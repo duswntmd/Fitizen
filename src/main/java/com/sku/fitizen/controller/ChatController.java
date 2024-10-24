@@ -1,21 +1,47 @@
 package com.sku.fitizen.controller;
 
+import com.sku.fitizen.Dto.MychatListDTO;
 import com.sku.fitizen.domain.User;
+import com.sku.fitizen.domain.challenge.Challenge;
+import com.sku.fitizen.service.challenge.ChallengeService;
+import com.sku.fitizen.service.challenge.ParticipationService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Controller
 @RequestMapping("/ws")
 public class ChatController {
-    @GetMapping("")
+
+    @Autowired
+    private ChallengeService service;
+    @Autowired
+    private ParticipationService pService;
+
+    @GetMapping("/myChallenges")
     @ResponseBody
-    public String index()
+    public MychatListDTO test(@SessionAttribute(value = "user") User user )
     {
-        return "WebSocket Test";
+        List<Challenge> myChall= service.getMyChallengeList(user.getId());
+        return new MychatListDTO(user.getId(), myChall);
     }
+
+    @GetMapping("/challUsers/{roomId}")
+    @ResponseBody
+    public MychatListDTO test2(@PathVariable("roomId") int roomId)
+    {
+        List<String> users =pService.getUserIdsByChallengeId(roomId);
+        Challenge challenge=service.getChallengeById(roomId);
+        String creator =challenge.getCreatorId();
+        return new MychatListDTO(users,creator);
+    }
+
+
 
     @GetMapping("/in")   //  localhost/ws/in?userid=smith  형식으로 요청하여 로그인 테스트
     public String chatForm(@SessionAttribute(value = "user") User user,
@@ -43,4 +69,7 @@ public class ChatController {
 
         return "th/chall/chat";
     }
+
+
+
 }
