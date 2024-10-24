@@ -8,6 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>맞춤 운동 검사</title>
     <style>
+        html, body {
+            margin: 0;
+
+        }
+
         .exercise-img {
             width: 200px;   /* 원하는 너비로 설정 */
             height: auto;   /* 비율에 맞게 높이 자동 조정 */
@@ -44,6 +49,7 @@
 
         .question {
             margin: 20px 0;
+            margin-bottom: 100px;
         }
 
         .question p {
@@ -101,11 +107,11 @@
             <p>1. 운동을 얼마나 자주 하시나요?</p>
             <div class="options">
                 <label><input type="radio" name="frequency" value="never" required>
-                    <img class="exercise-img fade-in" src="image/hardlyever.jpg" alt="거의안함">
+                    <img class="exercise-img fade-in" src="image/never.jpg" alt="거의안함">
                     <span class="option-text">거의 안함</span>
                 </label>
                 <label><input type="radio" name="frequency" value="sometimes">
-                    <img class="exercise-img fade-in" src="image/sometimes.png" alt="가끔 함">
+                    <img class="exercise-img fade-in" src="image/sometimes.jpg" alt="가끔 함">
                     <span class="option-text">가끔 함</span>
                 </label>
                 <label><input type="radio" name="frequency" value="regularly">
@@ -146,19 +152,19 @@
             <p>3. 운동을 통해 이루고 싶은 목표는 무엇인가요?</p>
             <div class="options">
                 <label><input type="radio" name="goal" value="lose_weight" required>
-                    <img class="exercise-img fade-in" src="image/loseweight.jpg" alt="체중감량">
+                    <img class="exercise-img fade-in" src="image/weightloss.webp" alt="체중감량">
                     <span class="option-text">체중 감량</span>
                 </label>
                 <label><input type="radio" name="goal" value="build_muscle">
-                    <img class="exercise-img fade-in" src="image/muscle.jpg" alt="근육 증가">
+                    <img class="exercise-img fade-in" src="image/muscle.webp" alt="근육 증가">
                     <span class="option-text">근육 증가</span>
                 </label>
                 <label><input type="radio" name="goal" value="increase_endurance">
-                    <img class="exercise-img fade-in" src="image/endurance.jpg" alt="지구력 향상">
+                    <img class="exercise-img fade-in" src="image/endurance.webp" alt="지구력 향상">
                     <span class="option-text">지구력 향상</span>
                 </label>
                 <label><input type="radio" name="goal" value="improve_flexibility">
-                    <img class="exercise-img fade-in" src="image/flexibility.jpg" alt="유연성 증가">
+                    <img class="exercise-img fade-in" src="image/flexibility.webp" alt="유연성 증가">
                     <span class="option-text">유연성 증가</span>
                 </label>
             </div>
@@ -169,14 +175,14 @@
             <p>4. 운동에 사용할 수 있는 시간은 얼마나 되나요?</p>
             <div class="options">
                 <label><input type="radio" name="time" value="short" required>
-                    <img class="exercise-img fade-in" src="image/short.jpg" alt="15~30분">
+                    <img class="exercise-img fade-in" src="image/15min.jpg" alt="15~30분">
                     <span class="option-text">짧은시간(15~30분)</span>
                 </label>
                 <label><input type="radio" name="time" value="medium">
-                    <img class="exercise-img fade-in" src="image/medium.jpg" alt="중간 시간(30~60분)">
+                    <img class="exercise-img fade-in" src="image/30min.jpg" alt="중간 시간(30~60분)">
                     <span class="option-text">중간 시간(30~60분)</span></label>
                 <label><input type="radio" name="time" value="long">
-                    <img class="exercise-img fade-in" src="image/long.jpg" alt="긴 시간(60분 이상)">
+                    <img class="exercise-img fade-in" src="image/60min.jpg" alt="긴 시간(60분 이상)">
                     <span class="option-text">긴 시간(60분 이상)</span></label>
             </div>
         </div>
@@ -186,15 +192,15 @@
             <p>5. 운동을 할 때 주로 어떤 환경을 선호하나요?</p>
             <div class="options">
                 <label><input type="radio" name="environment" value="indoor" required>
-                    <img class="exercise-img fade-in" src="image/inside.jpg" alt="실내">
+                    <img class="exercise-img fade-in" src="image/inside.webp" alt="실내">
                     <span class="option-text">실내</span>
                 </label>
                 <label><input type="radio" name="environment" value="outdoor">
-                    <img class="exercise-img fade-in" src="image/outside.jpg" alt="실외">
+                    <img class="exercise-img fade-in" src="image/outside.webp" alt="실외">
                     <span class="option-text">실외</span>
                 </label>
                 <label><input type="radio" name="environment" value="both">
-                    <img class="exercise-img fade-in" src="image/both.png" alt="실내,외 둘다">
+                    <img class="exercise-img fade-in" src="image/both.webp" alt="실내,외 둘다">
                     <span class="option-text">둘 다</span>
                 </label>
             </div>

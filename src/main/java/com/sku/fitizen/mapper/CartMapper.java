@@ -9,8 +9,10 @@ import java.util.List;
 @Mapper
 public interface CartMapper {
 
+    CartItem findCartItemByUserIdAndProductId(int productId, String userId); // 상품 조회
+
     // 장바구니 항목 추가
-    int insertCartItem(CartItem cartItem);
+    void insertCartItem(CartItem cartItem);
 
     // 특정 사용자의 장바구니 항목 조회
     List<CartItem> selectCartItemsByUserId(@Param("user_id") String userId);
@@ -20,4 +22,6 @@ public interface CartMapper {
 
     // 장바구니 항목 삭제
     void deleteCartItemsByUserId(CartItem cartItem);
+
+    List<CartItem> findSelectedCartItems(String user_id,List<Integer> product_id);
 }

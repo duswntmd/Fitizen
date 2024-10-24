@@ -93,12 +93,17 @@
 <!-- 상품 이름 -->
 <h2>${product.prname}</h2>
 
+    <img src="/image/${product.primage}" alt="${product.prname}" style="max-width: 300px; max-height: 300px;">
 <!-- 상품 설명 -->
 <p>${product.prdesc}</p>
 
 <!-- 상품 가격 -->
 <p>가격: ${product.prprice}원</p>
-
+    <!-- 수량 입력 필드 -->
+    <label for="qty">수량:</label>
+    <input type="number" id="qty" name="qty" min="1" value="1"> <!-- 기본 수량을 1로 설정 -->
+    <input type="hidden" id="prid" value="${product.prid}">
+    <input type="hidden" id="userId" value="${userId}">
 <!-- 로그인여부 확인 후 장바구니 추가로직 -->
     <c:choose>
         <c:when test="${not empty userId}">
@@ -115,6 +120,7 @@
 <br>
 <a href="${pageContext.request.contextPath}/shop">상품 목록으로 돌아가기</a>
 </div>
+<%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
     // 페이지 로드 시 클릭 이벤트 설정
@@ -125,17 +131,25 @@
         });
     });
 
-    // 장바구니 추가 함수
     function addCart() {
+        var qty = $('#qty').val();  // 입력된 수량 값 가져오기
+        var prid = $('#prid').val();
+        var userId = $('#userId').val();
         $.ajax({
-            url: '/shop/cart/add/${product.prid}', // 서버 측 URL (GET 요청)
-            type: 'GET',
+            url: '/shop/cart/add', // 서버 측 URL (POST 요청)
+            type: 'POST',
+            data: {
+                prid: prid,  // 상품 ID
+                qty: qty,  // 입력된 수량 값 전송
+                userId: userId
+            },
             success: function (response) {
-                if (response.cartadded > 0) {
+
+                if (response.status === 'success') {
                     alert('장바구니에 성공적으로 추가되었습니다.');
                     window.location.href = '/cart';  // 장바구니 페이지로 리다이렉트
                 } else {
-                    alert('장바구니에 추가 실패');
+                    alert('장바구니에 추가 실패: ' + response.message);
                 }
             },
             error: function (xhr, status, error) {
@@ -147,5 +161,5 @@
 
 
 </body>
-<%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
+
 </html>
