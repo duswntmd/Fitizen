@@ -23,7 +23,9 @@
 <div>
 </div>
 <div class="page-contents">
-
+    <div>
+        <th:block th:replace="~{th/header :: header}"></th:block>
+    </div>
 <div id="chatContainer">
     <!-- textarea 대신 div 사용 -->
     <div id="chatBoxArea"></div>
@@ -194,7 +196,7 @@
         formData.append("writeDate",writeDate);
         formData.append("challengeId",roomId);
 
-        // 댓글 삭제 확인 메시지
+
         if (confirm("인증 게시물로 올릴건가요 ? \n" +
                     "제목은 임시 제목으로 올라가요! \n" +
                     "나중에 수정하세요! \n" +

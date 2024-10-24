@@ -9,6 +9,7 @@ import com.sku.fitizen.domain.User;
 import com.sku.fitizen.service.board.PageService;
 import com.sku.fitizen.service.challenge.ChallCommentService;
 import com.sku.fitizen.service.challenge.ChallengeService;
+import com.sku.fitizen.service.challenge.ParticipationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -68,6 +69,7 @@ public class ChallengController {
         model.addAttribute("c", c);
         model.addAttribute("userChall", userChall);
         model.addAttribute("list", list);
+        model.addAttribute("user", user);
         // 목록이 비어있는지 여부를 모델에 추가
         model.addAttribute("isEmpty", list.isEmpty());
         return "th/chall/challengePage";
@@ -171,6 +173,7 @@ public class ChallengController {
         model.addAttribute("myChall",myChall);
         return "th/chall/myChallengePage";
     }
+
 
 
 

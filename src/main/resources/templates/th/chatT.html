@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="chatT">
+
+  <!-- 채팅 버튼 -->
+  <div class="chat-button" onclick="toggleChat()">
+    💬
+    <span class="notification-badge" id="notificationBadge">3</span> <!-- 안읽은 메시지 숫자 -->
+  </div>
+  <div class="chat-window" id="chatWindow">
+    <div id="participantsList" class="participants-list" style="display: none;" >
+      <div class="host-header" id="hostHeader"></div>
+      <div class="participants"></div>
+    </div>
+    <div class="chat-header">
+      <button class="expand-button" onclick="toggleExpandChat()">🔍</button> <!-- New Expand Button -->
+      <span class="current-challenge-title" style="display: none;"></span>
+      <span class="participants-title" onclick="toggleParticipants()" style="display: none">참여자 목록</span>
+      <button class="back-button" onclick="backButton()" style="display: none">뒤로가기</button>
+      <span class="challenge-title" onclick="showChallenges()">참여 챌린지</span>
+      <span class="trainer-title" onclick="showTrainers()">트레이너</span>
+      <button class="close-button" onclick="toggleChat()">닫기</button>
+    </div>
+    <div class="chat-body" id="chatBody"></div>
+    </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript">
+
+    function resetChatHeader() {
+      const chatHeader = document.querySelector('.chat-header');
+
+      // 헤더의 버튼과 타이틀을 초기 상태로 리셋
+      chatHeader.querySelector('.back-button').style.display = 'none';
+      chatHeader.querySelector('.participants-title').style.display = 'none';
+      chatHeader.querySelector('.current-challenge-title').style.display = 'none';
+      chatHeader.querySelector('.challenge-title').style.display = 'block';
+      chatHeader.querySelector('.trainer-title').style.display = 'block';
+      const participantsList = document.getElementById('participantsList');
+      participantsList.style.display = 'none';
+    }
+
+    var  userId ="";
+    var chRoomId="";
+    function toggleExpandChat() {
+      const chatWindow = document.querySelector('.chat-window'); // 클래스 선택자 사용
+      chatWindow.classList.toggle('expanded'); // expanded 클래스 토글
+    }
+
+    function showParticipants(roomId) {
+      const participantsList = document.getElementById('participantsList');
+      const hostHeader = document.getElementById('hostHeader');
+      const participantsContainer = document.querySelector('.participants');
+
+      participantsList.style.display = 'block';
+
+      // API 호출하여 참여자 목록 가져오기
+      fetch(`/ws/challUsers/${roomId}`)
+              .then(response => response.json())
+              .then(data => {
+                const participants = data.users; // DTO에서 참여자 목록 가져오기
+
+                // 호스트 헤더에 진행자 정보 추가
+                hostHeader.textContent = `진행자: ${data.creatorId}`; // 생성자 ID 표시
+
+                // 기존 참여자 목록 초기화
+                participantsContainer.innerHTML = ''; // 기존 내용을 지움
+
+                // 각 참여자를 리스트에 추가
+                participants.forEach(userId => {
+                  const item = document.createElement('div');
+                  item.className = 'participant-item';
+                  item.textContent = userId; // 참여자 이름
+                  participantsContainer.appendChild(item);
+                });
+              })
+              .catch(error => {
+                console.error('Error fetching participants:', error);
+              });
+    }
+    function backButton() {
+      resetChatHeader();
+      // 챌린지 목록으로 돌아가기
+      showChallenges();
+    }
+
+    function toggleParticipants() {
+      const participantsList = document.getElementById('participantsList');
+      participantsList.style.display = participantsList.style.display === 'block' ? 'none' : 'block';
+
+      if (participantsList.style.display === 'block') {
+        showParticipants(chRoomId); // 참여자 목록을 보여주기 위한 함수 호출
+      }
+    }
+    const chatBody = document.getElementById('chatBody');
+    function toggleChat() {
+      const chatWindow = document.getElementById('chatWindow');
+      chatWindow.style.display = chatWindow.style.display === 'block' ? 'none' : 'block';
+      if (chatWindow.style.display === 'block') {
+        showChallenges();
+      }else{
+        // 헤더 초기화
+        resetChatHeader();
+      }
+
+    }
+
+
+    function showChallenges() {
+        chatBody.innerHTML = ""; // 기존 내용 삭제
+        fetch('/ws/myChallenges')
+                .then(response => response.json())  // 응답을 JSON으로 변환
+                .then(data => {
+                  userId = data.userId;
+                  const mychallList=data.challengeList;
+                  // 서버에서 받아온 챌린지 목록을 각각 DOM에 추가
+                  mychallList.forEach(MyChallenges => {
+                    const item = document.createElement('div');
+                    item.className = 'myChall-list';
+                    item.innerHTML = `
+                                   <div onclick="connectWebSocket(${MyChallenges.challengeId},'${MyChallenges.title}')" style="cursor: pointer;">
+                                     <strong>${MyChallenges.title}</strong>
+                                     (${MyChallenges.members}/${MyChallenges.limitUser})
+                                   </div>
+                                     `;
+
+                    chatBody.appendChild(item);
+                  });
+                })
+                .catch(error => {
+                  console.error('Error fetching challenges:', error);
+                });
+      }
+
+    var host = "localhost";
+    var g_webSocket = null;
+    // 웹소켓 연결 함수
+    function connectWebSocket(roomId,title)
+    {
+
+      chRoomId=roomId;
+
+      // 챌린지 선택 시 헤더 업데이트
+      const chatHeader = document.querySelector('.chat-header');
+
+      // 기존 헤더 내용 숨기기
+      chatHeader.querySelectorAll('.challenge-title,.trainer-title').forEach(el => {
+        el.style.display = 'none';
+      });
+      chatHeader.querySelector('.back-button').style.display='block';
+      chatHeader.querySelector('.participants-title').style.display='block';
+      // 챌린지 제목 업데이트
+      const currentChallengeTitle = chatHeader.querySelector('.current-challenge-title');
+      currentChallengeTitle.innerText = "\""+title+"\"";  // 제목 설정
+      currentChallengeTitle.style.display = 'block';  // 챌린지 제목 보이기
+
+      g_webSocket = new WebSocket("ws://" + host + "/chat?" + "roomId=" + roomId);
+      g_webSocket.onopen = function (message) {
+
+        showParticipants(roomId);
+
+        chatBody.innerHTML = ""; // 기존 내용 삭제
+        // 메시지를 입력할 수 있는 HTML 추가
+        const inputContainer = `
+            <div id="chatBoxArea"></div>
+            <div id="inputContainer">
+                <input id="inputMsgBox" type="text" placeholder="Type a message...">
+                <input id="sendButton" type="button" value="보내기" onclick="sendButton_onclick()">
+                <label id="fileButton" for="imgInputBox">사진</label>
+            </div>
+            <input id="imgInputBox" type="file" accept="image/*">
+        `;
+
+        // chatBody에 inputContainer 추가
+        chatBody.innerHTML += inputContainer;
+
+        addLineToChatBox("챌린지 참여 채팅방입니다.");
+        document.getElementById('inputMsgBox').addEventListener('keypress', inputMsgBox_onkeypress);
+
+      };
+
+      g_webSocket.onmessage = function(message) {
+        try {
+          var data = JSON.parse(message.data); // JSON 파싱
+
+
+          /*
+          // 안 읽은 메시지일 경우에만 읽음 처리 요청
+          if (!data.seen) {
+            sendReadReceiptToServer(data.messageId);
+          }
+
+           */
+
+          // 읽음 처리 요청 함수
+          function sendReadReceiptToServer(messageId) {
+            // 서버에 읽음 처리 요청
+            $.ajax({
+              url: '/ws/readMessage',
+              method: 'POST',
+              data: { messageId: messageId },
+              success: function(res) {
+                console.log("읽음 처리 완료:", res);
+              },
+              error: function(err) {
+                console.error("읽음 처리 오류:", err);
+              }
+            });
+
+          if (data.msg) {
+            addLineToChatBox(data.msg ,data.sender); // 텍스트 메시지 추가
+          }
+          if (data.img) {
+            displayImage(data.img, data.fileName , data.sender); // 이미지 출력
+          }
+        } catch (e) {
+          console.error("메시지 파싱 오류:", e);
+          addLineToChatBox(message.data); // JSON이 아니면 그대로 출력
+        }
+      };
+
+      g_webSocket.onclose = function(message) {
+        addLineToChatBox("채팅 접속 실패...개발자 수정중..");
+      };
+
+      g_webSocket.onerror = function(message) {
+        addLineToChatBox("Error!");
+      };
+    }
+    function addLineToChatBox(_line, sender) {
+      if (_line == null) {
+        _line = "";
+      }
+      var chatBoxArea = document.getElementById("chatBoxArea");
+      var messageDiv = document.createElement("div");
+      var senderIdDiv = document.createElement("div");
+
+      messageDiv.textContent = _line; // 메시지 추가
+      senderIdDiv.textContent = sender; // 발신자 ID 추가
+
+      messageDiv.className = 'message';
+      senderIdDiv.className = 'sender-id';
+
+      // 보낸 사람에 따라 클래스를 다르게 설정
+      if (sender === userId) {
+        messageDiv.classList.add('sent');
+        senderIdDiv.style.display = 'none'; // 자신의 메시지에는 발신자 ID를 숨김
+      } else {
+        messageDiv.classList.add('received');
+      }
+
+      // 발신자 ID를 메시지 위에 추가
+      messageDiv.appendChild(senderIdDiv);
+
+      chatBoxArea.appendChild(messageDiv); // div에 추가
+      chatBoxArea.scrollTop = chatBoxArea.scrollHeight;
+    }
+
+    function displayImage(base64Image, fileName, sender) {
+
+      var chatBoxArea = document.getElementById("chatBoxArea");
+
+      // 이미지와 버튼을 포함할 컨테이너 div 생성
+      var imageContainer = document.createElement("div");
+      imageContainer.className = "image-container"; // 기본 클래스 추가
+
+      var imgElement = document.createElement("img");
+      imgElement.src = base64Image; // base64 이미지를 img 태그의 src로 설정
+
+      // 발신자 ID를 추가하는 div 생성
+      var senderIdDiv = document.createElement("div");
+      senderIdDiv.textContent = sender;
+      senderIdDiv.className = 'sender-id';
+
+
+      // "사진 저장" 버튼 생성
+      var saveButton = document.createElement("button");
+      saveButton.textContent = "사진 저장";
+      saveButton.onclick = function() {
+        downloadImage(base64Image, fileName);
+      };
+
+      // "따봉" 버튼 생성
+      var likeButton = document.createElement("button");
+      likeButton.textContent = "👍";
+      likeButton.onclick = function() {
+        alert("따봉 버튼 클릭됨!"); // 원하는 행동을 정의
+      };
+
+      // "인증게시판에 올리기" 버튼 생성
+
+      var uploadButton = document.createElement("button");
+      uploadButton.textContent = "인증게시판에 올리기";
+      uploadButton.onclick = function() {
+        uploadToBoard(base64Image, fileName);
+      };
+
+      // 이미지와 버튼을 컨테이너에 추가
+      imageContainer.appendChild(imgElement);
+
+
+
+
+      // 보낸 사람에 따라 클래스 추가
+      if (sender === userId) {
+        imageContainer.classList.add('sent'); // 오른쪽 정렬
+        senderIdDiv.style.display = 'none'; // 자신의 이미지에는 발신자 ID를 숨김
+        imageContainer.appendChild(uploadButton);
+      } else {
+        imageContainer.classList.add('received'); // 왼쪽 정렬
+        imageContainer.appendChild(likeButton);
+        imageContainer.appendChild(saveButton);
+      }
+
+      // 발신자 ID를 이미지 컨테이너 위에 추가
+      imageContainer.appendChild(senderIdDiv);
+
+      // 컨테이너를 chatBoxArea에 추가
+      chatBoxArea.appendChild(imageContainer);
+      chatBoxArea.scrollTop = chatBoxArea.scrollHeight;
+    }
+
+    function downloadImage(base64Image, fileName) {
+      var link = document.createElement("a");
+      link.href = base64Image;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function uploadToBoard(base64Image, fileName) {
+
+      var writeDate = getCurrentFormattedTime();
+      var formData = new FormData();
+      formData.append("base64Img", base64Image);
+      formData.append("photo", fileName);
+      formData.append("userId",userId);
+      formData.append("writeDate",writeDate);
+      formData.append("challengeId",chRoomId);
+
+
+      if (confirm("인증 게시물로 올릴건가요 ? \n" +
+              "제목은 임시 제목으로 올라가요! \n" +
+              "나중에 수정하세요! \n" +
+              "-FITIZEN 관리자-"))
+      {
+        $.ajax({
+          url: '../proofShot/addChatProof',
+          method: 'post',
+          cache: false,
+          data: formData,
+          processData: false,  // FormData 객체를 처리할 때는 false로 설정
+          contentType: false, // FormData 객체를 처리할 때는 false로 설정
+          dataType: 'json',
+          success: function (res) {
+
+            if (res.success) {
+              alert("인증 게시판에 등록 되었어요!")
+              //location.reload();  // 새로고침
+            }
+
+          },
+          error: function (xhr, status, err) {
+            alert('에러:' + err);
+          }
+
+        });
+      }
+
+    }
+
+    function sendButton_onclick() {
+      var inputMsgBox = document.getElementById("inputMsgBox");
+      var imgInputBox = document.getElementById("imgInputBox");
+      var currentTime = getCurrentFormattedTime();
+
+      // 메시지와 이미지를 전송할 객체를 준비
+      var obj = {
+        sender: userId,
+        msg: inputMsgBox.value || null,
+        img: null,
+        sentAt: currentTime,
+        fileName: imgInputBox.files.length > 0 ? imgInputBox.files[0].name : null
+      };
+
+
+      // 이미지 파일이 선택되었으면 base64로 인코딩하여 추가
+      if (imgInputBox.files.length > 0) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+          obj.img = event.target.result;
+
+          // 메시지나 이미지 중 하나가 있으면 전송
+          if (obj.msg || obj.img) {
+            g_webSocket.send(JSON.stringify(obj));
+          }
+        };
+        reader.readAsDataURL(imgInputBox.files[0]);
+      } else {
+        // 이미지가 없을 경우 메시지가 있는지 확인 후 전송
+        if (obj.msg) {
+          g_webSocket.send(JSON.stringify(obj));
+        }
+      }
+
+      inputMsgBox.value = "";
+      imgInputBox.value = "";
+      inputMsgBox.focus();
+
+      return true;
+    }
+
+    function inputMsgBox_onkeypress(event) {
+      if (event == null) {
+        return false;
+      }
+      var keyCode = event.keyCode || event.which;
+      if (keyCode == 13) {
+        sendButton_onclick(event);
+      }
+    }
+
+    function getCurrentFormattedTime() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+
+      return `${year}.${month}.${day} ${hours}:${minutes}`;
+    }
+
+  </script>
+  <style>
+
+    .participant-item {
+      margin: 5px 3px; /* Space between participants */
+      padding: 10px; /* Padding for better click area */
+      background-color: #f0f0f0; /* Background color */
+      border-radius: 3px; /* Rounded corners */
+      cursor: pointer; /* Pointer cursor on hover */
+    }
+
+    .participant-item:hover {
+      background-color: #e0e0e0; /* Change color on hover */
+    }
+    .host-header {
+      padding: 14px 15px; /* 패딩 */
+      background-color:#808080 ; /* 배경색 */
+      font-size: 16px; /* Adjust as needed */
+      font-weight: bold; /* Bold text */
+      margin-bottom: 10px; /* Spacing below the header */
+      color: white; /* Text color */
+    }
+    .expand-button {
+      background-color: transparent; /* 배경색 투명 */
+      border: none; /* 테두리 제거 */
+      color: white; /* 글자 색상 */
+      cursor: pointer; /* 포인터 커서 */
+      font-size: 16px; /* 글자 크기 */
+      transition: color 0.3s; /* 색상 전환 효과 */
+    }
+
+
+
+
+    .chat-button {
+      position: fixed;
+      right: 50px; /* 오른쪽에서의 간격 */
+      top: 50%; /* 화면 중간 위치 */
+      transform: translateY(-50%); /* 버튼을 중앙에 위치시킴 */
+      z-index: 1000; /* 다른 요소 위에 표시되도록 */
+      cursor: pointer; /* 포인터 커서 */
+      font-size: 40px; /* 아이콘 크기 */
+      color: #007BFF; /* 아이콘 색상 */
+      transition: transform 0.3s; /* 크기 변환 효과 */
+    }
+
+    /* 알림 배지 스타일 */
+    .notification-badge {
+      position: absolute;
+      top: -5px; /* 버튼 위쪽 위치 조정 */
+      right: -10px; /* 버튼 오른쪽 위치 조정 */
+      background-color: red; /* 배경색 */
+      color: white; /* 글자 색상 */
+      border-radius: 50%; /* 둥글게 */
+      padding: 5px 10px; /* 패딩 */
+      font-size: 12px; /* 글자 크기 */
+      font-weight: bold; /* 글자 두껍게 */
+      display: inline-block; /* 인라인 블록 */
+    }
+
+
+
+    /* 채팅 헤더 스타일 */
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color:#808080 ; /* 배경색 */
+      color: white; /* 글자 색상 */
+      padding: 10px 15px; /* 패딩 */
+      border-top-left-radius: 5px; /* 모서리 둥글게 */
+      border-top-right-radius: 5px; /* 모서리 둥글게 */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* 그림자 추가 */
+    }
+
+    .challenge-title, .trainer-title {
+      font-size: 16px; /* 글자 크기 */
+      font-weight: bold; /* 글자 두껍게 */
+    }
+
+    .close-button {
+      background-color: transparent; /* 배경색 투명 */
+      border: none; /* 테두리 제거 */
+      color: white; /* 글자 색상 */
+      cursor: pointer; /* 포인터 커서 */
+      font-size: 16px; /* 글자 크기 */
+      transition: color 0.3s; /* 색상 전환 효과 */
+    }
+    .back-button {
+      background-color: transparent; /* 배경색 투명 */
+      border: none; /* 테두리 제거 */
+      color: white; /* 글자 색상 */
+      cursor: pointer; /* 포인터 커서 */
+      font-size: 16px; /* 글자 크기 */
+      transition: color 0.3s; /* 색상 전환 효과 */
+    }
+
+
+    .close-button:hover {
+      color: #FF6B6B; /* hover 시 색상 변경 */
+    }
+
+
+
+    .participants-list {
+      width: 250px; /* 참여자 목록 너비 */
+      background-color: white; /* 배경색 */
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      overflow-y: auto; /* 스크롤 가능 */
+      height: 490px; /* 높이 설정 */
+      position: absolute; /* 절대 위치 설정 */
+      left: -270px; /* 챗 윈도우의 왼쪽 바깥쪽에 위치하도록 설정 */
+      top: 0; /* 위쪽 정렬 */
+    }
+
+    /* 채팅창 스타일 */
+    .chat-window {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 500px; /* 채팅창 너비 */
+      height: 600px; /* 채팅창 고정 높이 */
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      display: none; /* 기본적으로 숨김 */
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 1001; /* 버튼보다 위에 표시되도록 */
+    }
+    .chat-window.expanded {
+      width: 1400px; /* Expanded width */
+      height: 900px; /* Expanded height */
+    }
+
+    /* 채팅 본문 스타일 */
+    .chat-body {
+      padding: 10px;
+      height: calc(100% - 80px); /* 헤더와 푸터를 제외한 높이 계산 */
+    }
+
+    /* 목록 스타일 */
+    .myChall-list {
+      margin: 5px 0;
+      padding: 20px;
+      border-radius: 3px;
+      background-color: #f0f0f0; /* 배경색 */
+      cursor: pointer;
+    }
+
+    .myChall-list:hover {
+      background-color: #e0e0e0; /* hover 시 색상 변경 */
+    }
+
+
+
+
+
+
+    #chatBoxArea {
+      width: 100%;
+      height: calc(100% - 80px); /* 채팅 박스의 높이를 전체 높이에서 인풋 컨테이너의 높이를 빼서 조정 */
+      border: none;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      background-color: #e8e8e8; /* 배경색 통일 */
+      font-size: 16px; /* 글씨 크기 증가 */
+      display: flex;
+      flex-direction: column; /* 세로 정렬 */
+      align-items: stretch;
+    }
+
+    #inputContainer {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      height: 80px; /* 인풋 컨테이너 높이 조정 */
+      gap: 10px;
+      justify-content: center; /* 버튼을 가운데 정렬 */
+    }
+
+    #inputMsgBox {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px; /* 글씨 크기 증가 */
+      height: 50px; /* 높이 증가 */
+    }
+
+    #sendButton, #disconnectButton, #fileButton {
+      background-color: #808080; /* 검정색으로 변경 */
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px; /* 글씨 크기 증가 */
+      margin-left: 10px; /* 버튼 사이 간격 추가 */
+    }
+
+    #disconnectButton {
+      background-color: #000; /* 검정색으로 변경 */
+    }
+
+
+
+    #sendButton:hover, #disconnectButton:hover, #fileButton:hover {
+      opacity: 0.8;
+    }
+
+    #imgInputBox {
+      display: none; /* 숨겨진 파일 입력 필드 */
+    }
+
+    .message {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 10px;
+      max-width: 80%;
+      word-break: break-word;
+      display: inline-block; /* 컨테이너를 인라인 블록으로 설정 */
+    }
+
+
+    .message.sent {
+      align-self: flex-end; /* 오른쪽 정렬 */
+      background-color: #e1ffc7; /* 다른 배경색으로 표시 */
+      text-align: right; /* 오른쪽 정렬 */
+      position: relative; /* 발신자 아이디를 위치시키기 위해 상대 위치 설정 */
+    }
+
+    .message.received {
+      align-self: flex-start; /* 왼쪽 정렬 */
+      background-color: #f1f0f0; /* 기본 배경색 */
+      text-align: left; /* 왼쪽 정렬 */
+      position: relative; /* 발신자 아이디를 위치시키기 위해 상대 위치 설정 */
+    }
+
+    .image-container {
+      margin-top: 10px;
+      max-width: 80%;
+      word-break: break-word;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* 기본 왼쪽 정렬 */
+    }
+
+
+
+    .sender-id {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    .image-container.received {
+      align-items: flex-start; /* 기본 왼쪽 정렬 */
+      text-align: left; /* 왼쪽 정렬 */
+    }
+
+    /* 이미지 스타일 수정 */
+    .image-container img {
+      max-width: 80%; /* 컨테이너의 너비에 맞춰서 크기 조절 */
+      max-height: 80%; /* 최대 높이 설정 */
+      height: auto; /* 비율 유지 */
+      border-radius: 8px;
+    }
+
+    /* 버튼 스타일 */
+    .image-container button {
+      margin: 2px 5px; /* 상하 여백을 줄이고, 좌우 여백 유지 */
+    }
+
+    .image-container.sent {
+      align-self: flex-end;
+      align-items: flex-end; /* 오른쪽 정렬 */
+      text-align: right; /* 오른쪽 정렬 */
+      margin-right: 0; /* 오른쪽 여백 제거 */
+      padding-right: 0; /* 오른쪽 패딩 제거 */
+
+
+    }
+
+
+    .current-challenge-title {
+      font-size: 24px; /* 글자 크기 */
+      font-weight: bold; /* 글자 두께 */
+      color: white; /* 글자 색상 */
+      padding: 5px 5px; /* 안쪽 여백 */
+      text-align: center; /* 가운데 정렬 */
+    }
+
+    .participants-title,.trainer-title,.challenge-title {
+      cursor: pointer; /* 마우스를 올리면 손가락 모양으로 변경 */
+    }
+
+  </style>
+</div>
+</body>
+</html>

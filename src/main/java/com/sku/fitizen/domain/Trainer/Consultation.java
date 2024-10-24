@@ -14,7 +14,6 @@ public class Consultation {
     private int trainerNo;
     private String status; //'REQUESTED'(기본값), 'APPROVED', 'REJECTED', 'EXPIRED'
     private String isPaid; // Y,N(기본값)
-
     public Consultation(String id, int trainerNo) {
         this.userId = id;
         this.trainerNo = trainerNo;
