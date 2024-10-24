@@ -66,7 +66,8 @@
 </head>
 <body>
 <div class="page-contents">
-<form action="<c:url value="/login/login"/>" method="post" onsubmit="return formCheck(this);">
+<form action="<c:url value="/dologin"/>" method="post" onsubmit="return formCheck(this);">
+
     <h3 style="text-align:center">Login</h3>
     <div id="msg">
         <c:if test="${not empty param.msg}">
