@@ -197,9 +197,8 @@
             sendReadReceiptToServer(data.messageId);
           }
 
-           */
 
-          // 읽음 처리 요청 함수
+           // 읽음 처리 요청 함수
           function sendReadReceiptToServer(messageId) {
             // 서버에 읽음 처리 요청
             $.ajax({
@@ -213,6 +212,9 @@
                 console.error("읽음 처리 오류:", err);
               }
             });
+           */
+
+
 
           if (data.msg) {
             addLineToChatBox(data.msg ,data.sender); // 텍스트 메시지 추가
@@ -220,7 +222,7 @@
           if (data.img) {
             displayImage(data.img, data.fileName , data.sender); // 이미지 출력
           }
-        } catch (e) {
+        }catch(e){
           console.error("메시지 파싱 오류:", e);
           addLineToChatBox(message.data); // JSON이 아니면 그대로 출력
         }
