@@ -15,8 +15,8 @@
 html {
     margin: 0;
     padding: 0;
-    overflow-y: auto;
-    height: 120%;
+
+    height: 100%;
 }
 
 .header-container {
@@ -25,7 +25,7 @@ html {
     margin: 0;
     padding: 0;
     display: flex;
-    background-color: #0E0F0D;
+    background-color: #1C1C3C;
     justify-content: space-between; /* 로고와 메뉴 간의 간격을 자동으로 조절 */
     align-items: center;
 }
@@ -67,11 +67,11 @@ html {
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: #0E0F0D;  /*드롭다운 마우스안올렷을때 배경색*/
+    background-color: #1C1C3C;  /*드롭다운 마우스안올렷을때 배경색*/
     list-style: none;
     padding: 0;
     margin: 0;
-    border: 1px solid #000;
+    border: 1px solid #1C1C3C;
 }
 
 .dropdown-menu li {
@@ -87,8 +87,9 @@ html {
 .dropdown-menu a:hover {
     background-color: #6b0c36;  /* 글씨배경에 마우스올릴때 색*/
 }
-.content{
-    flex:1;
+
+.content-wrapper {
+    flex: 1; /* 이 부분이 푸터를 화면 하단에 고정시키는 핵심 */
 }
 
 
@@ -101,12 +102,13 @@ header{
 
 }
 footer {
-    flex-shrink: 0;
+    height:200px;
     margin-top: auto;
-    background-color: #0056b3; /* 푸터 배경 색상 */
+    background-color: #1C1C3C; /* 푸터 배경 색상 */
     color: white; /* 푸터 텍스트 색상 */
     text-align: center; /* 푸터 내용 중앙 정렬 */
     padding: 10px 0; /* 푸터 내부 여백 */
     width:100%;
+    position: relative;
 
 }

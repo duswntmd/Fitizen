@@ -64,7 +64,7 @@
             <c:forEach var="pr" items="${list}" varStatus="status">
 
                 <tr>
-                    <td><img src="../images/${pr.primage}" style="max-width: 100px; max-height: 100px;"></td>
+                    <td><img src="../image/${pr.primage}" style="max-width: 100px; max-height: 100px;"></td>
                     <td> ${pr.prid}</td>
                     <td> <a href= "shop/shopDetail/${pr.prid}">${pr.prname}</a></td>
                     <td> ${pr.prprice}</td>

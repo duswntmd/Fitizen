@@ -11,4 +11,5 @@ public class Product {
     int prprice;
     String prdesc;
     String primage;
+    int stock;
 }

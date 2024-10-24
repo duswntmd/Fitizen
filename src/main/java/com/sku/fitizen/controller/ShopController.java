@@ -47,62 +47,88 @@ public class ShopController {
         return "shopDetail";
     }
 
-    @GetMapping("/cart/add/{prid}")
+    @PostMapping("/cart/add")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> addToCart(@PathVariable int prid, HttpSession session) {
+    public ResponseEntity<Map<String, Object>> addToCart(@RequestParam("prid") int productId, @RequestParam("userId") String userId,@RequestParam("qty") int qty, HttpSession session) {
+        CartItem existingCartItem = cartService.findCartItemByUserIdAndProductId(userId, productId);
         Map<String, Object> response = new HashMap<>();
-        String userId = (String) session.getAttribute("userId");
 
+        System.out.println(productId+"    "+userId);
         // 로그인 여부 확인
         if (userId == null) {
             response.put("status", "error");
             response.put("message", "로그인이 필요합니다.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);  // JSON 응답으로 반환
         }
-
-        // 세션에서 장바구니 조회
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new ArrayList<>();
-        }
-
-        // 상품 정보 조회
-        Product product = shopService.getProductById(prid);
-        if (product != null) {
-            // 장바구니에 이미 존재하는지 확인
-            CartItem existingCartItem = null;
-            for (CartItem item : cart) {
-                if (item.getProduct().getPrid() == prid) {
-                    existingCartItem = item;
-                    break;
-                }
-            }
-
-            if (existingCartItem != null) {
-                // 이미 존재하는 경우 수량 증가
-                existingCartItem.setQty(existingCartItem.getQty() + 1);
-            } else {
-                // 존재하지 않는 경우 새로 추가
-                CartItem cartItem = new CartItem();
-                cartItem.setProduct(product);  // 상품 정보 설정
-                cartItem.setQty(1);  // 기본 수량을 1로 설정
-                cartItem.setPrice(product.getPrprice());  // 상품 가격 설정
-                cartItem.setUser_id(userId);  // 사용자 ID 설정
-                cart.add(cartItem);
-
-                // 데이터베이스에 장바구니 항목 추가
-                cartService.insertCartItem(cartItem);
-            }
-
-            session.setAttribute("cart", cart);  // 세션에 장바구니 업데이트
-            response.put("cartadded", true);
+        if (existingCartItem != null) {
+            // 장바구니에 해당 상품이 있으면 수량 증가
+            existingCartItem.setQty(existingCartItem.getQty() + 1);
+            cartService.updateCartItem(existingCartItem);
+            response.put("status", "success");
+            response.put("message", "장바구니에 상품 수량이 업데이트되었습니다.");
         } else {
-            response.put("cartadded", false);
-        }
+            // 장바구니에 없으면 새로 추가
+            Product product = cartService.getProductById(productId);  // 상품 정보 조회
+            CartItem newCartItem = new CartItem();
+            newCartItem.setProduct_id(productId);
+            newCartItem.setUser_id(userId);
+            newCartItem.setQty(qty);
+            newCartItem.setProduct_price(product.getPrprice());  // 제품 가격 설정
+            newCartItem.setPrice(product.getPrprice()* newCartItem.getQty());
+            newCartItem.setProduct_name(product.getPrname());  // 제품명 설정
+            cartService.insertCartItem(newCartItem);
+            response.put("status", "success");
+            response.put("message", "장바구니에 새 상품이 추가되었습니다.");
 
-        // JSON 응답으로 반환
-        return ResponseEntity.ok().body(response);
+        }
+        // 최종 응답 반환
+        return ResponseEntity.ok(response);
     }
+
+//    @PostMapping("/cart/add")
+//    @ResponseBody
+//    public ResponseEntity<Map<String, Object>> addToCart(@RequestParam("prid") int prid,
+//                                                         @RequestParam("qty") int qty,
+//                                                         HttpSession session) {
+//        Map<String, Object> response = new HashMap<>();
+//        String userId = (String) session.getAttribute("userId");
+//
+//        // 로그인 여부 확인
+//        if (userId == null) {
+//            response.put("status", "error");
+//            response.put("message", "로그인이 필요합니다.");
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);  // JSON 응답으로 반환
+//        }
+//
+//        // 상품 정보 조회
+//        Product product = shopService.getProductById(prid);
+//        if (product == null) {
+//            response.put("status", "error");
+//            response.put("message", "해당 상품을 찾을 수 없습니다.");
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);  // 상품 없음 오류 반환
+//        }
+//
+//        // CartItem 생성
+//        CartItem cartItem = new CartItem();
+//        cartItem.setProduct_id(prid);
+//        cartItem.setQty(cartItem.getQty()+1);
+//        cartItem.setPrice(product.getPrprice());  // 상품 가격 설정
+//        cartItem.setUser_id(userId);
+//        cartItem.setProduct(product);
+//        cartItem.setProduct_name(product.getPrname());
+//        cartItem.setProduct_price(product.getPrprice());
+//        System.out.println(cartItem.getProduct());
+//        // 장바구니에 추가 또는 수량 업데이트
+//        cartService.addOrUpdateCartItem(cartItem);
+//
+//        // 세션에서 장바구니 상태 업데이트
+//        List<CartItem> cart = cartService.selectCartItemsByUserId(userId);
+//        session.setAttribute("cart", cart);  // 세션에 갱신된 장바구니 저장
+//
+//        response.put("status", "success");
+//        response.put("message", "상품이 장바구니에 성공적으로 추가되었습니다.");
+//        return ResponseEntity.ok(response);
+//    }
 
 
 }
