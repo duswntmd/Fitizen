@@ -19,6 +19,8 @@ public class MychatListDTO {
     private List<String> users;
     private String creatorId;
 
+
+
     public MychatListDTO(String userId, List<Challenge> challengeList) {
         this.userId = userId;
         this.challengeList = challengeList;

@@ -19,10 +19,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 public class WebSocketHandler extends TextWebSocketHandler
@@ -30,7 +27,6 @@ public class WebSocketHandler extends TextWebSocketHandler
     //private final List<WebSocketSession> webSocketSessions = new ArrayList<>();
     @Autowired
     ChatService chatService;
-
     @Autowired
     TrainerService trainerService;
     @Autowired
@@ -39,26 +35,33 @@ public class WebSocketHandler extends TextWebSocketHandler
     ParticipationService pService;
     @Autowired
     Base64Image base64Image;
+    @Autowired
+    ConsultationService consultService;
+    @Autowired
+    AlarmWebSocketHandler alarmHandler;
 
 
    // private static Map<String, WebSocketSession> userMap = new HashMap<>();
     private static Map<String, Map<String, WebSocketSession>> roomMap = new HashMap<>(); // roomId 별로 사용자 저장
     private static Map<String, Map<String, WebSocketSession>> consultMap = new HashMap<>();
+
     @Override  /* 클라이언트 접속시에 호출됨 */
     public void afterConnectionEstablished(WebSocketSession session) throws Exception //session이 한 이용자 역할을 함
-    {   //클라이언트가 접속하자마자 돌아감
-        /* 인터셉터에서 전달된 userid 를 추출하여 사용하는 예 */
-       // String userid = (String)session.getAttributes().get("userid"); // Map<String ,object >   dbject 형이 나오기에 (String)으로
-       // log.info("웹소켓핸들러, userid={}", userid);
-
-       // userMap.put(userid, session); //이용자를 모아야만 메세지가 이용자마다 전달됨
-       // log.info("Client Connected");
-
+    {
         User user = (User) session.getAttributes().get("user");
         String roomId = (String) session.getAttributes().get("roomId");
         String consultId =(String)session.getAttributes().get("consultId");
 
         log.info("웹소켓 연결: userid={}, roomId={} consultId={}", user.getId(), roomId ,consultId);
+
+
+
+
+
+        //sendUnreadCounts(user.getId()); // 연결 시 현재 읽지 않은 메시지 개수를 전송
+
+
+
 
         // userid 를 조회해 트레이너 Y 이면 상담테이블에 번호가 존재하는지
         //N이면  userid 가 상담 테이블에 존재하는지
@@ -72,6 +75,9 @@ public class WebSocketHandler extends TextWebSocketHandler
         consultMap.put(consultId,new HashMap<>());
         consultMap.get(consultId).put(user.getId(), session);
 
+
+
+
         // 트레이너 상담 메세지 백업
         if(StringUtils.hasText(consultId)) {
 
@@ -80,8 +86,12 @@ public class WebSocketHandler extends TextWebSocketHandler
                {
                    for (ConsultMessage m : messages) {
                        JSONObject jsonMessage = new JSONObject();
+                       jsonMessage.put("messageId", m.getMessageId());
+                       System.out.println(m.getMessageId());
                        jsonMessage.put("sender", m.getSenderId());
                        jsonMessage.put("msg", m.getMessage());
+                       Integer seen = chatService.checkIfSeenConsult(m.getMessageId(),user.getId());
+                       jsonMessage.put("seen", seen);  // 읽음 여부 추가
                        if (m.getUImg() != null) {
                            String img = "data:image/jpeg;base64," + base64Image.imageToBase64(m.getUImg());
                            jsonMessage.put("img", img);
@@ -102,12 +112,11 @@ public class WebSocketHandler extends TextWebSocketHandler
             List<Message> messages = chatService.getMessages(user.getId(), roomId);
             for (Message m : messages) {
                 JSONObject jsonMessage = new JSONObject();
+                jsonMessage.put("messageId", m.getMessageId());
                 jsonMessage.put("sender", m.getSenderId());
                 jsonMessage.put("msg", m.getMessage());
-                /*
-                boolean seen = chatService.checkIfSeen(m.getMessageId(),user.getId());
+                Integer seen = chatService.checkIfSeen(m.getMessageId(),user.getId());
                 jsonMessage.put("seen", seen);  // 읽음 여부 추가
-                 */
                 if (m.getUImg() != null) {
                     String img = "data:image/jpeg;base64," + base64Image.imageToBase64(m.getUImg());
                     jsonMessage.put("img", img);
@@ -160,39 +169,67 @@ public class WebSocketHandler extends TextWebSocketHandler
             for (WebSocketSession ss : consultMap.get(consultId).values()) {
                 if (ss.isOpen()) {  // 세션이 열려 있는지 확인
                     ss.sendMessage(message);
-
-                    cdata.setSenderId(user.getId());
-                    cdata.setConsultId(Integer.parseInt(consultId));
-                    cdata.setMessage(msg != null ? msg : "");
-                    cdata.setImg(img != null ?  originImgName: "");
-                    cdata.setUImg(img != null ? UUIDImgName: "");
-                    chatService.saveConsultMessage(cdata);
-
-
-
                 }
             }
+            cdata.setSenderId(user.getId());
+            cdata.setConsultId(Integer.parseInt(consultId));
+            cdata.setMessage(msg != null ? msg : "");
+            cdata.setImg(img != null ?  originImgName: "");
+            cdata.setUImg(img != null ? UUIDImgName: "");
+
+            List<String> users = consultService.getUserIdsByConsultId(Integer.parseInt(consultId));
+
+            Map<String, WebSocketSession> Sessions = consultMap.get(consultId);
+            List<String> activeUserIds = new ArrayList<>();
+            if (Sessions != null) {
+                activeUserIds.addAll(Sessions.keySet());  // 현재 접속 중인 사용자 ID 목록 추출
+            }
+            chatService.saveConsultMessage(cdata,users,activeUserIds);
+
+            // 각 사용자에게 알림 소켓으로 읽지 않은 메시지 개수 전송
+            for (String id : users) {
+                if (!id.equals(user.getId())) {
+                    alarmHandler.notifyAllUnreadCountsToUser(id);
+                }
+            }
+
+
         }
 
         // 챌린지
-        // 동일한 roomId에 있는 사용자들에게만 메시지 전송
-        if (StringUtils.hasText(roomId) && roomMap.containsKey(roomId)) {
-            for (WebSocketSession ss : roomMap.get(roomId).values()) {
-                if (ss.isOpen()) {  // 세션이 열려 있는지 확인
-                    ss.sendMessage(message);
+// 동일한 roomId에 있는 사용자들에게만 메시지 전송
+        if (StringUtils.hasText(roomId) && roomMap.containsKey(roomId))
+        {
+            for (WebSocketSession ss : roomMap.get(roomId).values())
+            {
+                if (ss.isOpen())
+                {  // 세션이 열려 있는지 확인
+                    ss.sendMessage(message);// 메시지 전송
+                }
+            }
+            // 메시지 저장 (한 번만 실행)
+            data.setSenderId(user.getId());
+            data.setRoomId(Integer.parseInt(roomId));
+            data.setMessage(msg != null ? msg : "");
+            data.setImg(img != null ? originImgName : "");
+            data.setUImg(img != null ? UUIDImgName : "");
+            data.setSentAt(LocalDateTime.now());
 
-                    data.setSenderId(user.getId());
-                    data.setRoomId(Integer.parseInt(roomId));
-                    data.setMessage(msg != null ? msg : "");
-                    data.setImg(img != null ?  originImgName: "");
-                    data.setUImg(img != null ? UUIDImgName: "");
-                    data.setSentAt(LocalDateTime.now());
+            // roomMap에서 현재 접속 중인 사용자들의 ID를 추출
+            Map<String, WebSocketSession> activeSessions = roomMap.get(String.valueOf(data.getRoomId()));
+            List<String> activeUserIds = new ArrayList<>();
+            if (activeSessions != null) {
+                activeUserIds.addAll(activeSessions.keySet());  // 현재 접속 중인 사용자 ID 목록 추출
+            }
 
-                    // 알림 서비스 도입
-                    List<String> users =pService.getUserIdsByChallengeId(Integer.parseInt(roomId));
-                    chatService.saveChallMessage(data,users);
+            // 알림 서비스 도입 및 메시지 저장
+            List<String> users = pService.getUserIdsByChallengeId(Integer.parseInt(roomId));
+            chatService.saveChallMessage(data, users,activeUserIds);
 
-
+            // 각 사용자에게 알림 소켓으로 읽지 않은 메시지 개수 전송
+            for (String id : users) {
+                if (!id.equals(user.getId())) {
+                    alarmHandler.notifyAllUnreadCountsToUser(id);
                 }
             }
         }

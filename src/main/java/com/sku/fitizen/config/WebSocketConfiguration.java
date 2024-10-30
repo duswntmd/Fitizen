@@ -1,5 +1,6 @@
 package com.sku.fitizen.config;
 
+import com.sku.fitizen.handler.AlarmWebSocketHandler;
 import com.sku.fitizen.interceptor.HttpHandshakeInterceptor;
 import com.sku.fitizen.handler.WebSocketHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer
     /* "ws://ip/ws/chat" 요청은 인터셉터를 거쳐 웹소켓 핸들러에 연결됨 */
     private final static String CHAT_ENDPOINT="/chat";
     private final static String TRAINER_ENDPOINT = "/tChat";
+    private final static String ALARM_ENDPOINT = "/alarm";
 
    /* WebSocket 핸드셰이크
       지금 컨트롤러에 /trainer 가 있기때문에  TRAINER_ENDPOINT =/trainer 해버리면
@@ -35,7 +37,8 @@ public class WebSocketConfiguration implements WebSocketConfigurer
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        //getChatWebSocketHandler()(서버 역할) 채팅 응용하려면 여기서
+
+        //챌린지
         registry.addHandler(getChatWebSocketHandler(), CHAT_ENDPOINT)  /* 커스텀 웹소켓핸들러 등록*/
                 .addInterceptors(new HttpHandshakeInterceptor())        /* 커스텀 인터셉터 등록 */
                 .setAllowedOrigins("*");
@@ -44,6 +47,11 @@ public class WebSocketConfiguration implements WebSocketConfigurer
 
         // 트레이너 WebSocket 핸들러
         registry.addHandler(getTrainerWebSocketHandler(), TRAINER_ENDPOINT)
+                .addInterceptors(new HttpHandshakeInterceptor())
+                .setAllowedOrigins("*");
+
+        // 알람  WebSocket 핸들러
+        registry.addHandler(getAlarmHandshakeWebSocketHandler(), ALARM_ENDPOINT)
                 .addInterceptors(new HttpHandshakeInterceptor())
                 .setAllowedOrigins("*");
 
@@ -69,6 +77,13 @@ public class WebSocketConfiguration implements WebSocketConfigurer
     @Bean
     public WebSocketHandler getTrainerWebSocketHandler() {
         return new WebSocketHandler(); // 다른 핸들러를 사용하거나 같은 핸들러를 재사용할 수 있음
+    }
+
+    // 알람
+    @Bean
+    public AlarmWebSocketHandler getAlarmHandshakeWebSocketHandler()
+    {
+        return new AlarmWebSocketHandler();
     }
 
 

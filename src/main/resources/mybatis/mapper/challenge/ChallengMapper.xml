@@ -116,7 +116,7 @@
     <!-- 챌린지 참여자 등록   챌린지를 등록한 사람도 참여자에 포함된다  -->
     <insert id="addCreatorToParticipation" parameterType="com.sku.fitizen.domain.challenge.Participation">
                 INSERT  INTO participation
-                VALUES (#{userId},#{challengeId})
+                VALUES (#{userId},#{challengeId},SYSDATE)
     </insert>
 
     <!--챌린지 고유 아이디로 조회 : 챌린지 상세정보 보기 위해-->
@@ -128,8 +128,8 @@
     <!--챌린지 참여 등록  조건: 하나의 챌린지에 중복 참여 불가 -->
 
     <insert id="participate" parameterType="com.sku.fitizen.domain.challenge.Participation">
-        INSERT INTO  participation (userid, challengeid)
-        SELECT #{userId} ,#{challengeId}
+        INSERT INTO  participation (userid, challengeid,JOINDATE)
+        SELECT #{userId} ,#{challengeId},SYSDATE
         FROM DUAL
         WHERE NOT EXISTS(
                 SELECT 1
