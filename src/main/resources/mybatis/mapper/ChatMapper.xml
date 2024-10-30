@@ -4,6 +4,50 @@
 
 <mapper namespace="com.sku.fitizen.mapper.ChatMapper">
 
+    <!-- 상담 -->
+
+    <!-- 알림 저장 -->
+    <insert id="saveConsultAlim" parameterType="com.sku.fitizen.domain.challenge.ChallAlim">
+        INSERT INTO CONSULTALIM
+            (ALIMID, USERID, MESSAGEID, SEEN)
+        VALUES (calim_seq.NEXTVAL, #{userId}, #{messageId}, #{seen})
+    </insert>
+    <!-- 알림 저장 :실시간 채팅 이용중인 사람들 읽음 표시-->
+    <insert id="saveConsultAlimLIVE">
+        INSERT INTO CONSULTALIM
+            (ALIMID, USERID, MESSAGEID, SEEN)
+        VALUES (calim_seq.NEXTVAL, #{userId}, #{messageId}, 1)
+    </insert>
+    <!-- 사용자에 따른 상담 방별 안 읽은 메시지 개수 -->
+    <select id="unreadCountsByConsultId" parameterType="string" resultType="map">
+        SELECT
+            cm.CONSULTID AS "ConsultId",
+            COUNT(ca.MESSAGEID) AS "UnreadCount"
+        FROM
+            CONSULTMESSAGE cm
+                JOIN
+            CONSULTALIM ca ON cm.MESSAGEID = ca.MESSAGEID
+        WHERE
+            ca.USERID = #{userId}
+          AND ca.SEEN = 0
+        GROUP BY
+            cm.CONSULTID
+        ORDER BY
+            cm.CONSULTID
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!--챌린지 메세지 저장 -->
     <insert id="saveChallMessage" parameterType="com.sku.fitizen.domain.challenge.Message" useGeneratedKeys="true" keyProperty="messageId" keyColumn="messageId">
 
@@ -11,19 +55,27 @@
         VALUES (msg_seq.NEXTVAL,#{senderId},#{message},#{sentAt},#{roomId},#{img},#{uImg})
     </insert>
 
+
     <!-- 알림 저장 -->
     <insert id="saveChallAlim" parameterType="com.sku.fitizen.domain.challenge.ChallAlim">
         INSERT INTO CHALLALIM
             (ALIMID, USERID, MESSAGEID, SEEN)
         VALUES (alim_seq.NEXTVAL, #{userId}, #{messageId}, #{seen})
     </insert>
+    <!-- 알림 저장 :실시간 채팅 이용중인 사람들 읽음 표시-->
+    <insert id="saveChallAlimLIVE">
+        INSERT INTO CHALLALIM
+            (ALIMID, USERID, MESSAGEID, SEEN)
+        VALUES (alim_seq.NEXTVAL, #{userId}, #{messageId}, 1)
+    </insert>
 
     <!--상담 채팅 메세지 저장 -->
-    <insert id="saveConsultMessage" parameterType="com.sku.fitizen.domain.Trainer.ConsultMessage">
+    <insert id="saveConsultMessage" parameterType="com.sku.fitizen.domain.Trainer.ConsultMessage" useGeneratedKeys="true" keyProperty="messageId" keyColumn="messageId">
         INSERT  INTO CONSULTMESSAGE
         VALUES (TMSG_SEQ.nextval,#{senderId},#{message},SYSDATE,#{consultId},#{img},#{uImg})
-
     </insert>
+
+    <!-- 상담 채팅 알림 저장  안읽음 -->
 
     <!--챌린지 메세지 불러오기-->
     <select id="getMessagesByRoomId" parameterType="com.sku.fitizen.domain.challenge.Participation"
@@ -56,12 +108,94 @@
             WHERE userId = #{userId} AND challengeId = #{ChallengeId}
 
     </select>
+
+    <!-- 사용자 ID에 해당하는 읽지 않은 메시지 개수 조회 :전체 -->
+    <select id="countUnreadMessages" resultType="int">
+        SELECT COUNT(*)
+        FROM CHALLALIM
+        WHERE USERID = #{userId}
+          AND SEEN = 0
+    </select>
+
+    <!-- 사용자에 따른  챌린지별 안읽은 메세지 개수 -->
+    <select id="unreadCountsByChallengeId"  resultType="map">
+        SELECT
+            m.ROOMID AS "ChallengeId",
+            COUNT(c.MESSAGEID) AS "UnreadCount"
+        FROM
+            MESSAGE m
+                JOIN
+            CHALLALIM c ON m.MESSAGEID = c.MESSAGEID
+        WHERE
+            c.USERID = #{userId}
+          AND c.SEEN = 0
+        GROUP BY
+            m.ROOMID
+        ORDER BY
+            m.ROOMID
+    </select>
+
+
+    <!--ROOMID에서 가장 최근의 메시지를 조회-->
+    <select id="getLastMessage" resultType="map">
+        SELECT
+        m.ROOMID AS "ChallengeId",
+        m.SENDERID AS "senderId",
+        m.MESSAGE AS "message",
+        m.IMG AS "imge"
+        FROM (
+        SELECT
+        ROOMID,
+        SENDERID,
+        MESSAGE,
+        IMG,
+        ROW_NUMBER() OVER(PARTITION BY ROOMID ORDER BY SENTAT DESC) AS row_num
+        FROM MESSAGE
+        WHERE ROOMID IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ) m
+        WHERE m.row_num = 1
+    </select>
+
+    <!-- 상담 아이디별 마지막 메세지 -->
+    <select id="getLastConsultMessage" resultType="map">
+
+
+    </select>
+
     <!-- 알림 테이블에서 확인 여부 조회 -->
-    <select id="checkIfSee" parameterType="map" resultType="integer">
-        SELECT SEEN
+    <select id="checkIfSeen" parameterType="map" resultType="integer">
+        SELECT  COALESCE(SEEN, 0)
         FROM CHALLALIM
         WHERE MESSAGEID = #{messageId}
           AND USERID = #{userId}
     </select>
+
+    <select id="checkIfSeenConsult" parameterType="map" resultType="integer">
+        SELECT  COALESCE(SEEN, 0)
+        FROM  CONSULTALIM
+        WHERE MESSAGEID = #{messageId}
+          AND USERID = #{userId}
+    </select>
+
+
+    <!-- 읽음 처리 업데이트 -->
+    <update id="readMessage" parameterType="map">
+        UPDATE CHALLALIM
+        SET SEEN = 1
+        WHERE MESSAGEID = #{messageId}
+          AND USERID = #{userId}
+    </update>
+
+    <update id="readMessageConsult" parameterType="map">
+        UPDATE CONSULTALIM
+        SET SEEN = 1
+        WHERE MESSAGEID = #{messageId}
+          AND USERID = #{userId}
+    </update>
+
+
 
 </mapper>

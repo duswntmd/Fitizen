@@ -34,7 +34,7 @@ public class UserService {
 
         // 사용자 정보 삽입
         int rowsAffected = userMapper.insertUser(user);  // insert 성공 시 영향 받은 행 수 반환
-
+        userMapper.insertTrainer(user);
         // 삽입이 성공하면 권한 추가
         if (rowsAffected > 0) {
             userMapper.insertUserRole(user.getId(), "ROLE_USER");  // 기본 사용자 역할 추가

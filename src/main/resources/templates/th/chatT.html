@@ -11,7 +11,7 @@
   <!-- 채팅 버튼 -->
   <div class="chat-button" onclick="toggleChat()">
     💬
-    <span class="notification-badge" id="notificationBadge">3</span> <!-- 안읽은 메시지 숫자 -->
+    <span class="notification-badge" id="notificationBadge">1</span> <!-- 안읽은 메시지 숫자 -->
   </div>
   <div class="chat-window" id="chatWindow">
     <div id="participantsList" class="participants-list" style="display: none;" >
@@ -23,16 +23,52 @@
       <span class="current-challenge-title" style="display: none;"></span>
       <span class="participants-title" onclick="toggleParticipants()" style="display: none">참여자 목록</span>
       <button class="back-button" onclick="backButton()" style="display: none">뒤로가기</button>
-      <span class="challenge-title" onclick="showChallenges()">참여 챌린지</span>
-      <span class="trainer-title" onclick="showTrainers()">트레이너</span>
+      <span class="challenge-title" onclick="showChallenges()">참여 챌린지
+        <span class="challenge-badge" style="display:none;"></span> <!-- 합산된 알림 개수 -->
+      </span>
+      <span class="trainer-title" onclick="myConsultations()">트레이너 상담
+      <span class="trainer-badge" style="display:none;"></span> <!-- 합산된 알림 개수 -->
+      </span>
       <button class="close-button" onclick="toggleChat()">닫기</button>
     </div>
     <div class="chat-body" id="chatBody"></div>
-    </div>
+  </div>
 
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script type="text/javascript">
+
+
+    /*알림 배지를 업데이트하는 함수
+    function updateNotificationBadge(count) {
+      const badge = document.getElementById("notificationBadge");
+      badge.textContent = count;
+      badge.style.display = count > 0 ? "inline-block" : "none"; // 알림이 0이면 숨김
+    }
+    */
+
+
+    /* 서버에서 알림 개수를 가져와 업데이트하는 함수
+    function fetchUnreadMessageCount() {
+      $.ajax({
+        url: '/ws/unreadMessageCount',  // 서버에서 알림 개수를 제공하는 엔드포인트
+        method: 'GET',
+        success: function(count) {
+          updateNotificationBadge(count); // 가져온 알림 개수로 배지 업데이트
+        },
+        error: function(error) {
+          console.error("알림 수 조회 오류:", error);
+        }
+      });
+    }
+    // 페이지 로드 시 알림 개수 확인
+    fetchUnreadMessageCount();
+
+    // 주기적으로 알림 개수를 확인
+    setInterval(fetchUnreadMessageCount, 5000); // 5초마다 업데이트
+
+*/
+
 
     function resetChatHeader() {
       const chatHeader = document.querySelector('.chat-header');
@@ -89,6 +125,8 @@
       resetChatHeader();
       // 챌린지 목록으로 돌아가기
       showChallenges();
+      g_webSocket.close();
+      connectAlarmSocket(); // 알림 소켓 재연결
     }
 
     function toggleParticipants() {
@@ -101,48 +139,194 @@
     }
     const chatBody = document.getElementById('chatBody');
     function toggleChat() {
+
       const chatWindow = document.getElementById('chatWindow');
       chatWindow.style.display = chatWindow.style.display === 'block' ? 'none' : 'block';
       if (chatWindow.style.display === 'block') {
         showChallenges();
+        connectAlarmSocket(); // 알람 소켓 연결
       }else{
         // 헤더 초기화
         resetChatHeader();
       }
 
     }
+    function connectAlarmSocket() {
+      alarmSocket = new WebSocket("ws://" +host+ "/alarm");
+
+
+
+      alarmSocket.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+
+        // 상담별 알림 개수 업데이트
+        data.consultJsonArray.forEach(c => {
+          const { UnreadCount, ConsultId } = c;
+          const badge = document.getElementById(`unread-badge-${ConsultId}`);
+          if (badge) {
+            badge.textContent = UnreadCount;
+            badge.style.display = UnreadCount > 0 ? 'inline-block' : 'none';
+          }
+        });
+
+        // 총 알림 개수 업데이트
+        const total = document.querySelector('.trainer-title .trainer-badge');
+        const totalCount = data.totalUnreadConsultCount;
+        if (totalCount > 0) {
+          total.textContent =totalCount;
+          total.style.display = 'inline-block';
+        } else {
+          total.style.display = 'none';
+        }
+
+        // 챌린지별 알림 업데이트
+        data.challengeJsonArray.forEach(countInfo => {
+          const { UnreadCount, ChallengeId } = countInfo;
+          const badge = document.getElementById(`unread-badge-${ChallengeId}`);
+          if (badge) {
+            badge.textContent = UnreadCount;
+            badge.style.display = UnreadCount > 0 ? 'inline-block' : 'none';
+          }
+        });
+
+        // 총 알림 개수 업데이트
+        const totalBadge = document.querySelector('.challenge-title .challenge-badge');
+        const totalUnreadCount = data.totalUnreadChallengeCount;
+        if (totalUnreadCount > 0) {
+          totalBadge.textContent = totalUnreadCount;
+          totalBadge.style.display = 'inline-block';
+        } else {
+          totalBadge.style.display = 'none';
+        }
+
+
+
+
+        // 챌린지별 마지막 메시지 업데이트
+        data.lastMessages.forEach(messageInfo => {
+          const { senderId, message, ChallengeId, imge} = messageInfo;
+
+          // 각 챌린지 ID에 해당하는 마지막 메시지와 보낸 사람 업데이트
+         // const senderElement = document.getElementById(`lastMessage-sender-${ChallengeId}`);
+          const messageElement = document.getElementById(`lastMessage-content-${ChallengeId}`);
+
+          /*
+          if (senderElement) {
+            senderElement.textContent = senderId;
+          }
+
+           */
+          if (messageElement) {
+            if(imge !=null)
+            {
+              messageElement.textContent = "사진을 보냈습니다";
+              messageElement.style.fontStyle = 'italic';
+            }
+            else {
+              messageElement.textContent = message;
+              messageElement.style.fontStyle = 'italic';
+              // 메시지 텍스트 스타일 추가 (예: 기울임꼴)
+            }
+          }
+        });
+
+        // 총 상담 및 챌린지 알림 개수를 합산하여 표시
+        const totalTotal = data.totalUnreadConsultCount + data.totalUnreadChallengeCount;
+        const notificationBadge = document.getElementById("notificationBadge");
+
+        if (notificationBadge) {
+          notificationBadge.textContent = totalTotal
+          notificationBadge.style.display = totalTotal > 0 ? "inline-block" : "none";
+        }
+      };
+
+    }
+
+
+    function myConsultations() {
+      chatBody.innerHTML = ""; // 기존 내용 삭제
+
+      fetch('/ws/myConsultation')
+              .then(response => response.json())
+              .then(data => {
+                // 첫 번째 항목에서 역할 정보 확인
+                const isTrainer = data[0].isTrainer;
+                const myConsultList = data.slice(1); // 나머지 항목들을 myConsult 데이터로 사용
+
+                if (myConsultList.length === 0) { // 상담 목록이 없을 경우
+                  chatBody.innerHTML = `<div class="empty-message">신청된 상담이 없습니다.</div>`;
+                  return;
+                }
+                myConsultList.forEach(consult => {
+                  const item = document.createElement('div');
+
+                  // 역할에 따른 클래스 적용
+                  item.className = 'consult-list';
+
+                  // 트레이너일 경우 유저 이름 표시, 유저일 경우 트레이너 이름 표시
+                  const displayName = isTrainer ? consult.userName : consult.trainerName;
+
+                  item.innerHTML = `
+                   <div onclick="connectWebSocket('','${displayName}',${consult.consultId})" style="cursor: pointer;">
+                        <span class="consult-name"><strong>${displayName}</strong></span>
+                       <span class="consult-location">${consult.location || ''}</span>
+                        <span class="unread-badge" id="unread-badge-${consult.consultId}" style="display:none;"></span>
+                    </div>
+                `;
+                  chatBody.appendChild(item);
+                });
+              })
+              .catch(error => {
+                console.error('Error fetching consultations:', error);
+              });
+
+      connectAlarmSocket();
+
+    }
+
+
+
 
 
     function showChallenges() {
-        chatBody.innerHTML = ""; // 기존 내용 삭제
-        fetch('/ws/myChallenges')
-                .then(response => response.json())  // 응답을 JSON으로 변환
-                .then(data => {
-                  userId = data.userId;
-                  const mychallList=data.challengeList;
-                  // 서버에서 받아온 챌린지 목록을 각각 DOM에 추가
-                  mychallList.forEach(MyChallenges => {
-                    const item = document.createElement('div');
-                    item.className = 'myChall-list';
-                    item.innerHTML = `
-                                   <div onclick="connectWebSocket(${MyChallenges.challengeId},'${MyChallenges.title}')" style="cursor: pointer;">
-                                     <strong>${MyChallenges.title}</strong>
-                                     (${MyChallenges.members}/${MyChallenges.limitUser})
-                                   </div>
+      chatBody.innerHTML = ""; // 기존 내용 삭제
+      fetch('/ws/myChallenges')
+              .then(response => response.json())  // 응답을 JSON으로 변환
+              .then(data => {
+                userId = data.userId;
+                const mychallList=data.challengeList;
+
+                if (mychallList.length === 0) { // 챌린지 목록이 없을 경우
+                  chatBody.innerHTML = `<div class="empty-message">참여 중인 챌린지가 없어요.</div>`;
+                  return;
+                }
+                // 서버에서 받아온 챌린지 목록을 각각 DOM에 추가
+                mychallList.forEach(MyChallenges => {
+                  const item = document.createElement('div');
+                  item.className = 'myChall-list';
+                  item.innerHTML = `
+                                  <div onclick="connectWebSocket(${MyChallenges.challengeId},'${MyChallenges.title}','')" style="cursor: pointer;">
+                                     <span class="challenge-title"><strong>${MyChallenges.title}</strong></span>
+                                     <span class="challenge-participants">(${MyChallenges.members}/${MyChallenges.limitUser})</span>
+                                     <span class="last-message" id="lastMessage-content-${MyChallenges.challengeId}"></span>
+                                     <span class="unread-badge" id="unread-badge-${MyChallenges.challengeId}" style="display:none;"></span>
+                                  </div>
                                      `;
 
-                    chatBody.appendChild(item);
-                  });
-                })
-                .catch(error => {
-                  console.error('Error fetching challenges:', error);
+                  chatBody.appendChild(item);
                 });
-      }
+                connectAlarmSocket();
+              })
+              .catch(error => {
+                console.error('Error fetching challenges:', error);
+              });
+    }
 
+    var project ="172.16.97.13";
     var host = "localhost";
     var g_webSocket = null;
     // 웹소켓 연결 함수
-    function connectWebSocket(roomId,title)
+    function connectWebSocket(roomId,title ,consultId)
     {
 
       chRoomId=roomId;
@@ -161,17 +345,25 @@
       currentChallengeTitle.innerText = "\""+title+"\"";  // 제목 설정
       currentChallengeTitle.style.display = 'block';  // 챌린지 제목 보이기
 
-      g_webSocket = new WebSocket("ws://" + host + "/chat?" + "roomId=" + roomId);
+      g_webSocket = new WebSocket("ws://" + host + "/chat?" + "roomId=" + roomId+"&consultId="+consultId);
       g_webSocket.onopen = function (message) {
 
+
+        if (roomId !=='') {
         showParticipants(roomId);
+      }
+        const participantsTitle = chatHeader.querySelector('.participants-title');
+        if (consultId) {
+          // consultId가 존재하면 참여자 목록 헤더 숨기기
+          participantsTitle.style.display = 'none';
+        }
 
         chatBody.innerHTML = ""; // 기존 내용 삭제
         // 메시지를 입력할 수 있는 HTML 추가
         const inputContainer = `
             <div id="chatBoxArea"></div>
             <div id="inputContainer">
-                <input id="inputMsgBox" type="text" placeholder="Type a message...">
+                <input id="inputMsgBox" type="text" placeholder="메세지를 입력하세요...">
                 <input id="sendButton" type="button" value="보내기" onclick="sendButton_onclick()">
                 <label id="fileButton" for="imgInputBox">사진</label>
             </div>
@@ -181,7 +373,7 @@
         // chatBody에 inputContainer 추가
         chatBody.innerHTML += inputContainer;
 
-        addLineToChatBox("챌린지 참여 채팅방입니다.");
+        addLineToChatBox("챌린지 참여 채팅방입니다.","",true);
         document.getElementById('inputMsgBox').addEventListener('keypress', inputMsgBox_onkeypress);
 
       };
@@ -190,53 +382,39 @@
         try {
           var data = JSON.parse(message.data); // JSON 파싱
 
-
-          /*
           // 안 읽은 메시지일 경우에만 읽음 처리 요청
-          if (!data.seen) {
-            sendReadReceiptToServer(data.messageId);
-          }
-
-
-           // 읽음 처리 요청 함수
-          function sendReadReceiptToServer(messageId) {
-            // 서버에 읽음 처리 요청
-            $.ajax({
-              url: '/ws/readMessage',
-              method: 'POST',
-              data: { messageId: messageId },
-              success: function(res) {
-                console.log("읽음 처리 완료:", res);
-              },
-              error: function(err) {
-                console.error("읽음 처리 오류:", err);
+          if (data.seen !=null &&!data.seen && data.sender !== userId) {
+            setTimeout(function() {
+              if(chRoomId !== '') {
+                sendReadReceiptToChallenge(data.messageId);
+              }else {
+                sendReadReceiptToConsult(data.messageId);
               }
-            });
-           */
-
+            }, 500);  // 500ms 지연 후 읽음 처리 요청
+          }
 
 
           if (data.msg) {
-            addLineToChatBox(data.msg ,data.sender); // 텍스트 메시지 추가
+            addLineToChatBox(data.msg ,data.sender,false); // 텍스트 메시지 추가
           }
           if (data.img) {
-            displayImage(data.img, data.fileName , data.sender); // 이미지 출력
+            displayImage(data.img, data.fileName , data.sender,false); // 이미지 출력
           }
         }catch(e){
           console.error("메시지 파싱 오류:", e);
-          addLineToChatBox(message.data); // JSON이 아니면 그대로 출력
+          addLineToChatBox(message.data,"",true); // JSON이 아니면 그대로 출력
         }
       };
 
       g_webSocket.onclose = function(message) {
-        addLineToChatBox("채팅 접속 실패...개발자 수정중..");
+        addLineToChatBox("재접속해주세요!..", "", true); // 시스템 메시지 (isSystemMessage = true)
       };
 
       g_webSocket.onerror = function(message) {
-        addLineToChatBox("Error!");
+        addLineToChatBox("Error!","",true);
       };
     }
-    function addLineToChatBox(_line, sender) {
+    function addLineToChatBox(_line, sender,isSystemMessage = false) {
       if (_line == null) {
         _line = "";
       }
@@ -251,7 +429,15 @@
       senderIdDiv.className = 'sender-id';
 
       // 보낸 사람에 따라 클래스를 다르게 설정
-      if (sender === userId) {
+      // 조건: 메시지 내용이 "보낸사람님이 참여하였습니다." 형식일 경우
+      const participationMessage = `${sender}님이 참여하였습니다.`.trim().toLowerCase();
+      const creatorMessage=`${sender}(당신)은 주최자 입니다.!`.trim().toLowerCase();
+      if (_line.trim().toLowerCase() === participationMessage ||_line.trim().toLowerCase() === creatorMessage||isSystemMessage) {
+        // 중앙에 정렬
+        messageDiv.classList.add('centered');
+        senderIdDiv.style.display = 'none'; // 발신자 ID 숨김 (이미 메시지 내용에 포함되므로)
+
+      } else if (sender === userId) {
         messageDiv.classList.add('sent');
         senderIdDiv.style.display = 'none'; // 자신의 메시지에는 발신자 ID를 숨김
       } else {
@@ -289,12 +475,6 @@
         downloadImage(base64Image, fileName);
       };
 
-      // "따봉" 버튼 생성
-      var likeButton = document.createElement("button");
-      likeButton.textContent = "👍";
-      likeButton.onclick = function() {
-        alert("따봉 버튼 클릭됨!"); // 원하는 행동을 정의
-      };
 
       // "인증게시판에 올리기" 버튼 생성
 
@@ -314,10 +494,11 @@
       if (sender === userId) {
         imageContainer.classList.add('sent'); // 오른쪽 정렬
         senderIdDiv.style.display = 'none'; // 자신의 이미지에는 발신자 ID를 숨김
-        imageContainer.appendChild(uploadButton);
+        if(chRoomId) {
+          imageContainer.appendChild(uploadButton);
+        }
       } else {
         imageContainer.classList.add('received'); // 왼쪽 정렬
-        imageContainer.appendChild(likeButton);
         imageContainer.appendChild(saveButton);
       }
 
@@ -441,8 +622,43 @@
       return `${year}.${month}.${day} ${hours}:${minutes}`;
     }
 
+    function sendReadReceiptToChallenge(messageId) {
+      $.ajax({
+        url: '/ws/readMessage',
+        method: 'POST',
+        data: { messageId: messageId },
+        success: function(res) {
+          console.log("읽음 처리 완료:", res);
+        },
+        error: function(err) {
+          console.error("읽음 처리 오류:", err);
+        }
+      });
+    }
+    function sendReadReceiptToConsult(messageId) {
+      $.ajax({
+        url: '/ws/readMessageConsult',
+        method: 'POST',
+        data: { messageId: messageId },
+        success: function(res) {
+          console.log("읽음 처리 완료:", res);
+        },
+        error: function(err) {
+          console.error("읽음 처리 오류:", err);
+        }
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      connectAlarmSocket();
+    });
+
+
+
   </script>
   <style>
+
+
 
     .participant-item {
       margin: 5px 3px; /* Space between participants */
@@ -516,10 +732,24 @@
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* 그림자 추가 */
     }
 
-    .challenge-title, .trainer-title {
+    .challenge-title, .trainer-title,.consult-name {
       font-size: 16px; /* 글자 크기 */
       font-weight: bold; /* 글자 두껍게 */
+      position: relative; /* 부모 요소에 상대 위치를 설정 */
     }
+    .challenge-badge ,.trainer-badge {
+      position: absolute;
+      top: -20px; /* 버튼 위쪽 위치 */
+      right: -20px; /* 오른쪽에 배치 */
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: bold;
+      display: none; /* 기본적으로 숨김 */
+    }
+
 
     .close-button {
       background-color: transparent; /* 배경색 투명 */
@@ -578,21 +808,42 @@
 
     /* 채팅 본문 스타일 */
     .chat-body {
-      padding: 10px;
+      padding: 20px;
       height: calc(100% - 80px); /* 헤더와 푸터를 제외한 높이 계산 */
     }
 
     /* 목록 스타일 */
-    .myChall-list {
+    .myChall-list,.consult-list {
       margin: 5px 0;
       padding: 20px;
       border-radius: 3px;
-      background-color: #f0f0f0; /* 배경색 */
+      background-color:#e0e0e0; /* 배경색 */
       cursor: pointer;
+      position: relative;
+
+
     }
 
+
+    .myChall-list > div {
+      display: flex;
+      align-items: center;
+      gap: 20px; /* 요소들 간 간격 */
+    }
+
+    .unread-badge ,.unread-badgeC {
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: bold;
+      position: absolute;
+      right: 10px;
+      display: none;
+    }
     .myChall-list:hover {
-      background-color: #e0e0e0; /* hover 시 색상 변경 */
+      background-color: #d4d4d4; /* hover 시 색상 변경 */
     }
 
 
@@ -625,11 +876,12 @@
 
     #inputMsgBox {
       flex: 1;
-      padding: 10px;
+      padding: 11px;
       border: 1px solid #ddd;
       border-radius: 4px;
       font-size: 16px; /* 글씨 크기 증가 */
-      height: 50px; /* 높이 증가 */
+      height: 21px; /* 높이 증가 */
+
     }
 
     #sendButton, #disconnectButton, #fileButton {
@@ -727,16 +979,62 @@
 
 
     .current-challenge-title {
-      font-size: 24px; /* 글자 크기 */
+      font-size: 20px; /* 글자 크기 */
       font-weight: bold; /* 글자 두께 */
       color: white; /* 글자 색상 */
-      padding: 5px 5px; /* 안쪽 여백 */
+      padding: 1px; /* 안쪽 여백 */
       text-align: center; /* 가운데 정렬 */
     }
 
     .participants-title,.trainer-title,.challenge-title {
+      width: 100px; /* 고정 가로 너비 */
       cursor: pointer; /* 마우스를 올리면 손가락 모양으로 변경 */
+      text-overflow: ellipsis; /* 제목이 길면 말줄임 표시 */
+
     }
+
+    .message.centered {
+      align-self: center; /* 중앙에 배치 */
+      background-color: transparent; /* 배경색 제거 */
+      color: #555; /* 살짝 연한 회색 글씨 */
+      text-align: center; /* 텍스트 가운데 정렬 */
+      max-width: 100%; /* 메시지 박스의 너비를 넓게 */
+      border-bottom: 1px solid #ccc; /* 연한 회색 줄 추가 */
+      padding: 10px 0; /* 상하 여백을 주어 공간 확보 */
+    }
+
+    /* 인원 정보 스타일 */
+    .challenge-participants ,.consult-payment-status{
+      color: #888;
+      width: 80px; /* 고정 가로 너비 */
+      font-size: 14px;
+    }
+
+    /* 마지막 메시지 스타일 */
+    .last-message {
+
+      font-size: 16px; /* 글씨 크기 */
+      margin-left: 20px; /* 인원 정보와 메시지 사이 간격 조정 */
+      width: 130px; /* 고정 가로 너비 */
+      white-space: nowrap; /* 한 줄에 표시 */
+      overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+      text-overflow: ellipsis; /* 메시지가 길면 말줄임 표시 */
+      transition: opacity 0.5s ease-in-out, transform 0.3s ease; /* 부드러운 전환 효과 */
+      opacity: 1;
+      color: black;
+    }
+
+    .empty-message {
+      display: flex;
+      justify-content: center;   /* 가로 가운데 정렬 */
+      align-items: center;       /* 세로 가운데 정렬 */
+      height: 50%;              /* 부모 요소 높이에 맞추기 */
+      color: red;                /* 글씨 색상 빨간색 */
+      font-size: 18px;           /* 글씨 크기 */
+      font-weight: bold;         /* 글씨 두께 */
+    }
+
+
 
   </style>
 </div>

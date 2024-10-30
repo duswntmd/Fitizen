@@ -22,6 +22,22 @@
     </select>
 
 
+    <!-- 유저가 참가한 날짜 -->
+
+    <select id="getUserJoinDate" parameterType="com.sku.fitizen.domain.challenge.Participation"
+            resultType="Date">
+            SELECT JOINDATE FROM  PARTICIPATION
+            where USERID=#{userId} and CHALLENGEID=#{challengeId}
+
+    </select>
+
+    <!-- 유저가 참여한 챌린지 번호 리스트 -->
+    <select id="getChallengeIdsByUser" resultType="Integer">
+
+        SELECT  CHALLENGEID  FROM  PARTICIPATION
+        WHERE userId=#{userId}
+    </select>
+
 </mapper>
 
 
