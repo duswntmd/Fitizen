@@ -11,53 +11,54 @@
     <link rel="stylesheet" type="text/css" href="/resources/static/css/indexStyle.css">
     <title>회원가입</title>
     <style>
-
-
         /* 콘텐츠가 화면의 나머지 공간을 차지하도록 설정 */
-        .page-contents {
-            height: 100%;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* 콘텐츠가 가운데 정렬되도록 설정 */
-            align-items: center;
-            padding-bottom: 0;
-            margin-bottom: 0;
-        }
-
         html, body {
-            height:100%;
+            height: 100%;
+            margin: 0;
             font-family: 'Pretendard', sans-serif; /* 사용자가 설정한 Pretendard 폰트 사용 */
             background-color: #f4f4f9; /* 전체 배경을 은은한 회색으로 */
             color: #333; /* 텍스트 색상을 다크 그레이로 */
             line-height: 1.6; /* 가독성을 위한 라인 높이 설정 */
-            margin:0;
+            overflow-y: auto; /* 페이지 자체에서 스크롤 */
+        }
 
+        .page-contents {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* 페이지의 전체 높이 */
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         input[type="text"], input[type="password"], input[type="email"], input[type="date"], input[type="number"], select {
-            width: 100%; /* 입력 필드 너비를 100%로 */
-            padding: 10px; /* 적절한 패딩 */
-            margin: 8px 0; /* 위아래 여백 */
-            border: 1px solid #ccc; /* 기본 회색 테두리 */
-            border-radius: 4px; /* 부드러운 모서리 */
-            box-sizing: border-box; /* 박스 크기 설정 */
-            font-size: 16px; /* 기본 글자 크기 */
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
 
         button {
-            background-color: #007bff; /* 버튼의 배경색을 파란색으로 */
-            color: white; /* 텍스트 색상을 흰색으로 */
-            border: none; /* 테두리 제거 */
-            padding: 10px 20px; /* 패딩 설정 */
-            border-radius: 4px; /* 부드러운 모서리 */
-            cursor: pointer; /* 커서를 포인터로 변경 */
-            font-size: 16px; /* 기본 글자 크기 */
-            transition: background-color 0.3s ease; /* 배경색 변환 효과 */
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
         }
 
         button:hover {
-            background-color: #0056b3; /* 마우스를 올렸을 때 진한 파란색으로 변경 */
+            background-color: #0056b3;
         }
 
         .label {
@@ -109,7 +110,7 @@
 
 <body>
 <div class="page-contents">
-
+    <div class="form-container">
     <form:form modelAttribute="user" id="registerForm" onsubmit="return submitForm(event);">
         <div class="title">회원가입</div>
         <div id="msg" class="msg"><form:errors path="id"/></div>
@@ -156,6 +157,7 @@
 
         <button type="submit">회원 가입</button>
     </form:form>
+    </div>
 </div>
 <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 
@@ -164,8 +166,8 @@
         event.preventDefault(); // Prevent the default form submission
 
         const formData = new FormData(document.getElementById('registerForm'));
-
         const userType = document.getElementById('userType').value;
+
         formData.append('is_trainer', userType === 'TRAINER' ? 'Y' : 'N');
 
         if (userType === 'USER') {

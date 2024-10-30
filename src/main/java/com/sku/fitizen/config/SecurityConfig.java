@@ -51,15 +51,33 @@ public class SecurityConfig {
    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
       log.info("접근제한 설정");
       http.authorizeHttpRequests(authz -> authz
-                      .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                      .requestMatchers("/**", "/login/","/login/login/**", "/register/**", "/board/**","/challenge","/css/**",
-                                          "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**"
+              .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
+              .requestMatchers("/", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
+                                       "/findME", "findResult", "/exerciseDetail/**",
+                                       "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**"
 
-                      ).permitAll()
-                     .requestMatchers("/register/updateuser").hasAnyRole("USER")
-                     .requestMatchers("/register/deleteuser").hasAnyRole("USER")
+              ).permitAll()
+              .requestMatchers("/register/updateuser").hasAnyRole("USER")
+              .requestMatchers("/register/deleteuser").hasAnyRole("USER")
+              .requestMatchers("/board/write").hasAnyRole("USER")
+              .requestMatchers("/board/search").hasAnyRole("USER")
+              .requestMatchers("/board/search").hasAnyRole("USER")
+              .requestMatchers("/board/view/**").hasAnyRole("USER")
+              .requestMatchers("/board/edit/**").hasAnyRole("USER")
+              .requestMatchers("/board/delete/**").hasAnyRole("USER")
+              .requestMatchers("/board/download/**").hasAnyRole("USER")
+              .requestMatchers("/board/like/**").hasAnyRole("USER")
+              .requestMatchers("/board/unlike/**").hasAnyRole("USER")
+              .requestMatchers("/comments/add/**").hasAnyRole("USER")
+              .requestMatchers("/comments/edit/**").hasAnyRole("USER")
+              .requestMatchers("/comments/delete/**").hasAnyRole("USER")
+              .requestMatchers("/kakao/map/**").hasAnyRole("USER")
+              .requestMatchers("/kakao/reviewDetail/**").hasAnyRole("USER")
+              .requestMatchers("/kakao/addReview/**").hasAnyRole("USER")
+              .requestMatchers("/kakao/editReview/**").hasAnyRole("USER")
+              .requestMatchers("/kakao/deleteReview").hasAnyRole("USER")
                       //.anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
-                      .anyRequest().denyAll()
+                     .anyRequest().denyAll()
       ).csrf( csrfConf -> csrfConf.disable()
       ).formLogin(loginConf -> loginConf.loginPage("/login/login")   // 컨트롤러 메소드와 지정된 위치에 로그인 폼이 준비되어야 함
               .loginProcessingUrl("/dologin")            // 컨트롤러 메소드 불필요, 폼 action과 일치해야 함

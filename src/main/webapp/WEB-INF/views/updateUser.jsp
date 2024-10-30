@@ -14,7 +14,7 @@
             background-color: #f7f7f7;
         }
         #page-wrap {
-            max-width: 600px;
+            max-width: 900px;
             margin: 50px auto;
             padding: 20px;
             background-color: #fff;
@@ -31,8 +31,9 @@
             font-weight: bold;
             color: #555;
         }
+
         input[type="submit"] {
-            margin-top: 20px;
+            margin-top: 30px;
             width: 100%;
             background-color: #007bff;
             color: #fff;
