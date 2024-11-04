@@ -1,71 +1,157 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="true"%>
-
-<c:set var="user" value="${sessionScope.user}" />
-<c:set var="loginId" value="${user == null ? '' : user.id}" />
-<c:set var="loginOutLink" value="${user == null ? '/login/login' : '/login/logout'}" />
-
-<c:choose>
-    <c:when test="${user == null}">
-        <c:set var="loginOut" value="Login" />
-    </c:when>
-    <c:otherwise>
-        <c:set var="loginOut" value="${'Logout ('}${loginId}${')'}" />
-    </c:otherwise>
-</c:choose>
-
-
-
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>FITIZEN</title>
+    <style>
+        /* 기본 스타일 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-x: hidden;
+            font-family: 'Pretendard-Black';
+        }
 
 
+        /* 섹션 스타일 */
+        section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
+        /* 섹션 내부 콘텐츠 정렬 */
+        .section-content {
+            display: flex;
+            width: 80%;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* 텍스트와 이미지 스타일 */
+        .section-text {
+            flex: 1;
+            color: #000;
+            padding: 20px;
+
+        }
+
+        .section-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .section-1 {
+            /*background: url("../image/cardio.jpg") no-repeat center center;*/
+            background: linear-gradient(to right, #ff7e5f, #feb47b); /* 오렌지에서 밝은 노랑으로 */
+            background-size: cover;
+            background-attachment: scroll;
+        }
+
+        .section-2 {
+            /*background: url("../image/cycling.jpg") no-repeat center center;*/
+            background: linear-gradient(to right, #00c9ff, #92fe9d); /* 밝은 블루에서 민트 그린으로 */
+            background-size: cover;
+            background-attachment: scroll;
+        }
+
+        .section-3 {
+           /* background: url("../image/badminton.jpg") no-repeat center center;*/
+            background: linear-gradient(to right, #9d50bb, #6e482a); /* 진한 퍼플에서 딥 핑크로 */
+            background-size: cover;
+            background-attachment: scroll;
+        }
+        .section-4 {
+            /*background: url("../image/competing.jpg") no-repeat center center;*/
+            background: linear-gradient(to right, #f12711, #f5af19); /* 딥 레드에서 밝은 옐로우로 */
+            background-size: cover;
+            background-attachment: scroll;
+        }
+
+        .section-5 {
+            /*background: url("../image/fb.jpg") no-repeat center center;*/
+            background: linear-gradient(to right, #a8ff78, #78ffd6); /* 라임에서 네온 그린으로 */
+            background-size: cover;
+            background-attachment: scroll;
+        }
+
+        /* 반응형 스타일 */
+        @media (max-width: 768px) {
+            .section-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="content-wrapper">
-    <!-- 페이지 컨텐츠 -->
-    <div style="text-align:center">
-        <section>
-            <%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
-        <h1 style="line-height: 0.4; color:Black">
-            <p style="line-height: 0; font-size: 70%;">초보자들을 위한 운동 추천 사이트</p>
-            <p style="line-height: 0; font-size: 150%;">FITIZEN</p>
-        </section>
-        </h1>
-        <section>
-        <h4>
-           <p style="line-height: 100%; font-size: 90%;"> 자신에게 딱 맞는 운동을 찾아보세요</p>
-        </h4>
-        </section>
-        <section>
-        <h4>
-            <p style=" line-height: 100%;"> 근처의 운동시설을 찾아보세요</p>
-        </h4>
-        </section>
-        <section>
-        <h4>
-            <p style=" line-height: 100%;"> 다른 사용자들과 정보를 공유하고, 경쟁해보세요.</p>
-        </h4>
-        </section>
-    </div>
-    <section style="margin-top: 100px; margin-bottom: 0;">
-    <div class="extra" style="color: white;">
+    <%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
 
-        <%@ include file="carousel.jsp" %>
-</div>
-
-
+    <!-- 메인 섹션들 -->
+    <section class="section-1">
+        <div class="section-content">
+            <div class="section-text">
+                <h1 style="font-size: 400%">FITIZEN</h1>
+                <p style="font-size: 250%">초보자들을 위한 운동 추천 사이트</p>
+            </div>
+            <div class="section-image">
+                <img src="/image/stretching.jpg" alt="운동 이미지" style="width: 100%;">
+            </div>
+        </div>
     </section>
-    <footer>
-        <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
-    </footer>
 
+    <section class="section-2">
+        <div class="section-content">
+            <div class="section-text">
+                <h1 style="font-size: 400%">자신에게 딱 맞는 운동을 찾아보세요</h1>
+                <p style="font-size: 200%">어떤 운동을 해야 할지 고민이신가요?</p>
+                <p style="font-size: 200%">맞춤 운동 검사를 통해 내게 딱 맞는 운동을 확인해보세요</p>
+            </div>
+            <div class="section-image">
+                <img src="/image/thinking.jpg" alt="고민 이미지" style="width: 100%;">
+            </div>
+        </div>
+    </section>
+
+    <section class="section-3">
+        <div class="section-content">
+            <div class="section-text">
+                <h1 style="font-size: 400%">근처의 운동시설을 찾아보세요</h1>
+                <p style="font-size: 200%">운동을 어디서 해야할지 고민이신가요?</p>
+                <p style="font-size: 200%">근처에 있는 운동 시설을 찾아드립니다.</p>
+            </div>
+            <div class="section-image">
+                <img src="/image/map.jpg" alt="지도 사진" style="width: 100%;">
+            </div>
+        </div>
+    </section>
+
+    <section class="section-4">
+        <div class="section-content">
+            <div class="section-text">
+                <h1 style="font-size: 400%">다른 사용자들과 정보를 공유하고, 경쟁해보세요.</h1>
+                <p style="font-size: 200%">게시판에서 정보를 공유하고, 챌린지에서 다른 사용자들과 경쟁해보세요.</p>
+            </div>
+            <div class="section-image">
+                <img src="/image/competing.jpg" alt="경쟁 이미지" style="width: 100%;">
+            </div>
+        </div>
+    </section>
+
+    <!-- 카로셀 포함 섹션 -->
+    <section class="section-5" style="height: calc(100vh - 250px); padding-top: 50px;">
+        <div class="extra" style="color: white; justify-content: center;">
+            <%@ include file="carousel.jsp" %> <!-- 카로셀 파일 포함 -->
+        </div>
+    </section>
+
+    <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 
     <script>
         let currentSection = 0;
@@ -82,59 +168,7 @@
         });
     </script>
 </div>
+
+
 </body>
-
-<style>
- html {
-        height: auto;
-        margin: 0; /* 기본 여백 제거 */
-        overflow-x: hidden; /* 가로 스크롤 방지 */
-     display: flex;
-     flex-direction: column;
-     scroll-snap-type: y mandatory; /* 세로 스크롤에 맞춰 스냅 */
-    overflow-y: hidden;
-    }
- body {
-     justify-content: space-between; /* 푸터를 하단에 배치 */
-     min-height: 100vh; /* 화면 전체 높이를 채움 */
- }
- section {
-     height: 100vh; /* 각 섹션을 한 화면 크기로 설정 */
- }
-
-    .content-wrapper {
-        flex-grow: 1;
-        width: 100%;
-        background: url("../image/Fitizen_Background.jpg") no-repeat center center;
-        background-size: cover; /* 배경 이미지를 화면에 맞춤 */
-    }
-
-    body {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        min-height: 100vh;
-    }
-    h1 {
-        font-family: 'Pretendard-Black';
-        font-size : 400%;
-
-    }
-    h2 {
-        font-family: 'Pretendard-Black';
-        font-size : 600%;
-    }
-    h3 {
-        font-family: 'Pretendard-Black';
-        font-size : 200%;
-    }
-    h4 {
-        font-family: 'Pretendard-Black';
-        font-size : 300%;
-    }
- .extra {
-     padding-bottom: 200px; /* 푸터 높이만큼 패딩 추가 */
- }
-
-</style>
 </html>

@@ -15,7 +15,6 @@
 </c:choose>
 
 <!DOCTYPE html>
-<html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
