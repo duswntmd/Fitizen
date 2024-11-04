@@ -8,7 +8,7 @@
     <title>상점</title>
     <style>
         table {
-            width: 100%;
+            width: 1200px;
             border-collapse: collapse;
             margin: 20px 0;
             font-size: 18px;
@@ -16,7 +16,7 @@
         }
         th, td {
             padding: 12px;
-            border: 1px solid #ddd;
+
         }
         th {
             background-color: #f2f2f2;
@@ -49,13 +49,13 @@
     <div>
         <h1> 상점 페이지</h1>
     </div>
-
+    <a href="shop/addProduct">상품 추가하기</a>
     <div id="main">
 
         <table>
             <tr>
                 <th>이미지</th>
-                <th>상품 번호</th>  <!-- tr의 첫번째 자식 -->
+
                 <th>상품명</th>
                 <th>가격</th>
 
@@ -64,8 +64,7 @@
             <c:forEach var="pr" items="${list}" varStatus="status">
 
                 <tr>
-                    <td><img src="../image/${pr.primage}" style="max-width: 100px; max-height: 100px;"></td>
-                    <td> ${pr.prid}</td>
+                    <td><img src="../image/${pr.primage}" style="max-width: 200px; max-height: 200px;"></td>
                     <td> <a href= "shop/shopDetail/${pr.prid}">${pr.prname}</a></td>
                     <td> ${pr.prprice}</td>
 

@@ -5,6 +5,7 @@ import com.sku.fitizen.mapper.ShopMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class ShopService {
@@ -25,6 +26,7 @@ public class ShopService {
 
     public void addProduct(Product product) {
         shopMapper.insertProduct(product);
+
     }
 
     public void updateProduct(Product product) {
@@ -36,5 +38,14 @@ public class ShopService {
     }
     public void getpridByprname(String prname) {
         shopMapper.getPridByProductName(prname);
+    }
+    public String generateRandomString(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            sb.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return sb.toString();
     }
 }

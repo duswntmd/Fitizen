@@ -146,7 +146,7 @@
 
 <table>
     <thead>
-    <tr>
+    <tr style="text-align: center">
         <th>선택</th>
         <th></th>
         <th>상품명</th>

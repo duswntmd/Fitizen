@@ -7,7 +7,7 @@
 
     <!-- 목록 보기 -->
     <select id="getAllProducts" resultType="com.sku.fitizen.domain.Product">
-        SELECT * FROM product
+        SELECT * FROM product ORDER BY PRID DESC
     </select>
 
     <!-- 상세 보기 -->
@@ -15,13 +15,14 @@
         SELECT * FROM product WHERE prid = #{prid}
     </select>
 
-    <!-- 추가 -->
     <insert id="insertProduct" parameterType="com.sku.fitizen.domain.Product">
-        INSERT INTO product (prname, prprice, prdesc, primage)
-        VALUES (#{prname}, #{prprice}, #{prdesc}, #{primage})
-        <selectKey keyProperty="prid" resultType="int" order="AFTER">
-            SELECT LAST_INSERT_ID()
+        <!-- Oracle에서 시퀀스를 통해 prid 키 생성 -->
+        <selectKey keyProperty="prid" resultType="int" order="BEFORE">
+            SELECT product_seq.NEXTVAL AS prid FROM dual
         </selectKey>
+
+        INSERT INTO product (prid, prname, prprice, prdesc, primage)
+        VALUES (#{prid}, #{prname}, #{prprice}, #{prdesc}, #{primage})
     </insert>
 
     <!-- 상품명으로 prid 얻기 -->

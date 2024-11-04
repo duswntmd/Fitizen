@@ -31,7 +31,9 @@
                 </ul>
             </li>
             <li><a th:href="@{${session.user != null ? '/login/logout' : '/login/login'}}" th:text="${session.user != null ? 'Logout (' + session.user.id + ')' : 'Login'}"></a></li>
-            <li><a href="/register/add">회원가입</a></li>
+            <li th:if="${session.user == null}">
+                <a href="/register/add">회원가입</a>
+            </li>
             <li class="dropdown">
                 <div th:if="${session.user != null}">
                     <a href="/user/myPage">마이페이지</a>
