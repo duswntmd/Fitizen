@@ -1,5 +1,6 @@
 package com.sku.fitizen.config;
 
+import com.sku.fitizen.handler.CustomAuthenticationSuccessHandler;
 import jakarta.servlet.DispatcherType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +49,10 @@ public class SecurityConfig {
    }
 
    @Bean
-   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+   public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationSuccessHandler successHandler) throws Exception {
       log.info("접근제한 설정");
       http.authorizeHttpRequests(authz -> authz
-              .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
+              .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
               .requestMatchers("/", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
                                        "/findME", "findResult", "/exerciseDetail/**",
                                        "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**"
@@ -60,7 +61,6 @@ public class SecurityConfig {
               .requestMatchers("/register/updateuser").hasAnyRole("USER")
               .requestMatchers("/register/deleteuser").hasAnyRole("USER")
               .requestMatchers("/board/write").hasAnyRole("USER")
-              .requestMatchers("/board/search").hasAnyRole("USER")
               .requestMatchers("/board/search").hasAnyRole("USER")
               .requestMatchers("/board/view/**").hasAnyRole("USER")
               .requestMatchers("/board/edit/**").hasAnyRole("USER")
@@ -81,18 +81,21 @@ public class SecurityConfig {
       ).csrf( csrfConf -> csrfConf.disable()
       ).formLogin(loginConf -> loginConf.loginPage("/login/login")   // 컨트롤러 메소드와 지정된 위치에 로그인 폼이 준비되어야 함
               .loginProcessingUrl("/dologin")            // 컨트롤러 메소드 불필요, 폼 action과 일치해야 함
-                .failureUrl("/login/login")      // 로그인 실패시 이동 경로(컨트롤러 메소드 필요함)
+              .failureUrl("/login/login")      // 로그인 실패시 이동 경로(컨트롤러 메소드 필요함)
               //.failureForwardUrl("/login?error=Y")  //실패시 다른 곳으로 forward
-              .defaultSuccessUrl("/", true)
+              //.defaultSuccessUrl("/", true)
+              .successHandler(successHandler)
               .usernameParameter("id")  // 로그인 폼에서 이용자 ID 필드 이름, 디폴트는 username
               .passwordParameter("pwd")  // 로그인 폼에서 이용자 암호 필트 이름, 디폴트는 password
               .permitAll()
+
       ).logout(logoutConf -> logoutConf.logoutRequestMatcher(new AntPathRequestMatcher("/login/logout")) //로그아웃 요청시 URL
               .logoutSuccessUrl("/login/login")   // 로그아웃 성공시 다시 로그인폼으로 이동
               .invalidateHttpSession(true)
               .deleteCookies("JSESSIONID")
               .permitAll()
-
+      ) .sessionManagement(sessionManagement ->
+                      sessionManagement.sessionFixation().none() // 기존 세션 유지 (또는 .sessionFixation().migrateSession()으로 설정 가능)
       ).exceptionHandling(exConf -> exConf.accessDeniedPage("/noaccess")); // 권한이 없어 접속 거부할 때
 
       return http.build();

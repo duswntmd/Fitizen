@@ -1,7 +1,7 @@
 package com.sku.fitizen.controller;
 
-import com.sku.fitizen.domain.User;
 import com.sku.fitizen.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,17 +20,15 @@ public class IndexController {
     UserService userService;
 
     @GetMapping("")
-    public String index(@AuthenticationPrincipal UserDetails loggedInUser, Model model) {
+    public String index(@AuthenticationPrincipal UserDetails loggedInUser, HttpServletRequest request, Model model) {
         if (loggedInUser == null) {
             return "index";
         }
 
-        String username = loggedInUser.getUsername();
-
-        // 2. 데이터베이스에서 사용자 정보 조회
-        User user = userService.findUserByUsername(username);
-
-        model.addAttribute("user", user);
+//        String username = loggedInUser.getUsername();
+//        User user = userService.findUserByUsername(username);
+//
+//        model.addAttribute("user", user);
         return "index";
     }
 

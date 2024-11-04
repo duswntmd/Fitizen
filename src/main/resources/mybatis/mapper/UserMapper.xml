@@ -29,7 +29,7 @@
         SELECT username AS id, password AS pwd, name, email, birth,
                reg_date, up_date, is_trainer, enabled
         FROM users
-        WHERE username = #{username}
+        WHERE username = #{id}
     </select>
 
     <!-- 사용자 추가 -->

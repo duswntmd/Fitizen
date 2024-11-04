@@ -1,6 +1,7 @@
 package com.sku.fitizen.controller;
 
 import com.sku.fitizen.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +20,12 @@ public class LoginController {
     UserService userService;
 
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(HttpServletRequest request) {
+        String uri = request.getHeader("Referer");
+        // 이전 페이지가 로그인 페이지가 아닌 경우에만 설정
+        if (uri != null && !uri.contains("/login")) {
+            request.getSession().setAttribute("prevPage", uri);
+        }
         return "loginForm";
     }
 

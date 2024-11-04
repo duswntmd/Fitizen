@@ -42,6 +42,7 @@ public class RegisterController {
         return "registerForm"; // WEB-INF/views/registerForm.jsp
     }
 
+
     @PostMapping("/add")
     @ResponseBody
     public Map<String, Object> save(@Valid User user, BindingResult result) throws Exception {
