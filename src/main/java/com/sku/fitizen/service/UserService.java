@@ -168,4 +168,10 @@ public class UserService {
 //        return password;
 //    }
 
+    //  유저 아이디로 is trainer  Y or N 조회
+    public char isTrainer (String userId)
+    {
+        return userMapper.isTrainer(userId);
+    }
+
 }

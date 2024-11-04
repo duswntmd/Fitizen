@@ -85,7 +85,7 @@
         SELECT PASSWORD FROM USERS WHERE EMAIL = #{email} AND USERNAME = #{id}
     </select>
 
-    <!-- 사용자 포인트 적립 -->
+    <!-- 사용자 포인트 적립  2024.10.30: 수정할 예정-jaeho -->
     <update id="addPointsToUser" parameterType="map">
         UPDATE USERS
         SET POINTS = POINTS + #{points}
@@ -103,4 +103,11 @@
         SET PASSWORD = #{pwd}
         WHERE USERNAME = #{id}
     </update>
+
+    <!-- 유저가 트레이너인지 Y ,N 조회 -->
+    <select id="isTrainer">
+        SELECT IS_TRAINER
+        FROM USERS
+        WHERE USERNAME =#{userId}
+    </select>
 </mapper>

@@ -55,7 +55,13 @@ public class SecurityConfig {
               .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
               .requestMatchers("/", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
                                        "/findME", "findResult", "/exerciseDetail/**",
-                                       "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**"
+                                       "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
+                                       "/challenge/**",
+                                       "/ws/**", "/chat", "/tChat", "/alarm",
+                                       "/ai/chatBot/**"
+
+
+
 
               ).permitAll()
               .requestMatchers("/register/updateuser").hasAnyRole("USER")

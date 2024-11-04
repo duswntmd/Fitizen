@@ -46,4 +46,7 @@ public interface UserMapper {
 
     // 비밀번호 변경
     int changePwd(@Param("pwd") String pwd, @Param("id") String id);
+
+    // 유저가 트레이너인지 Y ,N 조회
+    char isTrainer(String userId);
 }

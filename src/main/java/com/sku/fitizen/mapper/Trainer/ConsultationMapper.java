@@ -1,5 +1,6 @@
 package com.sku.fitizen.mapper.Trainer;
 
+import com.sku.fitizen.Dto.ConsultLastMessageDTO;
 import com.sku.fitizen.domain.Trainer.Consultation;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -25,7 +26,8 @@ public interface ConsultationMapper {
     // 상담 취소
     int cancel(Consultation consult);
 
-
+    // 유저가 속한 상담 아이디 목록
+    List<Integer> getConsultIdsByUser(ConsultLastMessageDTO dto);
 
     // 트레이너
 

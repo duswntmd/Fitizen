@@ -1,8 +1,10 @@
 package com.sku.fitizen.service;
 
 
+import com.sku.fitizen.Dto.ConsultLastMessageDTO;
 import com.sku.fitizen.domain.Trainer.ConsultMessage;
 import com.sku.fitizen.domain.Trainer.Consultation;
+import com.sku.fitizen.domain.User;
 import com.sku.fitizen.domain.challenge.*;
 import com.sku.fitizen.mapper.ChatMapper;
 import com.sku.fitizen.service.Trainer.ConsultationService;
@@ -11,6 +13,7 @@ import com.sku.fitizen.service.challenge.ChallengeService;
 import com.sku.fitizen.service.challenge.ParticipationService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,12 +29,14 @@ public class ChatService {
 
     @Autowired
     ChatMapper mapper;
-
+    @Autowired
+    UserService userService;
     @Autowired
     ChallengeService cService;
     @Autowired
     ParticipationService pService;
-
+    @Autowired
+    TrainerService tService;
     @Autowired
     ConsultationService consultService;
 
@@ -48,9 +53,19 @@ public class ChatService {
     }
 
     public List<Map<Integer, Message>> getLastConsultMessage(String userId){
-      //  List<Integer> ids= consultService.getConsultIdsByUser(userId);
-      //  return  mapper.getLastConsultMessage(ids);
-        return  null;
+        ConsultLastMessageDTO dto = new ConsultLastMessageDTO();
+
+        if(userService.isTrainer(userId) =='Y')
+        {
+            int id = tService.getTrainerNoByUserId(userId);
+            dto.setTrainerId(id);
+        }else if(userService.isTrainer(userId) =='N') {
+            dto.setUserId(userId);
+        }
+
+
+        List<Integer> ids= consultService.getConsultIdsByUser(dto);
+        return  mapper.getLastConsultMessage(ids);
     }
 
 
