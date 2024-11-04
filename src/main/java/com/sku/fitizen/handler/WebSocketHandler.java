@@ -87,7 +87,6 @@ public class WebSocketHandler extends TextWebSocketHandler
                    for (ConsultMessage m : messages) {
                        JSONObject jsonMessage = new JSONObject();
                        jsonMessage.put("messageId", m.getMessageId());
-                       System.out.println(m.getMessageId());
                        jsonMessage.put("sender", m.getSenderId());
                        jsonMessage.put("msg", m.getMessage());
                        Integer seen = chatService.checkIfSeenConsult(m.getMessageId(),user.getId());

@@ -1,5 +1,6 @@
 package com.sku.fitizen.service.Trainer;
 
+import com.sku.fitizen.Dto.ConsultLastMessageDTO;
 import com.sku.fitizen.domain.Trainer.Consultation;
 import com.sku.fitizen.mapper.Trainer.ConsultationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +69,8 @@ public class ConsultationService {
         else return false;
     }
 
-    // 알림 마지막 메세지 : 유저가 속학 상담 아이디
+    // 알림 마지막 메세지 : 유저가 속학한 상담 아이디 목록
+    public List<Integer> getConsultIdsByUser(ConsultLastMessageDTO dto){
+      return  mapper.getConsultIdsByUser(dto);
+    }
 }

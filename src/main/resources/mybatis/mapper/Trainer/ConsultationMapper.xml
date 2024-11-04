@@ -90,4 +90,19 @@
     </update>
 
 
+    <!--유저가 속한 상담 아이디 목록-->
+    <select id="getConsultIdsByUser" parameterType="com.sku.fitizen.Dto.ConsultLastMessageDTO" resultType="int">
+        SELECT CONSULTID
+        FROM TRAINERCONSULTATION
+        <where>
+            <if test="userId != null">
+                USERID = #{userId}
+            </if>
+            <if test="trainerId != 0">
+                TRAINERNO = #{trainerId}
+            </if>
+        </where>
+    </select>
+
+
 </mapper>

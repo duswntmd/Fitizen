@@ -1,5 +1,6 @@
 package com.sku.fitizen.handler;
 
+import com.sku.fitizen.Dto.ConsultLastMessageDTO;
 import com.sku.fitizen.domain.User;
 import com.sku.fitizen.domain.challenge.Message;
 import com.sku.fitizen.service.ChatService;
@@ -48,7 +49,6 @@ public class AlarmWebSocketHandler extends TextWebSocketHandler {
         // 각각의 마지막 메세지
         List<Map<Integer, Message>> getLastMessage = chatService.getLastMessage(userId);
         List<Map<Integer,Message>> getLastConsultMessage= chatService.getLastConsultMessage(userId);
-
         int totalUnreadChallengeCount = 0;
         int totalUnreadConsultCount = 0;
 
@@ -71,6 +71,8 @@ public class AlarmWebSocketHandler extends TextWebSocketHandler {
         JSONArray lastMessagesArray = new JSONArray();
         getLastMessage.forEach(messageInfo -> lastMessagesArray.put(new JSONObject(messageInfo)));
 
+        JSONArray lastMessagesConsultArray = new JSONArray();
+        getLastConsultMessage.forEach(messageInfo -> lastMessagesConsultArray.put(new JSONObject(messageInfo)));
 
         // 결과 JSON 객체 생성 및 합산된 총 알림 개수 추가
         JSONObject responseJson = new JSONObject();
@@ -80,7 +82,7 @@ public class AlarmWebSocketHandler extends TextWebSocketHandler {
 
         responseJson.put("consultJsonArray", consultJsonArray);
         responseJson.put("totalUnreadConsultCount", totalUnreadConsultCount); // 전체 상담 알림 수
-
+        responseJson.put("lastMessagesConsult", lastMessagesConsultArray);
         // 사용자 세션에 알림 전송
         WebSocketSession session = alarmSessions.get(userId);
         if (session != null && session.isOpen()) {
