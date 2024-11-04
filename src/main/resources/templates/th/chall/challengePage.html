@@ -80,10 +80,7 @@
             <button class="category-button"  type="submit">검색</button>
         </form>
     </div>
-    <!--
-        <button class="category-button">전체보기</button>
-        <button class="category-button">마감</button>
-    -->
+
     <div class="category-buttons">
         <button class="category-button" id="0" onclick="filterChallenges(0)">전체보기</button>
         <div th:each="c : ${c}">
@@ -137,7 +134,9 @@
         </div>
     </div>
 </div>
-
+<div th:if="${user !=null}">
+<th:block th:replace="~{th/chatT :: chatT}"></th:block>
+</div>
 <th:block th:replace="~{th/footer :: footer}"></th:block>
 
 

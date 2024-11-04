@@ -6,6 +6,29 @@
 <mapper namespace="com.sku.fitizen.mapper.Trainer.ConsultationMapper">
 
 
+    <!-- 상담 엮인 유저 아이디 목록  유저, 트레이너 컬럼: userId-->
+    <select id="getUserIdsByConsultId" parameterType="int" resultType="string">
+        SELECT
+            TC.USERID AS "userId"
+        FROM
+            TRAINERCONSULTATION TC
+        WHERE
+            TC.CONSULTID = #{consultId}
+
+        UNION
+
+        SELECT
+            T.USERID AS "userId"
+        FROM
+            TRAINERCONSULTATION TC
+                JOIN
+            TRAINERS T ON TC.TRAINERNO = T.TRAINERNO
+        WHERE
+            TC.CONSULTID = #{consultId}
+
+    </select>
+
+
     <!--상담 신청-->
     <insert id="saveConsultation" parameterType="com.sku.fitizen.domain.Trainer.Consultation">
 
@@ -15,7 +38,7 @@
 
     <!--유저 :상담 신청에서-->
     <select id="existByUserId" parameterType="com.sku.fitizen.domain.Trainer.Consultation">
-        SELECT * FROM  TRAINERCONSULTATION WHERE  userId=#{userId} AND TRAINERNO =#{trainerId}
+        SELECT * FROM  TRAINERCONSULTATION WHERE  userId=#{userId} AND TRAINERNO =#{trainerNo}
     </select>
 
 
@@ -27,7 +50,7 @@
 
         FROM TRAINERCONSULTATION tc
                  JOIN TRAINERS t ON tc.TRAINERNO = t.TRAINERNO
-                 JOIN USERS u ON tc.USERID = u.ID
+                 JOIN USERS u ON tc.USERID = u.USERNAME
         WHERE t.TRAINERNO = #{trainerNo}
     </select>
 
@@ -43,7 +66,7 @@
 
         FROM TRAINERCONSULTATION tc
                  JOIN TRAINERS t ON tc.TRAINERNO = t.TRAINERNO
-                 JOIN USERS u ON t.USERID = u.ID
+                 JOIN USERS u ON t.USERID = u.USERNAME
         WHERE tc.USERID = #{userId}
     </select>
 
@@ -65,6 +88,21 @@
         UPDATE TRAINERCONSULTATION SET STATUS='REJECTED'
         WHERE TRAINERNO=#{trainerNo} AND USERID=#{userId}
     </update>
+
+
+    <!--유저가 속한 상담 아이디 목록-->
+    <select id="getConsultIdsByUser" parameterType="com.sku.fitizen.Dto.ConsultLastMessageDTO" resultType="int">
+        SELECT CONSULTID
+        FROM TRAINERCONSULTATION
+        <where>
+            <if test="userId != null">
+                USERID = #{userId}
+            </if>
+            <if test="trainerId != 0">
+                TRAINERNO = #{trainerId}
+            </if>
+        </where>
+    </select>
 
 
 </mapper>

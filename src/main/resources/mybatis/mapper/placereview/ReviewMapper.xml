@@ -25,7 +25,7 @@
     <select id="findReviewsByPlaceId" parameterType="long" resultMap="reviewResultMap">
         SELECT R.ID, R.CONTENT, R.RATING, R.USER_ID, R.PLACE_ID, R.CREATED_DATE, U.NAME AS userName
         FROM REVIEWS R
-        JOIN USERS U ON R.USER_ID = U.ID
+        JOIN USERS U ON R.USER_ID = U.USERNAME
         WHERE R.PLACE_ID = #{placeId}
     </select>
 

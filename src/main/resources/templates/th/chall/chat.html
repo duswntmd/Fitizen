@@ -23,9 +23,11 @@
 <div>
 </div>
 <div class="page-contents">
-
+    <div>
+        <th:block th:replace="~{th/header :: header}"></th:block>
+    </div>
 <div id="chatContainer">
-    <!-- textarea 대신 div 사용 -->
+
     <div id="chatBoxArea"></div>
     <div id="inputContainer">
         <input id="inputMsgBox" type="text" placeholder="Type a message...">
@@ -45,7 +47,7 @@
         var consultId='[[${consultId}]]';
         var roomId = '[[${roomId}]]';
         var host = "localhost";
-        g_webSocket = new WebSocket("ws://" + host + "/chat?" + "roomId=" + roomId +"&consultId="+consultId);
+        g_webSocket = new WebSocket("ws://" + "localhost" + "/chat?" + "roomId=" + roomId +"&consultId="+consultId);
 
         g_webSocket.onopen = function(message) {
             addLineToChatBox("챌린지 참여 채팅방입니다.");
@@ -194,7 +196,7 @@
         formData.append("writeDate",writeDate);
         formData.append("challengeId",roomId);
 
-        // 댓글 삭제 확인 메시지
+
         if (confirm("인증 게시물로 올릴건가요 ? \n" +
                     "제목은 임시 제목으로 올라가요! \n" +
                     "나중에 수정하세요! \n" +

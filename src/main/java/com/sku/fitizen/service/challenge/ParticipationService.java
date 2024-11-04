@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -13,6 +14,12 @@ public class ParticipationService
 {
     @Autowired
     ParticipationMapper mapper;
+
+    public  List<Integer> getChallengeIdsByUser(String userId)
+    {
+       return mapper.getChallengeIdsByUser(userId);
+    }
+
 
     // 한 유저가 특정 챌린지에 참여자인지
    public boolean  existUser(Participation parti)
@@ -32,5 +39,13 @@ public class ParticipationService
         return userIds;
     }
 
+  public Date getUserJoinDate  (String userId, int challengeId) {
 
+      Participation parti = new Participation();
+      parti.setUserId(userId);
+      parti.setChallengeId(challengeId);
+
+
+      return mapper.getUserJoinDate(parti);
+  }
 }

@@ -2,8 +2,11 @@ package com.sku.fitizen.service.challenge;
 
 import com.sku.fitizen.domain.challenge.Challenge;
 import com.sku.fitizen.domain.challenge.ChallCategory;
+import com.sku.fitizen.domain.challenge.Message;
 import com.sku.fitizen.domain.challenge.Participation;
+import com.sku.fitizen.mapper.ChatMapper;
 import com.sku.fitizen.mapper.challenge.ChallengeMapper;
+import com.sku.fitizen.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -22,6 +27,9 @@ public class ChallengeService {
 
     @Autowired
     ChallengeMapper mapper;
+
+    @Autowired
+    ChatMapper chatMapper;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -63,6 +71,17 @@ public class ChallengeService {
                 //챌린지 등록한 사람도 참여자 ->참여자 등록
                 Participation parti = new Participation(creatorId, challengeId);
                 int saved = mapper.addCreatorToParticipation(parti);
+
+                Message data= new Message();
+                data.setSenderId(parti.getUserId());
+                data.setSentAt(LocalDateTime.now());
+                data.setRoomId(parti.getChallengeId());
+                data.setMessage(parti.getUserId()+"(당신)은 주최자 입니다.!");
+                data.setImg("");
+                data.setUImg("");
+                chatMapper.saveChallMessage(data);
+
+
 
                 if (saved == 1) return true;
 
@@ -127,8 +146,27 @@ public class ChallengeService {
         public int participate(Participation parti)
         {
             int success =mapper.participate(parti);
-            if(success==1) mapper.increaseMembers(parti.getChallengeId());
-            return 1;
+            if(success==1)
+            {
+                mapper.increaseMembers(parti.getChallengeId());
+                /*
+                 *  챌린지 참여하면 -> 참여테이블 -> 채팅테이블  메세지 (" 참여하였씁니다 ")
+                 *  이유 : 메세지 동기화시 참여한 시점 부터 동기화 하기위해  ex(카톡 오픈챗 )
+                 *  이유2: 메세지 알림 : 안읽음 표시시 들어온 시점("참여하였습니다") 부터  안읽은 메세지가 몇개인지 처리하기 위해 메세지를 보냄
+                 */
+                Message obj= new Message();
+                obj.setSenderId(parti.getUserId());
+                obj.setSentAt(LocalDateTime.now());
+                obj.setRoomId(parti.getChallengeId());
+                obj.setMessage(parti.getUserId()+"님이 참여하였습니다.");
+                obj.setImg("");
+                obj.setUImg("");
+                chatMapper.saveChallMessage(obj);
+            }
+
+
+
+            return success;
         }
 
         //내가 참여한 챌린지
@@ -139,8 +177,6 @@ public class ChallengeService {
             return myChall;
         }
 
-
-
         //********스캐줄링 메서드********//
 
         // 챌린지 종료날짜가 오늘이 챌린지 번호 가져오기
@@ -148,6 +184,8 @@ public class ChallengeService {
         {
             return  mapper.getChallengesEndingToday();
         }
+
+
 
 
 }

@@ -3,70 +3,111 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.sku.fitizen.dao.UserMapper">
+<mapper namespace="com.sku.fitizen.mapper.UserMapper">
+
+    <resultMap id="userResultMap" type="com.sku.fitizen.domain.User">
+        <id property="id" column="USERNAME"/> <!-- USERNAME이 ID와 매핑 -->
+        <result property="pwd" column="PASSWORD"/> <!-- PASSWORD가 pwd와 매핑 -->
+        <result property="name" column="NAME"/>
+        <result property="email" column="EMAIL"/>
+        <result property="birth" column="BIRTH"/>
+        <result property="reg_date" column="REG_DATE"/>
+        <result property="up_date" column="UP_DATE"/>
+        <result property="is_trainer" column="IS_TRAINER"/>
+        <result property="authority" column="AUTHORITY"/>
+        <result property="enabled" column="ENABLED"/>
+        <result property="workPlaceName" column="WORKPLACENAME"/>
+        <result property="zipCode" column="ZIPCODE"/>
+        <result property="location" column="LOCATION"/>
+        <result property="locationDetail" column="LOCATIONDETAIL"/>
+        <result property="workYears" column="WORKYEARS"/>
+        <result property="awards" column="AWARDS"/>
+    </resultMap>
+
+    <!-- 사용자 정보 조회 쿼리 -->
+    <select id="selectUserByUsername" resultType="com.sku.fitizen.domain.User">
+        SELECT username AS id, password AS pwd, name, email, birth,
+               reg_date, up_date, is_trainer, enabled
+        FROM users
+        WHERE username = #{id}
+    </select>
 
     <!-- 사용자 추가 -->
-    <insert id="insertUser" parameterType="User">
-        INSERT INTO USERS (ID, PWD, NAME, EMAIL, BIRTH, REG_DATE, UP_DATE,IS_TRAINER)
-        VALUES (#{id}, #{pwd}, #{name}, #{email}, #{birth}, SYSDATE, NULL,#{is_trainer})
+    <insert id="insertUser" parameterType="com.sku.fitizen.domain.User">
+        INSERT INTO USERS (USERNAME, PASSWORD, NAME, EMAIL, BIRTH, REG_DATE, UP_DATE, IS_TRAINER, ENABLED)
+        VALUES (#{id}, #{pwd}, #{name}, #{email}, #{birth}, SYSDATE, NULL, #{is_trainer}, #{enabled})
+    </insert>
+
+    <insert id="insertUserRole" parameterType="User">
+        INSERT INTO AUTHORITIES (USERNAME, AUTHORITY)
+        VALUES (#{id},  #{authority})
     </insert>
 
     <!-- 트레이너 추가 -->
-    <insert id="insertTrainer" parameterType="User">
-        INSERT INTO TRAINERS (TRAINERNO,USERID,WORKPLACENAME,LOCATION,WORKYEARS,ZIPCODE,LOCATIONDETAIL)
-        VALUES (TRAINER_SEQ.nextval,#{id}, #{workPlaceName},#{location},#{workYears},#{zipCode},#{locationDetail})
+    <insert id="insertTrainer" parameterType="com.sku.fitizen.domain.User">
+        INSERT INTO TRAINERS (TRAINERNO, USERID, WORKPLACENAME, LOCATION, WORKYEARS, ZIPCODE, LOCATIONDETAIL)
+        VALUES (TRAINER_SEQ.nextval, #{id}, #{workPlaceName}, #{location}, #{workYears}, #{zipCode}, #{locationDetail})
     </insert>
 
-
     <!-- 사용자 목록 찾기 (로그인 등) -->
-    <select id="selectUser" parameterType="String" resultType="User">
-        SELECT * FROM USERS WHERE ID = #{id}
+    <select id="selectUser" parameterType="String" resultMap="userResultMap">
+        SELECT * FROM USERS WHERE USERNAME = #{id}
     </select>
 
     <!-- 사용자 수정 -->
-    <update id="updateUser" parameterType="User">
+    <update id="updateUser" parameterType="com.sku.fitizen.domain.User">
         UPDATE USERS
-        SET PWD = #{pwd}, NAME = #{name}, EMAIL = #{email}, BIRTH = #{birth}, UP_DATE = SYSDATE
-        WHERE ID = #{id}
+        SET PASSWORD = #{pwd}, NAME = #{name}, EMAIL = #{email}, BIRTH = #{birth}, UP_DATE = SYSDATE
+        WHERE USERNAME = #{id}
     </update>
 
     <!-- 사용자 삭제 -->
     <delete id="deleteUser" parameterType="map">
-        DELETE FROM USERS WHERE ID = #{id} AND NAME = #{name} AND PWD = #{pwd}
+        DELETE FROM USERS WHERE USERNAME = #{id} AND NAME = #{name}
     </delete>
 
-    <!-- 중복체크 -->
+    <delete id="deleteUserAuthorities" parameterType="string">
+        DELETE FROM AUTHORITIES WHERE USERNAME = #{id}
+    </delete>
+
+    <!-- 중복 체크 -->
     <select id="isIdDuplicate" parameterType="String" resultType="int">
-        SELECT COUNT(*) FROM USERS WHERE ID = #{id}
+        SELECT COUNT(*) FROM USERS WHERE USERNAME = #{id}
     </select>
 
     <!-- 사용자 아이디 찾기 -->
     <select id="findIdByEmailAndName" parameterType="map" resultType="String">
-        SELECT ID FROM USERS WHERE EMAIL = #{email} AND NAME = #{name}
+        SELECT USERNAME FROM USERS WHERE EMAIL = #{email} AND NAME = #{name}
     </select>
 
     <!-- 사용자 비밀번호 찾기 -->
     <select id="findPasswordByEmailAndId" parameterType="map" resultType="String">
-        SELECT PWD FROM USERS WHERE EMAIL = #{email} AND ID = #{id}
+        SELECT PASSWORD FROM USERS WHERE EMAIL = #{email} AND USERNAME = #{id}
     </select>
 
-
-
-    <!--사용자 포인트 적립 (챌린지)-->
-    <!-- 사용자 포인트 적립 -->
+    <!-- 사용자 포인트 적립  2024.10.30: 수정할 예정-jaeho -->
     <update id="addPointsToUser" parameterType="map">
         UPDATE USERS
         SET POINTS = POINTS + #{points}
-        WHERE ID = #{userId}
+        WHERE USERNAME = #{userId}
     </update>
 
-
-    <!-- 아이디랑 이름 써서 이메일전송, 비밀번호 변경에 사용-->
-    <select id="findEmailByIdAndName" parameterType="User" resultType="String">
-        SELECT EMAIL FROM USERS WHERE ID= #{id} AND NAME=#{name}
+    <!-- 이메일 찾기 -->
+    <select id="findEmailByIdAndName" parameterType="com.sku.fitizen.domain.User" resultType="String">
+        SELECT EMAIL FROM USERS WHERE USERNAME = #{id} AND NAME = #{name}
     </select>
 
-    <update id="changePwd" parameterType="map" >
-        update USERS set pwd=#{pwd} where id=#{id}
+    <!-- 비밀번호 변경 -->
+    <update id="changePwd" parameterType="map">
+        UPDATE USERS
+        SET PASSWORD = #{pwd}
+        WHERE USERNAME = #{id}
     </update>
+
+    <!-- 유저가 트레이너인지 Y ,N 조회 -->
+    <select id="isTrainer">
+        SELECT IS_TRAINER
+        FROM USERS
+        WHERE USERNAME =#{userId}
+    </select>
 </mapper>

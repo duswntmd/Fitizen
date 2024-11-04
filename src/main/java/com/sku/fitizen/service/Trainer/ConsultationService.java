@@ -1,5 +1,6 @@
 package com.sku.fitizen.service.Trainer;
 
+import com.sku.fitizen.Dto.ConsultLastMessageDTO;
 import com.sku.fitizen.domain.Trainer.Consultation;
 import com.sku.fitizen.mapper.Trainer.ConsultationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,23 @@ public class ConsultationService {
        else return false;
     }
 
-
+    // 상담 아이디로 유저 ,트레이너 아이디 한번에 가져오기  List<String>
+    public List<String> getUserIdsByConsultId( int consultId)
+    {
+        return mapper.getUserIdsByConsultId(consultId);
+    }
 
 
 
     // 이미 신청한 상담인지
-    public int existByUserId(Consultation consult) {return mapper.existByUserId(consult);}
+    public Integer existByUserId(Consultation consult) {
 
+
+       Integer result =mapper.existByUserId(consult);
+
+        return (result != null) ? result : 0;
+
+    }
 
     // 트레이너에게 신청된 상담 목록 조회
     public List<Map<String, Object>> getMyUsers(int trainerNo) {return mapper.getMyUsers(trainerNo);}
@@ -56,5 +67,10 @@ public class ConsultationService {
     {
         if(mapper.reject(consult)>0) return true;
         else return false;
+    }
+
+    // 알림 마지막 메세지 : 유저가 속학한 상담 아이디 목록
+    public List<Integer> getConsultIdsByUser(ConsultLastMessageDTO dto){
+      return  mapper.getConsultIdsByUser(dto);
     }
 }

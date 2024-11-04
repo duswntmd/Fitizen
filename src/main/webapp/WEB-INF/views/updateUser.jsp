@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
+<%@ include file="header.jsp" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -14,7 +14,7 @@
             background-color: #f7f7f7;
         }
         #page-wrap {
-            max-width: 600px;
+            max-width: 900px;
             margin: 50px auto;
             padding: 20px;
             background-color: #fff;
@@ -31,8 +31,9 @@
             font-weight: bold;
             color: #555;
         }
+
         input[type="submit"] {
-            margin-top: 20px;
+            margin-top: 30px;
             width: 100%;
             background-color: #007bff;
             color: #fff;
@@ -47,7 +48,7 @@
 </head>
 <body>
 <div id="page-wrap">
-    <form action="${pageContext.request.contextPath}/register/updateuser" method="post">
+    <form id="updateUserForm">
         <h2>사용자 정보 수정</h2>
         <c:if test="${not empty message}">
             <div class="alert alert-success">${message}</div>
@@ -61,8 +62,8 @@
             <span class="form-control-plaintext">${user.id}</span>
         </div>
         <div class="mb-3">
-            <label>비밀번호:</label>
-            <input type="password" class="form-control" name="pwd" value="${user.pwd}" />
+            <label>비밀번호 (변경하려면 입력하세요):</label>
+            <input type="password" class="form-control" name="pwd" placeholder="비밀번호 변경 시 입력" />
         </div>
         <div class="mb-3">
             <label>이름:</label>
@@ -83,13 +84,30 @@
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- AJAX 요청 -->
 <script>
-    let msg = "${msg}";
-    if(msg=="WRT_OK") {
-        alert("회원 정보가 성공적으로 수정되었습니다.");
-        window.location.href ="/";
-    }
+    document.getElementById("updateUserForm").onsubmit = function(event) {
+        event.preventDefault();
+        let formData = new FormData(this);
+        fetch("/register/updateuser", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert(data.message);
+                    window.location.href = "/";
+                } else {
+                    alert("오류: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("사용자 정보 수정 중 오류가 발생했습니다.");
+            });
+    };
 </script>
-<%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
+<%@ include file="footer.jsp" %>
 </body>
 </html>

@@ -115,6 +115,7 @@ public class BoardController {
     @GetMapping("/view/{bno}")
     public String view(@PathVariable("bno") Long bno, HttpServletRequest request, HttpServletResponse response,
                        @SessionAttribute(value = "user", required = false) User user, Model model) {
+
         // 쿠키 확인
         Cookie[] cookies = request.getCookies();
         boolean hasViewed = false;

@@ -26,8 +26,8 @@
     <!-- 유저아이디의 트레이너 번호 -->
     <select id="getTrainerNoByUserId" parameterType="String" resultType="Integer">
         SELECT  t.TRAINERNO
-        FROM  TRAINERS t JOIN USERS u ON u.ID =t.USERID
-        WHERE u.id = #{userId}
+        FROM  TRAINERS t JOIN USERS u ON u.USERNAME =t.USERID
+        WHERE u.USERNAME = #{userId}
     </select>
 
 

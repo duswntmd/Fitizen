@@ -28,6 +28,7 @@ public class ConsultationController {
     @ResponseBody
     public Map<String,Object> consultation(@SessionAttribute(value = "user" ,required = false) User user, @PathVariable int trainerNo)
     {
+
         Map<String, Object> result = new HashMap<>();
 
         if (user == null) {

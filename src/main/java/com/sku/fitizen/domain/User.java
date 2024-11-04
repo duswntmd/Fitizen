@@ -17,6 +17,8 @@ public class User {
     private Date reg_date;
     private Date up_date;
     private String is_trainer; // Y,N(기본값)
+    private String authority;
+    private int enabled;
 
 
     private String workPlaceName; // 근무지
