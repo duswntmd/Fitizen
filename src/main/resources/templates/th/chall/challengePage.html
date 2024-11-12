@@ -16,13 +16,62 @@
     <th:block th:replace="~{th/chall/challCarousel :: challCarousel}"></th:block>
 </div>
 <div class="challenge-banner">
-    이번달<span> 공식 </span>챌린지
+    FITIZEN<span> 공식 </span>챌린지
     <img src="/Assets/check.png" alt="아이콘" style="width: 30px; height: 30px; vertical-align: middle;">
+
 </div>
+<div class="container">
+        <div class="challenge-list">
+            <!-- Thymeleaf Loop for Challenge Items -->
+            <div th:each="c : ${adminChallenge}" class="challenge-box">
+                <div class="image-placeholder">
+                    <img th:src="@{'/files/challengeCover/' + ${c.uCoverImg}}" alt="챌린지 이미지">
+                    <div class="remaining-time" th:attr="data-start-date=${c.startDate}">
+                        <span class="time"></span>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="title">[[${c.title}]]</div>
+                    <div class="user-info">
+                        <img alt="프로필 이미지">
+                        <div class="user-id">[[${c.creatorId}]]</div>
+                    </div>
+                    <div class="date-range" th:text="'기간: ' + ${c.startDate} + ' ~ ' + ${c.endDate}"></div>
+                    <div class="details">
+                        <div class="participant-info">
+                            참여인원수: <span class="current-participants">[[${c.members}]]</span> /
+                            <span class="limit-user" th:text="${c.limitUser}"></span>
+                        </div>
+                        <div th:if="${userChall.contains(c)}">
+                            <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여중</a>
+                        </div>
+                        <div th:if="${userChall.contains(c) == false}">
+                            <div th:if="${c.members == c.limitUser or c.startDate.isBefore(currentDate)}">
+                                <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여 불가</a>
+                            </div>
+                            <div th:if="${c.members < c.limitUser and !c.startDate.isBefore(currentDate)}">
+                                <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여하기</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 참여 조건 포인트 영역 -->
+                    <div th:if="${c.entryPoint != 0}" class="entry-point">
+                        <span class="point-text">참여 조건:</span>
+                        <span class="point-value">[[${c.entryPoint}]]</span>
+                        <span class="point-label">POINT</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 <div class="challenge-banner">
     <span>인기 </span>챌린지 TOP3
 </div>
 <div class="container">
+
+
     <div class="challenge-list">
         <!-- Thymeleaf Loop for Challenge Items -->
         <div th:each="c : ${top3}" class="challenge-box">
@@ -32,7 +81,7 @@
             <div class="image-placeholder">
                 <img th:src="@{'/files/challengeCover/' + ${c.uCoverImg}}" alt="챌린지 이미지">
                 <div class="remaining-time" th:attr="data-start-date=${c.startDate}">
-                    마감: <span class="time"></span>
+                    <span class="time"></span>
                 </div>
             </div>
             <div class="content">
@@ -51,13 +100,22 @@
                         <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여중</a>
                     </div>
                     <div th:if="${userChall.contains(c) == false}">
-                        <div th:if="${c.members == c.limitUser}">
+                        <div th:if="${c.members == c.limitUser or c.startDate.isBefore(currentDate)}">
                             <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여 불가</a>
                         </div>
-                        <div th:if="${c.members < c.limitUser}">
+
+                        <div th:if="${c.members < c.limitUser and !c.startDate.isBefore(currentDate)}">
                             <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여하기</a>
                         </div>
                     </div>
+                </div>
+                <div th:if="${c.entryPoint != 0}" class="entry-point">
+                    <span class="point-text">참여 조건:</span>
+                    <span class="point-value">[[${c.entryPoint}]]</span>
+                    <span class="point-label">POINT</span>
+                </div>
+                <div th:if="${c.entryPoint == 0}" class="entry-point">
+                    <span class="point-text">비공식 챌린지</span>
                 </div>
             </div>
         </div>
@@ -92,8 +150,8 @@
 </div>
 
 <div class="container">
+
     <div class="challenge-list">
-        <!-- 목록이 비어 있을 경우 메시지 표시 -->
         <div th:if="${isEmpty}" class="empty-message">
             <p class="message-text">등록된 챌린지가 없습니다.</p>
             <p class="encouragement-text">첫 번째로 등록해서 사람들과 함께해요!</p>
@@ -103,7 +161,7 @@
             <div class="image-placeholder">
                 <img th:src="@{'/files/challengeCover/' + ${c.uCoverImg}}" alt="챌린지 이미지">
                 <div class="remaining-time" th:attr="data-start-date=${c.startDate}">
-                    마감: <span class="time"></span>
+                    <span class="time"></span>
                 </div>
             </div>
             <div class="content">
@@ -122,20 +180,30 @@
                         <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여중</a>
                     </div>
                     <div th:if="${userChall.contains(c) == false}">
-                        <div th:if="${c.members == c.limitUser}">
+                        <div th:if="${c.members == c.limitUser or c.startDate.isBefore(currentDate)}">
                             <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여 불가</a>
                         </div>
-                        <div th:if="${c.members < c.limitUser}">
+                        <div th:if="${c.members < c.limitUser and !c.startDate.isBefore(currentDate)}">
                             <a class="button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">참여하기</a>
                         </div>
                     </div>
                 </div>
+                <div th:if="${c.entryPoint != 0}" class="entry-point">
+                    <span class="point-text">참여 조건:</span>
+                    <span class="point-value">[[${c.entryPoint}]]</span>
+                    <span class="point-label">POINT</span>
+                </div>
+                <div th:if="${c.entryPoint == 0}" class="entry-point">
+                    <span class="point-text">비공식 챌린지</span>
+                </div>
+
+            </div>
             </div>
         </div>
     </div>
 </div>
 <div th:if="${user !=null}">
-<th:block th:replace="~{th/chatT :: chatT}"></th:block>
+<th:block th:replace="~{th/chatUsers :: chatUsers}"></th:block>
 </div>
 <th:block th:replace="~{th/footer :: footer}"></th:block>
 
@@ -162,7 +230,10 @@
                     const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000); // 초 계산 추가
 
-                    remainingTimeElement.innerHTML = `${days}일 ${hours}시간 ${minutes}분 ${seconds}초 전`;
+                    remainingTimeElement.innerHTML = `참여기한:${days}일 ${hours}시간 ${minutes}분 ${seconds}초 전`;
+                }else
+                {
+                    remainingTimeElement.innerHTML = `모집 종료`;
                 }
             });
         }

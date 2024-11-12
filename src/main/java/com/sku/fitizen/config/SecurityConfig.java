@@ -65,13 +65,14 @@ public class SecurityConfig {
               .requestMatchers("/", "/favicon.ico", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
                       "/findME", "findResult", "/exerciseDetail/**",
                       "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
-                      "/challenge/**", "/mail/**",
-                      "/ws/**", "/chat", "/tChat", "/alarm",
-                      "/ai/chatBot/**", "/shop/**","/ai/predict_result","/ai/predict_exercise","/ai/aiResult"
+                       "/mail/**",
+                      "/ai/chatBot/**", "/shop/**","/ai/predict_result","/ai/predict_exercise","/ai/aiResult",
+                      "/trainer/**","/challenge","/challenge/detail/*","/challenge/search","/proofShot/*","/challenge/detail/*"
 
 
 
-              ).permitAll()
+
+                      ).permitAll()
               .requestMatchers("/cart/**").hasAnyRole("USER")
               .requestMatchers("/register/updateuser").hasAnyRole("USER")
               .requestMatchers("/register/deleteuser").hasAnyRole("USER")
@@ -91,7 +92,12 @@ public class SecurityConfig {
               .requestMatchers("/kakao/addReview/**").hasAnyRole("USER")
               .requestMatchers("/kakao/editReview/**").hasAnyRole("USER")
               .requestMatchers("/kakao/deleteReview").hasAnyRole("USER")
-
+              .requestMatchers("/ws/**","/chat", "/tChat", "/alarm").hasAnyRole("USER","ADMIN")
+              .requestMatchers("/consultation").hasAnyRole("USER","ADMIN")
+              .requestMatchers("/challenge/add","/challenge/save","/challenge/participate/*","/challenge/participate",
+                      "challenge/myChall","/chellComment/**").hasAnyRole("USER","ADMIN")
+              .requestMatchers("/proofComment/**","proofShot/addProofShotForm/*","proofShot/add/","proofShot/addChatProof","proofShot/verify").hasAnyRole("USER","ADMIN")
+              .requestMatchers("pay/*" ,"verify/**","/savePayment/*").hasAnyRole("USER","ADMIN")
               //.anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
               .anyRequest().denyAll()
       ).csrf(csrfConf -> csrfConf.disable()

@@ -1,10 +1,12 @@
 package com.sku.fitizen.service.challenge;
 
+import com.sku.fitizen.domain.SpendingPoint;
 import com.sku.fitizen.domain.challenge.Challenge;
 import com.sku.fitizen.domain.challenge.ChallCategory;
 import com.sku.fitizen.domain.challenge.Message;
 import com.sku.fitizen.domain.challenge.Participation;
 import com.sku.fitizen.mapper.ChatMapper;
+import com.sku.fitizen.mapper.PaymentMapper;
 import com.sku.fitizen.mapper.challenge.ChallengeMapper;
 import com.sku.fitizen.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class ChallengeService {
 
     @Autowired
     ChallengeMapper mapper;
+
+    @Autowired
+    PaymentMapper paymentMapper;
 
     @Autowired
     ChatMapper chatMapper;
@@ -69,7 +74,7 @@ public class ChallengeService {
 
                 /* *****참여자 등록***** */
                 //챌린지 등록한 사람도 참여자 ->참여자 등록
-                Participation parti = new Participation(creatorId, challengeId);
+                Participation parti = new Participation(challengeId,creatorId);
                 int saved = mapper.addCreatorToParticipation(parti);
 
                 Message data= new Message();
@@ -126,6 +131,12 @@ public class ChallengeService {
             return mapper.getTop3Challenge();
         }
 
+        // 관리자 챌린지 : 공식 챌린지 목록
+        public List<Challenge> getChallengesByAdmin()
+        {
+           return mapper.getChallengesByAdmin();
+        }
+
         //챌린지 전체 목록
         public List<Challenge> getChallengeList()
         {
@@ -145,6 +156,7 @@ public class ChallengeService {
         @Transactional
         public int participate(Participation parti)
         {
+
             int success =mapper.participate(parti);
             if(success==1)
             {
@@ -162,9 +174,12 @@ public class ChallengeService {
                 obj.setImg("");
                 obj.setUImg("");
                 chatMapper.saveChallMessage(obj);
-            }
+                if(parti.getSpentPoint()>0)
+                {
+                    paymentMapper.saveSpendingPoint(new SpendingPoint(parti.getUserId(),parti.getSpentPoint()));
 
-
+                }
+            }else return success;
 
             return success;
         }

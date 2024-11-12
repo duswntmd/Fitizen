@@ -22,6 +22,9 @@ public interface ChallengeMapper {
   // top3 챌린지
   List<Challenge> getTop3Challenge();
 
+  // 관리자 챌린지: 공식 챌린지 목록
+  List<Challenge> getChallengesByAdmin();
+
   // 챌린지 전체 목록    카테고리별- 챌린지 리스트
   List<Challenge> getChallengeList();
 

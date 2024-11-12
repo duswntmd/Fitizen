@@ -69,11 +69,22 @@ public class AlarmWebSocketHandler extends TextWebSocketHandler {
         }
 
         JSONArray lastMessagesArray = new JSONArray();
-        getLastMessage.forEach(messageInfo -> lastMessagesArray.put(new JSONObject(messageInfo)));
+        if (getLastMessage != null) {  // getLastMessage 리스트가 null인지 확인
+            getLastMessage.forEach(messageInfo -> {
+                if (messageInfo != null) {  // 개별 항목이 null인지 확인
+                    lastMessagesArray.put(new JSONObject(messageInfo));
+                }
+            });
+        }
 
         JSONArray lastMessagesConsultArray = new JSONArray();
-        getLastConsultMessage.forEach(messageInfo -> lastMessagesConsultArray.put(new JSONObject(messageInfo)));
-
+        if (getLastConsultMessage != null) {  // getLastConsultMessage 리스트가 null인지 확인
+            getLastConsultMessage.forEach(messageInfo -> {
+                if (messageInfo != null) {  // 개별 항목이 null인지 확인
+                    lastMessagesConsultArray.put(new JSONObject(messageInfo));
+                }
+            });
+        }
         // 결과 JSON 객체 생성 및 합산된 총 알림 개수 추가
         JSONObject responseJson = new JSONObject();
         responseJson.put("challengeJsonArray", challengeJsonArray);      // 개별 챌린지별 알림

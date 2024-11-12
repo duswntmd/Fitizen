@@ -11,10 +11,20 @@
             SELECT CHALL_SEQ.NEXTVAL FROM DUAL
         </selectKey>
         <!-- 등록 -->
-        INSERT INTO challenge (challengeId, TITLE, COVERIMG,UCOVERIMG, STARTDATE, ENDDATE, LIMITUSER, CONTENT, CREATORID,WEEK,PROOFCOUNT,PROOFDAYS,CATEGORYID)
-        VALUES (#{challengeId}, #{title},#{coverImg},#{uCoverImg}, #{startDate}, #{endDate}, #{limitUser}, #{content}, #{creatorId},#{week},#{proofCount},#{proofDays},#{categoryId})
+        INSERT INTO challenge (challengeId, TITLE, COVERIMG,UCOVERIMG, STARTDATE, ENDDATE, LIMITUSER, CONTENT, CREATORID,WEEK,PROOFCOUNT,PROOFDAYS,CATEGORYID,ENTRYPOINT)
+        VALUES (#{challengeId}, #{title},#{coverImg},#{uCoverImg}, #{startDate}, #{endDate}, #{limitUser}, #{content}, #{creatorId},#{week},#{proofCount},#{proofDays},#{categoryId},#{entryPoint})
     </insert>
 
+    <!--관리자 챌린지 : 공식 챌린지 -->
+    <select id="getChallengesByAdmin" resultType="com.sku.fitizen.domain.challenge.Challenge">
+        SELECT *
+        FROM challenge c
+        WHERE c.creatorId IN (
+            SELECT username
+            FROM authorities
+            WHERE authority = 'ROLE_ADMIN'
+        )
+    </select>
 
     <!--챌린지 카테고리들-->
     <select id="getChallCategories" resultType="com.sku.fitizen.domain.challenge.ChallCategory">
@@ -128,14 +138,8 @@
     <!--챌린지 참여 등록  조건: 하나의 챌린지에 중복 참여 불가 -->
 
     <insert id="participate" parameterType="com.sku.fitizen.domain.challenge.Participation">
-        INSERT INTO  participation (userid, challengeid,JOINDATE)
-        SELECT #{userId} ,#{challengeId},SYSDATE
-        FROM DUAL
-        WHERE NOT EXISTS(
-                SELECT 1
-                FROM participation
-                WHERE challengeId =#{challengeId} AND userId= #{userId}
-            )
+        INSERT INTO  participation (USERID, CHALLENGEID, JOINDATE)
+        VALUES (#{userId} ,#{challengeId},SYSDATE)
     </insert>
 
     <!--챌린지 참여자 수 증가  -->

@@ -40,11 +40,13 @@ public class Challenge {
 
     private int  categoryId;
 
+    private int entryPoint;
+
     @Override
     public String toString() {
         return "Challenge [challengeId=" + challengeId + ", title=" + title + ", startDate="+ startDate +
                 ", endDate="+ endDate + ", limitUser="+limitUser+", creatorId=" + creatorId + ", content="
                 + content + ", members="+ ",week=" + week + ", poofCount="
-                + proofCount + ", proofDays="+proofDays + ", categoryId=" + categoryId + "]";
+                + proofCount + ", proofDays="+proofDays + ", categoryId=" + categoryId + "point="+entryPoint+"]";
     }
 }

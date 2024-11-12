@@ -82,7 +82,7 @@ public class WebSocketHandler extends TextWebSocketHandler
         if(StringUtils.hasText(consultId)) {
 
                List<ConsultMessage> messages= chatService.getConsultMessages(consultId);
-               if(messages!=null && messages.size()>0)
+               if(messages!=null && !messages.isEmpty())
                {
                    for (ConsultMessage m : messages) {
                        JSONObject jsonMessage = new JSONObject();
@@ -107,6 +107,7 @@ public class WebSocketHandler extends TextWebSocketHandler
         // 챌린지 채팅방 메세지 백업
         if(StringUtils.hasText(roomId)) {
         boolean exists = chatService.checkParticipationExists(user.getId(), roomId);
+        System.out.println(exists+"확인");
         if (exists) {
             List<Message> messages = chatService.getMessages(user.getId(), roomId);
             for (Message m : messages) {

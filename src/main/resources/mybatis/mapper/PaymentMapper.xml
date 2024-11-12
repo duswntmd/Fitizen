@@ -11,7 +11,8 @@
             userId,
             impUid,
             merchantUid,
-            amount,
+            PAID_AMOUNT,
+            POINT,
             paidAt
         ) VALUES (
                      PAYMENT_SEQ.nextval,
@@ -19,6 +20,7 @@
                      #{impUid},
                      #{merchantUid},
                      #{amount},
+                     #{point},
                      SYSDATE
                  )
     </insert>
@@ -33,18 +35,19 @@
     </select>
 
 
+    <!--사용 포인트 기록 -->
+    <select id="saveSpendingPoint" parameterType="com.sku.fitizen.domain.SpendingPoint">
+        INSERT  INTO  SPENDINGPOINT VALUES (SPENT_SEQ.nextval,#{userId},#{spendingPoint},SYSDATE)
+    </select>
+
     <!--개인 보유 잔액(포인트)-->
     <select id="getBalanceByUserId" parameterType="String" resultType="Integer">
         SELECT
-            NVL((SELECT SUM(AMOUNT) FROM PAYMENT WHERE USERID = #{userId}), 0)
-                - NVL((SELECT SUM(SPENT_AMOUNT) FROM SPENDINGPOINT WHERE USERID = #{userId}), 0)
+            NVL((SELECT SUM(PAYMENT.POINT) FROM PAYMENT WHERE USERID = #{userId}), 0)
+                - NVL((SELECT SUM(SPENT_POINT) FROM SPENDINGPOINT WHERE USERID = #{userId}), 0)
                 AS balance
         FROM DUAL
     </select>
-
-
-
-
 
 
 

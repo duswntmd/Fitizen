@@ -2,6 +2,7 @@ package com.sku.fitizen.mapper;
 
 
 import com.sku.fitizen.domain.Payment;
+import com.sku.fitizen.domain.SpendingPoint;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -19,5 +20,7 @@ public interface PaymentMapper {
    // 개인 보유 잔여 포인트 목록 조회
    int getBalanceByUserId(String userId);
 
+   // 사용 포인트 기록
+   void saveSpendingPoint(SpendingPoint spendingPoint);
 
 }

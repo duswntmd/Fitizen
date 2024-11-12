@@ -31,9 +31,13 @@
                 <img alt="User profile image" class="round_img"/>
             </a>
 
-            <div class="my_id">
+            <div th:if="${user != null}" class="my_id">
                 <a href="#n" class="txt_id">[[${user.id}]]</a>
                 <p>[[${user.name}]]</p>
+            </div>
+            <div th:if="${user == null}" class="my_id">
+                <a href="#n" class="txt_id">익명</a>
+                <p>로그인하세요.</p>
             </div>
         </div>
 
@@ -102,9 +106,47 @@
     <!--FEED BOARD-->
     <div class="feed_board">
 
+        <article th:if="${list}" class="feed"  >
+            <!--top-->
+            <div class="new_poster">
+                <div class="poster_img">
+                    <img alt="follower profile image" class="round_img"/>
+                </div>
+                <a href="#n" class="poster_id txt_id">관리자</a>
+                <!-- <button><i class="fas fa-ellipsis-h"></i>옵션 더보기</button> -->
+                <i class="fa fa-trash" ></i>
+            </div>
+
+            <!--content-->
+            <section class="feed_imgs">
+                <div class="photo-container" ondblclick="openModal(this.querySelector('img').src)">
+                    <div class="double-click-message">더블 클릭하여 확대</div>
+                    <img alt="바다사진" src="/files/challengeCover/exer.png"/>
+                </div>
+                <div class="interactions">
+                    <div class="my_emotion">
+                        <!--위에서 cdn을 링크로 삽입해서 여기서 클래스명으로 가져오면 사용할 수 있다.-->
+                        <button type="button"><i class="far fa-heart"></i>like</button></span>
+                        <button type="button"><i class="far fa-paper-plane"></i>send_DM</button></span>
+                    </div>
+                    <div class="pagnation"></div>
+
+                </div>
+
+            </section>
+
+            <!--feed text-->
+            <section class="feed_txt">
+                <span> <br/>위에 예시처럼 자유롭게 운동한 사진을 올려주세요!</span>
+
+            </section>
+
+
+
+
 
         <!--FEED COMPONENT-->
-        <article class="feed" th:each="p : ${list}"  >
+        <article th:if="${list}" class="feed" th:each="p : ${list}"  >
             <!--top-->
             <div class="new_poster">
                 <div class="poster_img">
