@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>운동 분석</title>
+</head>
+<body>
+<h1>운동 분석을 위한 동영상 업로드</h1>
+<form action="/ai/analyzeVideo" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept="video/*">
+    <button type="submit">분석 요청</button>
+</form>
+
+<div>
+    <div th:if="${aivideourl}">
+        <h2>분석된 동영상:</h2>
+        <video controls autoplay th:src="${aivideourl}" width="600"></video>
+    </div>
+    <!-- 결과 또는 오류 메시지를 표시 -->
+    <p th:if="${result}" th:text="'분석 결과: ' + ${result}"></p>
+    <p th:if="${error}" th:text="'오류: ' + ${error}"></p>
+</div>
+</body>
+</html>

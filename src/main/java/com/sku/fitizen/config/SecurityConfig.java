@@ -56,7 +56,8 @@ public class SecurityConfig {
               .requestMatchers("/", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
                                        "/findME", "findResult", "/exerciseDetail/**",
                                        "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
-                                       "/challenge/**",
+                                       "/challenge/**","favicon.ico", "/video_storage/**", "/ai/uploadProcessedVideo",
+                                       "/processed_videos/**",
                                        "/ws/**", "/chat", "/tChat", "/alarm",
                                        "/ai/chatBot/**"
 
@@ -64,6 +65,7 @@ public class SecurityConfig {
 
 
               ).permitAll()
+//              .requestMatchers("/video_storage").hasAnyRole("USER")
               .requestMatchers("/register/updateuser").hasAnyRole("USER")
               .requestMatchers("/register/deleteuser").hasAnyRole("USER")
               .requestMatchers("/board/write").hasAnyRole("USER")
@@ -82,6 +84,8 @@ public class SecurityConfig {
               .requestMatchers("/kakao/addReview/**").hasAnyRole("USER")
               .requestMatchers("/kakao/editReview/**").hasAnyRole("USER")
               .requestMatchers("/kakao/deleteReview").hasAnyRole("USER")
+              .requestMatchers("/ai/uploadVideo").hasAnyRole("USER")
+              .requestMatchers("/ai/analyzeVideo").hasAnyRole("USER")
                       //.anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
                      .anyRequest().denyAll()
       ).csrf( csrfConf -> csrfConf.disable()

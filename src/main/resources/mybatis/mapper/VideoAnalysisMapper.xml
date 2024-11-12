@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sku.fitizen.mapper.VideoAnalysisMapper">
+
+    <!-- ResultMap 정의 -->
+    <resultMap id="VideoResultMap" type="com.sku.fitizen.domain.VideoAnalysis">
+        <id property="vnum" column="vnum"/>
+        <result property="userid" column="userid"/>
+        <result property="realvideoname" column="realvideoname"/>
+        <result property="uuidvideoname" column="uuidvideoname"/>
+        <result property="videourl" column="videourl"/>
+        <result property="aivideourl" column="aivideourl"/>
+        <result property="videoresult" column="videoresult"/>
+    </resultMap>
+
+    <!-- 사용자별 비디오 리스트 조회 -->
+    <select id="getVideosByUser" parameterType="string" resultMap="VideoResultMap">
+        SELECT * FROM video_analysis WHERE userid = #{userid}
+    </select>
+
+    <!-- Insert 문 -->
+    <insert id="insertVideoAnalysis" parameterType="VideoAnalysis">
+        INSERT INTO video_analysis (vnum, userid, realvideoname, uuidvideoname, videourl)
+        VALUES (seq_video_analysis.NEXTVAL, #{userid}, #{realvideoname}, #{uuidvideoname}, #{videourl})
+    </insert>
+
+    <update id="updateVideoAnalysisResult" parameterType="VideoAnalysis">
+        UPDATE video_analysis
+        SET videoresult = #{videoresult},
+            aivideourl = #{aivideourl}
+        WHERE uuidvideoname = #{uuidvideoname}
+    </update>
+
+    <!-- 특정 비디오 분석 레코드 조회 -->
+    <select id="getVideoAnalysisById" parameterType="long" resultMap="VideoResultMap">
+        SELECT * FROM video_analysis WHERE vnum = #{vnum}
+    </select>
+
+    <!-- 모든 비디오 분석 레코드 조회 -->
+    <select id="getAllVideoAnalysis" resultMap="VideoResultMap">
+        SELECT * FROM video_analysis
+    </select>
+
+    <!-- 비디오 분석 레코드 삭제 -->
+    <delete id="deleteVideoAnalysis" parameterType="long">
+        DELETE FROM video_analysis WHERE vnum = #{vnum}
+    </delete>
+
+</mapper>

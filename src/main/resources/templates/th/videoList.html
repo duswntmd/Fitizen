@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Video List</title>
+</head>
+<body>
+<h1>My Video Analyses</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Real Video Name</th>
+        <th>Video URL</th>
+        <th>Analysis Result</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="video : ${videoList}">
+        <td th:text="${video.realVideoName}">Video Name</td>
+        <td><a th:href="${video.videoUrl}" target="_blank">Play Video</a></td>
+        <td th:text="${video.videoResult}">Result</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
