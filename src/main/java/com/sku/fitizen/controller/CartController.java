@@ -30,7 +30,7 @@ public class CartController {
     @GetMapping("")
     public String cart(Model model, HttpSession session) {
         String userId = (String) session.getAttribute("userId");
-
+        System.out.println("UserId: " + userId);
         // DB에서 해당 사용자의 장바구니 목록을 가져옴
         List<CartItem> cart = cartService.selectCartItemsByUserId(userId);
         List<Product> products = new ArrayList<>();

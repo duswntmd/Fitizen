@@ -141,7 +141,7 @@
     <title>Shopping Cart</title>
 </head>
 <body>
-<h1>${userId}님의 장바구니</h1>
+<h1>${user.id}님의 장바구니</h1>
 
 
 <table>
@@ -194,8 +194,12 @@
     </c:forEach>
     </tbody>
 </table>
-
-<!-- 결제 폼 -->
+<div id="selectedItemsInfo" style="text-align: center; margin-top: 20px;">
+    <h3>선택된 항목</h3>
+    <ul id="selectedItemsList" style="display: none;"></ul>
+    <p><strong>총 금액:</strong> <span id="totalPrice">0</span> 원</p>
+</div>
+    <!-- 결제 폼 -->
 <form id="checkoutForm" action="cart/checkout" method="post">
     <!-- 결제 버튼 -->
     <input type="submit" value="결제하기" id="checkoutBtn">
@@ -203,7 +207,7 @@
 
 
 <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
         // 결제 버튼 클릭 시 체크된 상품들만 서버로 전송
@@ -212,6 +216,37 @@
                 event.preventDefault();  // 체크된 항목이 없으면 결제 진행 안 함
                 alert('결제할 상품을 선택하세요.');
             }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 선택된 상품 정보와 총 금액 업데이트 함수
+        function updateSelectedItems() {
+            let totalPrice = 0;
+            let selectedItemsList = document.getElementById('selectedItemsList');
+            selectedItemsList.innerHTML = '';  // 기존 항목 초기화
+
+            let checkboxes = document.querySelectorAll('input[name="selectedProductIds"]:checked');
+            checkboxes.forEach(function(checkbox) {
+                let row = checkbox.closest('tr');
+                let itemName = row.querySelector('td:nth-child(3)').innerText;  // 상품명
+                let itemTotalPrice = parseFloat(row.querySelector('td:nth-child(6)').innerText.replace(/,/g, ''));  // 총 금액 (쉼표 제거)
+
+                totalPrice += itemTotalPrice;
+
+                // 선택된 상품 목록에 추가
+                let listItem = document.createElement('li');
+                listItem.textContent = itemName + ' - ' + itemTotalPrice.toLocaleString() + '원';
+                selectedItemsList.appendChild(listItem);
+            });
+
+            // 총 금액 업데이트
+            document.getElementById('totalPrice').textContent = totalPrice.toLocaleString();
+        }
+
+        // 체크박스 상태 변경 시 이벤트 (즉각적인 업데이트)
+        document.querySelectorAll('input[name="selectedProductIds"]').forEach(function(checkbox) {
+            checkbox.addEventListener('change', updateSelectedItems);
         });
     });
 </script>

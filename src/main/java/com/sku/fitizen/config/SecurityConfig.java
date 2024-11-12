@@ -2,6 +2,9 @@ package com.sku.fitizen.config;
 
 import com.sku.fitizen.handler.CustomAuthenticationSuccessHandler;
 import jakarta.servlet.DispatcherType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,11 +13,15 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 
 @Slf4j
 @Configuration
@@ -48,22 +55,24 @@ public class SecurityConfig {
        */
    }
 
+
    @Bean
    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationSuccessHandler successHandler) throws Exception {
       log.info("접근제한 설정");
+
       http.authorizeHttpRequests(authz -> authz
               .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
-              .requestMatchers("/", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
-                                       "/findME", "findResult", "/exerciseDetail/**",
-                                       "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
-                                       "/challenge/**",
-                                       "/ws/**", "/chat", "/tChat", "/alarm",
-                                       "/ai/chatBot/**"
-
+              .requestMatchers("/", "/favicon.ico", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
+                      "/findME", "findResult", "/exerciseDetail/**",
+                      "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
+                      "/challenge/**", "/mail/**",
+                      "/ws/**", "/chat", "/tChat", "/alarm",
+                      "/ai/chatBot/**", "/shop/**","/ai/predict_result","/ai/predict_exercise","/ai/aiResult"
 
 
 
               ).permitAll()
+              .requestMatchers("/cart/**").hasAnyRole("USER")
               .requestMatchers("/register/updateuser").hasAnyRole("USER")
               .requestMatchers("/register/deleteuser").hasAnyRole("USER")
               .requestMatchers("/board/write").hasAnyRole("USER")
@@ -82,9 +91,10 @@ public class SecurityConfig {
               .requestMatchers("/kakao/addReview/**").hasAnyRole("USER")
               .requestMatchers("/kakao/editReview/**").hasAnyRole("USER")
               .requestMatchers("/kakao/deleteReview").hasAnyRole("USER")
-                      //.anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
-                     .anyRequest().denyAll()
-      ).csrf( csrfConf -> csrfConf.disable()
+
+              //.anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
+              .anyRequest().denyAll()
+      ).csrf(csrfConf -> csrfConf.disable()
       ).formLogin(loginConf -> loginConf.loginPage("/login/login")   // 컨트롤러 메소드와 지정된 위치에 로그인 폼이 준비되어야 함
               .loginProcessingUrl("/dologin")            // 컨트롤러 메소드 불필요, 폼 action과 일치해야 함
               .failureUrl("/login/login")      // 로그인 실패시 이동 경로(컨트롤러 메소드 필요함)
@@ -100,10 +110,12 @@ public class SecurityConfig {
               .invalidateHttpSession(true)
               .deleteCookies("JSESSIONID")
               .permitAll()
-      ) .sessionManagement(sessionManagement ->
-                      sessionManagement.sessionFixation().none() // 기존 세션 유지 (또는 .sessionFixation().migrateSession()으로 설정 가능)
+      ).sessionManagement(sessionManagement ->
+              sessionManagement.sessionFixation().none() // 기존 세션 유지 (또는 .sessionFixation().migrateSession()으로 설정 가능)
       ).exceptionHandling(exConf -> exConf.accessDeniedPage("/noaccess")); // 권한이 없어 접속 거부할 때
 
       return http.build();
    }
+
+
 }

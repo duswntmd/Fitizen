@@ -45,14 +45,14 @@
     </tr>
 </table>
 
-<div th:if="${session.user != null and session.user.id == 'psjae'}">
+<div th:if="${session.user != null and session.user.id == 'psjae1'}">
     <form th:action="@{/qna/comment}" method="post">
         <input type="hidden" name="qid" th:value="${qna.qid}" />
         <textarea name="comment" rows="4" cols="50" placeholder="댓글을 입력하세요"></textarea>
         <button type="submit">댓글 추가</button>
     </form>
 </div>
-<div th:if="${session.user == null or session.user.id != 'psjae'}">
+<div th:if="${session.user == null or session.user.id != 'psjae1'}">
     <p>관리자만 댓글을 추가할 수 있습니다</p>
 </div>
 

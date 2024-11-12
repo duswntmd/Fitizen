@@ -29,6 +29,14 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         User user = userService.findUserByUsername(id);
         request.getSession().setAttribute("user", user);
 
+        if (user != null) {
+            request.getSession().setAttribute("userId", user.getId()); // user 객체의 ID 속성 사용
+            log.info("UserId set in session: " + user.getId());
+        } else {
+            log.warn("User object is null, userId not set in session.");
+        }
+
+
         String prevPage = (String) request.getSession().getAttribute("prevPage");
         log.info("Previous page: " + prevPage);
         // URL에서 경로 부분만 추출
