@@ -95,6 +95,7 @@
 
         /* 챗봇 메시지 스타일 (왼쪽) */
         .message.bot {
+            position: relative;
             display: flex;
             align-items: center;
             margin: 10px 0;
@@ -228,6 +229,28 @@
             color: #007bff;
         }
 
+        .plusMessage
+        {
+            position: absolute;
+            bottom: -45px; /* 부모 요소 하단에 위치 */
+            left: 112px; /* 부모 요소의 왼쪽 정렬 */
+
+            background-color: #e0e7ff;
+            /* 버튼 스타일 */
+            display: inline-block;
+            padding: 10px 20px; /* 가로 세로 패딩 */
+            border-radius: 8px; /* 둥근 모서리 */
+            color: #333; /* 글자 색상 */
+            text-align: center;
+            text-decoration: none; /* 링크 스타일 제거 */
+        }
+        .plusMessage img {
+            width: 24px; /* 이미지 너비 */
+            height: 24px; /* 이미지 높이 */
+            vertical-align: middle; /* 텍스트와 수직 정렬 */
+
+        }
+
     </style>
 </head>
 <body>
@@ -267,8 +290,9 @@
                     </div>
                     <!-- 메시지 내용 -->
                     <div class="message-content">안녕하세요!AI 트레이너 FitBOT이에요! 맞춤 운동 방법을 알려드릴게요!</div>
+                    <a class="plusMessage" href="" target="_blank" style="display:none;">챌린지 이동
+                        <img src="/Assets/arrow-right.png" alt="챌린지 이동 버튼"></a>
                 </div>
-
             </div>
 
             <!-- 입력 영역 -->
@@ -314,7 +338,7 @@
         // 사용자의 메시지를 화면에 추가
         addMessage(ask, 'user');
         // 서버에 질문을 보내고 챗봇의 응답을 받아서 표시
-        fetch(`ai/chatBot/${selectedModel}`, {
+        fetch(`/ai/chatBot/${selectedModel}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -344,6 +368,43 @@
         const messageContent = document.createElement("div");
         messageContent.classList.add(sender === 'bot' ? 'message-content' : 'message-content2');
         messageContent.textContent = content;
+
+        // URL이 포함된 경우 URL을 추출하고, 메시지에서 URL을 제거
+        const urlRegex = /(https?:\/\/[^\s]+)/;
+        const urlRegex2= /\((https?:\/\/[^\s]+)\)/g;
+        let urlMatch = urlRegex.exec(content);
+        let urlMatch2= urlRegex2.exec(content);
+        let url = null;
+
+        if (urlMatch) {
+            url = urlMatch[1]; // URL 추출
+            content = content.replace(urlRegex, "").trim(); // 메시지에서 URL 제거
+        }else if(urlMatch2)
+        {
+            url = urlMatch2[1]; // URL 추출
+            content = content.replace(urlRegex2, "").trim(); // 메시지에서 URL 제거
+        }
+
+        // 메시지 텍스트 추가
+        messageContent.innerHTML = content.replace(/\n/g, "<br>");
+        message.appendChild(messageContent);
+
+        // URL이 있을 경우 plusMessage 버튼 생성 및 링크 추가
+        if (url) {
+            const plusMessage = document.createElement("a");
+            plusMessage.href = url;
+            plusMessage.target = "_blank";
+            plusMessage.classList.add("plusMessage");
+            plusMessage.style.display = "block"; // 버튼 표시
+            plusMessage.innerHTML="링크";
+            const img = document.createElement("img");
+            img.src = "/Assets/arrow-right.png"; // 이미지 경로
+            plusMessage.appendChild(img); // 링크 안에 이미지 추가
+            message.appendChild(plusMessage); // plusMessage 버튼을 message 하단에 추가
+        }
+
+
+
 
         // 줄바꿈(\n)을 <br>로 변환하여 HTML로 추가
         messageContent.innerHTML = content.replace(/\n/g, "<br>");

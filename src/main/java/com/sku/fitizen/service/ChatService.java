@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ChatService {
@@ -49,6 +46,11 @@ public class ChatService {
     public List<Map<Integer, Message>> getLastMessage(String userId)
     {
       List<Integer> ids= pService.getChallengeIdsByUser(userId);
+        // ids 리스트가 비어있는지 확인하여 비어있으면 빈 리스트 반환
+        if (ids.isEmpty()) {
+            return new ArrayList<>();  // 빈 리스트 반환
+        }
+
         return  mapper.getLastMessage(ids);
     }
 
@@ -64,7 +66,12 @@ public class ChatService {
         }
 
 
+
         List<Integer> ids= consultService.getConsultIdsByUser(dto);
+        // ids 리스트가 비어있는지 확인하여 비어있으면 빈 리스트 반환
+        if (ids.isEmpty()) {
+            return new ArrayList<>();  // 빈 리스트 반환
+        }
         return  mapper.getLastConsultMessage(ids);
     }
 
@@ -159,15 +166,13 @@ public class ChatService {
 
     // 챌린지  채팅 목록 동기화
     public List<Message> getMessages(String userId, String roomId) {
-        Participation participation = new Participation(userId, Integer.parseInt(roomId));
-        //System.out.println("확인용"+mapper.getMessagesByRoomId(participation));
+        Participation participation = new Participation(Integer.parseInt(roomId),userId);
         return mapper.getMessagesByRoomId(participation);
     }
 
 
     public boolean checkParticipationExists(String userId, String roomId) {
-        Participation participation = new Participation(userId,Integer.parseInt(roomId));
-
+        Participation participation = new Participation(Integer.parseInt(roomId),userId);
 
         return mapper.checkParticipationExists(participation);
     }

@@ -6,12 +6,12 @@
 </head>
 <body>
 
-<div th:fragment="chatT">
+<div th:fragment="chatUsers">
 
   <!-- 채팅 버튼 -->
   <div class="chat-button" onclick="toggleChat()">
     💬
-    <span class="notification-badge" id="notificationBadge">1</span> <!-- 안읽은 메시지 숫자 -->
+    <span class="notification-badge" id="notificationBadge">0</span> <!-- 안읽은 메시지 숫자 -->
   </div>
   <div class="chat-window" id="chatWindow">
     <div id="participantsList" class="participants-list" style="display: none;" >
@@ -152,7 +152,7 @@
 
     }
     function connectAlarmSocket() {
-      alarmSocket = new WebSocket("ws://" +project+ "/alarm");
+      alarmSocket = new WebSocket("ws://" +host+ "/alarm");
 
 
 
@@ -379,7 +379,7 @@
       currentChallengeTitle.innerText = "\""+title+"\"";  // 제목 설정
       currentChallengeTitle.style.display = 'block';  // 챌린지 제목 보이기
 
-      g_webSocket = new WebSocket("ws://" + project + "/chat?" + "roomId=" + roomId+"&consultId="+consultId);
+      g_webSocket = new WebSocket("ws://" +host + "/chat?" + "roomId=" + roomId+"&consultId="+consultId);
       g_webSocket.onopen = function (message) {
 
 
@@ -407,7 +407,12 @@
         // chatBody에 inputContainer 추가
         chatBody.innerHTML += inputContainer;
 
-        addLineToChatBox("챌린지 참여 채팅방입니다.","",true);
+        if(roomId !=="") {
+          addLineToChatBox("챌린지 참여 채팅방입니다.", "", true);
+        }else if(consultId !=="")
+        {
+          addLineToChatBox("트레이너 상담방입니다.", "", true);
+        }
         document.getElementById('inputMsgBox').addEventListener('keypress', inputMsgBox_onkeypress);
 
       };
@@ -429,6 +434,7 @@
 
 
           if (data.msg) {
+            console.log(data.msg)
             addLineToChatBox(data.msg ,data.sender,false); // 텍스트 메시지 추가
           }
           if (data.img) {

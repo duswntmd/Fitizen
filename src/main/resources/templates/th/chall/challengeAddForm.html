@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" xmlns:sec="http://www.w3.org/1999/xhtml"
+      lang="ko">
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
@@ -34,11 +35,20 @@
             <button class="btn-back">뒤로가기</button>
         </a>
         <form id="addForm"  enctype="multipart/form-data">
+            <div sec:authorize="hasRole('ADMIN')">
+               관리자 챌린지 작성페이지 입니다.
+            </div>
             <div class="form-group">
                 <label for="title">챌린지 제목</label>
                 <input type="text" id="title" name="title">
             </div>
 
+            <div sec:authorize="hasRole('ADMIN')">
+                <div class="form-group">
+                <label for="entryPoint">포인트</label>
+                <input type="number" id="entryPoint" name="entryPoint" min="0" value="0" placeholder="사용자는 포인트를 사용하여야 챌린지를 참여할 수 있습니다.">
+                </div>
+            </div>
             <div class="form-group" id="coverImageWrapper" style="position: relative;">
                 <input type="file" id="file" name="file" accept="image/*" style="display: none;">
                 <img id="imagePreview" src="" alt="미리보기 이미지" style="width: 100%; height: 100%; object-fit: cover; display: none;">
@@ -288,6 +298,7 @@
         const removeButton = document.getElementById('removeImageButton');
         const fileSelectButton = document.getElementById('fileSelectButton');
 
+
         if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
@@ -329,7 +340,9 @@
         const contentInput = document.getElementById('content').value.trim();
         const selectedCategory = document.querySelector('input[name="categoryId"]:checked');
         const fileInput = document.getElementById('file').files.length;
-        const limitUser= document.getElementById('limitUser').value
+        const limitUser= document.getElementById('limitUser').value;
+        const entryPoint = document.getElementById('entryPoint'); // 포인트 입력란 가져오기
+
 
 // 선택된 카테고리 ID 로그
         console.log("선택된 카테고리 ID:", selectedCategory.value);
@@ -363,7 +376,18 @@
         }
         // 인증 사진 최대 개수 계산 (최신 값 업데이트)
         calculateProofCount();
+
         if (!confirm('챌린지를 등록하시겠습니까?')) return;
+
+
+        if (entryPoint) { // pointInput 요소가 존재할 때만 검사를 수행
+
+
+            if (entryPoint.value === ""||isNaN(entryPoint.value) ||parseInt(entryPoint.value) === 0) {
+                alert("포인트를 입력해주세요.");
+                return;
+            }
+        }
 
         var form = document.getElementById('addForm');
 
