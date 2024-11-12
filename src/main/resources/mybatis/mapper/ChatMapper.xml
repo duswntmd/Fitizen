@@ -81,11 +81,11 @@
     <select id="getMessagesByRoomId" parameterType="com.sku.fitizen.domain.challenge.Participation"
             resultType="Message">
             SELECT * FROM  message
-            WHERE roomId=#{ChallengeId}
+            WHERE roomId=#{challengeId}
             AND sentAt >=(
                 SELECT MIN(sentAt)
                 FROM message
-                WHERE  roomId=#{ChallengeId}
+                WHERE  roomId=#{challengeId}
                 AND senderID=#{userId}
                 )
             ORDER BY sentAt,messageId
@@ -105,7 +105,7 @@
     <select id="checkParticipationExists" parameterType="com.sku.fitizen.domain.challenge.Participation">
             SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
             FROM participation
-            WHERE userId = #{userId} AND challengeId = #{ChallengeId}
+            WHERE userId = #{userId} AND challengeId = #{challengeId}
 
     </select>
 

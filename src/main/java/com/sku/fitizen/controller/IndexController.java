@@ -48,13 +48,15 @@ public class IndexController {
         return "findResult";
     }
 
-  
+
+
     @GetMapping("/exerciseDetail")
     public String exerciseDetail(@RequestParam("exercise") String sport, Model model) {
         System.out.println("선택된 운동:"+sport);
         model.addAttribute("sport", sport);  // 운동 이름을 모델에 추가
         return "exerciseDetail";  // exerciseDetail.jsp로 이동
     }
+
 
 
 }

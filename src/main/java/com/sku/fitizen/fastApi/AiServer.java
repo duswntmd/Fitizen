@@ -3,8 +3,11 @@ package com.sku.fitizen.fastApi;
 import com.sku.fitizen.domain.User;
 import com.sku.fitizen.domain.VideoAnalysis;
 import com.sku.fitizen.service.VideoAnalysisService;
+import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +36,7 @@ import java.util.UUID;
 public class AiServer {
 
     private final HttpClient client;
+    //    private final String pythonServerUrl = "http://220.67.113.235:8000/";
     private final RestTemplate restTemplate = new RestTemplate();
     private final String pythonServerUrl = "http://220.67.113.237:8000/";
     private final VideoAnalysisService videoAnalysisService;
@@ -224,7 +228,6 @@ public class AiServer {
         }
     }
 
-
     @GetMapping("/chatBot")
     public String chatBot() {
         return "th/chatBot";
@@ -261,7 +264,7 @@ public class AiServer {
 
                 // "answer" 필드가 있는지 확인
                 if (jsonResponse.has("answer")) {
-                    //System.out.println(jsonResponse.getString("answer"));
+
                     return jsonResponse.getString("answer");
                 } else {
                     return "Error: 'answer' field not found in response";
@@ -275,5 +278,62 @@ public class AiServer {
             return "Error occurred: " + e.getMessage();
         }
     }
+
+
+
+
+
+
+    @PostMapping("/predict_exercise")
+    @ResponseBody
+    public ResponseEntity<String> recommendExercise(@RequestBody Map<String, String> requestData,HttpSession session,Model model) {
+        try {
+            // 데이터 변환 및 JSON 객체 생성
+            Map<String, Object> data = new HashMap<>();
+            data.put("height", Integer.parseInt(requestData.get("height")));
+            data.put("weight", Integer.parseInt(requestData.get("weight")));
+            data.put("goal", requestData.get("goal"));
+            data.put("frequency", requestData.get("frequency"));
+            data.put("preference", requestData.get("preference"));
+
+            JSONObject json = new JSONObject(data);  // 'data' 사용하여 JSON 생성
+            System.out.println("JSON to be sent to Python server: " + json.toString());
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(pythonServerUrl + "/predict_exercise"))
+                    .header("Content-Type", "application/json")
+                    .version(HttpClient.Version.HTTP_1_1)  // HTTP/1.1로 강제 설정
+                    .POST(HttpRequest.BodyPublishers.ofString(json.toString(), StandardCharsets.UTF_8))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            System.out.println("Response from Python server: " + response.body());
+            String responseBody = response.body();
+            JSONObject jsonObject = new JSONObject(responseBody);
+            String exercise = jsonObject.getString("recommended_exercise");
+            System.out.println("추천운동:" + exercise);
+
+
+            // Model 객체에 값 저장
+            session.setAttribute("exercise", exercise);
+
+            // JSON 형태로 반환
+
+            return ResponseEntity.ok("/aiResult");
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/aiResult")
+    public String aiResult(HttpSession session, Model model) {
+        String exercise = (String) session.getAttribute("exercise"); // 세션에서 값 가져오기
+        model.addAttribute("exercise", exercise); // 모델에 값 추가
+        return "aiResult";
+    }
+
+
 }
 

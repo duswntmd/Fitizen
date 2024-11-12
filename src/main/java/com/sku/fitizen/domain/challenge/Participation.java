@@ -10,6 +10,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Participation {
     private String userId;
-    private int ChallengeId;
+    private int challengeId;
 
+    private int spentPoint;
+
+    public Participation(String userId, int spentPoint) {
+        this.userId = userId;
+        this.spentPoint = spentPoint;
+    }
+
+    public Participation(int challengeId, String userId) {
+        this.challengeId = challengeId;
+        this.userId = userId;
+    }
 }

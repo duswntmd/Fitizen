@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" xmlns:sec="http://www.w3.org/1999/xhtml">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,7 +19,10 @@
 <div class="page-contents">
     <div class="container">
         <div class="challenge-details">
-            <!-- 챌린지 주제 타이틀 -->
+            <!-- 공식 챌린지 배너 -->
+            <div th:if="${challe.entryPoint != 0}" class="official-challenge-banner">
+                <span>공식 챌린지 입니다!</span>
+            </div>
             <div class="form-group">
                 <h2 class="challenge-title">챌린지 주제</h2>
                 <div class="info-box">
@@ -44,6 +47,11 @@
                 <p>
                     <strong>인증 요일:</strong><span class="red-text"> [[${challe.proofDays}]]</span>
                 </p>
+                <div th:if="${challe.entryPoint != 0}" >
+                    <strong>참여 조건:</strong>
+                    <span class="red-text">[[${challe.entryPoint}]]</span>
+                    <span class="point-label">POINT</span>
+                </div>
 
             </div>
             </div>
@@ -110,19 +118,340 @@
         </div>
 
     </div>
+
     <div class="form-group" style="text-align: center; ">
-        <a th:href="@{../participate/{challengeId}(challengeId=${challe.challengeId})}"><button>챌린지 도전!</button></a>
+
+        <a th:if="${userChall.contains(challe)}" th:href="@{../myChall}">
+            <button>참여중</button>
+        </a>
+        <a th:if="${!userChall.contains(challe) and (challe.members == challe.limitUser or challe.startDate.isBefore(currentDate))}">
+            <button disabled style=" cursor: not-allowed;">참여불가</button>
+        </a>
+
+        <a th:if="${challe.entryPoint>0} and ${!userChall.contains(challe) and (challe.members < challe.limitUser and !challe.startDate.isBefore(currentDate))}"  th:onclick="|openModal(${balance}, ${challe.entryPoint} ,${challe.challengeId})|"  >
+            <button>챌린지 도전</button>
+        </a>
+        <a th:if="${challe.entryPoint==0} and ${!userChall.contains(challe) and (challe.members < challe.limitUser and !challe.startDate.isBefore(currentDate))}" >
+            <button th:onclick="|participation(${challe.challengeId})|">챌린지 도전</button>
+        </a>
+
+
         <a th:href="@{../../proofShot/{challengeId}(challengeId=${challe.challengeId})}"><button>인증 게시판</button></a>
-        <a href="/challenge">
+        <a  href="/challenge">
             <button class="btn-back">뒤로가기</button>
         </a>
     </div>
+
 </div>
-<th:block th:replace="~{th/chatT :: chatT}"></th:block>
+
+<!-- 모달 팝업 -->
+<div id="entryPointModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">X</span>
+        <h2>
+            <img src="/Assets/check.png" alt="아이콘" style="width: 30px; height: 30px; vertical-align: middle;">
+            공식 챌린지: 블라블라 <span id="challengeTitle"></span>
+        </h2>
+        <h2>/포인트 지급 조건/<span></span></h2>
+        <div class="info-box">
+            <p>* 인증 요일에 인증 사진 올리기 !</p>
+            <p>* 달성도 80%이상 달성시 5000포인트 지급!</p>
+            <p>* 달성도 70%이상 달성시 2500포인트 지급!</p>
+            <p>* 달성도 70%미만일 경우 사용 포인트 소멸 및 지급 X</p>
+        </div>
+        <div class="points-row">
+            <th:block th:if="${user != null}">
+                <p><strong>현재 보유 포인트:</strong> <span id="userPoints" th:text="${balance}">0</span> 포인트</p>
+                <button class="use-points-button" onclick="usePoints()">포인트 사용하기</button>
+            </th:block>
+            <th:block th:if="${user == null}">
+                <p style="color: red;">로그인 후 이용해주세요</p>
+            </th:block>
+        </div>
+        <p><strong>참여 포인트 조건:</strong> <span id="entryPoints"></span> 포인트</p>
+        <h2>/주의/<span></span></h2>
+        <div class="info-box">
+            <p>* 챌린지 시작시 참여 취소 및 포인트 환불 불가능합니다.</p>
+        </div>
+        <div class="modal-actions">
+            <button id="participateButton" th:attr="data-challenge-id=${challe.challengeId}" onclick="confirmParticipation()" disabled>참여하기</button>
+            <button onclick="showChargeOptions()">포인트 충전하기</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- 포인트 충전 모달 팝업 -->
+<div id="chargeOptionsModal" class="modal" style="display: none;">
+    <div class="modal-content">
+
+        <span class="close-button" onclick="closeChargeModal()">뒤로가기</span>
+        <div class="charge-container">
+            <h3>충전할 포인트를 선택하세요:</h3>
+            <div class="charge-buttons">
+                <button class="charge-button green" onclick="chargePoints(100)">1000 포인트</button>
+                <button class="charge-button blue" onclick="chargePoints(10000)">10000 포인트</button>
+                <button class="charge-button red" onclick="chargePoints(20000)">20000 포인트</button>
+            </div>
+
+            <p class="charge-fee">수수료 15%가 적용됩니다</p>
+        </div>
+
+    </div>
+</div>
+
+
+<div th:if="${user !=null}">
+<th:block th:replace="~{th/chatUsers :: chatUsers}"></th:block>
+</div>
 <th:block th:replace="~{th/footer :: footer}"></th:block>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.iamport.kr/js/iamport.payment-1.1.7.js"></script>
 <script>
 
+    function participation(challengeId) {
+        $.ajax({
+            url: `/challenge/participate/${challengeId}`,
+            method: 'GET',
+            success: function(response) {
+                if(response.success>0){alert("참여 등록 완료.")
+                }else alert("로그인 후 이용해주세요")
+                location.reload(); // 페이지 새로고침
+            },
+            error: function(xhr, status, error) {
+                alert('참여 처리 중 오류가 발생하였습니다.');
+            }
+        });
+    }
+
+
+
+
+
+    function chargePoints(amount) {
+
+        const userEmail = '[[${user != null ? user.email : ""}]]';
+        const userId = '[[${user != null ? user.id : ""}]]';
+
+        // 로그인 여부 확인
+        if (!userEmail || !userId) {
+            alert("로그인후 이용해주세요.");
+            return;
+        }
+
+
+        alert(`${amount} 포인트가 충전됩니다. 수수료 15%가 적용됩니다.`);
+        var IMP = window.IMP;
+        IMP.init("imp38808434"); // 가맹점 식별코드로 초기화
+
+        IMP.request_pay(
+            {
+                pg: 'html5_inicis',
+                name: "FITIZEN POINT",
+                amount: amount+(amount*0.15),
+                buyer_email: userEmail,
+                buyer_name: userId
+            },
+            function (rsp) {
+                console.log(rsp);
+                $.ajax({
+                    type: 'POST',
+                    url: '/verify/' + rsp.imp_uid
+                }).done(function (data) {
+                    console.log(data);
+                    if (rsp.paid_amount === data.response.amount) {
+                        //  alert("imp_uid: " + data.imp_uid + " merchant_uid(orderKey): " + data.merchant_uid);
+                        console.log("결제 및 결제 검증 완료");
+
+                        // 결제 검증 성공 후, 추가 데이터 전송
+                        $.ajax({
+                            type: 'POST',
+                            url: '/savePayment',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                userId: userId,
+                                userEmail: userEmail,
+                                amount: amount+(amount*0.15),
+                                point: amount,
+                                impUid: rsp.imp_uid,
+                                merchantUid: rsp.merchant_uid,
+                                paidAt: data.paidAt
+                            }),
+                            dataType: 'json',
+                            success: function (success) {
+                                alert("결제 완료");
+                                console.log("결제 정보 저장 성공", success);
+                                location.reload(); // 결제 성공 시 페이지 새로고침
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("결제 정보 저장 실패", error);
+                            }
+                        });
+                    } else {
+                        alert("결제 실패");
+                    }
+                });
+            }
+        );
+    }
+
+
+    function showChargeOptions() {
+        closeModal();
+        document.getElementById("chargeOptionsModal").style.display = "block";
+    }
+
+    function closeChargeModal() {
+        document.getElementById("chargeOptionsModal").style.display = "none";
+        openModal(parseInt(document.getElementById("userPoints").innerText), parseInt(document.getElementById("entryPoints").innerText));
+    }
+
+
+    // 모달 열기
+    function openModal(balance, entryPoint, challengeId) {
+        const modal = document.getElementById("entryPointModal");  // modal 객체 정의
+        const usePointsButton = document.querySelector(".use-points-button");
+
+
+
+        // 모달에 포인트 정보 표시
+        // 로그인 여부에 따라 userPoints 요소에 접근
+        const userPointsElement = document.getElementById("userPoints");
+        if (userPointsElement) {
+            userPointsElement.innerText = balance; // 현재 보유 포인트
+        }
+
+        document.getElementById("entryPoints").innerText = entryPoint; // 참여에 필요한 포인트
+        const entryPointsElement = document.getElementById("entryPoints");
+        const insufficientMessageExists = document.getElementById("insufficientPointsMessage");
+
+        if (balance === 0 && !insufficientMessageExists) {
+            entryPointsElement.parentNode.insertAdjacentHTML(
+                'beforeend',
+                `<span id="insufficientPointsMessage" style="color: red; margin-left: 10px;">-포인트가 부족합니다</span>`
+            );
+            if (usePointsButton) {
+                usePointsButton.disabled = true;
+                usePointsButton.style.backgroundColor = "#cccccc";
+                usePointsButton.style.color = "#777";
+                usePointsButton.style.cursor = "not-allowed";
+            }
+
+        } else if (balance > 0 && insufficientMessageExists) {
+            insufficientMessageExists.remove();
+            usePointsButton.disabled = false;
+            usePointsButton.style.backgroundColor = "#cccccc";
+            usePointsButton.style.color = "#333";
+            usePointsButton.style.cursor = "pointer";
+        }
+
+        modal.style.display = "block";
+    }
+
+
+    function confirmParticipation() {
+
+        const challengeId = document.getElementById("participateButton").getAttribute("data-challenge-id");
+        const usedPoints = document.getElementById("entryPoints").innerText;
+
+        $.ajax({
+            url: `/challenge/participate`,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                challengeId: challengeId,
+                spentPoint: usedPoints
+            }),
+            success: function(response) {
+                alert(response.message);
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                alert('참여 처리 중 오류가 발생하였습니다.');
+            }
+        });
+    }
+
+
+
+
+
+
+    // 모달 닫기
+    function closeModal() {
+        document.getElementById("entryPointModal").style.display = "none";
+    }
+
+    let pointsUsed = false; // 포인트 사용 여부를 추적
+
+    let remainingEntryPoints = 0; // 남은 참여 조건 포인트를 전역 변수로 선언
+
+    function usePoints() {
+        const userPointsElement = document.getElementById("userPoints");
+        const entryPointsElement = document.getElementById("entryPoints");
+        const usePointsButton = document.querySelector(".use-points-button");
+        const participateButton = document.getElementById("participateButton");
+
+        const currentPoints = parseInt(userPointsElement.innerText);
+        const entryPoints = parseInt(entryPointsElement.innerText);
+
+        if (!pointsUsed) {
+            // 남은 포인트 계산
+            const remainingPoints = Math.max(currentPoints - entryPoints, 0); // 부족해도 0으로 표시
+            remainingEntryPoints = Math.max(entryPoints - currentPoints, 0);
+
+            // 취소선 추가 및 남은 포인트 표시
+            userPointsElement.classList.add("strikethrough");
+            entryPointsElement.classList.add("strikethrough");
+
+            userPointsElement.insertAdjacentHTML(
+                'afterend',
+                `<span id="remainingPointsDisplay" style="color: red;"> ${remainingPoints}</span>`
+            );
+            entryPointsElement.insertAdjacentHTML(
+                'afterend',
+                `<span id="remainingEntryPointsDisplay" style="color: red;"> ${remainingEntryPoints}</span>`
+            );
+
+
+            // 남은 참여 조건 포인트가 0보다 크면 '포인트가 부족합니다' 메시지 표시
+            if (remainingEntryPoints > 0) {
+                entryPointsElement.parentElement.insertAdjacentHTML(
+                    'beforeend',
+                    `<span id="insufficientPointsMessage" style="color: red; margin-left: 10px;">-포인트가 부족합니다</span>`
+                );
+                participateButton.disabled = true; // 참여하기 버튼 비활성화 유지
+            }else {
+                participateButton.disabled = false; // 참여 조건 충족 시 참여하기 버튼 활성화
+            }
+
+            // 버튼 스타일 변경
+            usePointsButton.style.backgroundColor = "#000";
+            usePointsButton.style.color = "#fff";
+
+            pointsUsed = true; // 포인트 사용됨으로 설정
+        } else {
+            // 원래 상태로 복원
+            userPointsElement.classList.remove("strikethrough");
+            entryPointsElement.classList.remove("strikethrough");
+
+            const insufficientPointsMessage = document.getElementById("insufficientPointsMessage");
+            // 남은 포인트 요소 삭제
+            const remainingPointsDisplay = document.getElementById("remainingPointsDisplay");
+            const remainingEntryPointsDisplay = document.getElementById("remainingEntryPointsDisplay");
+
+            if (remainingPointsDisplay) remainingPointsDisplay.remove();
+            if (remainingEntryPointsDisplay) remainingEntryPointsDisplay.remove();
+            if (insufficientPointsMessage) insufficientPointsMessage.remove();
+            remainingEntryPoints = 0; // 원래 상태로 복원
+            participateButton.disabled = true; // 포인트 사용 취소 시 참여하기 버튼 비활성화
+            // 버튼 스타일 원래대로 복원
+            usePointsButton.style.backgroundColor = "#cccccc";
+            usePointsButton.style.color = "#333";
+
+            pointsUsed = false; // 포인트 사용되지 않음으로 설정
+        }
+    }
 
 
 
@@ -144,7 +473,6 @@
         document.querySelector(`.save-button[onclick*="${commentId}"]`).style.display = 'inline';
         document.querySelector(`.cancel-button[onclick*="${commentId}"]`).style.display = 'inline';
     }
-
     function saveEdit(commentId) {
         const textarea = document.getElementById(`edit-${commentId}`);
         const commentText = document.getElementById(`comment-${commentId}`);
@@ -201,9 +529,6 @@
         document.querySelector(`.save-button[onclick*="${commentId}"]`).style.display = 'none';
         document.querySelector(`.cancel-button[onclick*="${commentId}"]`).style.display = 'none';
     }
-
-
-
     function saveComment() {
         {
 
@@ -238,14 +563,6 @@
             });
         }
     }
-
-    function editCommnet(commentId)
-    {
-
-
-
-
-    }
     function deleteComment(commentId)
     {
         // 댓글 삭제 확인 메시지
@@ -269,7 +586,6 @@
             });
         }
     }
-
 </script>
 </body>
 </html>

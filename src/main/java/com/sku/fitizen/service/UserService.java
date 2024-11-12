@@ -122,7 +122,11 @@ public class UserService {
 
     // 비밀번호 변경
     public boolean changePwd(String newPassword, String id) {
-        int result = userMapper.changePwd(newPassword, id);
+        // 새 비밀번호를 암호화
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        // 암호화된 비밀번호를 사용하여 업데이트
+        int result = userMapper.changePwd(encodedPassword, id);
         return result > 0;  // 변경된 레코드가 있을 경우 true 반환
     }
 

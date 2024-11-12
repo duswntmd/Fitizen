@@ -62,7 +62,7 @@
 
         .section-3 {
            /* background: url("../image/badminton.jpg") no-repeat center center;*/
-            background: linear-gradient(to right, #9d50bb, #6e482a); /* 진한 퍼플에서 딥 핑크로 */
+            background: linear-gradient(to right, #F8A2C8 , #A2E6F0 ); /* 진한 퍼플에서 딥 핑크로 */
             background-size: cover;
             background-attachment: scroll;
         }
@@ -75,7 +75,7 @@
 
         .section-5 {
             /*background: url("../image/fb.jpg") no-repeat center center;*/
-            background: linear-gradient(to right, #a8ff78, #78ffd6); /* 라임에서 네온 그린으로 */
+            background: linear-gradient(to right, #FF6A95, #6A82FB);
             background-size: cover;
             background-attachment: scroll;
         }

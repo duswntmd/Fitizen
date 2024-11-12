@@ -206,10 +206,21 @@
             </div>
         </div>
 
-        <button type="submit">제출</button>
+        <div class="question">
+            <p>키(cm)와 몸무게(kg)를 입력해주세요:</p>
+            <div class="options">
+                <label>키: <input type="number" name="height" placeholder="cm" required></label>
+                <label>몸무게: <input type="number" name="weight" placeholder="kg" required></label>
+            </div>
+        </div>
+
+        <button type="submit">검사 결과로 이동</button>
+        <button type="button" data-action="alternate" onclick="saveResultAndRedirectAlternate()">AI검사결과로 이동</button>
     </form>
 </div>
 
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.querySelectorAll('.exercise-img').forEach(img => {
         img.addEventListener('click', (event) => {
@@ -377,6 +388,58 @@
         window.location.href = '/findResult';
         return false; // 폼 제출 방지
     }
+
+
+    function saveResultAndRedirectAlternate() {
+        var form = document.getElementById('quizForm');
+        var frequency = form.elements['frequency'].value;
+        var preference = form.elements['type'].value;
+        var goal = form.elements['goal'].value;
+        var height = parseInt(form.elements['height'].value);
+        var weight = parseInt(form.elements['weight'].value);
+
+        if (height <= 0 || weight <= 0) {
+            alert("올바른 키와 몸무게를 입력해주세요.");
+            return false;
+        }
+
+        var data = {
+            height: height,
+            weight: weight,
+            frequency: frequency,
+            goal: goal,
+            preference: preference
+        };
+
+        $.ajax({
+            url: '/ai/predict_exercise',
+            type: 'POST',
+            contentType: 'application/json',  // JSON 형식으로 전송
+            data: JSON.stringify(data),       // JavaScript 객체를 JSON 문자열로 변환하여 전송
+            dataType: 'text',                 // JSON 응답을 예상
+            success: function(response) {
+                if (response && typeof response === 'string') {
+                    window.location.href ="/ai" +response; // 서버에서 반환된 URL로 이동
+                } else {
+                    alert("올바르지 않은 응답입니다. 다시 시도해주세요.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error status:', status);
+                console.error('Error message:', error);
+                console.error('Response text:', xhr.responseText);
+
+                if (xhr.responseText.includes('<!DOCTYPE html>')) {
+                    alert('로그인이 필요하거나 서버에 문제가 있습니다. 다시 시도해 주세요.');
+                    window.location.href = '/login/login';
+                } else {
+                    alert("결과를 불러오는 데 문제가 발생했습니다. 다시 시도해주세요.");
+                }
+            }
+        });
+        return false;
+    }
+
 </script>
 <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 </body>

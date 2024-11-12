@@ -202,12 +202,25 @@
             <artifactId>iamport-rest-client-java</artifactId>
             <version>0.2.14</version>
         </dependency>
+
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
             <version>6.0.0</version>
         </dependency>
 
+        <!-- TensorFlow Java API -->
+        <dependency>
+            <groupId>org.tensorflow</groupId>
+            <artifactId>tensorflow-core-platform</artifactId>
+            <version>0.4.0</version> <!-- 최신 버전 확인 후 적용 -->
+        </dependency>
+
+        <!-- 타임리프 시큐리티 의존성 -->
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+        </dependency>
 
     </dependencies>
 

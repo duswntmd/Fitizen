@@ -104,19 +104,13 @@
     <label for="qty">수량:</label>
     <input type="number" id="qty" name="qty" min="1" value="1"> <!-- 기본 수량을 1로 설정 -->
     <input type="hidden" id="prid" value="${product.prid}">
-    <input type="hidden" id="userId" value="${userId}">
+    <input type="hidden" id="userId" value="${user.id}">
 <!-- 로그인여부 확인 후 장바구니 추가로직 -->
-    <c:choose>
-        <c:when test="${not empty userId}">
+
             <!-- 장바구니에 추가 버튼 -->
             <a href="javascript:void(0);" id="addCartBtn">장바구니에 추가</a>
 
-        </c:when>
-        <c:otherwise>
-            <!-- 로그인 페이지로 이동 -->
-            <a href="${pageContext.request.contextPath}/login/login">로그인 후 장바구니에 추가</a>
-        </c:otherwise>
-    </c:choose>
+
 <!-- 상품 목록으로 돌아가는 버튼 -->
 <br>
 <a href="${pageContext.request.contextPath}/shop">상품 목록으로 돌아가기</a>

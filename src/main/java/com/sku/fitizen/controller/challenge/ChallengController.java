@@ -6,6 +6,7 @@ import com.sku.fitizen.domain.challenge.ChallComment;
 import com.sku.fitizen.domain.challenge.Challenge;
 import com.sku.fitizen.domain.challenge.Participation;
 import com.sku.fitizen.domain.User;
+import com.sku.fitizen.service.PaymentService;
 import com.sku.fitizen.service.board.PageService;
 import com.sku.fitizen.service.challenge.ChallCommentService;
 import com.sku.fitizen.service.challenge.ChallengeService;
@@ -17,10 +18,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/challenge")
@@ -38,12 +38,16 @@ public class ChallengController {
     @Autowired
     private PageService pageService;
 
+    @Autowired
+    private PaymentService paymentService;
 
     @GetMapping("")
     public String mainPage(@SessionAttribute(value = "user", required = false) User user,
                            @RequestParam(value = "categoryId",defaultValue ="0") int categoryId,
                            Model model) {
 
+        LocalDate currentDate = LocalDate.now();
+        model.addAttribute("currentDate", currentDate); // 현재 날짜 추가
         List<Challenge> list;
 
         // 카테고리에 따라 챌린지 목록을 가져옴
@@ -52,7 +56,10 @@ public class ChallengController {
 
             list= service.getChallengeList();
         } else if (categoryId == -1) {
-            list = service.getChallByCategory(categoryId);
+            // 전체 목록 중에서 endDate가 현재 날짜 이전인 것만 필터링
+            list = service.getChallengeList().stream()
+                    .filter(challenge -> challenge.getEndDate().isBefore(currentDate))
+                    .collect(Collectors.toList());
         } else {
             list = service.getChallByCategory(categoryId);
         }
@@ -62,6 +69,8 @@ public class ChallengController {
             userChall = service.getMyChallengeList(user.getId());
         }
 
+        List<Challenge> adminChallenge= service.getChallengesByAdmin();
+        model.addAttribute("adminChallenge", adminChallenge);
 
         List<Challenge> top3 = service.getTop3Challenge(); // 일단 임시로 참여자 수 많은 순으로(제한유저 꽉찬거 말고)
         model.addAttribute("top3", top3);
@@ -83,6 +92,8 @@ public class ChallengController {
                                    @RequestParam Map<String, String> info,
 
                                    Model model) {
+
+        model.addAttribute("currentDate", LocalDate.now()); // 현재 날짜 추가
 
         List<Challenge> userChall = new ArrayList<>();
         if (user != null) {
@@ -139,11 +150,21 @@ public class ChallengController {
                                   Model model
                                  )
     {
+        model.addAttribute("currentDate", LocalDate.now()); // 현재 날짜 추가
+
+        List<Challenge> userChall = new ArrayList<>();
+        int balance =0;
+        if (user != null) {
+            userChall = service.getMyChallengeList(user.getId());
+            balance =paymentService.getBalanceBYUserId(user.getId());
+        }
         Challenge challe=service.getChallengeById(id);
 
         List<ChallComment> list =challCommentService.getChallCommentList(id);
+        model.addAttribute("userChall", userChall);
         model.addAttribute("user",user);
         model.addAttribute("list",list);
+        model.addAttribute("balance",balance);
         model.addAttribute("challe",challe);
 
         return "th/chall/challengeDetail";
@@ -152,11 +173,37 @@ public class ChallengController {
 
     // 이용자 챌린지 참여하기
     @GetMapping("/participate/{challengeId}")
-    public  String participate(@SessionAttribute(value = "user",required = false) User user ,@PathVariable Integer challengeId)
+    @ResponseBody
+    public  Map<String,Integer> participate(@SessionAttribute(value = "user") User user ,
+                               @PathVariable Integer challengeId
+                               )
     {
         String userId = user.getId();
-        service.participate(new Participation(userId,challengeId));
-        return "redirect:/challenge/myChall";
+
+        // 서비스 메소드로 참여 처리
+      int success= service.participate(new Participation(challengeId,userId));
+
+        // JSON 응답 반환
+        Map<String,Integer> response = new HashMap<>();
+        response.put("success", success);
+        return response;
+    }
+
+    // 이용자 챌린지 참여하기 : 포인트 필요
+    @PostMapping("/participate")
+    @ResponseBody
+    public Map<String, String> participate(@SessionAttribute(value = "user") User user,
+                                           @RequestBody Map<String, Object> requestData) {
+        String userId = user.getId();
+        int spentPoint = Integer.parseInt(requestData.get("spentPoint").toString());
+        int challengeId = Integer.parseInt(requestData.get("challengeId").toString());
+
+        service.participate(new Participation(userId, challengeId, spentPoint));
+
+        // JSON 응답 생성
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "공식 챌린지에 성공적으로 참여했습니다.");
+        return response;
     }
 
     // 내가 참여한 챌린지로 이동

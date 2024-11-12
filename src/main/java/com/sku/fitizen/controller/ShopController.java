@@ -126,7 +126,6 @@ public class ShopController {
         @RequestParam("userId") String userId, @RequestParam("qty") int qty, HttpSession session){
             CartItem existingCartItem = cartService.findCartItemByUserIdAndProductId(userId, productId);
             Map<String, Object> response = new HashMap<>();
-
             System.out.println(productId + "    " + userId);
             // 로그인 여부 확인
             if (userId == null) {
