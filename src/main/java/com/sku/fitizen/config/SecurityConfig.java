@@ -67,7 +67,7 @@ public class SecurityConfig {
                       "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
                        "/mail/**",
                       "/ai/chatBot/**", "/shop/**","/ai/predict_result","/ai/predict_exercise","/ai/aiResult",
-                      "/trainer/**","/challenge","/hallenge/detail/*","/challenge/search","/proofShot/*","/challenge/detail/*"
+                      "/trainer/**","/challenge","/challenge/detail/*","/challenge/search","/proofShot/*","/challenge/detail/*"
 
 
 
