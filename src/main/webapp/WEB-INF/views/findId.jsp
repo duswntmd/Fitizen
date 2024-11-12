@@ -41,7 +41,7 @@
                 var name = $('#name').val();
 
                 $.ajax({
-                    url: '/login/findId', // 컨트롤러의 매핑 URL
+                    url: '/mail/findId', // 컨트롤러의 매핑 URL
                     type: 'POST',
                     data: {
                         email: email,
@@ -49,12 +49,12 @@
                     },
                     success: function(response) {
                         if (response.id) {
-                            $('#result').html("아이디는: " + response.id);
+                            $('#result').html("아이디는 " + response.id+"입니다");
                         } else {
                             $('#result').html(response.message);
                         }
                     },
-                    error: function() {
+                    error: function(xhr,status,err) {
                         $('#result').html("오류가 발생했습니다."+err);
                     }
                 });
