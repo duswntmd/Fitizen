@@ -41,49 +41,49 @@
     <c:when test="${exercise == 'health'}">
         <div class="exercise-container">
             <a href='../exerciseDetail?exercise=health'><img class='exercise-img fade-in' src='/image/health.jpg' alt='헬스' /></a>
-            <div class='exercise-text'>헬스</div>
+            <div class='exercise-text'>헬스(${confidence_score}%)</div>
         </div>
     </c:when>
     <c:when test="${exercise == 'yoga'}">
         <div class="exercise-container">
             <a href='../exerciseDetail?exercise=yoga'><img class='exercise-img fade-in' src='/image/yoga.jpg' alt='요가' /></a>
-            <div class='exercise-text'>요가</div>
+            <div class='exercise-text'>요가(${confidence_score}%)</div>
         </div>
     </c:when>
     <c:when test="${exercise == 'pilates'}">
         <div class="exercise-container">
             <a href='../exerciseDetail?exercise=pilates'><img class='exercise-img fade-in' src='/image/pilates.jpg' alt='필라테스' /></a>
-            <div class='exercise-text'>필라테스</div>
+            <div class='exercise-text'>필라테스(${confidence_score}%)</div>
         </div>
     </c:when>
     <c:when test="${exercise == 'cardio'}">
         <div class="exercise-container">
             <a href='../exerciseDetail?exercise=cardio'><img class='exercise-img fade-in' src='/image/cardio.jpg' alt='유산소 운동' /></a>
-            <div class='exercise-text'>유산소 운동</div>
+            <div class='exercise-text'>유산소 운동(${confidence_score}%)</div>
         </div>
     </c:when>
     <c:when test="${exercise == 'swimming'}">
         <div class="exercise-container">
             <a href='../exerciseDetail?exercise=swimming'><img class='exercise-img fade-in' src='/image/swimming.jpg' alt='수영' /></a>
-            <div class='exercise-text'>수영</div>
+            <div class='exercise-text'>수영(${confidence_score}%)</div>
         </div>
     </c:when>
     <c:when test="${exercise == 'basketball'}">
         <div class="exercise-container">
             <a href='../exerciseDetail?exercise=basketball'><img class='exercise-img fade-in' src='/image/basketball.jpg' alt='농구' /></a>
-            <div class='exercise-text'>농구</div>
+            <div class='exercise-text'>농구(${confidence_score}%)</div>
         </div>
     </c:when>
     <c:when test="${exercise == 'tableTennis'}">
         <div class="exercise-container">
             <a href='../exerciseDetail?exercise=tableTennis'><img class='exercise-img fade-in' src='/image/tabletennis.jpg' alt='탁구' /></a>
-            <div class='exercise-text'>탁구</div>
+            <div class='exercise-text'>탁구(${confidence_score}%)</div>
         </div>
     </c:when>
     <c:when test="${exercise == 'badminton'}">
         <div class="exercise-container">
             <a href='../exerciseDetail?exercise=badminton'><img class='exercise-img fade-in' src='/image/badminton.jpg' alt='배드민턴' /></a>
-            <div class='exercise-text'>배드민턴</div>
+            <div class='exercise-text'>배드민턴(${confidence_score}%)</div>
         </div>
     </c:when>
     <c:otherwise>
