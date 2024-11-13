@@ -36,7 +36,7 @@ import java.util.UUID;
 public class AiServer {
 
     private final HttpClient client;
-    //    private final String pythonServerUrl = "http://220.67.113.235:8000/";
+    //private final String pythonServerUrl = "http://127.0.0.1:8000/"; //박성재테스트용 파이썬url
     private final RestTemplate restTemplate = new RestTemplate();
     private final String pythonServerUrl = "http://220.67.113.237:8000/";
     private final VideoAnalysisService videoAnalysisService;
@@ -300,7 +300,7 @@ public class AiServer {
             System.out.println("JSON to be sent to Python server: " + json.toString());
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(pythonServerUrl + "/predict_exercise"))
+                    .uri(URI.create(pythonServerUrl + "predict_exercise"))
                     .header("Content-Type", "application/json")
                     .version(HttpClient.Version.HTTP_1_1)  // HTTP/1.1로 강제 설정
                     .POST(HttpRequest.BodyPublishers.ofString(json.toString(), StandardCharsets.UTF_8))
@@ -312,12 +312,13 @@ public class AiServer {
             String responseBody = response.body();
             JSONObject jsonObject = new JSONObject(responseBody);
             String exercise = jsonObject.getString("recommended_exercise");
-            System.out.println("추천운동:" + exercise);
+            float confidence_score=jsonObject.getFloat("confidence_score");
+            System.out.println("추천운동:" + exercise+", 정확도:"+100*confidence_score+"%" );
 
 
             // Model 객체에 값 저장
             session.setAttribute("exercise", exercise);
-
+            session.setAttribute("confidence_score", confidence_score);
             // JSON 형태로 반환
 
             return ResponseEntity.ok("/aiResult");
@@ -330,7 +331,9 @@ public class AiServer {
     @GetMapping("/aiResult")
     public String aiResult(HttpSession session, Model model) {
         String exercise = (String) session.getAttribute("exercise"); // 세션에서 값 가져오기
+        float confidence_score=(float) session.getAttribute("confidence_score");
         model.addAttribute("exercise", exercise); // 모델에 값 추가
+        model.addAttribute("confidence_score",confidence_score*100);
         return "aiResult";
     }
 
