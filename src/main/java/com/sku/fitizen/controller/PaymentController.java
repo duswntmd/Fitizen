@@ -1,9 +1,10 @@
-package com.sku.fitizen.controller.challenge;
+package com.sku.fitizen.controller;
 
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
+import com.sku.fitizen.Dto.orderProductDTO;
 import com.sku.fitizen.domain.User;
 import com.sku.fitizen.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class PaymentController {
      //   return iamportClient.paymentByImpUid(imp_uid);
 
         IamportResponse<Payment> response = iamportClient.paymentByImpUid(imp_uid);
-        System.out.println("Response from Iamport: " + response.getMessage()+"1"+response.getResponse()); // 디버깅을 위한 로그 출력
+       // System.out.println("Response from Iamport: " + response.getMessage()+"1"+response.getResponse()); // 디버깅을 위한 로그 출력
         return response;
 
         /*
@@ -62,7 +63,7 @@ public class PaymentController {
 
     @PostMapping("/savePayment")
     @ResponseBody
-    public Map<String, Object> savePayment(@RequestBody com.sku.fitizen.domain.Payment payment)
+    public Map<String, Object> savePayment(@RequestBody com.sku.fitizen.domain.pay.Payment payment)
     {
         Map<String, Object> response = new HashMap<>();
 
@@ -72,6 +73,17 @@ public class PaymentController {
 
         return response;
     }
+
+    @PostMapping("/orderPayment")
+    @ResponseBody
+    public Map<String, Object> orderPayment(@RequestBody orderProductDTO dto)
+    {
+        Map<String, Object> response = new HashMap<>();
+        boolean success  = paymentService.saveOrderPayment(dto);
+        response.put("success", success);
+        return response;
+    }
+
 
 
     @PostMapping("/cancel")
@@ -100,7 +112,7 @@ public class PaymentController {
             return "redirect:/login/login";
         }
 
-       List<com.sku.fitizen.domain.Payment> list =paymentService.getPaymentLsit(userId);
+       List<com.sku.fitizen.domain.pay.Payment> list =paymentService.getPaymentLsit(userId);
        model.addAttribute("payments", list);
 
        int balance =paymentService.getBalanceBYUserId(userId);

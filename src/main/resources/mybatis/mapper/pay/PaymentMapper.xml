@@ -4,8 +4,25 @@
 
 <mapper namespace="com.sku.fitizen.mapper.PaymentMapper">
 
+
+    <!--결제 정보저장(fitizen store)-->
+
+
+    <insert id="insertOrder" parameterType="com.sku.fitizen.Dto.orderProductDTO" useGeneratedKeys="true" keyProperty="orderId" keyColumn="orderId">
+        INSERT INTO orders (ORDERID, USERID, IMPUID, MERCHANTUID, TOTALPRICE, PAIDAT)
+        VALUES (ORDER_SEQ.nextval, #{userId}, #{impUid}, #{merchantUid}, #{totalPrice}, SYSDATE)
+    </insert>
+
+
+    <insert id="insertOrderProduct" parameterType="map">
+        INSERT INTO orderProducts
+        VALUES (ORDERPAY_SEQ.nextval, #{orderId}, #{product.product_id}, #{product.qty},
+                #{product.product_name}, #{product.product_price},#{product.price})
+    </insert>
+
+
     <!-- 결제 정보 저장-->
-    <insert id="savePayment" parameterType="com.sku.fitizen.domain.Payment" >
+    <insert id="savePayment" parameterType="com.sku.fitizen.domain.pay.Payment" >
         INSERT INTO payment (
             paymentId,
             userId,
@@ -27,7 +44,7 @@
 
 
     <!-- 결제 내역 -->
-    <select id="getPaymentList" parameterType="com.sku.fitizen.domain.Payment">
+    <select id="getPaymentList" parameterType="com.sku.fitizen.domain.pay.Payment">
 
          SELECT  * FROM  PAYMENT
          WHERE  USERID =#{userId}

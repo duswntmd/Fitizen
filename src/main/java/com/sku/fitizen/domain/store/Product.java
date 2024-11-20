@@ -1,4 +1,4 @@
-package com.sku.fitizen.domain;
+package com.sku.fitizen.domain.store;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

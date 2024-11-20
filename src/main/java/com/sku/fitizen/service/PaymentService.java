@@ -1,7 +1,11 @@
 package com.sku.fitizen.service;
 
-import com.sku.fitizen.domain.Payment;
+import com.sku.fitizen.Dto.orderProductDTO;
+import com.sku.fitizen.domain.pay.Payment;
+import com.sku.fitizen.domain.store.CartItem;
 import com.sku.fitizen.mapper.PaymentMapper;
+import com.sku.fitizen.mapper.store.CartMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,11 +23,39 @@ public class PaymentService {
 
     @Autowired
     PaymentMapper paymentMapper;
+    @Autowired
+    CartMapper cartMapper;
 
 
     private static final String API_KEY = "1503384544352203";
     private static final String API_SECRET = "oT90x1wAb37Xj64cfvnZEmMFA7GUqmQPAvuc1vgShf4Iab5ZWHyYB2Kq4WxAM9S5RDG1sQyGHJ1UxsJP";
 
+
+
+    // 결제 기록 저장 ( fitizen store)
+    @Transactional
+    public  boolean saveOrderPayment (orderProductDTO dto)
+    {
+        // 결제 정보  오더 테이블, 주문 상품들 테이블 , 장바구니 제거 3젝션
+        // System.out.println(dto);
+        paymentMapper.insertOrder(dto);
+        int orderId =dto.getOrderId();
+        // orderProduct 테이블에 저장
+        boolean saved = dto.getOrderProducts().stream()
+                .allMatch(product -> paymentMapper.insertOrderProduct(product, orderId) > 0);
+
+        if (saved) {
+            dto.getOrderProducts().forEach(product -> {
+                CartItem cartItem = new CartItem();
+                cartItem.setProduct_id(product.getProduct_id());
+                cartItem.setUser_id(dto.getUserId());
+                cartMapper.deleteCartItemsByUserId(cartItem); // 장바구니 항목 삭제
+            });
+            return true;
+        }
+
+        return false; // 실패 시 false 반환
+    }
 
 
     // 결제 기록 저장

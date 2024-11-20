@@ -1,6 +1,6 @@
-package com.sku.fitizen.mapper;
+package com.sku.fitizen.mapper.store;
 
-import com.sku.fitizen.domain.Product;
+import com.sku.fitizen.domain.store.Product;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

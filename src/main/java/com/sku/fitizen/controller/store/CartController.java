@@ -1,22 +1,18 @@
-package com.sku.fitizen.controller;
+package com.sku.fitizen.controller.store;
 
-import com.sku.fitizen.domain.CartItem;
-import com.sku.fitizen.domain.Product;
-import com.sku.fitizen.service.CartService;
-import com.sku.fitizen.service.ShopService;
+import com.sku.fitizen.domain.store.CartItem;
+import com.sku.fitizen.domain.store.Product;
+import com.sku.fitizen.service.store.CartService;
+import com.sku.fitizen.service.store.ShopService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/cart")
@@ -30,7 +26,7 @@ public class CartController {
     @GetMapping("")
     public String cart(Model model, HttpSession session) {
         String userId = (String) session.getAttribute("userId");
-        System.out.println("UserId: " + userId);
+        //System.out.println("UserId: " + userId);
         // DB에서 해당 사용자의 장바구니 목록을 가져옴
         List<CartItem> cart = cartService.selectCartItemsByUserId(userId);
         List<Product> products = new ArrayList<>();

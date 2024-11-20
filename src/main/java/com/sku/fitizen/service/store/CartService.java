@@ -1,19 +1,13 @@
-package com.sku.fitizen.service;
+package com.sku.fitizen.service.store;
 
-import com.sku.fitizen.domain.CartItem;
-import com.sku.fitizen.domain.Order;
-import com.sku.fitizen.domain.Product;
-import com.sku.fitizen.mapper.CartMapper;
-import com.sku.fitizen.mapper.OrderMapper;
-import com.sku.fitizen.mapper.ShopMapper;
+import com.sku.fitizen.domain.store.CartItem;
+import com.sku.fitizen.domain.store.Product;
+import com.sku.fitizen.mapper.store.CartMapper;
+import com.sku.fitizen.mapper.store.ShopMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class CartService {
@@ -24,15 +18,15 @@ public class CartService {
     @Autowired
     private ShopMapper shopMapper;
 
-    @Autowired
-    private OrderMapper orderMapper;
-
     public List<CartItem> selectCartItemsByUserId(String userId) {
+
 
         return cartMapper.selectCartItemsByUserId(userId);
     }
 
     public void insertCartItem(CartItem cartItem) {
+
+        // System.out.println(cartItem);
         cartMapper.insertCartItem(cartItem);
     }
 

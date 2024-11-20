@@ -75,7 +75,6 @@
 
             const userEmail = '[[${user.email}]]';
             const userId= '[[${user.id}]]';
-
             IMP.init("imp38808434");
             IMP.request_pay(
                 {
@@ -94,9 +93,8 @@
                     }).done(function(data) {
                         console.log(data);
                         if (rsp.paid_amount === data.response.amount) {
-                            alert("imp_uid: " + data.impUid + " merchant_uid(orderKey) :" + data.merchantUid);
+                            //alert("imp_uid: " + data.impUid + " merchant_uid(orderKey) :" + data.merchantUid);
                             console.log("결제 및 결제검증완료")
-
                             // 결제 검증 성공 후, 추가 데이터 전송
                             $.ajax({
                                 type: 'POST',

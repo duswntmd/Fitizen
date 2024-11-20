@@ -1,9 +1,9 @@
-package com.sku.fitizen.controller;
+package com.sku.fitizen.controller.store;
 
-import com.sku.fitizen.domain.CartItem;
-import com.sku.fitizen.domain.Product;
-import com.sku.fitizen.service.CartService;
-import com.sku.fitizen.service.ShopService;
+import com.sku.fitizen.domain.store.CartItem;
+import com.sku.fitizen.domain.store.Product;
+import com.sku.fitizen.service.store.CartService;
+import com.sku.fitizen.service.store.ShopService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -18,9 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 

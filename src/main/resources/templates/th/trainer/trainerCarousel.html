@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="trainerCarousel">
+
+    <div class="carousel-container">
+        <div class="carousel-wrapper">
+            <div class="carousel" id="carousel">
+                <div class="content-section">
+                    <div class="left-image">
+                        <img src="/files/challengeCover/eximg.png" alt="챌린지 예시 이미지 1">
+                    </div>
+                    <div class="right-description">
+                        <h3>챌린지 참여 방법</h3>
+                        <p>1. 원하는 챌린지를 선택하세요.</p>
+                        <p>2. 참여하기 버튼을 클릭하여 챌린지에 참가하세요!</p>
+                        <p>3. 챌린지 기간 동안 목표를 달성하고 인증샷을 업로드하세요.</p>
+                        <p>4. 모든 목표를 완료하면 포인트가 적립됩니다.</p>
+                        <p>5. 포인트는 마이페이지에서 확인할 수 있습니다.</p>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <div class="left-image">
+                        <img src="/files/challengeCover/eximg.png" alt="챌린지 예시 이미지 2">
+                    </div>
+                    <div class="right-description">
+                        <h3>챌린지 등록 방법</h3>
+                        <p>1. 친구를 초대하여 함께 챌린지에 참여하세요!</p>
+                        <p>2. 팀 목표를 설정하고 함께 도전하세요.</p>
+                        <p>3. 목표 달성을 위해 소통하세요.</p>
+                        <p>4. 팀원과 함께 인증샷을 업로드하세요.</p>
+                        <p>5. 포인트를 함께 적립할 수 있습니다.</p>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <div class="left-image">
+                        <img src="/files/challengeCover/eximg.png" alt="챌린지 예시 이미지 3">
+                    </div>
+                    <div class="right-description">
+                        <h3>얻은 포인트로 다양한 서비스를 이용하세요!</h3>
+                        <p>1. 개인 목표를 설정하고 도전하세요.</p>
+                        <p>2. 목표 달성을 위한 계획을 세우세요.</p>
+                        <p>3. 정기적으로 진행 상황을 확인하세요.</p>
+                        <p>4. 목표 달성 후 인증샷을 업로드하세요.</p>
+                        <p>5. 마이페이지에서 포인트를 확인하세요.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="dots">
+                <span class="dot" onclick="showSlide(0)"></span>
+                <span class="dot" onclick="showSlide(1)"></span>
+                <span class="dot" onclick="showSlide(2)"></span>
+            </div>
+            <button class="prev" type="button" onclick="prevSlide()">&lt;</button>
+            <button class="next" type="button" onclick="nextSlide()">&gt;</button>
+        </div>
+    </div>
+    <script>
+        let currentIndex = 0;
+
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.content-section');
+            if (index >= slides.length) currentIndex = 0;
+            if (index < 0) currentIndex = slides.length - 1;
+            const offset = -currentIndex * 100; // 각 이미지의 너비 비율
+            document.getElementById('carousel').style.transform = `translateX(${offset}%)`;
+            updateDots(); // 점 업데이트
+        }
+
+        function nextSlide() {
+            currentIndex++;
+            showSlide(currentIndex);
+        }
+
+        function prevSlide() {
+            currentIndex--;
+            showSlide(currentIndex);
+        }
+
+        function updateDots() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active');
+                if (index === currentIndex) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        setInterval(nextSlide, 5000);
+    </script>
+</div>
+</body>
+</html>

@@ -244,6 +244,8 @@ public class AiServer {
         }
         String question = request.get("question");
         String json = String.format("{\"question\": \"%s\"}", question);
+        System.out.println("Generated JSON: " + json);
+
 
         // HttpRequest 생성 (POST 요청)
         HttpRequest httpRequest = HttpRequest.newBuilder()
