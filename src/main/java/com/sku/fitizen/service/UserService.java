@@ -175,6 +175,7 @@ public class UserService {
     //  유저 아이디로 is trainer  Y or N 조회
     public char isTrainer (String userId)
     {
+        System.out.println("asdasdasd"+userMapper.isTrainer(userId));
         return userMapper.isTrainer(userId);
     }
 

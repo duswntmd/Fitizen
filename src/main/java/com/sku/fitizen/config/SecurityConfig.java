@@ -2,9 +2,6 @@ package com.sku.fitizen.config;
 
 import com.sku.fitizen.handler.CustomAuthenticationSuccessHandler;
 import jakarta.servlet.DispatcherType;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,15 +10,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 
 @Slf4j
 @Configuration
@@ -99,7 +92,7 @@ public class SecurityConfig {
                 .requestMatchers("/challenge/add","/challenge/save","/challenge/participate/*","/challenge/participate",
                         "challenge/myChall","/chellComment/**").hasAnyRole("USER","ADMIN")
                 .requestMatchers("/proofComment/**","proofShot/addProofShotForm/*","proofShot/add/","proofShot/addChatProof","proofShot/verify").hasAnyRole("USER","ADMIN")
-                .requestMatchers("pay/*" ,"verify/**","/savePayment/*").hasAnyRole("USER","ADMIN")
+                .requestMatchers("pay/*" ,"verify/**","/savePayment").hasAnyRole("USER","ADMIN")
                 .requestMatchers("/ai/uploadVideo").hasAnyRole("USER")
                 .requestMatchers("/ai/analyzeVideo").hasAnyRole("USER")
                 //.anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
