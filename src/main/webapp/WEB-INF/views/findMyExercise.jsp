@@ -251,7 +251,14 @@
         const time = form.elements['time'].value;
         const environment = form.elements['environment'].value;
 
-        // 초기 점수 설정
+        const height = parseInt(form.elements['height'].value);
+        const weight = parseInt(form.elements['weight'].value);
+
+        if (!height || height <= 0 || !weight || weight <= 0) {
+            alert("올바른 키와 몸무게를 입력해주세요.");
+            return false; // 폼 제출 방지
+        }
+
         const scores = {
             health: 0,
             yoga: 0,
@@ -259,97 +266,135 @@
             cardio: 0,
             swimming: 0,
             basketball: 0,
-            tableTennis: 0,
+            tabletennis: 0,
             badminton: 0
         };
 
         // 빈도에 따른 점수 계산
-        if (frequency === 'never') {
-            scores.yoga += 2;
-            scores.pilates += 2;
-        } else if (frequency === 'sometimes') {
-            scores.cardio += 2;
-            scores.badminton += 1;
-            scores.tableTennis += 1;
-        } else if (frequency === 'regularly') {
-            scores.health += 2;
-            scores.swimming += 2;
-            scores.basketball += 1;
-        } else if (frequency === 'daily') {
-            scores.health += 3;
-            scores.cardio += 2;
-            scores.swimming += 2;
-            scores.basketball += 2;
+        switch (frequency) {
+            case 'never':
+                scores.yoga += 2;
+                scores.pilates += 2;
+                break;
+            case 'sometimes':
+                scores.cardio += 2;
+                scores.badminton += 1;
+                scores.tabletennis += 1;
+                break;
+            case 'regularly':
+                scores.health += 2;
+                scores.swimming += 2;
+                scores.basketball += 1;
+                break;
+            case 'daily':
+                scores.health += 3;
+                scores.cardio += 2;
+                scores.swimming += 2;
+                scores.basketball += 2;
+                break;
         }
 
         // 선호 운동 유형에 따른 점수 계산
-        if (type === 'cardio') {
-            scores.cardio += 3;
-            scores.swimming += 2;
-            scores.basketball += 2;
-        } else if (type === 'strength') {
-            scores.health += 3;
-            scores.badminton += 1;
-            scores.tableTennis += 1;
-        } else if (type === 'flexibility') {
-            scores.yoga += 3;
-            scores.pilates += 3;
-        } else if (type === 'balance') {
-            scores.pilates += 3;
-            scores.yoga += 2;
-            scores.badminton += 1;
+        switch (type) {
+            case 'cardio':
+                scores.cardio += 3;
+                scores.swimming += 2;
+                scores.basketball += 2;
+                break;
+            case 'strength':
+                scores.health += 3;
+                scores.badminton += 1;
+                scores.tabletennis += 1;
+                break;
+            case 'flexibility':
+                scores.yoga += 3;
+                scores.pilates += 3;
+                break;
+            case 'balance':
+                scores.pilates += 3;
+                scores.yoga += 2;
+                scores.badminton += 1;
+                break;
         }
 
         // 목표에 따른 점수 계산
-        if (goal === 'lose_weight') {
-            scores.cardio += 2;
-            scores.swimming += 2;
-            scores.basketball += 1;
-        } else if (goal === 'build_muscle') {
-            scores.health += 3;
-        } else if (goal === 'increase_endurance') {
-            scores.cardio += 2;
-            scores.swimming += 2;
-            scores.basketball += 1;
-        } else if (goal === 'improve_flexibility') {
-            scores.yoga += 3;
-            scores.pilates += 3;
+        switch (goal) {
+            case 'lose_weight':
+                scores.cardio += 2;
+                scores.swimming += 2;
+                scores.basketball += 1;
+                break;
+            case 'build_muscle':
+                scores.health += 3;
+                if (weight > 80) {
+                    scores.health += 1;
+                } else {
+                    scores.badminton += 1;
+                }
+                break;
+            case 'increase_endurance':
+                scores.cardio += 2;
+                scores.swimming += 2;
+                scores.basketball += 1;
+                if (height > 175) {
+                    scores.swimming += 1;
+                } else {
+                    scores.cardio += 1;
+                }
+                break;
+            case 'improve_flexibility':
+                scores.yoga += 3;
+                scores.pilates += 3;
+                if (height < 160) {
+                    scores.yoga += 1;
+                } else {
+                    scores.pilates += 1;
+                }
+                break;
         }
 
         // 운동 시간에 따른 점수 조정
-        if (time === 'short') {
-            scores.cardio += 1;
-            scores.tableTennis += 1;
-        } else if (time === 'medium') {
-            scores.yoga += 1;
-            scores.pilates += 1;
-            scores.basketball += 1;
-        } else if (time === 'long') {
-            scores.health += 2;
-            scores.swimming += 2;
-            scores.cardio += 2;
+        switch (time) {
+            case 'short':
+                scores.cardio += 1;
+                scores.tabletennis += 1;
+                break;
+            case 'medium':
+                scores.yoga += 1;
+                scores.pilates += 1;
+                scores.basketball += 1;
+                break;
+            case 'long':
+                scores.health += 2;
+                scores.swimming += 2;
+                scores.cardio += 2;
+                break;
         }
 
         // 환경에 따른 점수 조정
-        if (environment === 'indoor') {
-            scores.health += 2;
-            scores.yoga += 2;
-            scores.pilates += 2;
-            scores.tableTennis += 1;
-            scores.badminton += 1;
-        } else if (environment === 'outdoor') {
-            scores.cardio += 2;
-            scores.swimming += 2;
-            scores.basketball += 2;
-        } else if (environment === 'both') {
-            scores.cardio += 1;
-            scores.yoga += 1;
-            scores.pilates += 1;
-            scores.health += 1;
-            scores.swimming += 1;
-            scores.basketball += 1;
-            scores.tableTennis += 1;
-            scores.badminton += 1;
+        switch (environment) {
+            case 'indoor':
+                scores.health += 2;
+                scores.yoga += 2;
+                scores.pilates += 2;
+                scores.tabletennis += 1;
+                scores.badminton += 1;
+                break;
+            case 'outdoor':
+                scores.cardio += 2;
+                scores.swimming += 2;
+                scores.basketball += 2;
+                break;
+            case 'both':
+                scores.cardio += 1;
+                scores.yoga += 1;
+                scores.pilates += 1;
+                scores.health += 1;
+                scores.swimming += 1;
+                scores.basketball += 1;
+                scores.tabletennis += 1;
+                scores.badminton += 1;
+                break;
         }
 
         // 추천 운동 결정
@@ -373,7 +418,7 @@
                     "     <div class='exercise-text'>수영</div>";
                 case 'basketball': return "<a href='exerciseDetail?exercise=basketball'><img class='exercise-img fade-in' src='/image/basketball.jpg' alt='농구' /></a>" +
                     "     <div class='exercise-text'>농구</div>";
-                case 'tableTennis': return "<a href='exerciseDetail?exercise=tableTennis'><img class='exercise-img fade-in' src='/image/tabletennis.jpg' alt='탁구' /></a>" +
+                case 'tabletennis': return "<a href='exerciseDetail?exercise=tabletennis'><img class='exercise-img fade-in' src='/image/tabletennis.jpg' alt='탁구' /></a>" +
                     "     <div class='exercise-text'>탁구</div>";
                 case 'badminton': return "<a href='exerciseDetail?exercise=badminton'><img class='exercise-img fade-in' src='/image/badminton.jpg' alt='배드민턴' /></a>" +
                     "     <div class='exercise-text'>배드민턴</div>";

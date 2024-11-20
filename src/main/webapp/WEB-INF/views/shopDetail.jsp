@@ -28,7 +28,12 @@
         align-items: center;
         flex-grow: 1;
         padding: 20px;
-        margin: 0;
+        margin: 20px auto; /* 가운데 정렬 */
+        max-width: 800px; /* 최대 너비 설정 */
+        background-color: #ffffff; /* 배경색 흰색 */
+        border: 1px solid #ccc; /* 윤곽선 추가 */
+        border-radius: 10px; /* 모서리 둥글게 */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
     }
 
     /* 제목 스타일 */
@@ -60,23 +65,44 @@
         margin-bottom: 25px;
     }
 
-    /* 버튼 스타일 */
+    /* 버튼 스타일 통일 */
     .page-contents a {
+        width:200px;
         display: inline-block;
         padding: 10px 20px;
         margin: 10px;
-        background-color: #007BFF;
+        background-color: #007BFF; /* 기본 버튼 색상 */
         color: white;
         text-decoration: none;
         border-radius: 5px;
         font-size: 1.1em;
         transition: background-color 0.3s ease;
+        border: none; /* 버튼 테두리 제거 */
+        cursor: pointer; /* 마우스 커서 포인터로 변경 */
+        text-align: center; /* 버튼 텍스트 가운데 정렬 */
     }
-
-    .page-contents a:hover {
+    .page-contents button{
+        width:200px;
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        background-color:  #FF0000;; /* 기본 버튼 색상 */
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 1.1em;
+        transition: background-color 0.3s ease;
+        border: none; /* 버튼 테두리 제거 */
+        cursor: pointer; /* 마우스 커서 포인터로 변경 */
+        text-align: center; /* 버튼 텍스트 가운데 정렬 */
+    }
+    /* 버튼 호버 스타일 */
+    .page-contents a:hover{
         background-color: #0056b3; /* 버튼에 마우스를 올렸을 때 색상 변경 */
     }
-
+    .page-contents button:hover {
+        background-color: #990000; /* 버튼에 마우스를 올렸을 때 색상 변경 */
+    }
     /* 상품 목록으로 돌아가기 버튼 스타일 */
     .page-contents a:nth-child(6) {
         background-color: #6c757d; /* 회색 톤 */
@@ -85,7 +111,9 @@
     .page-contents a:nth-child(6):hover {
         background-color: #5a6268; /* 버튼에 마우스를 올렸을 때 색상 변경 */
     }
+
 </style>
+
 
 <body>
 <div class="page-contents">
@@ -108,13 +136,11 @@
 <!-- 로그인여부 확인 후 장바구니 추가로직 -->
 
             <!-- 장바구니에 추가 버튼 -->
-            <a href="javascript:void(0);" id="addCartBtn">장바구니에 추가</a>
 
-
-<!-- 상품 목록으로 돌아가는 버튼 -->
-<br>
-<a href="${pageContext.request.contextPath}/shop">상품 목록으로 돌아가기</a>
-    <button id="deleteButton">삭제</button>
+    <a href="javascript:void(0);" id="addCartBtn" class="button">장바구니에 추가</a>
+    <br>
+    <a href="${pageContext.request.contextPath}/shop" class="button">상품 목록으로 돌아가기</a>
+    <button id="deleteButton" class="button">삭제</button>
 </div>
 <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

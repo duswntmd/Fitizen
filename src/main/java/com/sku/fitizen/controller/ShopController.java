@@ -31,7 +31,7 @@ public class ShopController {
     private CartService cartService;
 
     private  ShopService shopService;
-    private static final String IMAGE_DIR = "static/image/";
+    private static final String IMAGE_DIR = "static/image/";  //바꿔야됨
     public ShopController(ShopService shopService) {
         this.shopService = shopService;
     }

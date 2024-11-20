@@ -22,7 +22,7 @@
                      #{user_id, jdbcType=VARCHAR},
                      #{product_name, jdbcType=VARCHAR},
                      #{product_price, jdbcType=INTEGER},
-             #{qty} * (SELECT prprice FROM product WHERE product_id = #{product_id}AND ROWNUM = 1)
+             #{qty} * (SELECT prprice FROM product WHERE prid = #{product_id}AND ROWNUM = 1)
                  )
     </insert>
 
