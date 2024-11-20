@@ -36,9 +36,9 @@ import java.util.UUID;
 public class AiServer {
 
     private final HttpClient client;
-    //private final String pythonServerUrl = "http://127.0.0.1:8000/"; //박성재테스트용 파이썬url
+    private final String pythonServerUrl = "http://127.0.0.1:8000/"; //박성재테스트용 파이썬url
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String pythonServerUrl = "http://220.67.113.237:8000/";
+    //private final String pythonServerUrl = "http://220.67.113.237:8000/";
     private final VideoAnalysisService videoAnalysisService;
 
     @Autowired
@@ -311,14 +311,22 @@ public class AiServer {
             System.out.println("Response from Python server: " + response.body());
             String responseBody = response.body();
             JSONObject jsonObject = new JSONObject(responseBody);
-            String exercise = jsonObject.getString("recommended_exercise");
-            float confidence_score=jsonObject.getFloat("confidence_score");
-            System.out.println("추천운동:" + exercise+", 정확도:"+100*confidence_score+"%" );
+            String exercise1 = jsonObject.getString("recommended_exercise1");
+            float confidence_score1=jsonObject.getFloat("confidence_score1");
+            String exercise2 = jsonObject.getString("recommended_exercise2");
+            float confidence_score2=jsonObject.getFloat("confidence_score2");
+            String exercise3 = jsonObject.getString("recommended_exercise3");
+            float confidence_score3=jsonObject.getFloat("confidence_score3");
+            //System.out.println("추천운동:" + exercise+", 정확도:"+100*confidence_score+"%" );
 
 
             // Model 객체에 값 저장
-            session.setAttribute("exercise", exercise);
-            session.setAttribute("confidence_score", confidence_score);
+            session.setAttribute("exercise1", exercise1);
+            session.setAttribute("confidence_score1", confidence_score1);
+            session.setAttribute("exercise2", exercise2);
+            session.setAttribute("confidence_score2", confidence_score2);
+            session.setAttribute("exercise3", exercise3);
+            session.setAttribute("confidence_score3", confidence_score3);
             // JSON 형태로 반환
 
             return ResponseEntity.ok("/aiResult");
@@ -330,10 +338,18 @@ public class AiServer {
 
     @GetMapping("/aiResult")
     public String aiResult(HttpSession session, Model model) {
-        String exercise = (String) session.getAttribute("exercise"); // 세션에서 값 가져오기
-        float confidence_score=(float) session.getAttribute("confidence_score");
-        model.addAttribute("exercise", exercise); // 모델에 값 추가
-        model.addAttribute("confidence_score",confidence_score*100);
+        String exercise1 = (String) session.getAttribute("exercise1"); // 세션에서 값 가져오기
+        float confidence_score1=(float) session.getAttribute("confidence_score1");
+        String exercise2 = (String) session.getAttribute("exercise2"); // 세션에서 값 가져오기
+        float confidence_score2=(float) session.getAttribute("confidence_score2");
+        String exercise3 = (String) session.getAttribute("exercise3"); // 세션에서 값 가져오기
+        float confidence_score3=(float) session.getAttribute("confidence_score3");
+        model.addAttribute("exercise1", exercise1); // 모델에 값 추가
+        model.addAttribute("confidence_score1",confidence_score1);
+        model.addAttribute("exercise2", exercise2); // 모델에 값 추가
+        model.addAttribute("confidence_score2",confidence_score2);
+        model.addAttribute("exercise3", exercise3); // 모델에 값 추가
+        model.addAttribute("confidence_score3",confidence_score3);
         return "aiResult";
     }
 

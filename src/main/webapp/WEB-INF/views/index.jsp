@@ -12,6 +12,7 @@
             padding: 0;
             height: 100%;
             overflow-x: hidden;
+            overflow-y: hidden;
             font-family: 'Pretendard-Black';
         }
 
@@ -23,6 +24,7 @@
             align-items: center;
             height: 100vh;
         }
+
 
         /* 섹션 내부 콘텐츠 정렬 */
         .section-content {
@@ -44,6 +46,11 @@
         .section-image {
             flex: 1;
             text-align: center;
+        }
+        .header-container.hidden {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
         }
 
         .section-1 {
@@ -87,14 +94,51 @@
                 text-align: center;
             }
         }
+        .section-nav {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            background-color: lightgray;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .nav-dot.active {
+            background-color: #000; /* 활성화된 섹션의 색상 */
+        }
     </style>
 </head>
 <body>
 <div class="content-wrapper">
-    <%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
+
+
+    <div class="section-nav">
+        <div class="nav-dot" data-section="0"></div>
+        <div class="nav-dot" data-section="1"></div>
+        <div class="nav-dot" data-section="2"></div>
+        <div class="nav-dot" data-section="3"></div>
+        <div class="nav-dot" data-section="4"></div>
+        <div class="nav-dot" data-section="5"></div>
+    </div>
+
+    <section class="section-0" style="height: fit-content">
+
+        <%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
+    </section>
 
     <!-- 메인 섹션들 -->
-    <section class="section-1">
+    <section class="section-1" style="height: calc(100vh);">
         <div class="section-content">
             <div class="section-text">
                 <h1 style="font-size: 400%">FITIZEN</h1>
@@ -156,6 +200,24 @@
     <script>
         let currentSection = 0;
         const sections = document.querySelectorAll('section');
+        const navDots = document.querySelectorAll('.nav-dot');
+
+        // 섹션 위치에 따라 헤더 표시 여부 업데이트
+        function checkHeaderVisibility() {
+            const section1Top = section1.getBoundingClientRect().top;
+            const section1Bottom = section1.getBoundingClientRect().bottom;
+
+            if (section1Top <= 0 && section1Bottom > 0) {
+                header.classList.remove('hidden'); // 섹션 1에 있을 때 헤더 표시
+            } else {
+                header.classList.add('hidden'); // 다른 섹션에서는 헤더 숨김
+            }
+        }
+
+        function updateNavDots() {
+            navDots.forEach(dot => dot.classList.remove('active'));
+            navDots[currentSection].classList.add('active');
+        }
 
         // 스크롤 이벤트 처리 함수
         window.addEventListener('wheel', function(event) {
@@ -165,7 +227,23 @@
                 currentSection = Math.max(currentSection - 1, 0);
             }
             sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+            updateNavDots(); // 네비게이션 점 업데이트
         });
+
+        // 점 네비게이션 클릭 이벤트
+        navDots.forEach(dot => {
+            dot.addEventListener('click', function() {
+                currentSection = parseInt(dot.getAttribute('data-section'));
+                sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+                updateNavDots();
+            });
+        });
+
+        updateNavDots(); // 초기 점 업데이트
+
+
+
+
     </script>
 </div>
 
