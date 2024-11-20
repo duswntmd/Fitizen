@@ -3,19 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.sku.fitizen.mapper.ShopMapper">
+<mapper namespace="com.sku.fitizen.mapper.store.ShopMapper">
 
     <!-- 목록 보기 -->
-    <select id="getAllProducts" resultType="com.sku.fitizen.domain.Product">
+    <select id="getAllProducts" resultType="com.sku.fitizen.domain.store.Product">
         SELECT * FROM product ORDER BY PRID DESC
     </select>
 
     <!-- 상세 보기 -->
-    <select id="getProductById" parameterType="int" resultType="com.sku.fitizen.domain.Product">
+    <select id="getProductById" parameterType="int" resultType="com.sku.fitizen.domain.store.Product">
         SELECT * FROM product WHERE prid = #{prid}
     </select>
 
-    <insert id="insertProduct" parameterType="com.sku.fitizen.domain.Product">
+    <insert id="insertProduct" parameterType="com.sku.fitizen.domain.store.Product">
         <!-- Oracle에서 시퀀스를 통해 prid 키 생성 -->
         <selectKey keyProperty="prid" resultType="int" order="BEFORE">
             SELECT product_seq.NEXTVAL AS prid FROM dual
@@ -33,7 +33,7 @@
     </select>
 
     <!-- 수정 -->
-    <update id="updateProduct" parameterType="com.sku.fitizen.domain.Product">
+    <update id="updateProduct" parameterType="com.sku.fitizen.domain.store.Product">
         UPDATE product
         SET prname = #{prname}, prprice = #{prprice}, prdesc = #{prdesc}, primage = #{primage}
         WHERE prid = #{prid}

@@ -163,7 +163,7 @@
         <tr>
             <!-- 체크박스 -->
             <td>
-                <input type="checkbox" name="selectedProductIds" value="${item.product.prid}" form="checkoutForm">
+                <input type="checkbox" name="selectedProductIds" value="${item.product.prid}" >
             </td>
             <td>
                 <img src="/image/${item.product.primage}" style="width: 100px; height: 100px;">
@@ -199,25 +199,103 @@
     <ul id="selectedItemsList" style="display: none;"></ul>
     <p><strong>총 금액:</strong> <span id="totalPrice">0</span> 원</p>
 </div>
-    <!-- 결제 폼 -->
-<form id="checkoutForm" action="cart/checkout" method="post">
-    <!-- 결제 버튼 -->
-    <input type="submit" value="결제하기" id="checkoutBtn">
-</form>
+    <button onclick="requestPay()">결제하기</button>
+
 
 
 <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <script>
+
+
     $(document).ready(function() {
-        // 결제 버튼 클릭 시 체크된 상품들만 서버로 전송
-        $('#checkoutBtn').click(function(event) {
-            if ($('input[name="selectedProductIds"]:checked').length === 0) {
-                event.preventDefault();  // 체크된 항목이 없으면 결제 진행 안 함
-                alert('결제할 상품을 선택하세요.');
-            }
-        });
+        var IMP = window.IMP;
+        IMP.init("imp38808434");// 가맹점 식별코드로 초기화
     });
+
+
+    function requestPay() {
+
+            if ($('input[name="selectedProductIds"]:checked').length === 0) {
+                alert('결제할 상품을 선택하세요.');
+                return;
+            }
+
+        const userEmail = '${user.email}';
+        const userId = '${user.id}';
+        let totalPrice = parseFloat(document.getElementById('totalPrice').textContent.replace(/,/g, '')) || 0;
+
+        const selectedItems = [];
+        $('input[name="selectedProductIds"]:checked').each(function () {
+            const row = $(this).closest('tr');
+            const qty = parseInt(row.find('input[name="qty"]').val(), 10); // 수량
+            const price = parseFloat(row.find('td:nth-child(5)').text().replace(/,/g, '')); // 개별 가격
+            const product_name = row.find('td:nth-child(3)').text();
+            const product_price =parseFloat(row.find('td:nth-child(6)').text().replace(/,/g, '')); // 계산된 총 가격
+            //console.log(row+"/"+qty+"/"+price+"/"+product_name+"/"+product_price)
+            selectedItems.push({
+                product_id: $(this).val(),
+                qty: qty,
+                price: price,
+                product_name: product_name,
+                product_price: product_price
+            });
+            //console.log(selectedItems)
+        });
+
+        IMP.init("imp38808434");
+        IMP.request_pay(
+            {
+                pg: 'html5_inicis',
+                name: "FITIZEN STORE",
+                amount: totalPrice,
+                buyer_email:userEmail,
+                buyer_name:userId
+
+            },
+            function (rsp) {
+                console.log(rsp);
+                $.ajax({
+                    type: 'POST',
+                    url: '/verify/' + rsp.imp_uid
+                }).done(function(data) {
+                    console.log(data);
+                    if (rsp.paid_amount === data.response.amount) {
+                        //alert("imp_uid: " + data.impUid + " merchant_uid(orderKey) :" + data.merchantUid);
+                        //console.log("결제 및 결제검증완료")
+
+                        // 결제 검증 성공 후, 추가 데이터 전송
+                        $.ajax({
+                            type: 'POST',
+                            url: '/orderPayment',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                userId: userId,
+                                totalPrice:totalPrice,
+                                impUid: rsp.imp_uid,
+                                merchantUid: rsp.merchant_uid,
+                                paidAt: data.paidAt,
+                                orderProducts: selectedItems
+                            }),
+                            dataType: 'json',
+                            success: function(success) {
+                                alert("결제 완료")
+                                //console.log("결제 정보 저장 성공",success);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("결제 정보 저장 실패", error);
+                            }
+                        });
+                    } else {
+                        alert("결제 실패");
+                    }
+                });
+            });
+    }
+
+
+
 
     document.addEventListener('DOMContentLoaded', function() {
         // 선택된 상품 정보와 총 금액 업데이트 함수

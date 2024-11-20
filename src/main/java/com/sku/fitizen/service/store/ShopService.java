@@ -1,7 +1,7 @@
-package com.sku.fitizen.service;
+package com.sku.fitizen.service.store;
 
-import com.sku.fitizen.domain.Product;
-import com.sku.fitizen.mapper.ShopMapper;
+import com.sku.fitizen.domain.store.Product;
+import com.sku.fitizen.mapper.store.ShopMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
