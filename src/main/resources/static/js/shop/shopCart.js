@@ -28,10 +28,10 @@
     selectedItems.push({
     product_id: $(this).val(),
     qty: qty,
-    price: price,
+    price: product_price,
     product_name: product_name,
-    product_price: product_price
-});
+    product_price: price
+    });
     //console.log(selectedItems)
 });
 
