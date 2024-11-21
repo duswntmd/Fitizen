@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="/css/users/deleteUser.css">
 </head>
 <body>
-
+<input type="hidden" name="_csrf" value="${_csrf.token}" />
 <div id="bodyContainer">
 <div class="page-contents">
     <h2>사용자 삭제</h2>
@@ -30,32 +30,8 @@
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    $("#deleteUserForm").submit(function(e) {
-        e.preventDefault();
 
-        $.ajax({
-            url: "${pageContext.request.contextPath}/register/deleteuser",
-            type: "POST",
-            data: {
-                id: $("#id").val(),
-                name: $("#name").val(),
-                pwd: $("#pwd").val()
-            },
-            success: function(response) {
-                if (response.status === "success") {
-                    alert(response.message);
-                    window.location.href = "/";
-                } else {
-                    alert(response.message);
-                }
-            },
-            error: function() {
-                alert("오류가 발생했습니다. 다시 시도해주세요.");
-            }
-        });
-    });
-</script>
+<script src="/js/users/deleteUser.js"defer></script>
 
 <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 </body>

@@ -27,9 +27,9 @@ import java.util.Map;
 public class ShopController {
     @Autowired
     private CartService cartService;
-
     private  ShopService shopService;
-    private static final String IMAGE_DIR = "static/image/";  //바꿔야됨
+    Path projectRoot = Paths.get("").toAbsolutePath(); // 현재 프로젝트 루트 경로
+    Path IMAGE_DIR = projectRoot.resolve("src/main/resources/static/ShopImage");
     public ShopController(ShopService shopService) {
         this.shopService = shopService;
     }
@@ -65,9 +65,9 @@ public class ShopController {
                 String hashedFileName = originalFilename+ "_" +randomString +fileExtension;
 
                 // resources/static/image 경로 설정
-                File imageDir = new ClassPathResource(IMAGE_DIR).getFile();
+                File imageDir = new File(IMAGE_DIR.toString());
                 if (!imageDir.exists()) {
-                    imageDir.mkdirs();  // 디렉토리가 없을 경우 생성
+                    imageDir.mkdirs();
                 }
 
                 Path filePath = Paths.get(imageDir.getAbsolutePath(), hashedFileName);  // 파일 저장 경로 설정
@@ -155,51 +155,6 @@ public class ShopController {
             // 최종 응답 반환
             return ResponseEntity.ok(response);
         }
-
-//    @PostMapping("/cart/add")
-//    @ResponseBody
-//    public ResponseEntity<Map<String, Object>> addToCart(@RequestParam("prid") int prid,
-//                                                         @RequestParam("qty") int qty,
-//                                                         HttpSession session) {
-//        Map<String, Object> response = new HashMap<>();
-//        String userId = (String) session.getAttribute("userId");
-//
-//        // 로그인 여부 확인
-//        if (userId == null) {
-//            response.put("status", "error");
-//            response.put("message", "로그인이 필요합니다.");
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);  // JSON 응답으로 반환
-//        }
-//
-//        // 상품 정보 조회
-//        Product product = shopService.getProductById(prid);
-//        if (product == null) {
-//            response.put("status", "error");
-//            response.put("message", "해당 상품을 찾을 수 없습니다.");
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);  // 상품 없음 오류 반환
-//        }
-//
-//        // CartItem 생성
-//        CartItem cartItem = new CartItem();
-//        cartItem.setProduct_id(prid);
-//        cartItem.setQty(cartItem.getQty()+1);
-//        cartItem.setPrice(product.getPrprice());  // 상품 가격 설정
-//        cartItem.setUser_id(userId);
-//        cartItem.setProduct(product);
-//        cartItem.setProduct_name(product.getPrname());
-//        cartItem.setProduct_price(product.getPrprice());
-//        System.out.println(cartItem.getProduct());
-//        // 장바구니에 추가 또는 수량 업데이트
-//        cartService.addOrUpdateCartItem(cartItem);
-//
-//        // 세션에서 장바구니 상태 업데이트
-//        List<CartItem> cart = cartService.selectCartItemsByUserId(userId);
-//        session.setAttribute("cart", cart);  // 세션에 갱신된 장바구니 저장
-//
-//        response.put("status", "success");
-//        response.put("message", "상품이 장바구니에 성공적으로 추가되었습니다.");
-//        return ResponseEntity.ok(response);
-//    }
 
 
 

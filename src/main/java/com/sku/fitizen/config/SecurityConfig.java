@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                 .requestMatchers("/", "/favicon.ico", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
                         "/findME", "findResult", "/exerciseDetail/**",
-                        "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
+                        "/ShopImage/**", "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
                         "/mail/**","favicon.ico", "/video_storage/**", "/ai/uploadProcessedVideo",
                         "/processed_videos/**",
                         "/ai/chatBot/**", "/shop/**","/ai/predict_result","/ai/predict_exercise","/ai/aiResult",
@@ -69,6 +69,7 @@ public class SecurityConfig {
                 ).permitAll()
                 //.requestMatchers("/video_storage").hasAnyRole("USER")
                 .requestMatchers("/cart/**").hasAnyRole("USER")
+                .requestMatchers("/qna/**").hasAnyRole("USER","ADMIN")
                 .requestMatchers("/register/updateuser").hasAnyRole("USER")
                 .requestMatchers("/register/deleteuser").hasAnyRole("USER")
                 .requestMatchers("/board/write").hasAnyRole("USER")
