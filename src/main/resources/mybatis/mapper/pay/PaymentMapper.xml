@@ -7,7 +7,6 @@
 
     <!--결제 정보저장(fitizen store)-->
 
-
     <insert id="insertOrder" parameterType="com.sku.fitizen.Dto.orderProductDTO" useGeneratedKeys="true" keyProperty="orderId" keyColumn="orderId">
         INSERT INTO orders (ORDERID, USERID, IMPUID, MERCHANTUID, TOTALPRICE, PAIDAT)
         VALUES (ORDER_SEQ.nextval, #{userId}, #{impUid}, #{merchantUid}, #{totalPrice}, SYSDATE)
@@ -36,7 +35,7 @@
                      #{userId},
                      #{impUid},
                      #{merchantUid},
-                     #{amount},
+                     #{paid_amount},
                      #{point},
                      SYSDATE
                  )
@@ -67,6 +66,53 @@
     </select>
 
 
+    <!-- 특정 사용자 주문과 주문상품 조회 -->
+    <select id="getOrderProductsByUserId" parameterType="String" resultMap="orderResultMap">
+        SELECT
+            o.ORDERID,
+            o.USERID,
+            o.MERCHANTUID,
+            o.TOTALPRICE AS ORDER_TOTAL,
+            o.PAIDAT,
+            op.PRODUCTID,
+            op.PRODUCTNAME,
+            op.QTY,
+            op.PRICE,
+            op.TOTALPRICE AS PRODUCT_TOTAL,
+            p.PRIMAGE AS PRODUCT_IMAGE,
+            p.PRDESC AS PRODUCT_DESCRIPTION
+        FROM
+            ORDERS o
+                JOIN
+            ORDERPRODUCTS op ON o.ORDERID = op.ORDERID
+                JOIN PRODUCT p ON op.PRODUCTID = p.PRID
+        WHERE
+            o.USERID = #{userId}
+        ORDER BY
+            o.PAIDAT DESC,
+            o.ORDERID
+    </select>
+
+    <!-- ResultMap 정의 -->
+    <resultMap id="orderResultMap" type="com.sku.fitizen.domain.store.Order">
+        <!-- 주문(Order) 매핑 -->
+        <id property="orderId" column="ORDERID" />
+        <result property="userId" column="USERID" />
+        <result property="merchantUid" column="MERCHANTUID" />
+        <result property="totalPrice" column="ORDER_TOTAL" />
+        <result property="paidAt" column="PAIDAT" />
+
+        <!-- 주문상품(OrderProduct) 매핑 -->
+        <collection property="orderProductList" ofType="com.sku.fitizen.domain.store.OrderProduct">
+            <result property="productId" column="PRODUCTID" />
+            <result property="productName" column="PRODUCTNAME" />
+            <result property="qty" column="QTY" />
+            <result property="price" column="PRICE" />
+            <result property="totalPrice" column="PRODUCT_TOTAL" />
+            <result property="productImage" column="PRODUCT_IMAGE" />
+            <result property="productDesc" column="PRODUCT_DESCRIPTION" />
+        </collection>
+    </resultMap>
 
 </mapper>
 

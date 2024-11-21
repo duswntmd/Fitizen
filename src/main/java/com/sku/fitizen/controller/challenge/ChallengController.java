@@ -1,6 +1,5 @@
 package com.sku.fitizen.controller.challenge;
 
-import com.github.pagehelper.PageInfo;
 import com.sku.fitizen.domain.challenge.ChallCategory;
 import com.sku.fitizen.domain.challenge.ChallComment;
 import com.sku.fitizen.domain.challenge.Challenge;
@@ -10,7 +9,6 @@ import com.sku.fitizen.service.PaymentService;
 import com.sku.fitizen.service.board.PageService;
 import com.sku.fitizen.service.challenge.ChallCommentService;
 import com.sku.fitizen.service.challenge.ChallengeService;
-import com.sku.fitizen.service.challenge.ParticipationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -218,7 +216,7 @@ public class ChallengController {
         List<Challenge> myChall=service.getMyChallengeList(userId);
         model.addAttribute("userId",userId);
         model.addAttribute("myChall",myChall);
-        return "th/chall/myChallengePage";
+        return "th/user/myChallenges";
     }
 
 

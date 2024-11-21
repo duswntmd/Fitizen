@@ -1,0 +1,120 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+.sidebar {
+    width: 200px;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+}
+
+.sidebar h1 {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.sidebar button {
+    width: 100%;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: left;
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.sidebar button:hover {
+    background-color: #f0f0f0;
+}
+
+.sidebar button span {
+    font-size: 14px;
+    color: #888;
+}
+.content {
+    flex: 7;
+    overflow-y: auto; /* 세로 스크롤 활성화 */
+    box-sizing: border-box; /* 패딩을 포함하여 크기 계산 */
+    scrollbar-width: none; /* Firefox에서 스크롤바 숨기기 */
+
+}
+
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header h3 {
+    margin: 0;
+}
+.header img {
+    cursor: pointer;
+}
+
+.sidebar .qa-section {
+    text-align: center;
+    margin-top: 20px; /* 상단과 여백 추가 */
+}
+
+.sidebar .qa-text {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px; /* 텍스트와 버튼 사이의 간격 */
+}
+
+.sidebar .qa-button {
+    width: calc(100% - 20px); /* 사이드바 패딩을 고려한 버튼 너비 */
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+    margin: 0 auto; /* 버튼을 중앙에 정렬 */
+    box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+}
+
+.sidebar .qa-button:hover {
+    background-color: #e0e0e0;
+}
+
+
+.centered-text {
+    position: absolute; /* 부모 기준으로 절대 위치 설정 */
+    top: 50%; /* 세로 가운데 */
+    left: 60%; /* 가로 가운데 */
+    transform: translate(-50%, -50%); /* 정확히 중앙으로 이동 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+    color: #666; /* 텍스트 색상 */
+    font-family: 'Arial', sans-serif;
+    border-radius: 50px; /* 타원형 효과 */
+}
+
+.centered-text h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333; /* 더 강조된 텍스트 색상 */
+    margin-bottom: 10px;
+}
+
+.centered-text p {
+    font-size: 16px;
+    color: #666;
+    margin: 5px 0;
+}

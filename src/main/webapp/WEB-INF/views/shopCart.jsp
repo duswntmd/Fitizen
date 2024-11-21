@@ -69,8 +69,7 @@
     <ul id="selectedItemsList" style="display: none;"></ul>
     <p><strong>총 금액:</strong> <span id="totalPrice">0</span> 원</p>
 </div>
-    <button onclick="requestPay()">결제하기</button>
-
+<button id="checkoutBtn" onclick="requestPay()">결제하기</button>
 
 
 <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
@@ -80,3 +79,4 @@
 </body>
 
 </html>
+

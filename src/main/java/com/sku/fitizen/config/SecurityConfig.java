@@ -66,6 +66,7 @@ public class SecurityConfig {
 
 
 
+
                 ).permitAll()
                 //.requestMatchers("/video_storage").hasAnyRole("USER")
                 .requestMatchers("/cart/**").hasAnyRole("USER")
@@ -93,9 +94,10 @@ public class SecurityConfig {
                 .requestMatchers("/challenge/add","/challenge/save","/challenge/participate/*","/challenge/participate",
                         "challenge/myChall","/chellComment/**").hasAnyRole("USER","ADMIN")
                 .requestMatchers("/proofComment/**","proofShot/addProofShotForm/*","proofShot/add/","proofShot/addChatProof","proofShot/verify").hasAnyRole("USER","ADMIN")
-                .requestMatchers("pay/*" ,"verify/**","/savePayment","/orderPayment").hasAnyRole("USER","ADMIN")
+                .requestMatchers("pay/*","cancel/**" ,"verify/**","/savePayment","/orderPayment","/getMyPayments","/myOrder").hasAnyRole("USER","ADMIN")
                 .requestMatchers("/ai/uploadVideo").hasAnyRole("USER")
                 .requestMatchers("/ai/analyzeVideo").hasAnyRole("USER")
+
                 //.anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
                 .anyRequest().denyAll()
         ).csrf( csrfConf -> csrfConf.disable()
