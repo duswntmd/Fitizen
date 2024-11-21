@@ -126,8 +126,8 @@
                             show: false
                         },
                         data: [
-                            { value: svc['service_unit'], name: '온라인 트레이너 상담' },
-                            { value: svc['service_inte'], name: '기타' }
+                            { value: svc['service_unit'], name: '상점 포인트 적용' },
+                            { value: svc['service_inte'], name: '챌린지 포인트 사용' }
                         ]
                     }
                 ]
@@ -136,14 +136,35 @@
 
             $(window).on('resize', function() {
                 myCircle.resize();
+
             });
         });
     </script>
 </head>
 <body>
+<h1>보유 포인트: [[${balance}]] P</h1>
+<div class="point-box">
+    <h2>포인트 충전</h2>
 
-<h1>결제 내역</h1>
-<h3>청약 철회 1/3</h3>
+    <div class="button-container">
+        <button class="point-button" onclick="requestPay(100)">100포인트</button>
+        <button class="point-button" onclick="requestPay(300)">300포인트</button>
+        <button class="point-button" onclick="requestPay(500)">500 포인트</button>
+        <button class="point-button" onclick="requestPay(1000)">1000 포인트</button>
+    </div>
+
+    <div class="button-container">
+        <button class="point-button cancel-btn" onclick="cancelPay()">결제 취소</button>
+    </div>
+    테스트 결제이며 자동 환불 됩니다.
+</div>
+<div>
+<h2>포인트 사용 현황</h2>
+<div id="circle" style="min-height: 205px;"></div>
+
+</div>
+<h2>결제 내역 ,청약 철회 1/3</h2>
+<h3>챌린지 포인트 결제 내역</h3>
 <div class="payments-container">
     <div class="payment-row">
         <div class="payment-item"><span>결제 번호</span></div>
@@ -152,18 +173,169 @@
         <div class="payment-item"><span>문의</span></div> <!-- 작업 열 추가 -->
     </div>
     <div th:each="payment : ${payments}" class="payment-row">
-        <div class="payment-item" th:text="${payment.impUid}"></div>
-        <div class="payment-item amount" th:text="${payment.amount + ' 원'}"></div>
+        <div class="payment-item" th:text="${payment.getMerchantUid()}"></div>
+        <div class="payment-item amount" th:text="${payment.paid_amount+ ' 원'}"></div>
         <div class="payment-item date" th:text="${#dates.format(payment.paidAt, 'yyyy-MM-dd HH:mm:ss')}"></div>
         <div class="payment-item">
             <button>결제 취소 요청</button>
         </div>
     </div>
 </div>
-
-<h1>포인트 사용 현황</h1>
-<h3>보유 포인트: [[${balance}]] P</h3>
-<div id="circle" style="min-height: 205px;"></div>
-
+<h3>상점 결제 내역</h3>
+<div class="payments-container">
+    <div class="payment-row">
+        <div class="payment-item"><span>결제 번호</span></div>
+        <div class="payment-item"><span>결제 금액</span></div>
+        <div class="payment-item"><span>날짜</span></div>
+        <div class="payment-item"><span>문의</span></div> <!-- 작업 열 추가 -->
+    </div>
+    <div th:each="payment : ${payments}" class="payment-row">
+        <div class="payment-item" th:text="${payment.getMerchantUid()}"></div>
+        <div class="payment-item amount" th:text="${payment.paid_amount+ ' 원'}"></div>
+        <div class="payment-item date" th:text="${#dates.format(payment.paidAt, 'yyyy-MM-dd HH:mm:ss')}"></div>
+        <div class="payment-item">
+            <button>결제 취소 요청</button>
+        </div>
+    </div>
+</div>
 </body>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+<style>
+
+
+    .point-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #fff;
+        padding: 30px;
+    }
+
+    .point-box h2 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+        margin: 10px 0;
+        gap: 10px; /* 버튼 간격 */
+    }
+
+    .point-button {
+        padding: 12px;
+        width: 100px; /* 버튼 너비 */
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .point-button:hover {
+        background-color: #0056b3;
+    }
+
+    .point-button:active {
+        background-color: #003f7f;
+    }
+
+    .cancel-btn {
+        background-color: #dc3545;
+    }
+
+    .cancel-btn:hover {
+        background-color: #c82333;
+    }
+
+    .cancel-btn:active {
+        background-color: #a71d2a;
+    }
+</style>
+<script>
+    $(document).ready(function() {
+
+        var IMP = window.IMP;
+        IMP.init("imp38808434");// 가맹점 식별코드로 초기화
+
+    });
+
+    function requestPay(amount) {
+
+        const userEmail = '[[${user.email}]]';
+        const userId= '[[${user.id}]]';
+        IMP.init("imp38808434");
+        IMP.request_pay(
+            {
+                pg: 'html5_inicis',
+                name: "FITIZEN POINT",
+                amount: amount,
+                buyer_email:userEmail,
+                buyer_name:userId
+
+            },
+            function (rsp) {
+                console.log(rsp);
+                $.ajax({
+                    type: 'POST',
+                    url: '/verify/' + rsp.imp_uid
+                }).done(function(data) {
+                    console.log(data);
+                    if (rsp.paid_amount === data.response.amount) {
+                        //alert("imp_uid: " + data.impUid + " merchant_uid(orderKey) :" + data.merchantUid);
+                        console.log("결제 및 결제검증완료")
+                        // 결제 검증 성공 후, 추가 데이터 전송
+                        $.ajax({
+                            type: 'POST',
+                            url: '/savePayment',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                userId: userId,
+                                userEmail: userEmail,
+                                amount: rsp.paid_amount,
+                                impUid: rsp.imp_uid,
+                                merchantUid: rsp.merchant_uid,
+                                paidAt:data.paidAt
+
+                            }),
+                            dataType: 'json',
+                            success: function(success) {
+                                alert("결제 완료")
+                                console.log("결제 정보 저장 성공",success);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("결제 정보 저장 실패", error);
+                            }
+                        });
+                    } else {
+                        alert("결제 실패");
+                    }
+                });
+            });
+    }
+
+    function cancelPay() {
+        jQuery.ajax({
+            url: "/cancel",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                merchant_uid:"",
+                imp_uid:"imp_225364953329",
+                cancel_request_amount:0,
+                reason: "테스트 결제 환불"
+            }),
+            dataType: "json",
+            success: function(response) {
+                console.log("환불 성공", response);
+            },
+            error: function(xhr, status, error) {
+                console.error("환불 실패", error);
+            }
+        });
+    }
+</script>
 </html>

@@ -6,6 +6,7 @@ import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import com.sku.fitizen.Dto.orderProductDTO;
 import com.sku.fitizen.domain.User;
+import com.sku.fitizen.domain.store.Order;
 import com.sku.fitizen.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -97,28 +98,41 @@ public class PaymentController {
         String token = paymentService.getPortOneToken();
 
         // 결제 취소 요청
-        Map<String, Object> cancelResponse = paymentService.cancelPayment(token, merchantUid, cancelAmount, reason);
+        Map<String, Object> response = paymentService.cancelPayment(token, merchantUid, cancelAmount, reason);
 
+         System.out.println(response);
         // 응답 결과 반환
-        return ResponseEntity.ok(cancelResponse);
+        return ResponseEntity.ok(response);
 
     }
 
 
-    @GetMapping("/getMyPayments/{userId}")
-    public String getMyPayments(@SessionAttribute(value = "user") User user, @PathVariable("userId") String userId, Model model)
+    @GetMapping("/getMyPayments")
+    public String getMyPayments(@SessionAttribute(value = "user") User user, Model model)
     {
         if (user == null || user.getId() == null) {
             return "redirect:/login/login";
         }
 
-       List<com.sku.fitizen.domain.pay.Payment> list =paymentService.getPaymentLsit(userId);
+       List<com.sku.fitizen.domain.pay.Payment> list =paymentService.getPaymentList(user.getId());
        model.addAttribute("payments", list);
 
-       int balance =paymentService.getBalanceBYUserId(userId);
+       model.addAttribute("user", user);
+       int balance =paymentService.getBalanceBYUserId(user.getId());
        model.addAttribute("balance", balance);
         return "th/user/myPayments";
     }
 
+
+    @GetMapping("/myOrder")
+    public String getMyOrder(@SessionAttribute(value = "user") User user, Model model)
+    {
+
+        List<Order> myOrders =paymentService.getOrderProductsByUserId(user.getId());
+
+        //System.out.println(myOrders);
+        model.addAttribute("orders", myOrders);
+        return "th/user/myOrder";
+    }
 
 }
