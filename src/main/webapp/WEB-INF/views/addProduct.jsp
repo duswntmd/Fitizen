@@ -6,63 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <title>상품 추가</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column; /* 요소들을 세로로 정렬 */
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f9f9f9;
-        }
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        label {
-            display: block;
-            margin-top: 15px;
-            color: #555;
-        }
-        input[type="text"],
-        input[type="number"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        input[type="file"] {
-            margin-top: 10px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            border: none;
-            color: #fff;
-            font-size: 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/css/product/addProduct.css">
+    <script src="/js/shop/addProduct.js"></script>
 </head>
 <body>
 <div class="container">
@@ -85,26 +30,7 @@
     <div id="result"></div>
 </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function submitForm() {
-            var formData = new FormData(document.getElementById("productForm"));
 
-            $.ajax({
-                url: '/shop/add',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    alert(response.message); // 성공 메시지를 alert로 표시
-                    window.location.href = '/shop'; // shopList로 페이지 이동
-                },
-                error: function(xhr, status, error) {
-                    $('#result').html('<p>상품 추가 중 오류가 발생했습니다. 다시 시도해주세요.</p>');
-                }
-            });
-        }
-    </script>
 </body>
 <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 </html>
