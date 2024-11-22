@@ -94,18 +94,23 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationSuccessHandler successHandler) throws Exception {
         log.info("접근제한 설정");
 
-
         http.authorizeHttpRequests(authz -> authz
                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                 .requestMatchers("/", "/favicon.ico", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
                         "/findME", "findResult", "/exerciseDetail/**",
-                        "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
+                        "/ShopImage/**", "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
                         "/mail/**","favicon.ico", "/video_storage/**",
                         "/ai/chatBot/**", "/shop/**","/ai/predict_result","/ai/predict_exercise","/ai/aiResult",
                         "/trainer/**","/challenge","/challenge/detail/*","/challenge/search","/proofShot/*","/challenge/detail/*"
+
+
+
+
+
                 ).permitAll()
 
                 .requestMatchers("/cart/**").hasAnyRole("USER")
+                .requestMatchers("/qna/**").hasAnyRole("USER","ADMIN")
                 .requestMatchers("/register/updateuser", "/register/deleteuser").hasAnyRole("USER","ADMIN")
                 .requestMatchers("/board/write", "/board/search", "/board/view/**", "/board/view/**", "/board/view/**",
                         "/board/view/**", "/board/edit/**", "/board/delete/**", "/board/download/**",
@@ -119,7 +124,8 @@ public class SecurityConfig {
                 .requestMatchers("/challenge/add","/challenge/save","/challenge/participate/*","/challenge/participate",
                         "challenge/myChall","/chellComment/**").hasAnyRole("USER","ADMIN")
                 .requestMatchers("/proofComment/**","proofShot/addProofShotForm/*","proofShot/add/","proofShot/addChatProof","proofShot/verify").hasAnyRole("USER","ADMIN")
-                .requestMatchers("pay/*" ,"verify/**","/savePayment").hasAnyRole("USER","ADMIN")
+                .requestMatchers("pay/*","cancel/**" ,"verify/**","/savePayment","/orderPayment","/getMyPayments","/myOrder").hasAnyRole("USER","ADMIN")
+
                 //.anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
                 .anyRequest().denyAll()
         ).requiresChannel(channel ->

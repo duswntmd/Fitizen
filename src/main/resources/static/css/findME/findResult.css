@@ -1,0 +1,63 @@
+
+.exercise-img {
+    width: 300px;   /* 원하는 너비로 설정 */
+    height: auto;   /* 비율에 맞게 높이 자동 조정 */
+    display: inline-block; /* 이미지를 가로로 정렬 */
+}
+.exercise-text {
+    font-size: 16px; /* 텍스트 크기 조정 */
+    color: #333; /* 텍스트 색상 */
+    display: block; /* 텍스트를 이미지 아래에 표시 */
+    margin-top: 5px; /* 이미지와 텍스트 사이에 간격 추가 */
+}
+.fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+
+.fade-in.show {
+    opacity: 1;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+}
+
+span{
+    font-size: 18px;
+    color: #555;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}

@@ -1,0 +1,103 @@
+
+    /* 페이지 전체 스타일 */
+html, body {
+    height: 100%;
+    font-family: 'Pretendard', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* 메인 콘텐츠 영역 스타일 */
+.page-contents {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    padding: 20px;
+    margin: 20px auto; /* 가운데 정렬 */
+    max-width: 800px; /* 최대 너비 설정 */
+    background-color: #ffffff; /* 배경색 흰색 */
+    border: 1px solid #ccc; /* 윤곽선 추가 */
+    border-radius: 10px; /* 모서리 둥글게 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+/* 제목 스타일 */
+.page-contents h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #444;
+}
+
+/* 상품 이름 스타일 */
+.page-contents h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* 상품 설명 스타일 */
+.page-contents p {
+    font-size: 1.2em;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* 가격 텍스트 스타일 */
+.page-contents p:nth-child(3) {
+    font-weight: bold;
+    font-size: 1.5em;
+    color: #e60023; /* 강조된 가격 색상 */
+    margin-bottom: 25px;
+}
+
+/* 버튼 스타일 통일 */
+.page-contents a {
+    width:200px;
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #007BFF; /* 기본 버튼 색상 */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+    border: none; /* 버튼 테두리 제거 */
+    cursor: pointer; /* 마우스 커서 포인터로 변경 */
+    text-align: center; /* 버튼 텍스트 가운데 정렬 */
+}
+.page-contents button{
+    width:200px;
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    background-color:  #FF0000;; /* 기본 버튼 색상 */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+    border: none; /* 버튼 테두리 제거 */
+    cursor: pointer; /* 마우스 커서 포인터로 변경 */
+    text-align: center; /* 버튼 텍스트 가운데 정렬 */
+}
+/* 버튼 호버 스타일 */
+.page-contents a:hover{
+    background-color: #0056b3; /* 버튼에 마우스를 올렸을 때 색상 변경 */
+}
+.page-contents button:hover {
+    background-color: #990000; /* 버튼에 마우스를 올렸을 때 색상 변경 */
+}
+/* 상품 목록으로 돌아가기 버튼 스타일 */
+.page-contents a:nth-child(6) {
+    background-color: #6c757d; /* 회색 톤 */
+}
+
+.page-contents a:nth-child(6):hover {
+    background-color: #5a6268; /* 버튼에 마우스를 올렸을 때 색상 변경 */
+}

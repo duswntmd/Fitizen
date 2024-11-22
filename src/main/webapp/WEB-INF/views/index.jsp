@@ -5,96 +5,29 @@
 <head>
     <meta charset="UTF-8">
     <title>FITIZEN</title>
-    <style>
-        /* 기본 스타일 */
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow-x: hidden;
-            font-family: 'Pretendard-Black';
-        }
+    <link rel="stylesheet" type="text/css" href="/css/index/index.css">
 
-
-        /* 섹션 스타일 */
-        section {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        /* 섹션 내부 콘텐츠 정렬 */
-        .section-content {
-            display: flex;
-            width: 80%;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-
-        /* 텍스트와 이미지 스타일 */
-        .section-text {
-            flex: 1;
-            color: #000;
-            padding: 20px;
-
-        }
-
-        .section-image {
-            flex: 1;
-            text-align: center;
-        }
-
-        .section-1 {
-            /*background: url("../image/cardio.jpg") no-repeat center center;*/
-            background: linear-gradient(to right, #ff7e5f, #feb47b); /* 오렌지에서 밝은 노랑으로 */
-            background-size: cover;
-            background-attachment: scroll;
-        }
-
-        .section-2 {
-            /*background: url("../image/cycling.jpg") no-repeat center center;*/
-            background: linear-gradient(to right, #00c9ff, #92fe9d); /* 밝은 블루에서 민트 그린으로 */
-            background-size: cover;
-            background-attachment: scroll;
-        }
-
-        .section-3 {
-           /* background: url("../image/badminton.jpg") no-repeat center center;*/
-            background: linear-gradient(to right, #F8A2C8 , #A2E6F0 ); /* 진한 퍼플에서 딥 핑크로 */
-            background-size: cover;
-            background-attachment: scroll;
-        }
-        .section-4 {
-            /*background: url("../image/competing.jpg") no-repeat center center;*/
-            background: linear-gradient(to right, #f12711, #f5af19); /* 딥 레드에서 밝은 옐로우로 */
-            background-size: cover;
-            background-attachment: scroll;
-        }
-
-        .section-5 {
-            /*background: url("../image/fb.jpg") no-repeat center center;*/
-            background: linear-gradient(to right, #FF6A95, #6A82FB);
-            background-size: cover;
-            background-attachment: scroll;
-        }
-
-        /* 반응형 스타일 */
-        @media (max-width: 768px) {
-            .section-content {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-    </style>
 </head>
 <body>
 <div class="content-wrapper">
-    <%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
+
+
+    <div class="section-nav">
+        <div class="nav-dot" data-section="0"></div>
+        <div class="nav-dot" data-section="1"></div>
+        <div class="nav-dot" data-section="2"></div>
+        <div class="nav-dot" data-section="3"></div>
+        <div class="nav-dot" data-section="4"></div>
+        <div class="nav-dot" data-section="5"></div>
+    </div>
+
+    <section class="section-0" style="height: fit-content">
+
+        <%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
+    </section>
 
     <!-- 메인 섹션들 -->
-    <section class="section-1">
+    <section class="section-1" style="height: calc(100vh);">
         <div class="section-content">
             <div class="section-text">
                 <h1 style="font-size: 400%">FITIZEN</h1>
@@ -153,20 +86,7 @@
 
     <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 
-    <script>
-        let currentSection = 0;
-        const sections = document.querySelectorAll('section');
-
-        // 스크롤 이벤트 처리 함수
-        window.addEventListener('wheel', function(event) {
-            if (event.deltaY > 0) { // 아래로 스크롤
-                currentSection = Math.min(currentSection + 1, sections.length - 1);
-            } else { // 위로 스크롤
-                currentSection = Math.max(currentSection - 1, 0);
-            }
-            sections[currentSection].scrollIntoView({ behavior: 'smooth' });
-        });
-    </script>
+    <script src="/js/index/index.js"></script>
 </div>
 
 
