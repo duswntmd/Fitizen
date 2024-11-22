@@ -18,13 +18,13 @@ public interface BoardCommentMapper {
     BoardComment select(Long cno);
 
     // 댓글 추가
-    void insert(BoardComment comments);
+    int insert(BoardComment comments);
 
     // 댓글 수정
-    void update(BoardComment comments);
+    int update(BoardComment comments);
 
     // 댓글 삭제 상태 변경 (논리적 삭제)
-    void markAsDeleted(@Param("cno") Long cno, @Param("commenter") String commenter);
+    int markAsDeleted(@Param("cno") Long cno, @Param("commenter") String commenter);
 
     // 물리적 삭제 (논리적 삭제된 경우)
     void deletePhysically(Long cno);

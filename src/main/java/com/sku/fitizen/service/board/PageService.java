@@ -3,9 +3,7 @@ package com.sku.fitizen.service.board;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sku.fitizen.domain.board.Board;
-import com.sku.fitizen.domain.challenge.Challenge;
 import com.sku.fitizen.mapper.board.BoardMapper;
-import com.sku.fitizen.mapper.challenge.ChallengeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +15,14 @@ public class PageService {
     @Autowired
     private BoardMapper boardMapper;
 
-    @Autowired
-    private ChallengeMapper challengeMapper;
+    public PageService(BoardMapper boardMapper) {
+        this.boardMapper = boardMapper;
+    }
 
     public PageInfo<Board> getBoardList(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);  // 페이지 설정
         List<Board> boards = boardMapper.getBoardList();  // 모든 게시글 조회
         return new PageInfo<>(boards);  // 페이지 정보 반환
     }
-
 
 }

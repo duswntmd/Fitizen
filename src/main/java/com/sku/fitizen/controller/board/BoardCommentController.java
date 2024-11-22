@@ -1,10 +1,9 @@
 package com.sku.fitizen.controller.board;
 
-import com.sku.fitizen.domain.board.BoardComment;
 import com.sku.fitizen.domain.User;
+import com.sku.fitizen.domain.board.BoardComment;
 import com.sku.fitizen.service.board.BoardCommentService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,15 +17,17 @@ import java.util.Map;
 @SessionAttributes("user")
 public class BoardCommentController {
 
-    @Autowired
-    private BoardCommentService boardCommentService;
+    private final BoardCommentService boardCommentService;
 
-    // 댓글 조회 (AJAX 요청으로 특정 게시글의 댓글을 가져옴)
+    public BoardCommentController(BoardCommentService boardCommentService) {
+        this.boardCommentService = boardCommentService;
+    }
+
+    // 댓글 조회
     @GetMapping("/list")
     @ResponseBody
     public List<BoardComment> getComments(@RequestParam("bno") Long bno) {
-        List<BoardComment> comments = boardCommentService.getCommentsByBoard(bno);
-        return comments;
+        return boardCommentService.getCommentsByBoard(bno);
     }
 
     // 댓글 추가
@@ -34,25 +35,10 @@ public class BoardCommentController {
     @ResponseBody
     public Map<String, Object> addComment(@RequestBody BoardComment comments,
                                           @SessionAttribute(value = "user", required = false) User user) {
-        Map<String, Object> result = new HashMap<>();
-
-        if (user == null) {
-            result.put("success", false);
-            result.put("message", "로그인이 필요합니다.");
-            return result;
-        }
-
-        try {
+        return execute(() -> {
             comments.setCommenter(user.getId());
-            boardCommentService.addComment(comments);;
-            result.put("success", true);
-            result.put("message", "댓글이 성공적으로 등록되었습니다.");
-        } catch (Exception e) {
-            result.put("success", false);
-            result.put("message", "댓글 등록에 실패했습니다.");
-        }
-
-        return result;
+            boardCommentService.addComment(comments);
+        }, "댓글이 성공적으로 등록되었습니다.", "댓글 등록에 실패했습니다.");
     }
 
     // 댓글 수정
@@ -60,24 +46,12 @@ public class BoardCommentController {
     @ResponseBody
     public Map<String, Object> updateComment(@RequestBody BoardComment comments,
                                              @SessionAttribute(value = "user", required = false) User user) {
-        Map<String, Object> result = new HashMap<>();
-
-        if (user == null || !comments.getCommenter().equals(user.getId())) {
-            result.put("success", false);
-            result.put("message", "댓글 수정 권한이 없습니다.");
-            return result;
+        if (!hasPermission(comments.getCommenter(), user)) {
+            return createResponse(false, "댓글 수정 권한이 없습니다.");
         }
 
-        try {
-            boardCommentService.updateComment(comments);
-            result.put("success", true);
-            result.put("message", "댓글이 성공적으로 수정되었습니다.");
-        } catch (Exception e) {
-            result.put("success", false);
-            result.put("message", "댓글 수정에 실패했습니다.");
-        }
-
-        return result;
+        return execute(() -> boardCommentService.updateComment(comments),
+                "댓글이 성공적으로 수정되었습니다.", "댓글 수정에 실패했습니다.");
     }
 
     // 댓글 삭제
@@ -85,17 +59,31 @@ public class BoardCommentController {
     @ResponseBody
     public Map<String, Object> deleteComment(@RequestParam("cno") Long cno,
                                              @SessionAttribute(value = "user", required = false) User user) {
+        return execute(() -> boardCommentService.deleteComment(cno, user.getId()),
+                "댓글이 성공적으로 삭제되었습니다.", "댓글 삭제에 실패했습니다.");
+    }
+
+    // 공통 응답 생성
+    private Map<String, Object> createResponse(boolean success, String message) {
         Map<String, Object> result = new HashMap<>();
-
-        try {
-            boardCommentService.deleteComment(cno, user.getId());
-            result.put("success", true);
-            result.put("message", "댓글이 성공적으로 삭제되었습니다.");
-        } catch (Exception e) {
-            result.put("success", false);
-            result.put("message", "댓글 삭제에 실패했습니다.");
-        }
-
+        result.put("success", success);
+        result.put("message", message);
         return result;
+    }
+
+    // 공통 실행 메서드
+    private Map<String, Object> execute(Runnable action, String successMessage, String errorMessage) {
+        try {
+            action.run();
+            return createResponse(true, successMessage);
+        } catch (Exception e) {
+            log.error(errorMessage, e);
+            return createResponse(false, errorMessage);
+        }
+    }
+
+    // 권한 확인
+    private boolean hasPermission(String commenterId, User user) {
+        return user != null && commenterId.equals(user.getId());
     }
 }

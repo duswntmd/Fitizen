@@ -19,16 +19,16 @@ public interface BoardMapper {
     Board getBoardWithFiles(Long bno);
 
     // 게시글 삽입
-    void insertBoard(Board board);
+    int insertBoard(Board board);
 
     // 게시글 수정
-    void updateBoard(Board board);
+    int updateBoard(Board board);
 
     // 게시글 삭제
-    void deleteBoard(Long bno);
+    int deleteBoard(Long bno);
 
     // 게시글 조회수 증가
-    void updateHits(Long bno);
+    int updateHits(Long bno);
 
     // 제목과 작성자 기준으로 게시글 검색 (페이징 적용 가능)
     List<Board> searchBoardList(@Param("title") String title, @Param("author") String author);

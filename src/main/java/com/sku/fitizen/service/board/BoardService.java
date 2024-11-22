@@ -3,48 +3,44 @@ package com.sku.fitizen.service.board;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sku.fitizen.domain.board.Board;
+import com.sku.fitizen.domain.board.BoardComment;
+import com.sku.fitizen.domain.board.BoardFilesVO;
 import com.sku.fitizen.mapper.board.BoardCommentMapper;
 import com.sku.fitizen.mapper.board.BoardLikeMapper;
 import com.sku.fitizen.mapper.board.BoardMapper;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
 public class BoardService {
 
-    @Autowired
-    private BoardMapper boardMapper;
+    private final BoardMapper boardMapper;
+    private final FileService fileService;
+    private final BoardLikeMapper boardLikeMapper;
+    private final BoardCommentMapper boardCommentMapper;
 
-    @Autowired
-    private FileService fileService;
-
-    @Autowired
-    private BoardLikeMapper boardLikeMapper;
-
-    @Autowired
-    private BoardCommentMapper boardCommentMapper;
-
-
-    // 게시글 목록 조회
-    public List<Board> getBoardList() {
-        return boardMapper.getBoardList();
+    public BoardService(BoardMapper boardMapper, FileService fileService, BoardLikeMapper boardLikeMapper, BoardCommentMapper boardCommentMapper) {
+        this.boardMapper = boardMapper;
+        this.fileService = fileService;
+        this.boardLikeMapper = boardLikeMapper;
+        this.boardCommentMapper = boardCommentMapper;
     }
 
     // 게시글 조회
     public Board getBoard(Long bno) {
         Board board = boardMapper.getBoard(bno);
         return board;
-    }
-
-    public Board getBoardWithFiles(Long bno) {
-        return boardMapper.getBoardWithFiles(bno);  // JOIN 쿼리 호출
     }
 
     // 게시글 생성 및 파일 저장
@@ -115,15 +111,25 @@ public class BoardService {
         boardMapper.deleteBoard(bno);
     }
 
-    public PageInfo<Board> searchBoardList(String title, String author, int pageNum, int pageSize) {
+    public PageInfo<Board> searchBoardList(String searchType, String keyword, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);  // 페이지 설정
-        List<Board> boards = boardMapper.searchBoardList(title, author);  // 조건에 맞는 게시글 조회
-        return new PageInfo<>(boards);  // 페이지 정보 반환
+        List<Board> boards;
+
+        // 검색 타입에 따라 쿼리 수행
+        if ("title".equals(searchType)) {
+            boards = boardMapper.searchBoardList(keyword, null);  // 제목으로 검색
+        } else if ("author".equals(searchType)) {
+            boards = boardMapper.searchBoardList(null, keyword);  // 작성자로 검색
+        } else {
+            boards = boardMapper.searchBoardList(null, null);  // 기본 목록
+        }
+
+        return new PageInfo<>(boards);  // PageInfo로 결과 반환
     }
 
     @Transactional
-    public void increaseHits(Long bno) {
-        boardMapper.updateHits(bno);
+    public int increaseHits(Long bno) {
+        return boardMapper.updateHits(bno);
     }
 
     public boolean isLikedByUser(Long bno, String userId) {
@@ -131,16 +137,78 @@ public class BoardService {
     }
 
     @Transactional
-    public void addLike(Long bno, String userId) {
-        boardLikeMapper.insertLike(bno, userId);
+    public int addLike(Long bno, String userId) {
+        return boardLikeMapper.insertLike(bno, userId);
     }
 
     @Transactional
-    public void removeLike(Long bno, String userId) {
-        boardLikeMapper.deleteLike(bno, userId);
+    public int removeLike(Long bno, String userId) {
+        return boardLikeMapper.deleteLike(bno, userId);
     }
 
     public int getLikeCount(Long bno) {
         return boardLikeMapper.countLikes(bno);
     }
+
+    // 조회수 증가 및 쿠키 처리
+    public boolean updateViewCount(Long bno, HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        boolean hasViewed = false;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("viewedBoard_" + bno)) {
+                    hasViewed = true;
+                    break;
+                }
+            }
+        }
+
+        if (!hasViewed) {
+            increaseHits(bno);  // 조회수 증가
+            Cookie cookie = new Cookie("viewedBoard_" + bno, "true");
+            cookie.setMaxAge(600);  // 10분 동안 유지
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        }
+        return hasViewed;
+    }
+
+    // 게시글 상세 정보 가져오기
+    public Map<String, Object> getBoardDetails(Long bno, String userId) {
+        Map<String, Object> details = new HashMap<>();
+
+        Board board = getBoard(bno);  // 게시글 정보
+        List<BoardFilesVO> files = fileService.getFilesByBoard(bno);  // 첨부 파일
+        List<BoardComment> comments = boardCommentMapper.selectAll(bno);  // 댓글
+        boolean likedByUser = isLikedByUser(bno, userId);  // 좋아요 여부
+
+        details.put("board", board);
+        details.put("files", files);
+        details.put("comments", comments);
+        details.put("likedByUser", likedByUser);
+
+        return details;
+    }
+
+    @Transactional
+    public void validateAndUpdateBoard(Board board, List<MultipartFile> files, List<Long> deleteFileIds, List<String> youtubeUrls) throws IOException {
+        // 기존 파일 목록 조회
+        List<BoardFilesVO> existingFiles = fileService.getFilesByBoard(board.getBno());
+
+        // 파일 및 유튜브 URL 검증
+        fileService.validateFilesForUpdate(files, deleteFileIds, existingFiles);
+        fileService.validateYoutubeUrlsForUpdate(youtubeUrls, deleteFileIds, existingFiles);
+
+        // 삭제할 파일 처리
+        if (deleteFileIds != null) {
+            for (Long fnum : deleteFileIds) {
+                fileService.deleteFileByFnum(fnum);
+            }
+        }
+
+        // 게시글과 파일 수정
+        updateBoard(board, files, deleteFileIds, youtubeUrls);
+    }
+
 }

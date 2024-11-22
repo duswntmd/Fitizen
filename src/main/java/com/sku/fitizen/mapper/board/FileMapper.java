@@ -15,10 +15,10 @@ public interface FileMapper {
     BoardFilesVO getFileByFnum(Long fnum);
 
     // 파일 삽입
-    void insertFile(BoardFilesVO file);
+    int insertFile(BoardFilesVO file);
 
     // 파일 삭제
-    void deleteFile(Long fnum);
+    int deleteFile(Long fnum);
 
     // 특정 게시글의 모든 파일 삭제
     void deleteFilesByBoard(Long bno);
