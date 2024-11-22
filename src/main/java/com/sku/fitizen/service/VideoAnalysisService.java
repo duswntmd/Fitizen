@@ -1,47 +1,42 @@
 package com.sku.fitizen.service;
 
-import com.sku.fitizen.mapper.VideoAnalysisMapper;
 import com.sku.fitizen.domain.VideoAnalysis;
+import com.sku.fitizen.mapper.VideoAnalysisMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class VideoAnalysisService {
 
     private final VideoAnalysisMapper videoAnalysisMapper;
 
-    public List<VideoAnalysis> getVideosByUser(String username) {
-        return videoAnalysisMapper.getVideosByUser(username);
-    }
-
     @Autowired
     public VideoAnalysisService(VideoAnalysisMapper videoAnalysisMapper) {
         this.videoAnalysisMapper = videoAnalysisMapper;
     }
 
-    // 비디오 분석 데이터 추가
-    public void insertVideoAnalysis(VideoAnalysis videoAnalysis) {
-        videoAnalysisMapper.insertVideoAnalysis(videoAnalysis);
+    public List<VideoAnalysis> getVideosByUser(String username) {
+        return videoAnalysisMapper.getVideosByUser(username);
     }
 
-    public void updateVideoAnalysisResult(VideoAnalysis videoAnalysis) {
-        videoAnalysisMapper.updateVideoAnalysisResult(videoAnalysis);
+    public VideoAnalysis getVideoAnalysisDetail(int vnum, String userid) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("vnum", vnum);
+        params.put("userid", userid);
+        return videoAnalysisMapper.getVideoAnalysdetail(params);
     }
 
-    // 특정 비디오 분석 데이터 조회
-    public VideoAnalysis getVideoAnalysisById(long vnum) {
-        return videoAnalysisMapper.getVideoAnalysisById(vnum);
+
+    public int insertVideoAnalysis(VideoAnalysis videoAnalysis) {
+        return videoAnalysisMapper.insertVideoAnalysis(videoAnalysis);
     }
 
-    // 모든 비디오 분석 데이터 조회
-    public List<VideoAnalysis> getAllVideoAnalysis() {
-        return videoAnalysisMapper.getAllVideoAnalysis();
+    public int updateVideoAnalysisResult(VideoAnalysis videoAnalysis) {
+        return videoAnalysisMapper.updateVideoAnalysisResult(videoAnalysis);
     }
 
-    // 비디오 분석 데이터 삭제
-    public int deleteVideoAnalysis(long vnum) {
-        return videoAnalysisMapper.deleteVideoAnalysis(vnum);
-    }
 }

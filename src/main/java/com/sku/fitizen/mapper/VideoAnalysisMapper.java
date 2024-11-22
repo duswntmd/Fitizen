@@ -2,27 +2,23 @@ package com.sku.fitizen.mapper;
 
 import com.sku.fitizen.domain.VideoAnalysis;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface VideoAnalysisMapper {
 
+    // 비디오 분석 리스트
     List<VideoAnalysis> getVideosByUser(String userid);
 
     // 비디오 분석 데이터 삽입
     int insertVideoAnalysis(VideoAnalysis videoAnalysis);
 
     // 분석 결과 업데이트
-    void updateVideoAnalysisResult(VideoAnalysis videoAnalysis);
+    int updateVideoAnalysisResult(VideoAnalysis videoAnalysis);
 
-    // 특정 비디오 분석 데이터 조회
-    VideoAnalysis getVideoAnalysisById(@Param("vnum") long vnum);
+    // 특정 비디오 상세 정보 조회
+    VideoAnalysis getVideoAnalysdetail(Map<String, Object> params);
 
-    // 모든 비디오 분석 데이터 조회
-    List<VideoAnalysis> getAllVideoAnalysis();
-
-    // 특정 비디오 분석 데이터 삭제
-    int deleteVideoAnalysis(@Param("vnum") long vnum);
 }
