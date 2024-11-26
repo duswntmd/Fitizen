@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.*;
 
 @Controller
@@ -133,7 +134,7 @@ public class AiServer {
             String uuidFilename = UUID.randomUUID().toString() + "_" + originalFilename;
             String staticFilePath = new File("src/main/resources/static/video_storage/" + uuidFilename).getAbsolutePath();
             String fileUrl = uuidUrl + uuidFilename;
-
+//            System.out.println("Checking file URL: " + fileUrl);
             // 파일 저장
             file.transferTo(new File(staticFilePath));
 
@@ -156,19 +157,38 @@ public class AiServer {
             retries = 0;
             while (!fileReady && retries < maxRetries) {
                 try {
-                    HttpClient tempClient = HttpClient.newHttpClient();
+                    HttpClient tempClient = HttpClient.newBuilder()
+//                            .sslContext(createTrustAllSslContext())
+//                            .sslContext(getUnsafeSslContext())
+                            .version(HttpClient.Version.HTTP_1_1)
+                            .connectTimeout(Duration.ofSeconds(10))
+                            .build();
+
                     HttpRequest fileCheckRequest = HttpRequest.newBuilder()
                             .uri(URI.create(fileUrl))
+                            .header("User-Agent", "HttpClient")
+                            .header("Accept", "*/*")
                             .GET()
                             .build();
+
+                    System.out.println("Sending HTTP request to: " + fileUrl);
+
                     HttpResponse<String> fileCheckResponse = tempClient.send(fileCheckRequest, HttpResponse.BodyHandlers.ofString());
+//                    System.out.println("Response Code: " + fileCheckResponse.statusCode());
+//                    System.out.println("Response Body: " + fileCheckResponse.body());
+
                     if (fileCheckResponse.statusCode() == 200) {
                         fileReady = true;
+                    } else {
+                        System.out.println("File not ready. Retrying...");
                     }
                 } catch (Exception ex) {
-                    Thread.sleep(200);  // 대기 시간 증가
-                    retries++;
+//                    System.out.println("Exception during file check: " + ex.getClass().getName());
+//                    System.out.println("Message: " + ex.getMessage());
+                    ex.printStackTrace(); // 예외 스택 출력
                 }
+                Thread.sleep(200);
+                retries++;
             }
 
             if (!fileReady) {
@@ -189,8 +209,8 @@ public class AiServer {
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-//            System.out.println("Response Status Code: " + response.statusCode());
-//            System.out.println("Response Body: " + response.body());
+            System.out.println("Response Status Code: " + response.statusCode());
+            System.out.println("Response Body: " + response.body());
             // 5. 분석 결과 DB 업데이트
             if (response.statusCode() == 200) {
                 JSONObject jsonResponse = new JSONObject(response.body());
@@ -351,6 +371,35 @@ public class AiServer {
         return "aiResult";
     }
 
+//    private SSLContext getUnsafeSslContext() {
+//        try {
+//            TrustManager[] trustAllCerts = new TrustManager[]{
+//                    new X509TrustManager() {
+//                        public java.security.cert.X509Certificate[] getAcceptedIssuers() { return null; }
+//                        public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) { }
+//                        public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) { }
+//                    }
+//            };
+//            SSLContext sc = SSLContext.getInstance("SSL");
+//            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+//            return sc;
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+//    private SSLContext createTrustAllSslContext() throws Exception {
+//        SSLContext sslContext = SSLContext.getInstance("TLS");
+//        sslContext.init(null, new TrustManager[]{new X509TrustManager() {
+//            @Override
+//            public void checkClientTrusted(X509Certificate[] chain, String authType) { }
+//            @Override
+//            public void checkServerTrusted(X509Certificate[] chain, String authType) { }
+//            @Override
+//            public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
+//        }}, new SecureRandom());
+//        return sslContext;
+//    }
 
 }
 

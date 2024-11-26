@@ -3,14 +3,8 @@ package com.sku.fitizen.config;
 import com.sku.fitizen.handler.CustomAuthenticationSuccessHandler;
 import jakarta.servlet.DispatcherType;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.Context;
-import org.apache.catalina.connector.Connector;
-import org.apache.tomcat.util.descriptor.web.SecurityCollection;
-import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -35,35 +29,35 @@ public class SecurityConfig {
         SpringApplication.run(SecurityConfig.class, args);
     }
 
-    @Bean
-    public ServletWebServerFactory servletContainer() {
-        // Tomcat을 커스터마이징하여 HTTP 요청을 HTTPS로 리디렉션
-        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
-            @Override
-            protected void postProcessContext(Context context) {
-                SecurityConstraint securityConstraint = new SecurityConstraint();
-                securityConstraint.setUserConstraint("CONFIDENTIAL"); // HTTPS 강제
-                SecurityCollection collection = new SecurityCollection();
-                collection.addPattern("/*"); // 모든 경로에 적용
-                securityConstraint.addCollection(collection);
-                context.addConstraint(securityConstraint);
-            }
-        };
-
-        // HTTP → HTTPS 리디렉션 설정 추가
-        tomcat.addAdditionalTomcatConnectors(httpToHttpsRedirectConnector());
-
-        return tomcat;
-    }
-
-    private Connector httpToHttpsRedirectConnector() {
-        Connector connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
-        connector.setScheme("http");
-        connector.setPort(80); // HTTP 포트
-        connector.setSecure(false);
-        connector.setRedirectPort(443); // HTTPS 포트로 리디렉션
-        return connector;
-    }
+//    @Bean
+//    public ServletWebServerFactory servletContainer() {
+//        // Tomcat을 커스터마이징하여 HTTP 요청을 HTTPS로 리디렉션
+//        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
+//            @Override
+//            protected void postProcessContext(Context context) {
+//                SecurityConstraint securityConstraint = new SecurityConstraint();
+//                securityConstraint.setUserConstraint("CONFIDENTIAL"); // HTTPS 강제
+//                SecurityCollection collection = new SecurityCollection();
+//                collection.addPattern("/*"); // 모든 경로에 적용
+//                securityConstraint.addCollection(collection);
+//                context.addConstraint(securityConstraint);
+//            }
+//        };
+//
+//        // HTTP → HTTPS 리디렉션 설정 추가
+//        tomcat.addAdditionalTomcatConnectors(httpToHttpsRedirectConnector());
+//
+//        return tomcat;
+//    }
+//
+//    private Connector httpToHttpsRedirectConnector() {
+//        Connector connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
+//        connector.setScheme("http");
+//        connector.setPort(80); // HTTP 포트
+//        connector.setSecure(false);
+//        connector.setRedirectPort(443); // HTTPS 포트로 리디렉션
+//        return connector;
+//    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -103,10 +97,6 @@ public class SecurityConfig {
                         "/ai/chatBot/**", "/shop/**","/ai/predict_result","/ai/predict_exercise","/ai/aiResult",
                         "/trainer/**","/challenge","/challenge/detail/*","/challenge/search","/proofShot/*","/challenge/detail/*"
 
-
-
-
-
                 ).permitAll()
 
                 .requestMatchers("/cart/**").hasAnyRole("USER")
@@ -128,8 +118,8 @@ public class SecurityConfig {
 
                 //.anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
                 .anyRequest().denyAll()
-        ).requiresChannel(channel ->
-                channel.anyRequest().requiresSecure() // HTTPS 강제
+//        ).requiresChannel(channel ->
+//                channel.anyRequest().requiresSecure() // HTTPS 강제
         ).csrf( csrfConf -> csrfConf.disable()
         ).formLogin(loginConf -> loginConf.loginPage("/login/login")   // 컨트롤러 메소드와 지정된 위치에 로그인 폼이 준비되어야 함
                 .loginProcessingUrl("/dologin")            // 컨트롤러 메소드 불필요, 폼 action과 일치해야 함
