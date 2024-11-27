@@ -36,7 +36,6 @@ public class QnaController {
     public String detail(@RequestParam("qid") int qid, Model model) {
        QNA qna=qnaService.findById(qid);
         model.addAttribute("qna",qna);
-        System.out.println(qna);
         return "th/qna/qnaDetail";
     }
 

@@ -89,35 +89,35 @@ public class SecurityConfig {
         log.info("접근제한 설정");
 
         http.authorizeHttpRequests(authz -> authz
-                .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
-                .requestMatchers("/", "/favicon.ico", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
-                        "/findME", "findResult", "/exerciseDetail/**",
-                        "/ShopImage/**", "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
-                        "/mail/**","favicon.ico", "/video_storage/**",
-                        "/ai/chatBot/**", "/shop/**","/ai/predict_result","/ai/predict_exercise","/ai/aiResult",
-                        "/trainer/**","/challenge","/challenge/detail/*","/challenge/search","/proofShot/*","/challenge/detail/*"
+                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+                        .requestMatchers("/", "/favicon.ico", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
+                                "/findME", "findResult", "/exerciseDetail/**",
+                                "/ShopImage/**", "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
+                                "/mail/**","favicon.ico", "/video_storage/**",
+                                "/ai/chatBot/**", "/shop/**","/ai/predict_result","/ai/predict_exercise","/ai/aiResult",
+                                "/trainer/**","/challenge","/challenge/detail/*","/challenge/search","/proofShot/*","/challenge/detail/*"
 
-                ).permitAll()
+                        ).permitAll()
 
-                .requestMatchers("/cart/**").hasAnyRole("USER")
-                .requestMatchers("/qna/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/register/updateuser", "/register/deleteuser").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/board/write", "/board/search", "/board/view/**", "/board/view/**", "/board/view/**",
-                        "/board/view/**", "/board/edit/**", "/board/delete/**", "/board/download/**",
-                        "/board/download/**", "/board/like/**", "/board/unlike/**", "/comments/add/**",
-                        "/comments/add/**", "/comments/edit/**", "/comments/delete/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/kakao/map/**", "/kakao/reviewDetail/**", "/kakao/addReview/**", "/kakao/editReview/**",
-                        "/kakao/deleteReview").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/ai/userVideos", "/ai/uploadVideo", "/ai/analyzeVideo", "/ai/detailvideo/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/ws/**","/chat", "/tChat", "/alarm").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/consultation").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/challenge/add","/challenge/save","/challenge/participate/*","/challenge/participate",
-                        "challenge/myChall","/chellComment/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/proofComment/**","proofShot/addProofShotForm/*","proofShot/add/","proofShot/addChatProof","proofShot/verify").hasAnyRole("USER","ADMIN")
-                .requestMatchers("pay/*","cancel/**" ,"verify/**","/savePayment","/orderPayment","/getMyPayments","/myOrder").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/cart/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/qna/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/register/updateuser", "/register/deleteuser").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/board/write", "/board/search", "/board/view/**", "/board/view/**", "/board/view/**",
+                                "/board/view/**", "/board/edit/**", "/board/delete/**", "/board/download/**",
+                                "/board/download/**", "/board/like/**", "/board/unlike/**", "/comments/add/**",
+                                "/comments/add/**", "/comments/edit/**", "/comments/delete/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/kakao/map/**", "/kakao/reviewDetail/**", "/kakao/addReview/**", "/kakao/editReview/**",
+                                "/kakao/deleteReview").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/ai/userVideos", "/ai/uploadVideo", "/ai/analyzeVideo", "/ai/detailvideo/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/ws/**","/chat", "/tChat", "/alarm").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/consultation").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/challenge/add","/challenge/save","/challenge/participate/*","/challenge/participate",
+                                "challenge/myChall","/chellComment/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/proofComment/**","proofShot/addProofShotForm/*","proofShot/add/","proofShot/addChatProof","proofShot/verify").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("pay/*","cancel/**" ,"verify/**","/savePayment","/orderPayment","/getMyPayments","/myOrder").hasAnyRole("USER","ADMIN")
 
-                //.anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
-                .anyRequest().denyAll()
+                        //.anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
+                        .anyRequest().denyAll()
 //        ).requiresChannel(channel ->
 //                channel.anyRequest().requiresSecure() // HTTPS 강제
         ).csrf( csrfConf -> csrfConf.disable()

@@ -47,132 +47,110 @@
     badminton: 0
 };
 
-    // 빈도에 따른 점수 계산
-    switch (frequency) {
-    case 'never':
-    scores.yoga += 2;
-    scores.pilates += 2;
-    break;
-    case 'sometimes':
-    scores.cardio += 2;
-    scores.badminton += 1;
-    scores.tabletennis += 1;
-    break;
-    case 'regularly':
-    scores.health += 2;
-    scores.swimming += 2;
-    scores.basketball += 1;
-    break;
-    case 'daily':
-    scores.health += 3;
-    scores.cardio += 2;
-    scores.swimming += 2;
-    scores.basketball += 2;
-    break;
-}
 
-    // 선호 운동 유형에 따른 점수 계산
-    switch (type) {
-    case 'cardio':
-    scores.cardio += 3;
-    scores.swimming += 2;
-    scores.basketball += 2;
-    break;
-    case 'strength':
-    scores.health += 3;
-    scores.badminton += 1;
-    scores.tabletennis += 1;
-    break;
-    case 'flexibility':
-    scores.yoga += 3;
-    scores.pilates += 3;
-    break;
-    case 'balance':
-    scores.pilates += 3;
-    scores.yoga += 2;
-    scores.badminton += 1;
-    break;
-}
 
-    // 목표에 따른 점수 계산
-    switch (goal) {
-    case 'lose_weight':
-    scores.cardio += 2;
-    scores.swimming += 2;
-    scores.basketball += 1;
-    break;
-    case 'build_muscle':
-    scores.health += 3;
-    if (weight > 80) {
-    scores.health += 1;
-} else {
-    scores.badminton += 1;
-}
-    break;
-    case 'increase_endurance':
-    scores.cardio += 2;
-    scores.swimming += 2;
-    scores.basketball += 1;
-    if (height > 175) {
-    scores.swimming += 1;
-} else {
-    scores.cardio += 1;
-}
-    break;
-    case 'improve_flexibility':
-    scores.yoga += 3;
-    scores.pilates += 3;
-    if (height < 160) {
-    scores.yoga += 1;
-} else {
-    scores.pilates += 1;
-}
-    break;
-}
+        // 선호 운동 유형에 따른 점수 계산
+        switch (type) {
+            case 'cardio':
+                scores.cardio += 3;
+                scores.swimming += 2;
+                scores.basketball += 1;
+                break;
+            case 'strength':
+                scores.health += 3;
+                scores.badminton += 1;
+                scores.tabletennis += 1;
+                break;
+            case 'flexibility':
+                scores.yoga += 3;
+                scores.pilates += 3;
+                break;
+            case 'balance':
+                scores.pilates += 3;
+                scores.yoga += 2;
+                scores.badminton += 1;
+                break;
+        }
 
-    // 운동 시간에 따른 점수 조정
-    switch (time) {
-    case 'short':
-    scores.cardio += 1;
-    scores.tabletennis += 1;
-    break;
-    case 'medium':
-    scores.yoga += 1;
-    scores.pilates += 1;
-    scores.basketball += 1;
-    break;
-    case 'long':
-    scores.health += 2;
-    scores.swimming += 2;
-    scores.cardio += 2;
-    break;
-}
+        // 목표에 따른 점수 계산
+        switch (goal) {
+            case 'lose_weight':
+                scores.cardio += 2;
+                scores.swimming += 2;
+                scores.basketball += 1;
+                break;
+            case 'build_muscle':
+                scores.health += 3;
+                if (weight > 80) {
+                    scores.health += 1;
+                } else {
+                    scores.badminton += 1;
+                }
+                break;
+            case 'increase_endurance':
+                scores.cardio += 2;
+                scores.swimming += 2;
+                scores.basketball += 1;
+                if (height > 175) {
+                    scores.swimming += 1;
+                } else {
+                    scores.cardio += 1;
+                }
+                break;
+            case 'improve_flexibility':
+                scores.yoga += 3;
+                scores.pilates += 3;
+                if (height < 160) {
+                    scores.yoga += 1;
+                } else {
+                    scores.pilates += 1;
+                }
+                break;
+        }
+
+//     // 운동 시간에 따른 점수 조정
+//     switch (time) {
+//     case 'short':
+//     scores.cardio += 1;
+//     scores.tabletennis += 1;
+//     break;
+//     case 'medium':
+//     scores.yoga += 1;
+//     scores.pilates += 1;
+//     scores.basketball += 1;
+//     break;
+//     case 'long':
+//     scores.health += 2;
+//     scores.swimming += 2;
+//     scores.cardio += 2;
+//     break;
+// }
 
     // 환경에 따른 점수 조정
-    switch (environment) {
-    case 'indoor':
-    scores.health += 2;
-    scores.yoga += 2;
-    scores.pilates += 2;
-    scores.tabletennis += 1;
-    scores.badminton += 1;
-    break;
-    case 'outdoor':
-    scores.cardio += 2;
-    scores.swimming += 2;
-    scores.basketball += 2;
-    break;
-    case 'both':
-    scores.cardio += 1;
-    scores.yoga += 1;
-    scores.pilates += 1;
-    scores.health += 1;
-    scores.swimming += 1;
-    scores.basketball += 1;
-    scores.tabletennis += 1;
-    scores.badminton += 1;
-    break;
-}
+//     switch (environment) {
+//     case 'indoor':
+//     scores.health += 2;
+//     scores.yoga += 2;
+//     scores.pilates += 2;
+//     scores.tabletennis += 1;
+//     scores.badminton += 1;
+//     break;
+//     case 'outdoor':
+//     scores.cardio += 2;
+//     scores.swimming += 2;
+//     scores.basketball += 2;
+//     break;
+//     case 'both':
+//     scores.cardio += 1;
+//     scores.yoga += 1;
+//     scores.pilates += 1;
+//     scores.health += 1;
+//     scores.swimming += 1;
+//     scores.basketball += 1;
+//     scores.tabletennis += 1;
+//     scores.badminton += 1;
+//     break;
+// }
 
     // 추천 운동 결정
     const sortedScores = Object.entries(scores).sort(([,a], [,b]) => b - a);

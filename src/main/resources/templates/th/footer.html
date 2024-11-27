@@ -4,15 +4,31 @@
   <meta charset="UTF-8">
   <title>Footer</title>
   <link rel="stylesheet" type="text/css" th:href="@{/css/index/indexstyle.css}"> <!-- CSS 파일 링크 -->
+
 </head>
 <body>
 <footer>
-  <div class="footer-container">
-    <p>제작자: 박성재 pjkart5@naver.com</p>
-    <p>제작자: 연주승 wnend1010@naver.com</p>
-    <p>제작자: 정재호 1010wogh@naver.com</p>
-    <p>&copy; 2024 FITIZEN. All rights reserved.</p>
-  </div>
+  <table class="footer-table">
+    <tr>
+      <td>박성재</td>
+      <td>pjkart5@naver.com</td>
+      <td> <a href="/findME">맞춤운동찾기</a></td>
+      <td> <a href="/shop">상점</a></td>
+    </tr>
+    <tr>
+      <td>연주승</td>
+      <td>wnend1010@naver.com</td>
+      <td> <a href="/board/list">게시판</a></td>
+      <td> <a href="/ai/uploadVideo">자세분석</a></td>
+    </tr>
+    <tr>
+      <td>정재호</td>
+      <td>1010wogh@naver.com</td>
+      <td> <a href="/ai/chatBot">챗봇</a></td>
+      <td> <a href="/trainer">트레이너</a></td>
+    </tr>
+  </table>
+  <p>&copy; 2024 FITIZEN. All rights reserved.</p>
 </footer>
 </body>
 </html>

@@ -26,7 +26,7 @@
 
 <div class="exercise-container">
     <div class="exercise-text">추천 운동과 정확도 비교(차트를 클릭해 운동 상세정보로 이동)</div>
-    <canvas id="exerciseChart" width="450" height="450"></canvas> <!-- 차트 크기 조정 -->
+    <canvas id="exerciseChart" width="500" height="500"></canvas> <!-- 차트 크기 조정 -->
 </div>
 
 
