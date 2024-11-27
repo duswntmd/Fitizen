@@ -16,6 +16,10 @@ public class BoardCommentService {
     @Autowired
     private BoardCommentMapper boardCommentMapper;
 
+    public BoardCommentService(BoardCommentMapper boardCommentMapper) {
+        this.boardCommentMapper = boardCommentMapper;
+    }
+
     public int getCommentCount(Long bno, boolean isDeleted) {
         return boardCommentMapper.countCommentsByBoard(bno, isDeleted);
     }
@@ -36,7 +40,7 @@ public class BoardCommentService {
 
     // 댓글 추가
     @Transactional
-    public void addComment(BoardComment comments) {
+    public int addComment(BoardComment comments) {
         if (comments.getPcno() != null) {
             BoardComment parentComment = boardCommentMapper.select(comments.getPcno());
             if (parentComment.getDepth() >= 3) {
@@ -47,13 +51,13 @@ public class BoardCommentService {
             comments.setDepth(1);
         }
 
-        boardCommentMapper.insert(comments);
+        return boardCommentMapper.insert(comments);
     }
 
     // 댓글 수정
     @Transactional
-    public void updateComment(BoardComment comments) {
-        boardCommentMapper.update(comments);
+    public int updateComment(BoardComment comments) {
+        return boardCommentMapper.update(comments);
     }
 
     @Transactional

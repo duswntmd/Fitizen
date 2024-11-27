@@ -1,12 +1,17 @@
 package com.sku.fitizen.service;
 
+import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.exception.IamportResponseException;
+import com.siot.IamportRestClient.response.AccessToken;
 import com.sku.fitizen.Dto.orderProductDTO;
 import com.sku.fitizen.domain.pay.Payment;
 import com.sku.fitizen.domain.store.CartItem;
+import com.sku.fitizen.domain.store.Order;
 import com.sku.fitizen.mapper.PaymentMapper;
 import com.sku.fitizen.mapper.store.CartMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +33,14 @@ public class PaymentService {
     CartMapper cartMapper;
 
 
-    private static final String API_KEY = "1503384544352203";
-    private static final String API_SECRET = "oT90x1wAb37Xj64cfvnZEmMFA7GUqmQPAvuc1vgShf4Iab5ZWHyYB2Kq4WxAM9S5RDG1sQyGHJ1UxsJP";
+    private final IamportClient iamportClient;
 
+    // 생성자에서 API Key와 Secret을 주입
+    @Autowired
+    public PaymentService(@Value("${REST_API_KEY}") String restApiKey,
+                          @Value("${REST_API_SECRET}") String restApiSecret) {
+        this.iamportClient = new IamportClient(restApiKey, restApiSecret);
+    }
 
 
     // 결제 기록 저장 ( fitizen store)
@@ -67,44 +78,28 @@ public class PaymentService {
         if(result == 1) return true;
         return  false;
     }
-
     // 결제 기록 불러오기
-    public List<Payment> getPaymentLsit(String userId)
-    {
-        List<Payment> Payments =paymentMapper.getPaymentList(userId);
-
-        return Payments;
-
-    }
-
-
+    public List<Payment> getPaymentList(String userId) {return paymentMapper.getPaymentList(userId);}
     // 잔액 포인트 불러오기
     public  int  getBalanceBYUserId(String userId)
     {
         return paymentMapper.getBalanceByUserId(userId);
     }
 
-
-
-
+    // 유저 결제 상품 목록
+    public List<Order> getOrderProductsByUserId(String userId){ return paymentMapper.getOrderProductsByUserId(userId);}
 
     // 포트원 API 토큰 발급
     public String getPortOneToken() {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            // 토큰 발급 요청
+            AccessToken response = iamportClient.getAuth().getResponse();
+           // System.out.println("발급된 토큰: " + response.getToken());
+            return response.getToken();
+        } catch (IamportResponseException | IOException e) {
+            throw new RuntimeException("IAMPORT 토큰 발급 실패", e);
+        }
 
-        Map<String, String> body = new HashMap<>();
-        body.put("imp_key", API_KEY);
-        body.put("imp_secret", API_SECRET);
-
-        HttpEntity<Map<String, String>> entity = new HttpEntity<>(body, headers);
-        ResponseEntity<Map> response = restTemplate.postForEntity("https://api.iamport.kr/users/getToken", entity, Map.class);
-
-        Map<String, Object> responseBody = response.getBody();
-        String token = (String) ((Map) responseBody.get("response")).get("access_token");
-
-        return token;
     }
 
 

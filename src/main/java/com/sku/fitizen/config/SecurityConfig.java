@@ -4,6 +4,7 @@ import com.sku.fitizen.handler.CustomAuthenticationSuccessHandler;
 import jakarta.servlet.DispatcherType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,6 +24,40 @@ public class SecurityConfig {
 
     @Autowired
     DataSource dataSource;
+
+    public static void main(String[] args) {
+        SpringApplication.run(SecurityConfig.class, args);
+    }
+
+//    @Bean
+//    public ServletWebServerFactory servletContainer() {
+//        // Tomcat을 커스터마이징하여 HTTP 요청을 HTTPS로 리디렉션
+//        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
+//            @Override
+//            protected void postProcessContext(Context context) {
+//                SecurityConstraint securityConstraint = new SecurityConstraint();
+//                securityConstraint.setUserConstraint("CONFIDENTIAL"); // HTTPS 강제
+//                SecurityCollection collection = new SecurityCollection();
+//                collection.addPattern("/*"); // 모든 경로에 적용
+//                securityConstraint.addCollection(collection);
+//                context.addConstraint(securityConstraint);
+//            }
+//        };
+//
+//        // HTTP → HTTPS 리디렉션 설정 추가
+//        tomcat.addAdditionalTomcatConnectors(httpToHttpsRedirectConnector());
+//
+//        return tomcat;
+//    }
+//
+//    private Connector httpToHttpsRedirectConnector() {
+//        Connector connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
+//        connector.setScheme("http");
+//        connector.setPort(80); // HTTP 포트
+//        connector.setSecure(false);
+//        connector.setRedirectPort(443); // HTTPS 포트로 리디렉션
+//        return connector;
+//    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -54,50 +89,37 @@ public class SecurityConfig {
         log.info("접근제한 설정");
 
         http.authorizeHttpRequests(authz -> authz
-                .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
-                .requestMatchers("/", "/favicon.ico", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
-                        "/findME", "findResult", "/exerciseDetail/**",
-                        "/ShopImage/**", "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
-                        "/mail/**","favicon.ico", "/video_storage/**", "/ai/uploadProcessedVideo",
-                        "/processed_videos/**",
-                        "/ai/chatBot/**", "/shop/**","/ai/predict_result","/ai/predict_exercise","/ai/aiResult",
-                        "/trainer/**","/challenge","/challenge/detail/*","/challenge/search","/proofShot/*","/challenge/detail/*"
+                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+                        .requestMatchers("/", "/favicon.ico", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
+                                "/findME", "findResult", "/exerciseDetail/**",
+                                "/ShopImage/**", "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
+                                "/mail/**","favicon.ico", "/video_storage/**",
+                                "/ai/chatBot/**", "/shop/**","/ai/predict_result","/ai/predict_exercise","/ai/aiResult",
+                                "/trainer/**","/challenge","/challenge/detail/*","/challenge/search","/proofShot/*","/challenge/detail/*"
 
+                        ).permitAll()
 
+                        .requestMatchers("/cart/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/qna/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/register/updateuser", "/register/deleteuser").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/board/write", "/board/search", "/board/view/**", "/board/view/**", "/board/view/**",
+                                "/board/view/**", "/board/edit/**", "/board/delete/**", "/board/download/**",
+                                "/board/download/**", "/board/like/**", "/board/unlike/**", "/comments/add/**",
+                                "/comments/add/**", "/comments/edit/**", "/comments/delete/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/kakao/map/**", "/kakao/reviewDetail/**", "/kakao/addReview/**", "/kakao/editReview/**",
+                                "/kakao/deleteReview").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/ai/userVideos", "/ai/uploadVideo", "/ai/analyzeVideo", "/ai/detailvideo/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/ws/**","/chat", "/tChat", "/alarm").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/consultation").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/challenge/add","/challenge/save","/challenge/participate/*","/challenge/participate",
+                                "challenge/myChall","/chellComment/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/proofComment/**","proofShot/addProofShotForm/*","proofShot/add/","proofShot/addChatProof","proofShot/verify").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("pay/*","cancel/**" ,"verify/**","/savePayment","/orderPayment","/getMyPayments","/myOrder").hasAnyRole("USER","ADMIN")
 
-
-                ).permitAll()
-                //.requestMatchers("/video_storage").hasAnyRole("USER")
-                .requestMatchers("/cart/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/qna/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/register/updateuser").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/register/deleteuser").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/board/write").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/board/search").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/board/view/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/board/edit/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/board/delete/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/board/download/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/board/like/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/board/unlike/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/comments/add/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/comments/edit/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/comments/delete/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/kakao/map/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/kakao/reviewDetail/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/kakao/addReview/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/kakao/editReview/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/kakao/deleteReview").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/ws/**","/chat", "/tChat", "/alarm").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/consultation").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/challenge/add","/challenge/save","/challenge/participate/*","/challenge/participate",
-                        "challenge/myChall","/chellComment/**").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/proofComment/**","proofShot/addProofShotForm/*","proofShot/add/","proofShot/addChatProof","proofShot/verify").hasAnyRole("USER","ADMIN")
-                .requestMatchers("pay/*" ,"verify/**","/savePayment","/orderPayment").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/ai/uploadVideo").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/ai/analyzeVideo").hasAnyRole("USER","ADMIN")
-                //.anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
-                .anyRequest().denyAll()
+                        //.anyRequest().authenticated()  // 그 외의 모든 요청은 인증 필요
+                        .anyRequest().denyAll()
+//        ).requiresChannel(channel ->
+//                channel.anyRequest().requiresSecure() // HTTPS 강제
         ).csrf( csrfConf -> csrfConf.disable()
         ).formLogin(loginConf -> loginConf.loginPage("/login/login")   // 컨트롤러 메소드와 지정된 위치에 로그인 폼이 준비되어야 함
                 .loginProcessingUrl("/dologin")            // 컨트롤러 메소드 불필요, 폼 action과 일치해야 함

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>운동 분석 상세 보기</title>
+    <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .video-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        video {
+            width: 500px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .analysis-results {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #333;
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 60%;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .chart-container {
+            width: 90%;
+            margin: 20px auto;
+        }
+    </style>
+    <!-- Chart.js 라이브러리 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div>
+    <th:block th:replace="~{th/header :: header}"></th:block>
+</div>
+
+<h1>운동 분석 상세 보기</h1>
+<h3 th:text="'사용자 : ' + ${userid} + ' 님의 자세 분석'"></h3>
+
+<!-- 비디오 원본과 AI 분석된 비디오를 나란히 표시 -->
+<div class="video-container">
+    <div>
+        <h2>원본 비디오</h2>
+        <video id="videoPlayer" controls th:src="@{${videoUrl}}"></video>
+    </div>
+    <div>
+        <h2>분석된 비디오</h2>
+        <video controls th:src="@{${aiVideoUrl}}"></video>
+    </div>
+    <div>
+        <h2>분석 분포</h2>
+        <canvas id="doughnutChart" width="500" height="400"></canvas>
+    </div>
+</div>
+
+<!-- 막대 그래프 표시 -->
+<div class="chart-container">
+    <h2>시간 순서에 따른 분석 결과</h2>
+    <canvas id="barChart" width="1200" height="300"></canvas>
+</div>
+
+<!-- 도넛형 차트 표시 -->
+<!--<div class="chart-container">-->
+<!--    <h2>분석 분포 (도넛형 차트)</h2>-->
+<!--    <canvas id="doughnutChart" width="500" height="500"></canvas>-->
+<!--</div>-->
+
+<!-- 분석 결과를 표로 표시 -->
+<div class="analysis-results">
+    <h2>표 분석 결과</h2>
+    <table id="analysisTable">
+        <thead>
+        <tr>
+            <th>프레임 시간</th>
+            <th>자세 결과</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        <tr th:each="frame, stat : ${frames}" th:if="${stat.index < 10}">
+            <td th:text="${frame}"></td>
+            <td th:text="${valuesLabels[stat.index]}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <button id="toggleTableButton" style="margin-top: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">더 보기</button>
+</div>
+
+<!-- 목록으로 돌아가는 버튼 -->
+<div>
+    <a href="/ai/userVideos">
+        <button style="margin-top: 20px; padding: 10px 20px; font-size: 16px; border-radius: 5px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">목록으로 돌아가기</button>
+    </a>
+</div>
+
+<div>
+    <th:block th:replace="~{th/footer :: footer}"></th:block>
+</div>
+
+<!-- Chart.js 그래프 생성 스크립트 -->
+<script th:inline="javascript">
+    // Thymeleaf에서 전달된 데이터로 막대 그래프 생성
+    const frames = [[${frames}]];  // 프레임 번호 데이터
+    const values = [[${values}]];  // 각 프레임의 값 데이터
+    const valuesLabels = [[${valuesLabels}]];
+    const doughnutLabels = [[${doughnutLabels}]]; // 자세 라벨
+    const doughnutValues = [[${doughnutValues}]]; // 라벨별 값
+
+    const fullTableData = frames.map((frame, index) => {
+        return {
+            frame: frame,
+            label: valuesLabels[index]
+        };
+    });
+
+    // 테이블의 초기 상태
+    let tableExpanded = false;
+
+    // 버튼 클릭 이벤트 핸들러
+    document.getElementById("toggleTableButton").addEventListener("click", function () {
+        const tableBody = document.getElementById("tableBody");
+        const button = document.getElementById("toggleTableButton");
+
+        if (tableExpanded) {
+            // 축소: 처음 10개 항목만 다시 표시
+            tableBody.innerHTML = fullTableData.slice(0, 10).map(row => `
+                <tr>
+                    <td>${row.frame}</td>
+                    <td>${row.label}</td>
+                </tr>
+            `).join("");
+            button.textContent = "더 보기";
+        } else {
+            // 확장: 전체 항목 표시
+            tableBody.innerHTML = fullTableData.map(row => `
+                <tr>
+                    <td>${row.frame}</td>
+                    <td>${row.label}</td>
+                </tr>
+            `).join("");
+            button.textContent = "축소";
+        }
+
+        // 상태 변경
+        tableExpanded = !tableExpanded;
+    });
+
+    // 막대 그래프 생성
+    const ctxBar = document.getElementById('barChart').getContext('2d');
+    const barChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: frames,
+            datasets: [{
+                label: '자세분석',
+                data: values,
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return `${valueLabels[tooltipItem.dataIndex]} (프레임 ${tooltipItem.label})`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { title: { display: true, text: '시간' } },
+                y: { title: { display: true, text: '자세' } }
+            },
+            onClick: function (evt, elements) {
+                if (elements.length > 0) {
+                    const frameIndex = elements[0].index; // 클릭한 막대의 인덱스
+                    const frameNumber = frames[frameIndex]; // 프레임 번호 가져오기
+                    seekToFrame(frameNumber);
+                }
+            }
+        }
+    });
+
+    // 도넛형 차트 생성
+    const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+    const doughnutChart = new Chart(ctxDoughnut, {
+        type: 'doughnut',
+        data: {
+            labels: doughnutLabels, // 자세 라벨
+            datasets: [{
+                data: doughnutValues,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(153, 102, 255, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: false, // 반응형 비활성화
+            maintainAspectRatio: false, // 종횡비 유지 비활성화
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            const total = doughnutValues.reduce((a, b) => a + b, 0);
+                            const value = doughnutValues[tooltipItem.dataIndex];
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${tooltipItem.label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // 특정 프레임으로 비디오 이동
+    function seekToFrame(frameNumber) {
+        const fps = 30; // 비디오 FPS
+        const videoElement = document.getElementById('videoPlayer');
+        const timeInSeconds = frameNumber / fps;
+        videoElement.currentTime = timeInSeconds;
+        videoElement.play();
+    }
+</script>
+</body>
+</html>

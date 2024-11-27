@@ -5,7 +5,6 @@ import com.sku.fitizen.domain.VideoAnalysis;
 import com.sku.fitizen.service.VideoAnalysisService;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +24,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.time.Duration;
+import java.util.*;
 
 @Controller
 @RequestMapping("/ai")
@@ -36,9 +33,11 @@ import java.util.UUID;
 public class AiServer {
 
     private final HttpClient client;
-    private final String pythonServerUrl = "http://127.0.0.1:8000/"; //박성재테스트용 파이썬url
+    //private final String pythonServerUrl = "http://127.0.0.1:8000/"; //박성재테스트용 파이썬url
     private final RestTemplate restTemplate = new RestTemplate();
-    //private final String pythonServerUrl = "http://220.67.113.237:8000/";
+    private final String pythonServerUrl = "http://220.67.113.237:8000/";
+    private final String analyzeVideoUrl = "http://220.67.113.237:8000/videos/";
+    private final String uuidUrl = "http://220.67.113.236/video_storage/";
     private final VideoAnalysisService videoAnalysisService;
 
     @Autowired
@@ -53,39 +52,67 @@ public class AiServer {
         List<VideoAnalysis> videoList = videoAnalysisService.getVideosByUser(user.getId());
         model.addAttribute("videoList", videoList);
 
-        return "th/videoList"; // th/userVideos.html로 렌더링
+        return "th/videoList";
     }
 
-//    @PostMapping("/uploadProcessedVideo")
-//    @ResponseBody
-//    public ResponseEntity<Map<String, String>> uploadProcessedVideo(@RequestParam("file") MultipartFile file) {
-//        String fileName = file.getOriginalFilename();
-//        String directory = "src/main/resources/static/processed_videos/";
-//        Map<String, String> response = new HashMap<>();
-//
-//        try {
-//            // 지정된 디렉토리 확인 및 생성
-//            Path directoryPath = Paths.get(directory);
-//            if (!Files.exists(directoryPath)) {
-//                Files.createDirectories(directoryPath);
-//            }
-//
-//            // 파일 저장
-//            Path filePath = directoryPath.resolve(fileName);
-//            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-//            System.out.println("Video successfully saved to " + filePath.toString());
-//            System.out.println("파일 이름: " + file.getOriginalFilename());
-//            System.out.println("파일 크기: " + file.getSize());
-//            response.put("message", "File uploaded successfully");
-//            response.put("fileName", fileName);
-//            return ResponseEntity.ok(response);  // JSON 응답 반환
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            response.put("message", "Could not upload file");
-//            response.put("error", e.getMessage());
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);  // 에러 시 JSON 응답 반환
-//        }
-//    }
+    @GetMapping("/detailvideo/{vnum}")
+    public String getVideoDetail(@PathVariable int vnum, @SessionAttribute(value = "user", required = false) User user, Model model) {
+        String baseUrl = "/video_storage/";
+        VideoAnalysis videoAnalysis = videoAnalysisService.getVideoAnalysisDetail(vnum, user.getId());
+        String[] resultPairs = videoAnalysis.getVideoresult().split(",");
+        List<Integer> frames = new ArrayList<>();
+        List<Integer> values = new ArrayList<>();
+        List<String> valuesLabels = new ArrayList<>();  // 라벨링된 자세 리스트
+
+        // 자세 코드와 라벨 매핑
+        Map<Integer, String> labelMapping = new HashMap<>();
+        labelMapping.put(0, "정상 자세");
+        labelMapping.put(1, "무릎 안좋은 자세");
+        labelMapping.put(2, "앉은 자세");
+        labelMapping.put(3, "허리 구부린 자세");
+
+        for (String pair : resultPairs) {
+            String[] parts = pair.split(":");
+            frames.add(Integer.parseInt(parts[0])); // 프레임
+            int value = Integer.parseInt(parts[1]); // 값
+            values.add(value);
+            valuesLabels.add(labelMapping.getOrDefault(value, "알 수 없는 자세"));  // 값에 대한 라벨을 추가
+        }
+
+        // 도넛 차트를 위한 라벨과 빈도 계산
+        List<String> doughnutLabels = new ArrayList<>();
+        List<Integer> doughnutValues = new ArrayList<>();
+
+        Map<Integer, Integer> valueCounts = new HashMap<>();
+        for (Integer value : values) {
+            valueCounts.put(value, valueCounts.getOrDefault(value, 0) + 1);
+        }
+
+        // 실제 등장하는 코드만 doughnutLabels와 doughnutValues에 추가
+        for (Map.Entry<Integer, Integer> entry : valueCounts.entrySet()) {
+            Integer code = entry.getKey();
+            Integer count = entry.getValue();
+
+            // 등장하는 코드가 labelMapping에 존재할 때만 추가
+            if (labelMapping.containsKey(code)) {
+                doughnutLabels.add(labelMapping.get(code));  // 실제로 존재하는 코드의 이름만 추가
+                doughnutValues.add(count);
+            }
+        }
+
+        // 모델에 데이터 추가
+        model.addAttribute("doughnutLabels", doughnutLabels);
+        model.addAttribute("doughnutValues", doughnutValues);
+        model.addAttribute("userid", videoAnalysis.getUserid());
+        model.addAttribute("videoUrl", baseUrl + videoAnalysis.getUuidvideoname());
+        model.addAttribute("aiVideoUrl", analyzeVideoUrl + videoAnalysis.getAivideourl());
+        model.addAttribute("analysisResults", videoAnalysis.getVideoresult());
+        model.addAttribute("frames", frames);
+        model.addAttribute("values", values);
+        model.addAttribute("valuesLabels", valuesLabels);  // 프레임별 라벨링된 자세 값 추가
+        return "th/videoDetail";
+    }
+
 
     // 업로드 페이지 제공
     @GetMapping("/uploadVideo")
@@ -106,8 +133,8 @@ public class AiServer {
             String originalFilename = file.getOriginalFilename();
             String uuidFilename = UUID.randomUUID().toString() + "_" + originalFilename;
             String staticFilePath = new File("src/main/resources/static/video_storage/" + uuidFilename).getAbsolutePath();
-            String fileUrl = "http://220.67.113.236/video_storage/" + uuidFilename;
-
+            String fileUrl = uuidUrl + uuidFilename;
+//            System.out.println("Checking file URL: " + fileUrl);
             // 파일 저장
             file.transferTo(new File(staticFilePath));
 
@@ -130,19 +157,38 @@ public class AiServer {
             retries = 0;
             while (!fileReady && retries < maxRetries) {
                 try {
-                    HttpClient tempClient = HttpClient.newHttpClient();
+                    HttpClient tempClient = HttpClient.newBuilder()
+//                            .sslContext(createTrustAllSslContext())
+//                            .sslContext(getUnsafeSslContext())
+                            .version(HttpClient.Version.HTTP_1_1)
+                            .connectTimeout(Duration.ofSeconds(10))
+                            .build();
+
                     HttpRequest fileCheckRequest = HttpRequest.newBuilder()
                             .uri(URI.create(fileUrl))
+                            .header("User-Agent", "HttpClient")
+                            .header("Accept", "*/*")
                             .GET()
                             .build();
+
+                    System.out.println("Sending HTTP request to: " + fileUrl);
+
                     HttpResponse<String> fileCheckResponse = tempClient.send(fileCheckRequest, HttpResponse.BodyHandlers.ofString());
+//                    System.out.println("Response Code: " + fileCheckResponse.statusCode());
+//                    System.out.println("Response Body: " + fileCheckResponse.body());
+
                     if (fileCheckResponse.statusCode() == 200) {
                         fileReady = true;
+                    } else {
+                        System.out.println("File not ready. Retrying...");
                     }
                 } catch (Exception ex) {
-                    Thread.sleep(200);  // 대기 시간 증가
-                    retries++;
+//                    System.out.println("Exception during file check: " + ex.getClass().getName());
+//                    System.out.println("Message: " + ex.getMessage());
+                    ex.printStackTrace(); // 예외 스택 출력
                 }
+                Thread.sleep(200);
+                retries++;
             }
 
             if (!fileReady) {
@@ -163,8 +209,8 @@ public class AiServer {
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-//            System.out.println("Response Status Code: " + response.statusCode());
-//            System.out.println("Response Body: " + response.body());
+            System.out.println("Response Status Code: " + response.statusCode());
+            System.out.println("Response Body: " + response.body());
             // 5. 분석 결과 DB 업데이트
             if (response.statusCode() == 200) {
                 JSONObject jsonResponse = new JSONObject(response.body());
@@ -176,15 +222,15 @@ public class AiServer {
                 videoAnalysis.setUserid(user.getId());
                 videoAnalysis.setRealvideoname(originalFilename);
                 videoAnalysis.setUuidvideoname(uuidFilename);
-                videoAnalysis.setVideourl(fileUrl);
                 videoAnalysis.setAivideourl(aiVideoUrl);
                 videoAnalysis.setVideoresult(analysisResult);
 
 
                 videoAnalysisService.insertVideoAnalysis(videoAnalysis);
                 videoAnalysisService.updateVideoAnalysisResult(videoAnalysis);
-                model.addAttribute("aivideourl", aiVideoUrl);
-                model.addAttribute("result", "분석완료");
+                model.addAttribute("vnum", videoAnalysis.getVnum());
+                model.addAttribute("aivideourl", analyzeVideoUrl + aiVideoUrl);
+                model.addAttribute("result", "비디오 상세 보기를 눌러주세요");
             } else {
                 model.addAttribute("error", "오류: " + response.statusCode() + " 상태 코드가 반환되었습니다.");
             }
@@ -195,37 +241,6 @@ public class AiServer {
         }
 
         return "th/uploadVideo";
-    }
-
-
-
-    // 특정 비디오 분석 데이터 조회
-    @GetMapping("/video/{vnum}")
-    public ResponseEntity<VideoAnalysis> getVideoAnalysisById(@PathVariable long vnum) {
-        VideoAnalysis videoAnalysis = videoAnalysisService.getVideoAnalysisById(vnum);
-        if (videoAnalysis != null) {
-            return ResponseEntity.ok(videoAnalysis);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    // 모든 비디오 분석 데이터 조회
-    @GetMapping("/videos")
-    public ResponseEntity<List<VideoAnalysis>> getAllVideoAnalysis() {
-        List<VideoAnalysis> videoAnalysisList = videoAnalysisService.getAllVideoAnalysis();
-        return ResponseEntity.ok(videoAnalysisList);
-    }
-
-    // 비디오 분석 데이터 삭제
-    @DeleteMapping("/video/{vnum}")
-    public ResponseEntity<String> deleteVideoAnalysis(@PathVariable long vnum) {
-        int result = videoAnalysisService.deleteVideoAnalysis(vnum);
-        if (result > 0) {
-            return ResponseEntity.ok("비디오 분석 데이터가 삭제되었습니다.");
-        } else {
-            return ResponseEntity.status(500).body("삭제할 데이터가 존재하지 않거나 삭제 중 오류가 발생했습니다.");
-        }
     }
 
     @GetMapping("/chatBot")
@@ -251,6 +266,7 @@ public class AiServer {
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(URI.create(pythonServerUrl + selectedModel))
                 .header("Content-Type", "application/json")
+                .version(HttpClient.Version.HTTP_1_1)
                 .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
                 .build();
 
@@ -355,6 +371,35 @@ public class AiServer {
         return "aiResult";
     }
 
+//    private SSLContext getUnsafeSslContext() {
+//        try {
+//            TrustManager[] trustAllCerts = new TrustManager[]{
+//                    new X509TrustManager() {
+//                        public java.security.cert.X509Certificate[] getAcceptedIssuers() { return null; }
+//                        public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) { }
+//                        public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) { }
+//                    }
+//            };
+//            SSLContext sc = SSLContext.getInstance("SSL");
+//            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+//            return sc;
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+//    private SSLContext createTrustAllSslContext() throws Exception {
+//        SSLContext sslContext = SSLContext.getInstance("TLS");
+//        sslContext.init(null, new TrustManager[]{new X509TrustManager() {
+//            @Override
+//            public void checkClientTrusted(X509Certificate[] chain, String authType) { }
+//            @Override
+//            public void checkServerTrusted(X509Certificate[] chain, String authType) { }
+//            @Override
+//            public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
+//        }}, new SecureRandom());
+//        return sslContext;
+//    }
 
 }
 

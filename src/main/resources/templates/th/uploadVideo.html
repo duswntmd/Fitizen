@@ -4,22 +4,279 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>운동 분석</title>
+    <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        #main-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .page-contents {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .drag-area {
+            position: relative;
+            padding: 50px;
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            background-color: #eef6fc;
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .drag-area.dragover {
+            background-color: #d4e9fc;
+            border-color: #2980b9;
+        }
+
+        .drag-area p {
+            margin: 0;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .file-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            font-size: 14px;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            margin: 10px 5px;
+        }
+
+        .file-button:hover {
+            background-color: #2980b9;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-name-container {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none; /* 숨김 처리 */
+        }
+
+        .file-name {
+            display: flex;
+            align-items: center;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .file-name i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        #loadingMessage {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .spinner {
+            margin: 0 auto;
+            width: 50px;
+            height: 50px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #FF5733;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #loadingText {
+            margin-top: 10px;
+            color: #FF5733;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        #viewDetailsButton {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<h1>운동 분석을 위한 동영상 업로드</h1>
-<form action="/ai/analyzeVideo" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" accept="video/*">
-    <button type="submit">분석 요청</button>
-</form>
-
+<!-- 헤더 -->
 <div>
-    <div th:if="${aivideourl}">
-        <h2>분석된 동영상:</h2>
-        <video controls autoplay th:src="${aivideourl}" width="600"></video>
-    </div>
-    <!-- 결과 또는 오류 메시지를 표시 -->
-    <p th:if="${result}" th:text="'분석 결과: ' + ${result}"></p>
-    <p th:if="${error}" th:text="'오류: ' + ${error}"></p>
+    <th:block th:replace="~{th/header :: header}"></th:block>
 </div>
+
+<!-- 메인 컨테이너 -->
+<div id="main-container">
+    <div class="page-contents">
+        <h1>운동 분석을 위한 동영상 업로드</h1>
+        <div class="upload-container">
+            <!-- 드래그 앤 드롭 영역 -->
+            <div class="drag-area" id="dragArea">
+                <p><strong>업로드할 파일을 놓기</strong><br>또는</p>
+                <button type="button" class="file-button" onclick="triggerFileInput()">파일 선택</button>
+            </div>
+            <!-- 선택한 파일 이름 표시 -->
+            <div id="fileDisplayContainer" class="file-name-container">
+                <div class="file-name">
+                    <i class="fas fa-file-video"></i>
+                    <span id="fileName"></span>
+                </div>
+            </div>
+            <!-- 파일 선택 버튼 -->
+            <form id="uploadForm" action="/ai/analyzeVideo" method="post" enctype="multipart/form-data">
+                <input type="file" id="fileUpload" name="file" accept="video/*">
+                <button type="submit" class="file-button">분석 요청</button>
+            </form>
+        </div>
+
+        <!-- 로딩 메시지 (스피너 포함) -->
+        <div id="loadingMessage">
+            <div class="spinner"></div>
+            <div id="loadingText">분석 중입니다... 잠시만 기다려주세요.</div>
+        </div>
+
+        <div>
+            <!-- 분석된 동영상이 있는 경우 표시 -->
+            <div th:if="${aivideourl}">
+                <h2>분석된 동영상:</h2>
+                <video controls th:src="${aivideourl}" width="600"></video>
+            </div>
+            <!-- 결과 또는 오류 메시지를 표시 -->
+            <p th:if="${result}" th:text="'분석 성공: ' + ${result}"></p>
+            <p th:if="${error}" th:text="'오류: ' + ${error}"></p>
+            <!-- 분석 완료 후 비디오 상세 보기로 이동 -->
+            <a id="viewDetailsButton" th:if="${aivideourl}" th:href="@{/ai/detailvideo/{vnum}(vnum=${vnum})}">비디오 상세 보기</a>
+        </div>
+    </div>
+</div>
+
+<!-- 푸터 -->
+<div>
+    <th:block th:replace="~{th/footer :: footer}"></th:block>
+</div>
+
+<script>
+    const dragArea = document.getElementById("dragArea");
+    const fileUpload = document.getElementById("fileUpload");
+    const fileNameDisplay = document.getElementById("fileName");
+    const fileDisplayContainer = document.getElementById("fileDisplayContainer");
+    const uploadForm = document.getElementById("uploadForm");
+    const loadingMessage = document.getElementById("loadingMessage");
+
+    // 드래그 앤 드롭 이벤트 처리
+    dragArea.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        dragArea.classList.add("dragover");
+    });
+
+    dragArea.addEventListener("dragleave", () => {
+        dragArea.classList.remove("dragover");
+    });
+
+    dragArea.addEventListener("drop", (event) => {
+        event.preventDefault();
+        dragArea.classList.remove("dragover");
+        const file = event.dataTransfer.files[0];
+        if (file) {
+            fileUpload.files = event.dataTransfer.files;
+            fileNameDisplay.textContent = file.name;
+            fileDisplayContainer.style.display = "block";
+        }
+    });
+
+    // 파일 선택 시 이름 표시
+    fileUpload.addEventListener("change", function () {
+        const file = fileUpload.files[0];
+        if (file) {
+            fileNameDisplay.textContent = file.name;
+            fileDisplayContainer.style.display = "block";
+        } else {
+            fileDisplayContainer.style.display = "none";
+        }
+    });
+
+    // 폼 제출 시 로딩 메시지를 표시
+    uploadForm.addEventListener("submit", function () {
+        loadingMessage.style.display = "block";
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const viewDetailsButton = document.getElementById("viewDetailsButton");
+        const aivideourl = "[[${aivideourl}]]"; // Thymeleaf에서 전달된 aivideourl
+
+        if (aivideourl && aivideourl !== "null") { // aivideourl이 null이 아니면
+            viewDetailsButton.style.display = "inline-block"; // 버튼 보이기
+        }
+    });
+
+    // 파일 선택 버튼 클릭 시 input[type="file"] 트리거
+    function triggerFileInput() {
+        fileUpload.click();
+    }
+</script>
+
 </body>
 </html>

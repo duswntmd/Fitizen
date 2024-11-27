@@ -135,7 +135,7 @@
             <label for="title">제목:</label>
             <input type="text" id="title" name="title" th:value="${board.title}" required>
         </div>
-        <!-- 기존 유튜브 링크 표시 및 삭제 선택 -->
+
         <div>
             <label>기존 유튜브 링크:</label>
             <ul>
@@ -149,7 +149,7 @@
             </ul>
         </div>
 
-        <!-- 기존 이미지 파일 표시 및 삭제 선택 -->
+
         <div>
             <label>기존 이미지 파일:</label>
             <ul>
@@ -163,7 +163,7 @@
             </ul>
         </div>
 
-        <!-- 기존 기타 파일 표시 및 삭제 선택 -->
+
         <div>
             <label>기타 파일:</label>
             <ul>
@@ -176,14 +176,14 @@
             </ul>
         </div>
 
-        <!-- 새로운 유튜브 링크 추가 필드 -->
+
         <div id="youtube-url-container">
             <label for="youtubeUrls[0]">유튜브 링크:</label>
             <input type="text" id="youtubeUrls[0]" name="youtubeUrls[]" placeholder="유튜브 링크를 입력하세요">
             <button type="button" id="addYoutubeUrlBtn">유튜브 링크 추가</button>
         </div>
 
-        <!-- 새로운 이미지 업로드 필드 -->
+
         <div>
             <label for="files">새 이미지 파일 첨부:</label>
             <input type="file" id="files" name="files" multiple accept="image/*">
@@ -204,10 +204,10 @@
     $(document).ready(function() {
         let youtubeUrlIndex = 1;
 
-        // 유튜브 링크 추가 버튼
+
         $('#addYoutubeUrlBtn').on('click', function() {
             let currentYoutubeUrlCount = $('#youtube-url-container input[type="text"]').length;
-            let maxYoutubeCount = 3; // 최대 3개의 URL만 허용
+            let maxYoutubeCount = 3;
 
             if (currentYoutubeUrlCount >= maxYoutubeCount) {
                 alert("유튜브 영상은 최대 3개까지 추가할 수 있습니다.");
@@ -224,14 +224,14 @@
             youtubeUrlIndex++;
         });
 
-        // 유튜브 URL 삭제 버튼 클릭 시 해당 입력 필드 제거
+
         $(document).on('click', '.removeYoutubeUrlBtn', function() {
             $(this).parent().remove();
         });
 
         // 폼 제출
         $('#editForm').on('submit', function(event) {
-            event.preventDefault();  // 기본 폼 제출 방지
+            event.preventDefault();
 
             var formData = new FormData(this);
 
@@ -239,12 +239,12 @@
                 url: '/board/edit',
                 type: 'POST',
                 data: formData,
-                processData: false,  // 파일 전송을 위해 처리 방지
-                contentType: false,  // 파일 전송을 위해 contentType 설정 방지
+                processData: false,
+                contentType: false,
                 success: function(res) {
                     alert(res.success ? res.message : "게시글 수정 실패: " + res.message);
                     if (res.success) {
-                        window.location.href = '/board/view/' + formData.get("bno");  // 성공 시 상세보기로 이동
+                        window.location.href = '/board/view/' + formData.get("bno");
                     }
                 },
                 error: function(xhr, status, error) {

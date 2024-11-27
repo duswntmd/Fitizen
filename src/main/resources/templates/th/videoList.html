@@ -1,27 +1,99 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>My Video List</title>
+    <title>My Videos</title>
+    <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
+    <style>
+
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            margin-top: 120px;
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px auto 160px auto;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .no-videos {
+            text-align: center;
+            color: #888;
+            margin: 20px auto 160px auto;
+        }
+        .upload-button {
+            display: block;
+            width: 78%;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        .upload-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <div>
+        <th:block th:replace="~{th/header :: header}"></th:block>
+    </div>
 </head>
 <body>
-<h1>My Video Analyses</h1>
 
-<table>
-    <thead>
-    <tr>
-        <th>Real Video Name</th>
-        <th>Video URL</th>
-        <th>Analysis Result</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="video : ${videoList}">
-        <td th:text="${video.realVideoName}">Video Name</td>
-        <td><a th:href="${video.videoUrl}" target="_blank">Play Video</a></td>
-        <td th:text="${video.videoResult}">Result</td>
-    </tr>
-    </tbody>
-</table>
+<h1>나의 자세분석</h1>
 
+<!-- 비디오 업로드 버튼 -->
+<a href="/ai/uploadVideo" class="upload-button">자세 분석하러 가기</a>
+
+<!-- videoList 데이터가 있는지 확인 -->
+<div th:if="${videoList != null}">
+    <table>
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>아이디</th>
+            <th>비디오 이름</th>
+            <th>날짜</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- videoList의 각 비디오를 반복 -->
+        <tr th:each="video : ${videoList}">
+            <td th:text="${video.vnum}"></td>
+            <td><a th:href="@{/ai/detailvideo/{vnum}(vnum=${video.vnum})}" th:text="${video.userid}"></a></td>
+            <td th:text="${video.realvideoname}"></td>
+            <td th:text="${video.REGDATE}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 비디오 리스트가 없을 경우 메시지 표시 -->
+<div th:if="${videoList == null || videoList.size() == 0}" class="no-videos">
+    <p>자세를 교정할 데이터가 없어요 올려주세요!</p>
+</div>
+<div>
+    <th:block th:replace="~{th/footer :: footer}"></th:block>
+</div>
 </body>
 </html>

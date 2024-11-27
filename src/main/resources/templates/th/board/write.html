@@ -100,7 +100,6 @@
         font-size: 16px;
     }
 
-    /* Header & Footer Style */
     th:block th:replace {
         margin: 30px 0;
     }
@@ -116,7 +115,6 @@
 <h1>게시글 작성</h1>
 
 <form id="writeForm" enctype="multipart/form-data">
-<!--    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
 
     <div>
         <label for="title">제목:</label>
@@ -139,11 +137,6 @@
         <div id="content" contenteditable="true" required></div>
         <input type="hidden" id="contentInput" name="content">
     </div>
-<!--    <div>-->
-<!--        <label for="contentImages">내용에 들어갈 이미지:</label>-->
-<!--        <input type="file" id="contentImages" name="contentImages" multiple>-->
-<!--    </div>-->
-
 
     <button type="submit">작성 완료</button>
 </form>
@@ -153,77 +146,6 @@
 <th:block th:replace="~{th/footer :: footer}"></th:block>
 <script type="text/javascript">
     $(document).ready(function() {
-
-        // $('#insertYoutube').on('click', function() {
-        //     let youtubeUrl = $('#youtubeUrl').val();
-        //
-        //     if (youtubeUrl) {
-        //         // 유튜브 URL에서 watch?v=를 embed/로 변환
-        //         let youtubeEmbedUrl = youtubeUrl.replace("watch?v=", "embed/");
-        //
-        //         // 불필요한 쿼리 파라미터 제거 (예: &list=, &start_radio= 등)
-        //         youtubeEmbedUrl = youtubeEmbedUrl.split('&')[0];
-        //
-        //         const iframe = `<iframe width="560" height="315" src="${youtubeEmbedUrl}" frameborder="0" allowfullscreen></iframe>`;
-        //         $('#content').append(iframe);
-        //     } else {
-        //         alert('유튜브 링크를 입력하세요.');
-        //     }
-        // });
-
-        // $('#files').on('change', function() {
-        //     let fileInput = this.files;
-        //     for (let i = 0; i < fileInput.length; i++) {
-        //         let file = fileInput[i];  // 현재 파일
-        //
-        //         let reader = new FileReader();
-        //         reader.onload = function(e) {
-        //             $('#content').append(`<img src="${e.target.result}" style="max-width: 100%;"><br>`);  // base64로 미리보기
-        //         };
-        //
-        //         reader.readAsDataURL(file);  // 파일을 base64로 읽기
-        //     }
-        // });
-
-        // $('#youtubeUrl').on('change', function() {
-        //     let youtubeUrl = $(this).val();
-        //     if (youtubeUrl) {
-        //         let youtubeEmbedUrl = youtubeUrl.replace("watch?v=", "embed/");
-        //         $('#content').append(`<iframe width="560" height="315" src="${youtubeEmbedUrl}" frameborder="0" allowfullscreen></iframe><br>`);
-        //     } else {
-        //         alert('유튜브 링크를 입력하세요.');
-        //     }
-        // });
-
-        // $('#contentImages').on('change', function() {
-        //     let fileInput = this.files;
-        //     for (let i = 0; i < fileInput.length; i++) {
-        //         let file = fileInput[i];  // 현재 파일
-        //         let formData = new FormData();
-        //         formData.append('file', file);  // 폼데이터에 파일 추가
-        //
-        //         // 서버로 파일을 전송
-        //         $.ajax({
-        //             url: '/board/uploadImage',  // 서버의 파일 업로드 엔드포인트
-        //             type: 'POST',
-        //             data: formData,
-        //             processData: false,  // 파일 데이터를 처리하지 않도록 설정
-        //             contentType: false,  // contentType을 false로 설정하여 파일을 전송
-        //             success: function(response) {
-        //                 if (response.success) {
-        //                     // 서버에서 반환된 URL을 사용하여 이미지 미리보기
-        //                     let imageUrl = response.url;
-        //                     $('#content').append(`<img src="${imageUrl}" style="max-width: 100%;"><br>`);
-        //                 } else {
-        //                     alert('이미지 업로드 실패: ' + response.message);
-        //                 }
-        //             },
-        //             error: function() {
-        //                 alert('이미지 업로드 중 오류가 발생했습니다.');
-        //             }
-        //         });
-        //     }
-        // });
 
         let youtubeUrlIndex = 1;
 
