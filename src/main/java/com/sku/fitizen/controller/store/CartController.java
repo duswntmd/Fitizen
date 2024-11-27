@@ -1,7 +1,9 @@
 package com.sku.fitizen.controller.store;
 
+import com.sku.fitizen.domain.pay.Payment;
 import com.sku.fitizen.domain.store.CartItem;
 import com.sku.fitizen.domain.store.Product;
+import com.sku.fitizen.service.PaymentService;
 import com.sku.fitizen.service.store.CartService;
 import com.sku.fitizen.service.store.ShopService;
 import jakarta.servlet.http.HttpSession;
@@ -17,7 +19,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/cart")
 public class CartController {
-
+    @Autowired
+    PaymentService paymentService;
     @Autowired
     private CartService cartService;
     @Autowired
@@ -26,17 +29,18 @@ public class CartController {
     @GetMapping("")
     public String cart(Model model, HttpSession session) {
         String userId = (String) session.getAttribute("userId");
-        //System.out.println("UserId: " + userId);
         // DB에서 해당 사용자의 장바구니 목록을 가져옴
         List<CartItem> cart = cartService.selectCartItemsByUserId(userId);
         List<Product> products = new ArrayList<>();
-// 모든 상품의 prid 값을 출력
+        // 모든 상품의 prid 값을 출력
         for (CartItem item : cart) {
             int prid = item.getProduct().getPrid();
             Product product = shopService.getProductById(prid);
             item.setProduct(product);
         }
 
+        int point=paymentService.getBalanceBYUserId(userId);
+        model.addAttribute("point", point);
         model.addAttribute("cart", cart);  // 장바구니 항목을 모델에 추가
         model.addAttribute("userId", userId);
         return "shopCart";
@@ -70,23 +74,5 @@ public class CartController {
         redirectAttributes.addFlashAttribute("message", "상품이 장바구니에서 삭제되었습니다.");
         return "redirect:/cart";
     }
-
-//    @PostMapping("/checkout")
-//    public String checkout(@RequestParam("selectedProductIds") List<Integer> productIds, HttpSession session) {
-//        String userId = (String) session.getAttribute("userId");
-//        // 선택된 상품들에 대한 결제 로직 처리
-//        cartService.checkoutItems(userId, productIds);
-//        System.out.println(productIds);
-//        return "redirect:/cart/orderConfirmation";
-//    }
-
-//    @GetMapping("/orderConfirmation")
-//    public String orderConfirmation(Model model, HttpSession session) {
-//        String userId = (String) session.getAttribute("userId");
-//        List<CartItem> cart = cartService.selectCartItemsByUserId(userId);
-//        model.addAttribute("cart", cart);
-//        model.addAttribute("userId", userId);
-//        return "orderConfirmation";
-//    }
 
 }

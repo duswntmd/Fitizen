@@ -119,3 +119,38 @@
 });
 });
 
+    document.getElementById("applyPoints").addEventListener("click", function () {
+        // 현재 사용 가능한 포인트와 입력된 포인트 값 가져오기
+        const availablePoints = parseInt(document.getElementById("availablePoints").textContent) || 0;
+        const usePoints = parseInt(document.getElementById("usePoints").value) || 0;
+
+        // 총 금액 가져오기
+        const totalPriceElement = document.getElementById("totalPrice");
+        const totalPrice = parseInt(totalPriceElement.textContent.replace(/[^0-9]/g, "")) || 0;
+
+        // 이미 적용된 포인트 가져오기
+        const appliedPoints = parseInt(document.getElementById("appliedPoints").textContent) || 0;
+
+        // 입력된 포인트가 사용 가능한 포인트를 초과하는 경우 처리
+        if (usePoints > availablePoints) {
+            alert("사용 가능한 포인트를 초과할 수 없습니다.");
+            return;
+        }
+
+        // 입력된 포인트가 총 금액보다 큰 경우 처리
+        if (usePoints > totalPrice) {
+            alert("사용 포인트가 총 금액을 초과할 수 없습니다.");
+            return;
+        }
+
+        // 기존에 적용된 포인트를 초기화
+        const restoredTotalPrice = totalPrice + appliedPoints; // 이전에 뺀 포인트를 더함
+        document.getElementById("totalPrice").textContent = restoredTotalPrice.toLocaleString();
+
+        // 새로 입력된 포인트로 적용
+        document.getElementById("appliedPoints").textContent = usePoints;
+        const updatedTotalPrice = restoredTotalPrice - usePoints; // 새로운 포인트를 적용
+        totalPriceElement.textContent = updatedTotalPrice.toLocaleString();
+
+        alert("포인트가 적용되었습니다.");
+    });

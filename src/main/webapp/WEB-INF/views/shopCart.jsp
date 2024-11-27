@@ -64,6 +64,18 @@
     </c:forEach>
     </tbody>
 </table>
+<!-- 포인트 사용 영역 -->
+<div id="pointUsage" style="margin-top: 30px; text-align: center;">
+    <h3>포인트 사용</h3>
+    <p>보유 포인트: <span id="availablePoints">${point}</span> P</p>
+    <form id="pointForm" method="post" action="cart/applyPoints">
+        <label for="usePoints">사용할 포인트: </label>
+        <input type="number" id="usePoints" name="usePoints" min="0" max="${point}" value="0">
+        <button type="button" id="applyPoints">적용</button>
+    </form>
+    <p><strong>적용된 포인트:</strong> <span id="appliedPoints">0</span> P</p>
+</div>
+
 <div id="selectedItemsInfo" style="text-align: center; margin-top: 20px;">
     <h3>선택된 항목</h3>
     <ul id="selectedItemsList" style="display: none;"></ul>
