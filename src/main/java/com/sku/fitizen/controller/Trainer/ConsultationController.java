@@ -26,7 +26,7 @@ public class ConsultationController {
     // 트레이너 상담신청
     @GetMapping("/{trainerNo}")
     @ResponseBody
-    public Map<String,Object> consultation(@SessionAttribute(value = "user" ,required = false) User user, @PathVariable int trainerNo)
+    public Map<String,Object> consultation(@SessionAttribute(value = "user") User user, @PathVariable int trainerNo)
     {
 
         Map<String, Object> result = new HashMap<>();
@@ -37,6 +37,12 @@ public class ConsultationController {
             return result;
         }
 
+        if(user.getIs_trainer().equals("Y"))
+        {
+            result.put("success", false);
+            result.put("message","트레이너는 트레이너 상담 서비스를 이용할 수 없습니다.");
+            return result;
+        }
 
         // 이미 신청한 상담인지
        if(cService.existByUserId(new Consultation(user.getId(),trainerNo))>0)
@@ -77,14 +83,19 @@ public class ConsultationController {
               int trainerNo=tService.getTrainerNoByUserId(user.getId());
              List<Map<String, Object>> list =cService.getMyUsers(trainerNo);
              model.addAttribute("list", list);
+             List<Map<String, Object>> approvedList =cService.getMyUsersByApproved(trainerNo);
+             model.addAttribute("approvedList", approvedList);
           }
         else if(user.getIs_trainer().equals("N")) // 일반 유저일 경우
          {
+             //'REQUESTED'(기본값:요청됨), 'APPROVED(승인됨)', 'REJECTED(거절됨)'
              List<Map<String, Object>> list =cService.getMyTrainers(user.getId());
              model.addAttribute("list", list);
+             List<Map<String, Object>> approvedList =cService.getMyTrainersByApproved(user.getId());
+             model.addAttribute("approvedList", approvedList);
          }
         model.addAttribute("user", user);
-        return "th/trainer/myConsultation";
+        return "th/user/myConsultation";
     }
 
     // 상담 취소 -유저
@@ -148,5 +159,20 @@ public class ConsultationController {
     }
 
 
+    // 상담 재신청
+    @GetMapping("/reapply/{trainerNo}")
+    @ResponseBody
+    public Map<String,Boolean> reapply(@SessionAttribute("user")User user, @PathVariable int trainerNo)
+    {
+        Map<String, Boolean> map = new HashMap<>();
+        int success = cService.reapplyConsultation(new Consultation(user.getId(),trainerNo));
+        if(success > 0)
+        {
+            map.put("success", true);
+            return map;
+        }
+        map.put("rejected", false);
+        return map;
+    }
 
 }

@@ -5,6 +5,7 @@ import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.AccessToken;
 import com.sku.fitizen.Dto.orderProductDTO;
 import com.sku.fitizen.domain.pay.Payment;
+import com.sku.fitizen.domain.pay.SpendingPoint;
 import com.sku.fitizen.domain.store.CartItem;
 import com.sku.fitizen.domain.store.Order;
 import com.sku.fitizen.mapper.PaymentMapper;
@@ -80,6 +81,8 @@ public class PaymentService {
     }
     // 결제 기록 불러오기
     public List<Payment> getPaymentList(String userId) {return paymentMapper.getPaymentList(userId);}
+    // 포인트 사용 내역 불러오기
+    public List<SpendingPoint> getSpendingPointList(String userId) {return paymentMapper.getSpendingPointList(userId);}
     // 잔액 포인트 불러오기
     public  int  getBalanceBYUserId(String userId)
     {
@@ -87,7 +90,7 @@ public class PaymentService {
     }
 
     // 유저 결제 상품 목록
-    public List<Order> getOrderProductsByUserId(String userId){ return paymentMapper.getOrderProductsByUserId(userId);}
+    public List<Order> getOrderProductsByUserId(String userId, int no){ return paymentMapper.getOrderProductsByUserId(userId ,no);}
 
     // 포트원 API 토큰 발급
     public String getPortOneToken() {
@@ -104,22 +107,31 @@ public class PaymentService {
 
 
     // 결제 취소 요청 메서드
-    public Map<String, Object> cancelPayment(String token, String merchantUid, int cancelAmount, String reason) {
+    public Map<String, Object> cancelPayment(String token,String impUid, String merchantUid, int cancelAmount, String reason) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token); // 발급받은 토큰을 헤더에 추가
         headers.setContentType(MediaType.APPLICATION_JSON);
-
+        // System.out.println(impUid+"/"+merchantUid+"/"+cancelAmount);
         // 요청 데이터 구성
         Map<String, Object> body = new HashMap<>();
+        body.put("imp_uid", impUid);
         body.put("merchant_uid", merchantUid); // 취소할 주문 번호
         body.put("cancel_request_amount", cancelAmount); // 취소할 금액
         body.put("reason", reason); // 취소 사유
-
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
-
+        // 헤더 출력
+        //System.out.println("Headers: " + entity.getHeaders());
+        // 바디 출력
+        //System.out.println("Body: " + entity.getBody());
         // 포트원 결제 취소 API 호출
         ResponseEntity<Map> response = restTemplate.postForEntity("https://api.iamport.kr/payments/cancel", entity, Map.class);
+       // System.out.println("!!!!"+response.getBody());
+        Integer code = (Integer)response.getBody().get("code");
+        if (code ==0)
+        {
+            paymentMapper.cancelOrder(impUid,merchantUid);
+        }
 
         return response.getBody(); // 응답 데이터를 반환
     }

@@ -4,10 +4,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(window).ready(function(){
-            draw(80, '.pie-chart1','#28a745');
-            draw(50, '.pie-chart2', '#8b22ff');
+            draw(80, '.pie-chart1', '#a2d9a2');
+            draw(50, '.pie-chart2', '#d3b8ff');
             draw(30, '.pie-chart3','#ff0');
-        });
+        })
 
         function draw(max, classname, colorname){
             var i = 1;
@@ -30,34 +30,249 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
     <title>내 챌린지 목록</title>
-    <link th:href="@{/css/challenge/mychall.css}" rel="stylesheet" />
     <style>
-        .page-contents {
+
+        /* 공통 제목 스타일 */
+        .challenge-title-header {
+            font-size: 25px;
+            color: #333;;
+            text-align: left; /* 왼쪽 정렬 */
+            margin-bottom: 15px; /* 제목과 아래 콘텐츠 간 간격 */
+            padding: 10px 20px;
+            background: linear-gradient(to left, #ffffff, #eceff1); /* 흰색에서 밝은 회색으로 그라데이션 */
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 */
+        }
+
+        p.description {
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* 챌린지 리스트 */
+        .challenge-list {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            padding: 20px;
+        }
+        /* 챌린지 리스트 - 가로 정렬 */
+        .my-challenges {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            flex-wrap: wrap; /* 여러 줄로 나눠짐 */
+        }
+
+        /* 챌린지 아이템 */
+        .my-challenge-item {
+            display: flex;
+            align-items: center;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            gap: 15px;
+
+        }
+
+
+        /* 챌린지 리스트 - 공식/유저 챌린지 */
+        .challenge-list {
+            display: flex;
+            flex-wrap: wrap; /* 여러 줄로 배치 가능 */
+            gap: 10px; /* 항목 간격 */
+            justify-content: space-between; /* 공간 균등 배치 */
+
+        }
+
+        /* 챌린지 아이템 - 가로 2개씩 정사각형 */
+        .challenge-item {
+            width: calc(50% - 20px); /* 2개씩 배치 */
+            height: 250px;
+            min-width: 300px; /* 최소 너비 설정 */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* 중앙 정렬 */
+            position: relative;
+            overflow: hidden; /* 내용 넘침 방지 */
+        }
+
+        .challenge-layout {
+            display: flex;
+            gap: 20px; /* 이미지와 정보 간 간격 */
+            align-items: center; /* 수직 중앙 정렬 */
+            height: 100%; /* 전체 높이를 균등 분배 */
+            padding: 10px; /* 전체적인 내부 여백 */
+
+        }
+        .challenge-image {
+            flex: 1; /* 이미지 영역 1:1 비율 */
+            display: flex;
+            justify-content: center;
+            align-items: center; /* 이미지 중앙 정렬 */
+            width: 150px; /* 이미지 영역의 너비 고정 */
+            height: 150px; /* 이미지 영역의 높이 고정 */
+            overflow: hidden; /* 넘치는 부분 숨김 */
+            border: 1px solid #ddd; /* 테두리로 영역 강조 */
+            border-radius: 8px; /* 영역 둥글게 */
+            background-color: #f8f9fa; /* 이미지 없는 경우 배경 */
+        }
+
+        .challenge-image img {
+            width: 100%; /* 이미지가 영역을 꽉 채우도록 설정 */
+            height: 100%; /* 높이도 영역에 맞춤 */
+            object-fit: cover; /* 이미지 비율 유지하며 부모 영역 채우기 */
+            object-position: center; /* 이미지를 중앙에 위치 */
+        }
+
+
+        .challenge-info {
+            flex: 1; /* 정보 영역 1:1 비율 */
+            display: flex;
+            flex-direction: column; /* 세로 정렬 */
+            justify-content: center; /* 세로 중앙 정렬 */
+            gap: 10px; /* 항목 간 간격 */
+            text-align: left; /* 텍스트 왼쪽 정렬 */
+        }
+
+
+
+        .challenge-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff; /* 파란색으로 강조 */
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .challenge-user-id,
+        .challenge-date-range {
+            font-size: 14px;
+            color: #555; /* 부드러운 회색 */
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        /* 챌린지 버튼 */
+        .challenge-actions {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            z-index: 3; /* 상위 레이어 */
+            margin-bottom: 10px; /* 아래 여백 추가 */
+
+
+        }
+        /* 챌린지 버튼 */
+        .my-challenge-actions {
             display: flex;
             justify-content: center;
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            gap: 10px;
+            z-index: 3; /* 상위 레이어 */
+            margin-bottom: 10px; /* 아래 여백 추가 */
+
+
         }
 
-        .challenge-list {
+
+        /* 챌린지 섹션 */
+        .participating-challenges {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            margin-top: 20px;
+            justify-content: center;
         }
 
-        .challenge-item {
-            display: flex;
-            align-items: center;
-            margin: 20px;
+        .challenge-section {
+            padding: 20px;
+            background-color: #fff;
         }
 
+        /* 섹션 제목 스타일 */
+        .section-title {
+            font-size: 24px; /* 폰트 크기 */
+            font-weight: bold; /* 굵은 텍스트 */
+            text-align: center; /* 가운데 정렬 */
+            margin-bottom: 15px; /* 아래 콘텐츠와 간격 */
+            padding: 10px; /* 텍스트와 배경 간격 */
+            color: #455a64; /* 부드러운 어두운 회색 */
+            background: linear-gradient(to left, #ffffff, #eceff1); /* 밝은 청록색에서 흰색으로 그라데이션 */
+            border-radius: 8px; /* 모서리를 둥글게 */
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 */
+            letter-spacing: 1px; /* 글자 간격을 조금 넓게 */
+            text-transform: uppercase; /* 모든 텍스트를 대문자로 */
+        }
+
+
+        .description {
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6; /* 읽기 쉽게 줄 간격 조정 */
+            font-style: italic; /* 기울임꼴로 살짝 강조 */
+            letter-spacing: 0.5px; /* 글자 간격을 살짝 넓게 */
+        }
+
+        /* 원형 차트 */
         .pie-chart-container {
-            width: 100px;
-            height: 100px;
-            position: relative;
-            margin-right: 20px;
+            position: absolute;
+            top: 45%; /* 수직 중앙 */
+            left: 50%; /* 수평 중앙 */
+            transform: translate(-50%, -50%); /* 중앙 정렬 */
+            width: 60%; /* 아이템의 80% 크기 */
+            height: 60%; /* 아이템의 80% 크기 */
+            opacity: 0; /* 기본 숨김 */
+            visibility: hidden; /* 보이지 않음 */
+            z-index: 1; /* 상위 레이어 */
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
+
+        /* 챌린지 아이템에 마우스를 올리면 차트가 보이도록 */
+        .challenge-item:hover .pie-chart-container {
+
+            opacity: 1; /* 보임 */
+            visibility: visible; /* 표시 */
+        }
+
+        .challenge-item:hover .challenge-layout
+        {
+            opacity: 0; /* 마우스를 올리면 숨김 */
+            pointer-events: none; /* 숨겨진 요소 클릭 방지 */
+        }
+
+
+
+        /* 달성도 라벨 */
+        .achievement-label {
+            position: absolute;
+            top: -25px; /* 차트 위쪽에 위치 */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+            opacity: 0; /* 숨김 */
+            visibility: hidden; /* 보이지 않음 */
+            transition: opacity 0.3s ease, visibility 0.3s ease; /* 부드러운 전환 */
+        }
+
+        /* 마우스를 올리면 달성도 라벨도 표시 */
+        .challenge-item:hover .achievement-label {
+            opacity: 1; /* 보임 */
+            visibility: visible; /* 표시 */
+        }
+
+
 
         .pie-chart {
             width: 100%;
@@ -66,6 +281,7 @@
             position: absolute;
             top: 0;
             left: 0;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
         }
 
         .center {
@@ -74,132 +290,142 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-weight: bold;
+            font-size: 14px;
+            color: #333;
         }
 
-        .challenge-info {
-            flex-grow: 1;
-        }
-
-        .challenge-actions {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .button {
-            margin-top: 5px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
+        /* 버튼 스타일 */
+        .challenge-button {
+            display: inline-block;
+            text-align: center;
+            padding: 10px 15px; /* 버튼 내부 여백 */
+            font-size: 14px;
+            font-weight: bold;
+            color: black; /* 흰색 텍스트 */
+            background-color: #e0e0e0; /* 파란색 배경 */
+            border: none;
             border-radius: 5px;
+            text-decoration: none; /* 링크 밑줄 제거 */
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* 색 전환 부드럽게 */
         }
+
+
     </style>
 </head>
 <body>
-<h1>공지</h1> 지급 된  누적 포인트  : 1000
-<p>
-포인트 지급 방법
+<h1 class="challenge-title-header">달성한 챌린지 - 공식 챌린지 X2 ,유저 챌린지 X1 </h1>
+<p class="description">
+    달성한 챌린지에요!<br>
+    당신의 노력의 성과를 확인하세요!
+</p>
 
-<h1>달성한 챌린지</h1>
-    <div class="challenge-list">
-
-        <!-- th:each를 사용하여 List를 반복 -->
-        <div th:each="m : ${myChall}" class="challenge-item">
-            <div class="pie-chart-container">
-                <div class="pie-chart pie-chart1"><span class="center">80%</span></div>
-            </div>
-            <div class="challenge-info">
-                <div class="title" th:text="${m.title}">챌린지 제목</div>
-                <div class="user-id" th:text="'진행자: ' + ${m.creatorId}">진행자</div>
-                <div class="date-range" th:text="'기간: ' + ${m.startDate} + ' ~ ' + ${m.endDate}">기간</div>
-            </div>
-            <div class="challenge-actions">
-                <a class="button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
-                <a class="button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
-                <a class="button" th:href="@{/challenge/cancel/{id}(id=${m.challengeId})}">챌린지 취소</a>
-            </div>
-        </div>
-    </div>
-<h1>내가 작성한 챌린지</h1>
-    <div class="challenge-list">
-
-        <!-- th:each를 사용하여 List를 반복 -->
-        <div th:each="m : ${myChall}" class="challenge-item">
-            <div class="pie-chart-container">
-                <div class="pie-chart pie-chart1"><span class="center">80%</span></div>
-            </div>
-            <div class="challenge-info">
-                <div class="title" th:text="${m.title}">챌린지 제목</div>
-                <div class="user-id" th:text="'진행자: ' + ${m.creatorId}">진행자</div>
-                <div class="date-range" th:text="'기간: ' + ${m.startDate} + ' ~ ' + ${m.endDate}">기간</div>
-            </div>
-            <div class="challenge-actions">
-                <a class="button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
-                <a class="button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
-                <a class="button" th:href="@{/challenge/cancel/{id}(id=${m.challengeId})}">챌린지 취소</a>
-            </div>
-        </div>
-    </div>
-<h1>참여중인 챌린지</h1>
-<div class="challenge-list">
-
-    <!-- th:each를 사용하여 List를 반복 -->
-    <div th:each="m : ${myChall}" class="challenge-item">
-        <div class="pie-chart-container">
-            <div class="pie-chart pie-chart1"><span class="center">80%</span></div>
-        </div>
+<div class="my-challenges">
+    <div th:each="m : ${myChall}" class="my-challenge-item">
         <div class="challenge-info">
-            <div class="title" th:text="${m.title}">챌린지 제목</div>
-            <div class="user-id" th:text="'진행자: ' + ${m.creatorId}">진행자</div>
-            <div class="date-range" th:text="'기간: ' + ${m.startDate} + ' ~ ' + ${m.endDate}">기간</div>
+            <div class="challenge-image">
+                <img src="/files/challengeCover/500.jpeg" alt="챌린지 이미지">
+            </div>
+            <div class="challenge-title" th:text="${m.title}">챌린지 제목</div>
         </div>
-        <div class="challenge-actions">
-            <a class="button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
-            <a class="button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
-            <a class="button" th:href="@{/challenge/cancel/{id}(id=${m.challengeId})}">챌린지 취소</a>
+        <div class="my-challenge-actions">
+            <a class="challenge-button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
+            <a class="challenge-button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
         </div>
     </div>
 </div>
-<h2>공식 챌린지</h2>
-    <div class="challenge-list">
 
-        <!-- th:each를 사용하여 List를 반복 -->
-        <div th:each="m : ${myChall}" class="challenge-item">
-            <div class="pie-chart-container">
-                <div class="pie-chart pie-chart1"><span class="center">80%</span></div>
+<h1 class="challenge-title-header">내가 작성한 챌린지 </h1>
+
+<div class="my-challenges">
+    <div th:each="m : ${myChall}" class="my-challenge-item">
+        <div class="challenge-info">
+            <div class="challenge-image">
+                <img src="/files/challengeCover/500.jpeg" alt="챌린지 이미지">
             </div>
-            <div class="challenge-info">
-                <div class="title" th:text="${m.title}">챌린지 제목</div>
-                <div class="user-id" th:text="'진행자: ' + ${m.creatorId}">진행자</div>
-                <div class="date-range" th:text="'기간: ' + ${m.startDate} + ' ~ ' + ${m.endDate}">기간</div>
-            </div>
-            <div class="challenge-actions">
-                <a class="button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
-                <a class="button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
-                <a class="button" th:href="@{/challenge/cancel/{id}(id=${m.challengeId})}">챌린지 취소</a>
+            <div class="challenge-title" th:text="${m.title}">챌린지 제목</div>
+            <div class="challenge-user-id" th:text="'진행자:나'"></div>
+            <div class="challenge-date-range" th:text="'기간: ' + ${m.startDate} + ' ~ ' + ${m.endDate}">기간</div>
+        </div>
+        <div class="my-challenge-actions">
+            <button class="challenge-button">수정하기</button>
+            <button class="challenge-button">삭제하기</button>
+            <a class="challenge-button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
+            <a class="challenge-button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
+        </div>
+    </div>
+</div>
+
+<h1 class="challenge-title-header">참여중인 챌린지</h1>
+<div class="participating-challenges">
+    <!-- 공식 챌린지 -->
+    <div class="challenge-section official-challenges">
+        <h2 class="section-title">공식 챌린지</h2>
+        <p class="description"> 챌린지 종료 후 ,해당 종료일에 자정 12시에 달성도에 따라 포인트가 지급됩니다.</p>
+        <div class="challenge-list">
+            <div th:each="m : ${myChall}" class="challenge-item">
+                <div class="pie-chart-container">
+                    <div class="achievement-label">달성도</div> <!-- 달성도 라벨 -->
+                    <div class="pie-chart pie-chart1"><span class="center">80%</span></div>
+                </div>
+                <div class="challenge-layout">
+                    <!-- 이미지 영역 -->
+                    <div class="challenge-image">
+                        <img src="/files/challengeCover/exer.png" alt="챌린지 이미지">
+                    </div>
+
+                    <!-- 챌린지 정보 -->
+                    <div class="challenge-info">
+                        <div class="challenge-title" th:text="${m.title}">챌린지 제목</div>
+                        <div class="challenge-user-id" th:text="'진행자: ' + ${m.creatorId}">진행자</div>
+                        <div class="challenge-date-range" th:text="'기간: ' + ${m.startDate} + ' ~ ' + ${m.endDate}">기간</div>
+                    </div>
+                </div>
+                <div class="challenge-actions">
+                    <a class="challenge-button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
+                    <a class="challenge-button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
+                    <a class="challenge-button" th:href="@{/challenge/cancel/{id}(id=${m.challengeId})}">챌린지 취소</a>
+                </div>
             </div>
         </div>
     </div>
 
-<h2>비공식(유저 챌린지) 챌린지</h2>
-    <div class="challenge-list">
+    <!-- 비공식(유저) 챌린지 -->
+    <div class="challenge-section user-challenges">
+        <h2 class="section-title">유저 챌린지 </h2>
+        <p class="description">비공식 챌린지이며 포인트가 지급되지 않습니다.</p>
+        <div class="challenge-list">
+            <div th:each="m : ${myChall}" class="challenge-item">
+                <!-- 차트 영역 -->
+                <div class="pie-chart-container">
+                    <div class="achievement-label">달성도</div> <!-- 달성도 라벨 -->
+                    <div class="pie-chart pie-chart2"><span class="center">50%</span></div>
+                </div>
 
-        <!-- th:each를 사용하여 List를 반복 -->
-        <div th:each="m : ${myChall}" class="challenge-item">
-            <div class="pie-chart-container">
-                <div class="pie-chart pie-chart1"><span class="center">80%</span></div>
-            </div>
-            <div class="challenge-info">
-                <div class="title" th:text="${m.title}">챌린지 제목</div>
-                <div class="user-id" th:text="'진행자: ' + ${m.creatorId}">진행자</div>
-                <div class="date-range" th:text="'기간: ' + ${m.startDate} + ' ~ ' + ${m.endDate}">기간</div>
-            </div>
-            <div class="challenge-actions">
-                <a class="button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
-                <a class="button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
-                <a class="button" th:href="@{/challenge/cancel/{id}(id=${m.challengeId})}">챌린지 취소</a>
-            </div>
+                <div class="challenge-layout">
+                    <!-- 이미지 영역 -->
+                    <div class="challenge-image">
+                        <img src="/files/challengeCover/500.jpeg" alt="챌린지 이미지">
+                    </div>
+
+                    <!-- 챌린지 정보 -->
+                    <div class="challenge-info">
+                        <div class="challenge-title" th:text="${m.title}">챌린지 제목</div>
+                        <div class="challenge-user-id" th:text="'진행자: ' + ${m.creatorId}">진행자</div>
+                        <div class="challenge-date-range" th:text="'기간: ' + ${m.startDate} + ' ~ ' + ${m.endDate}">기간</div>
+                    </div>
+                </div>
+
+                <!-- 버튼 영역 -->
+                <div class="challenge-actions">
+                    <a class="challenge-button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
+                    <a class="challenge-button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
+                    <a class="challenge-button" th:href="@{/challenge/cancel/{id}(id=${m.challengeId})}">챌린지 취소</a>
+                </div>
+          </div>
         </div>
     </div>
+</div>
 </body>
 </html>
+

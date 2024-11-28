@@ -1,6 +1,6 @@
 package com.sku.fitizen.service.challenge;
 
-import com.sku.fitizen.domain.SpendingPoint;
+import com.sku.fitizen.domain.pay.SpendingPoint;
 import com.sku.fitizen.domain.challenge.Challenge;
 import com.sku.fitizen.domain.challenge.ChallCategory;
 import com.sku.fitizen.domain.challenge.Message;
@@ -8,7 +8,6 @@ import com.sku.fitizen.domain.challenge.Participation;
 import com.sku.fitizen.mapper.ChatMapper;
 import com.sku.fitizen.mapper.PaymentMapper;
 import com.sku.fitizen.mapper.challenge.ChallengeMapper;
-import com.sku.fitizen.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +45,8 @@ public class ChallengeService {
             //saveChallenge를 @Transactional 할경우  챌린지 등록이 커밋 안된상태라 참여목록에서 FK를 참조 못함
             String creatorId = challenge.getCreatorId(); //참여자에 작성자 아이디도 넣기 위해
 
-            if (!file.isEmpty()) {
+            if (!file.isEmpty())
+            {
                 try {
                     // 파일 이름 및 경로 설정
                     String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();

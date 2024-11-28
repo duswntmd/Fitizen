@@ -74,7 +74,7 @@ public class RegisterController {
             if(user.getIs_trainer().equals("N")) {
                 response.put("message", "회원가입이 완료 되었습니다.");
             } else if(user.getIs_trainer().equals("Y")) {
-                response.put("message","트레이너 가입이 완료되었습니다.");
+                response.put("message","트레이너 가입이 완료되었습니다. 트레이너 승인 여부는 마이페이지에서 확인해주세요.");
             }
             return response;
         }

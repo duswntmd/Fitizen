@@ -6,16 +6,155 @@
     <title>온라인 트레이너 상담</title>
     <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
     <style>
-        /* 챌린지 문구 스타일 */
-        .challenge-banner {
+        body {
+            background-color: #f7f7f7;
+        }
+        .carousel-container {
+            display: flex; /* Flexbox 사용 */
+            align-items: center; /* 수직 중앙 정렬 */
+        }
+        .carousel-wrapper {
+            overflow: hidden; /* 화면 넘침 방지 */
+            width: 1000px; /* 너비를 1000px로 설정 */
+            margin: auto; /* 중앙 정렬 */
+            border: 4px solid transparent; /* 테두리 두께를 설정하고, 기본 색상을 투명으로 */
+            border-radius: 0; /* 직각으로 설정 (모서리 둥글기 없음) */
+            box-shadow: none; /* 그림자 제거 */
+        }
+
+
+        .carousel {
+            display: flex; /* Flexbox 사용 */
+            transition: transform 0.5s ease; /* 슬라이드 전환 효과 */
+        }
+        /* 두 섹션을 나누기 위한 레이아웃 */
+        .content-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            width: 90%; /* 양쪽에 여백을 주기 위해 */
+            max-width: 1200px;
+            min-width: 100%; /* 각 섹션의 최소 너비를 100%로 설정 */
+            box-sizing: border-box; /* 테두리 및 패딩을 너비에 포함 */
+        }
+        .left-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .left-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 20px; /* 오른쪽과 간격을 줍니다 */
+
+        }
+
+        .left-image img {
             width: 100%;
-            padding: 20px 0;
-            background-color: #f8f9fa;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
+            height: auto;
+            border-radius: 10px; /* 이미지를 조금 둥글게 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 이미지에 약간의 그림자 */
+        }
+        .left-image img {
+            max-width: 80%; /* 이미지의 최대 너비 설정 */
+            height: auto;   /* 비율 유지 */
+            border-radius: 10px; /* 이미지 모서리 둥글게 */
+        }
+        /* 오른쪽 설명 섹션 */
+        .right-description {
+            flex: 1;
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left; /* 설명 텍스트를 왼쪽 정렬 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start; /* 라인에 맞춰서 왼쪽으로 정렬 */
+        }
+
+        .right-description h3 {
+            font-size: 22px;
             color: #333;
-            border-bottom: 2px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        .right-description p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .right-description {
+            padding: 20px;
+            text-align: left; /* 텍스트 왼쪽 정렬 */
+            background-color: #ffffff; /* 배경 색상 */
+            border-radius: 0 10px 10px 0; /* 오른쪽 모서리 둥글게 */
+        }
+        .prev,
+        .next {
+            position: absolute; /* 절대 위치 설정 */
+            top: 50%; /* 수직 중앙 */
+            transform: translateY(-50%); /* 수직 중앙 정렬 */
+            background-color: rgba(255, 255, 255, 0.8); /* 배경 색상 */
+            border: none;
+            border-radius: 50%; /* 둥근 버튼 */
+            width: 40px; /* 버튼 크기 */
+            height: 40px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+        }
+
+        .prev:hover,
+        .next:hover {
+            background-color: rgba(0, 0, 0, 0.1); /* 호버 시 배경 색상 */
+        }
+
+        .prev {
+            left: 300px; /* 왼쪽 버튼 위치 */
+        }
+
+        .next {
+            right: 300px; /* 오른쪽 버튼 위치 */
+        }
+
+
+        .dots {
+            text-align: center; /* 점들을 중앙 정렬 */
+            margin-top: 10px; /* 위쪽 여백 추가 */
+        }
+
+        .dot {
+            height: 10px; /* 점의 높이 */
+            width: 10px; /* 점의 너비 */
+            margin: 0 5px; /* 점들 간의 간격 */
+            background-color: #bbb; /* 기본 점 색상 */
+            border-radius: 50%; /* 점 모양을 원형으로 */
+            display: inline-block; /* 인라인 블록으로 설정 */
+            cursor: pointer; /* 커서를 포인터로 설정 */
+            transition: background-color 0.3s; /* 색상 변화에 애니메이션 추가 */
+        }
+
+        .dot.active {
+            background-color: #717171; /* 활성화된 점의 색상 */
+        }
+
+
+        .description {
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6; /* 읽기 쉽게 줄 간격 조정 */
+            font-style: italic; /* 기울임꼴로 살짝 강조 */
+            letter-spacing: 0.5px; /* 글자 간격을 살짝 넓게 */
         }
 
         .challenge-banner span {
@@ -122,177 +261,113 @@
         }
 
 
-
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .page-contents {
-            display: flex;
-            justify-content: flex-start;
-            flex-wrap: wrap;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        .trainer-card {
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 10px;
-            margin: 10px;
-            width: 200px;
+        /* 챌린지 문구 스타일 */
+        .challenge-banner {
+            width: 100%;
+            padding: 20px 0;
+            background-color: #f8f9fa;
             text-align: center;
-            background-color: #fff;
-            height: 300px; /* 카드의 고정된 높이 설정 */
-            overflow: hidden; /* 내용이 넘칠 경우 숨김 */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* 내용이 고르게 배치되도록 설정 */
-        }
-        .trainer-card img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 10px;
-        }
-        .trainer-name {
-            font-size: 14px;
+            font-size: 24px;
             font-weight: bold;
-            margin: 5px 0; /* 여백 축소 */
+            color: #333;
+            border-bottom: 2px solid #ddd;
         }
-        .trainer-store, .trainer-location {
-            font-size: 12px;
+
+        .trainer-container {
+            display: flex; /* 가로 정렬 */
+            flex-wrap: wrap; /* 카드가 화면 너비에 따라 줄 바꿈 */
+            justify-content: center; /* 가로로 가운데 정렬 */
+            max-width: 1300px; /* 최대 너비 설정 (4개의 카드가 들어가도록 제한) */
+            gap: 20px; /* 카드 간의 간격 */
+            margin: 30px auto 100px; /* 위, 아래 여백 + 가운데 정렬 */
+            box-sizing: border-box; /* 내부 여백 포함 */
+        }
+
+
+        .trainer-card {
+            background: #f9f9f9; /* 카드 배경색 */
+            border: 1px solid #ccc; /* 테두리 */
+            border-radius: 10px; /* 모서리 둥글게 */
+            width: 250px; /* 카드 너비 */
+            height: 300px; /* 카드 높이 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 */
+            display: flex;
+            flex-direction: column; /* 요소들을 세로로 배치 */
+            align-items: center; /* 중앙 정렬 */
+            padding: 20px; /* 내부 여백 */
+            position: relative; /* 버튼을 아래로 고정하기 위해 */
+            transition: transform 0.3s ease; /* 호버 효과 */
+        }
+
+        .trainer-card:hover {
+            transform: scale(1.05); /* 호버 시 확대 효과 */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 그림자 강조 */
+        }
+
+        .trainer-image {
+            width: 250px; /* 이미지 크기 증가 */
+            height: 180px;
+            border-radius: 15px; /* 모서리 둥글게 */
+            margin-bottom: 15px; /* 아래 여백 */
+            object-fit: cover; /* 비율 유지하며 채우기 */
+        }
+
+        .trainer-info {
+            text-align: left; /* 텍스트 좌측 정렬 */
+            margin-bottom: auto; /* 버튼과의 간격 확보 */
+            width: 100%; /* 부모 너비에 맞게 확장 */
+        }
+
+        .trainer-name {
+            text-align: center; /* 가운데 정렬 */
+            font-size: 18px; /* 이름 글자 크기 */
+            font-weight: bold; /* 굵게 */
+            color: #333;
+            margin-bottom: 10px; /* 아래 여백 추가 */
+        }
+
+        .trainer-store,
+        .trainer-location {
+            font-size: 14px; /* 부가 정보 글자 크기 */
             color: #555;
-            margin: 5px 0; /* 여백 축소 */
+            margin-bottom: 5px; /* 항목 간 간격 */
         }
+
         .trainer-buttons {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 10px;
+
+            bottom: 20px; /* 아래 여백 */
+            width: 100%; /* 버튼을 카드 안에서 중앙 정렬 */
+            text-align: center;
         }
-        .btn {
-            padding: 8px 10px;
+
+        .trainer-buttons .btn {
+            display: inline-block; /* 버튼 스타일 */
+            padding: 10px 15px;
+            font-size: 14px;
             border: none;
-            border-radius: 5px;
-            font-size: 12px;
+            border-radius: 5px; /* 둥근 모서리 */
+            margin: 5px; /* 버튼 간격 */
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-        .btn-free {
-            background-color: #4CAF50;
+
+        .trainer-buttons .btn.btn-free {
+            background-color: #6c757d; /* 상담 신청 버튼 색상 */
             color: white;
         }
-        .btn-info {
-            background-color: #2196F3;
+
+        .trainer-buttons .btn.btn-free:hover {
+            background-color: #6c757d; /* 호버 시 색상 */
+        }
+
+        .trainer-buttons .btn.btn-info {
+            background-color: #6c757d; /* 정보 보기 버튼 색상 */
             color: white;
         }
-        .btn-free:hover, .btn-info:hover {
-            opacity: 0.8;
+
+        .trainer-buttons .btn.btn-info:hover {
+            background-color: #5a6268; /* 호버 시 색상 */
         }
-
-
-
-        .carousel-wrapper {
-            overflow: hidden; /* 화면 넘침 방지 */
-            width: 1000px; /* 너비를 1000px로 설정 */
-            margin: auto; /* 중앙 정렬 */
-            border: 4px solid transparent; /* 테두리 두께를 설정하고, 기본 색상을 투명으로 */
-            border-radius: 0; /* 직각으로 설정 (모서리 둥글기 없음) */
-            box-shadow: none; /* 그림자 제거 */
-        }
-
-
-
-        .carousel {
-            display: flex; /* Flexbox 사용 */
-            transition: transform 0.5s ease; /* 슬라이드 전환 효과 */
-        }
-        .content-section {
-            min-width: 100%; /* 각 섹션의 최소 너비를 100%로 설정 */
-            box-sizing: border-box; /* 테두리 및 패딩을 너비에 포함 */
-        }
-
-
-        .left-image {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .left-image img {
-            max-width: 80%; /* 이미지의 최대 너비 설정 */
-            height: auto;   /* 비율 유지 */
-            border-radius: 10px; /* 이미지 모서리 둥글게 */
-        }
-
-
-
-        .right-description {
-            padding: 20px;
-            text-align: left; /* 텍스트 왼쪽 정렬 */
-            background-color: #ffffff; /* 배경 색상 */
-            border-radius: 0 10px 10px 0; /* 오른쪽 모서리 둥글게 */
-        }
-
-        .prev,
-        .next {
-            position: absolute; /* 절대 위치 설정 */
-            top: 50%; /* 수직 중앙 */
-            transform: translateY(-50%); /* 수직 중앙 정렬 */
-            background-color: rgba(255, 255, 255, 0.8); /* 배경 색상 */
-            border: none;
-            border-radius: 50%; /* 둥근 버튼 */
-            width: 40px; /* 버튼 크기 */
-            height: 40px;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s;
-        }
-
-        .prev:hover,
-        .next:hover {
-            background-color: rgba(0, 0, 0, 0.1); /* 호버 시 배경 색상 */
-        }
-
-        .prev {
-            left: 300px; /* 왼쪽 버튼 위치 */
-        }
-
-        .next {
-            right: 300px; /* 오른쪽 버튼 위치 */
-        }
-
-        .carousel-container {
-            display: flex; /* Flexbox 사용 */
-            align-items: center; /* 수직 중앙 정렬 */
-        }
-
-
-        .dots {
-            text-align: center; /* 점들을 중앙 정렬 */
-            margin-top: 10px; /* 위쪽 여백 추가 */
-        }
-
-        .dot {
-            height: 10px; /* 점의 높이 */
-            width: 10px; /* 점의 너비 */
-            margin: 0 5px; /* 점들 간의 간격 */
-            background-color: #bbb; /* 기본 점 색상 */
-            border-radius: 50%; /* 점 모양을 원형으로 */
-            display: inline-block; /* 인라인 블록으로 설정 */
-            cursor: pointer; /* 커서를 포인터로 설정 */
-            transition: background-color 0.3s; /* 색상 변화에 애니메이션 추가 */
-        }
-
-        .dot.active {
-            background-color: #717171; /* 활성화된 점의 색상 */
-        }
-
-
-
-
 
     </style>
 </head>
@@ -300,47 +375,70 @@
 <div>
     <th:block th:replace="~{th/header :: header}"></th:block>
 </div>
-<div class="challenge-banner">
-    방문 없이<span> 트레이너 상담 </span>및 운동 꿀팁 얻기!
-</div>
 <div>
     <th:block th:replace="~{th/trainer/trainerCarousel :: trainerCarousel}"></th:block>
 </div>
+<div class="challenge-banner">
+    현직 트레이너
+</div>
 <div class="category-buttons">
-    <form action="../challenge/search" method="GET" onsubmit="saveScrollPosition()">
-        <input type="radio" id="title" name="searchType" value="title" checked>
-        <label for="title">지역</label>
 
-        <input type="radio" id="creatorId" name="searchType" value="creatorId">
-        <label for="creatorId">트레이너</label>
+    <form action="../trainer/search" method="GET" onsubmit="saveScrollPosition()">
+        <input type="radio" id="location" name="searchType" value="location" checked>
+        <label for="location">지역</label>
 
+        <input type="radio" id="workPlace" name="searchType" value="workPlace">
+        <label for="workPlace">헬스장</label>
+
+        <input type="radio" id="trainerName" name="searchType" value="trainerName">
+        <label for="trainerName">트레이너</label>
         <input type="text" name="keyword" placeholder="검색어 입력">
         <button class="category-button"  type="submit">검색</button>
-        현재 지역 : 서울 강남
-
+        <button class="category-button" >전체보기</button>
     </form>
 </div>
 
-<div class="page-contents">
+<p class="description">
+    상담 신청후 마이페이지에서 확인 가능하며,승인시 우측 화면 중앙 채팅 버튼에서 확인하시길 바랍니다.<br>
+    *욕설 및 상담 이외의 내용 적발 또는 개인정보 요구시, 영구정지 처리됩니다*
+</p>
+<div class="trainer-container">
     <div class="trainer-card" th:each="trainer : ${trainers}">
-        <img src="https://via.placeholder.com/100" alt="트레이너" />
-        <div class="trainer-name" th:text="${trainer.userId}"></div>
-        <div class="trainer-store" th:text="'매장 이름: ' + ${trainer.workPlaceName}"></div>
-        <div class="trainer-location" th:text="'위치: ' + ${trainer.location}"></div>
+        <img th:src="@{'/files/trainer/profileImage/' + ${trainer.profileImage}}" alt="트레이너" class="trainer-image" />
+        <div class="trainer-info">
+            <div class="trainer-name" th:text="${trainer.userName} + ' 트레이너'"></div>
+            <div class="trainer-store" th:text="'매장 이름: ' + ${trainer.workPlaceName}"></div>
+            <div class="trainer-location" th:text="'위치: ' + ${trainer.location}"></div>
+        </div>
         <div class="trainer-buttons">
-            <button class="btn btn-free"  th:onclick="|consultation(${trainer.trainerNo})|">상담 신청</button>
+            <button class="btn btn-free" th:onclick="|consultation(${trainer.trainerNo})|">상담 신청</button>
             <a th:href="@{/trainer/detail/{trainerNo}(trainerNo=${trainer.trainerNo})}" class="btn btn-info">정보 보기</a>
         </div>
     </div>
 </div>
-
 <div>
     <th:block th:replace="~{th/footer :: footer}"></th:block>
 </div>
+
+
+
 </body>
 </html>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script >
+    function saveScrollPosition() {
+        localStorage.setItem('scrollPosition', window.scrollY);
+    }
+
+    window.onload = function() {
+        const scrollPosition = localStorage.getItem('scrollPosition');
+        if (scrollPosition) {
+            window.scrollTo(0, parseInt(scrollPosition, 10));
+            localStorage.removeItem('scrollPosition'); // 위치를 사용한 후 삭제
+        }
+    };
+
+
     function consultation(trainerNo) {
         $.ajax({
             url: '/consultation/' + trainerNo,
@@ -350,7 +448,7 @@
             success: function (res) {
                 if (res.success) {
                     alert("상담 신청 완료!");
-                    alert("트레이너 승인 시 비용이 지불됩니다.");
+                    alert("마이페이지에서 상담 승인 여부를 확인해주세요!");
                 } else {
                     alert(res.message);  // 서버에서 전달된 메시지 표시
                 }
