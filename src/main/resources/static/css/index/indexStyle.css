@@ -106,12 +106,29 @@ header{
 
 }
 footer {
-    height:200px;
+    height: auto; /* 테이블 높이에 따라 유연하게 조정 */
     margin-top: auto;
     background-color: #1C1C3C; /* 푸터 배경 색상 */
-    color: white; /* 푸터 텍스트 색상 */
+    color: white; !important;/* 푸터 텍스트 색상 */
     text-align: center; /* 푸터 내용 중앙 정렬 */
-    padding: 10px 0; /* 푸터 내부 여백 */
-    width:100%;
+    padding: 20px 0; /* 푸터 내부 여백 추가 */
+    width: 100%;
     position: relative;
+}
+
+.footer-table {
+    width: 100%; /* 테이블 너비를 푸터 전체로 확장 */
+    max-width: 1200px; /* 필요 시 최대 너비 제한 */
+    margin: 0 auto; /* 가운데 정렬 */
+    border-collapse: collapse; /* 셀 간격 제거 */
+    color: white; /* 테이블 텍스트 색상 */
+}
+
+.footer-table td {
+    padding: 10px; /* 셀 내부 간격 추가 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+footer a{
+    color:#fff !important;
 }

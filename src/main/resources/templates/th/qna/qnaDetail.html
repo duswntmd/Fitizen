@@ -4,15 +4,98 @@
     <title>QnA Detail</title>
     <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
     <style>
+        /* 페이지 전체 레이아웃 */
         .page-contents {
-            /*    font-family: Arial, sans-serif;*/
             display: flex;
             justify-content: center;
             flex-direction: column;
             align-items: center;
-            /*    height: 100vh;*/
-            /*    margin: 0;*/
             min-height: 100vh;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #333;
+        }
+
+        /* 테이블 스타일 */
+        .page-contents table {
+            border-collapse: collapse;
+            width: 80%; /* 테이블의 너비를 적당히 조정 */
+            margin: 20px auto;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-contents table th,
+        .page-contents table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd; /* 셀 경계선 */
+            text-align: left; /* 텍스트 왼쪽 정렬 */
+            font-size: 16px;
+            color: #333;
+        }
+
+        .page-contents table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .page-contents table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .page-contents table tr:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        /* 댓글 입력 섹션 */
+        form textarea {
+            width: 80%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        form button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        /* 관리자 메시지 스타일 */
+        .page-contents p {
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        /* 링크 스타일 */
+        a {
+            display: block;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 16px;
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -45,14 +128,14 @@
     </tr>
 </table>
 
-<div th:if="${session.user != null and session.user.id == 'psjae1'}">
+    <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
     <form th:action="@{/qna/comment}" method="post">
         <input type="hidden" name="qid" th:value="${qna.qid}" />
         <textarea name="comment" rows="4" cols="50" placeholder="댓글을 입력하세요"></textarea>
         <button type="submit">댓글 추가</button>
     </form>
 </div>
-<div th:if="${session.user == null or session.user.id != 'psjae1'}">
+    <div th:if="${#authorization.expression('!hasRole(''ROLE_ADMIN'')')}">
     <p>관리자만 댓글을 추가할 수 있습니다</p>
 </div>
 
