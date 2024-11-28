@@ -57,9 +57,10 @@ public class AiServer {
 
     @GetMapping("/detailvideo/{vnum}")
     public String getVideoDetail(@PathVariable int vnum, @SessionAttribute(value = "user", required = false) User user, Model model) {
-        String baseUrl = "/video_storage/";
+
         VideoAnalysis videoAnalysis = videoAnalysisService.getVideoAnalysisDetail(vnum, user.getId());
         String[] resultPairs = videoAnalysis.getVideoresult().split(",");
+        String baseUrl = "/video_storage/";
         List<Integer> frames = new ArrayList<>();
         List<Integer> values = new ArrayList<>();
         List<String> valuesLabels = new ArrayList<>();  // 라벨링된 자세 리스트
@@ -106,6 +107,7 @@ public class AiServer {
         model.addAttribute("userid", videoAnalysis.getUserid());
         model.addAttribute("videoUrl", baseUrl + videoAnalysis.getUuidvideoname());
         model.addAttribute("aiVideoUrl", analyzeVideoUrl + videoAnalysis.getAivideourl());
+        model.addAttribute("aiAnswer", videoAnalysis.getAianswer());
         model.addAttribute("analysisResults", videoAnalysis.getVideoresult());
         model.addAttribute("frames", frames);
         model.addAttribute("values", values);
@@ -171,7 +173,7 @@ public class AiServer {
                             .GET()
                             .build();
 
-                    System.out.println("Sending HTTP request to: " + fileUrl);
+//                    System.out.println("Sending HTTP request to: " + fileUrl);
 
                     HttpResponse<String> fileCheckResponse = tempClient.send(fileCheckRequest, HttpResponse.BodyHandlers.ofString());
 //                    System.out.println("Response Code: " + fileCheckResponse.statusCode());
@@ -179,8 +181,6 @@ public class AiServer {
 
                     if (fileCheckResponse.statusCode() == 200) {
                         fileReady = true;
-                    } else {
-                        System.out.println("File not ready. Retrying...");
                     }
                 } catch (Exception ex) {
 //                    System.out.println("Exception during file check: " + ex.getClass().getName());
@@ -209,20 +209,22 @@ public class AiServer {
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Response Status Code: " + response.statusCode());
-            System.out.println("Response Body: " + response.body());
+//            System.out.println("Response Status Code: " + response.statusCode());
+//            System.out.println("Response Body: " + response.body());
             // 5. 분석 결과 DB 업데이트
             if (response.statusCode() == 200) {
                 JSONObject jsonResponse = new JSONObject(response.body());
 
                 String analysisResult = jsonResponse.optString("analysis_results", "결과 없음");
                 String aiVideoUrl = jsonResponse.optString("aivideourl", "URL 없음");
+                String aiAnswer = jsonResponse.optString("aianswer", "답변 없음");
 
                 VideoAnalysis videoAnalysis = new VideoAnalysis();
                 videoAnalysis.setUserid(user.getId());
                 videoAnalysis.setRealvideoname(originalFilename);
                 videoAnalysis.setUuidvideoname(uuidFilename);
                 videoAnalysis.setAivideourl(aiVideoUrl);
+                videoAnalysis.setAianswer(aiAnswer);
                 videoAnalysis.setVideoresult(analysisResult);
 
 
