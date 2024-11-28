@@ -42,12 +42,44 @@
 <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
-    var qty = $('#qty').val();  // 입력된 수량 값 가져오기
-    var prid = $('#prid').val();
-    var userId = $('#userId').val();
-    const productId = ${prid};
+    $(document).ready(function () {
+        // id="addCartBtn" 버튼 클릭 시 addCart 함수 호출
+        $('#addCartBtn').click(function () {
+            var qty = $('#qty').val();  // 입력된 수량 값 가져오기
+            var prid = $('#prid').val(); // 상품 ID 가져오기
+            var userId = $('#userId').val(); // 사용자 ID 가져오기
+
+            console.log("수량:", qty, "상품 ID:", prid, "사용자 ID:", userId);
+
+            // addCart 함수 호출 시 값 전달
+            addCart(prid, qty, userId);
+        });
+    });
+
+    function addCart(prid, qty, userId) {
+        $.ajax({
+            url: '/shop/cart/add', // 서버 측 URL (POST 요청)
+            type: 'POST',
+            data: {
+                prid: prid,  // 상품 ID
+                qty: qty,    // 입력된 수량 값 전송
+                userId: userId // 사용자 ID
+            },
+            success: function (response) {
+                if (response.status === 'success') {
+                    alert('장바구니에 성공적으로 추가되었습니다.');
+                    window.location.href = '/cart';  // 장바구니 페이지로 리다이렉트
+                } else {
+                    alert('장바구니에 추가 실패: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('장바구니에 추가 실패: ' + error);
+            }
+        });
+    }
 </script>
-<script src="/js/shop/shopDetail.js"></script>
+
 <script src="/js/shop/shopDetail_del.js"></script>
 
 </body>

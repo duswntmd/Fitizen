@@ -124,16 +124,18 @@ public class ShopController {
         @RequestParam("userId") String userId, @RequestParam("qty") int qty, HttpSession session){
             CartItem existingCartItem = cartService.findCartItemByUserIdAndProductId(userId, productId);
             Map<String, Object> response = new HashMap<>();
-            System.out.println(productId + "    " + userId);
             // 로그인 여부 확인
             if (userId == null) {
                 response.put("status", "error");
                 response.put("message", "로그인이 필요합니다.");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);  // JSON 응답으로 반환
             }
+            System.out.println(existingCartItem);
+        System.out.println("Product ID: " + productId + ", User ID: " + userId + ", Qty: " + qty);
+            System.out.println(qty);
             if (existingCartItem != null) {
                 // 장바구니에 해당 상품이 있으면 수량 증가
-                existingCartItem.setQty(existingCartItem.getQty() + 1);
+                existingCartItem.setQty(existingCartItem.getQty() + qty);
                 cartService.updateCartItem(existingCartItem);
                 response.put("status", "success");
                 response.put("message", "장바구니에 상품 수량이 업데이트되었습니다.");
