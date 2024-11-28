@@ -4,20 +4,56 @@
 
 <mapper namespace="com.sku.fitizen.mapper.Trainer.TrainerMapper">
 
-    <!-- 댓글 목록 불러오기: 챌린지별 댓글 -->
-    <select id="getTrainersByApproved" parameterType="com.sku.fitizen.domain.Trainer.Trainer"
+    <!--트레이너 등록 승인처리-->
+    <update id="approveTrainer" parameterType="int">
+        UPDATE TRAINERS SET APPROVED ='Y' WHERE TRAINERNO=#{trainerNo}
+    </update>
+    <!--승인되지 않은 트레이너 리스트-->
+    <select id="getTrainersByUnapproved" parameterType="com.sku.fitizen.domain.Trainer.Trainer"
             resultType="com.sku.fitizen.domain.Trainer.Trainer">
         select * FROM TRAINERS
-        where APPROVED ='Y'
+        where APPROVED ='N'
+    </select>
+    <!-- 승인된 트레이너들 가져오기 (유저 이름 포함) -->
+    <select id="getTrainersByApproved" resultType="com.sku.fitizen.domain.Trainer.Trainer">
+        SELECT
+            t.TRAINERNO,
+            t.USERID,
+            u.NAME AS userName, -- USERS 테이블에서 가져온 이름
+            t.WORKPLACENAME,
+            t.ZIPCODE,
+            t.LOCATION,
+            t.LOCATIONDETAIL,
+            t.WORKYEARS,
+            t.APPROVED,
+            t.INTRODUCTION,
+            t.PROFILE_IMAGE AS profileImage
+        FROM TRAINERS t
+                 JOIN USERS u ON t.USERID = u.USERNAME -- 조인 조건
+        WHERE t.APPROVED = 'Y'
     </select>
 
-    <!--트레이너 상세 정보-->
+
     <select id="getTrainerDetailById" parameterType="Integer"
             resultType="com.sku.fitizen.domain.Trainer.Trainer">
-
-            select *FROM TRAINERS where TRAINERNO =#{id}
-
+        SELECT
+            t.TRAINERNO,
+            t.USERID,
+            u.NAME AS userName, -- USERS 테이블에서 가져온 이름
+            t.WORKPLACENAME,
+            t.ZIPCODE,
+            t.LOCATION,
+            t.LOCATIONDETAIL,
+            t.WORKYEARS,
+            t.APPROVED,
+            t.INTRODUCTION,
+            t.PROFILE_IMAGE AS profileImage,
+            t.BACKGROUND_IMAGE AS backGroundImage
+        FROM TRAINERS t
+                 JOIN USERS u ON t.USERID = u.USERNAME -- 조인 조건
+        WHERE t.TRAINERNO = #{id}
     </select>
+
     <!-- 트레이너 번호의 유저아이디-->
     <select id="getUserIdByTrainerNo" resultType="string">
         SELECT USERID FROM TRAINERS WHERE TRAINERNO = #{trainerNo}
@@ -30,5 +66,38 @@
         WHERE u.USERNAME = #{userId}
     </select>
 
+    <!--검색 : 지역, 트레이너 -->
+    <select id="searchTrainerList" parameterType="map" resultType="com.sku.fitizen.domain.Trainer.Trainer">
+        SELECT
+        T.*,
+        U.NAME AS userName
+        FROM TRAINERS T
+        JOIN USERS U ON T.USERID = U.USERNAME
+        <where>
+            <if test="searchType.equalsIgnoreCase('location')">
+                AND LOWER(T.LOCATION) LIKE '%' || LOWER(#{keyword}) || '%'
+            </if>
+            <if test="searchType.equalsIgnoreCase('workPlace')">
+                AND LOWER(T.WORKPLACENAME) LIKE '%' || LOWER(#{keyword}) || '%'
+            </if>
+            <if test="searchType.equalsIgnoreCase('trainerName')">
+                AND LOWER(U.NAME) LIKE '%' || LOWER(#{keyword}) || '%'
+
+            </if>
+        </where>
+    </select>
+
+    <update id="updateInfo" parameterType="com.sku.fitizen.domain.Trainer.Trainer">
+        UPDATE TRAINERS
+        SET
+            WORKPLACENAME = #{workPlaceName},
+            LOCATION = #{location},
+            WORKYEARS = #{workYears},
+            INTRODUCTION = #{introduction},
+            PROFILE_IMAGE = NVL(#{profileImage}, PROFILE_IMAGE),
+            BACKGROUND_IMAGE = NVL(#{backGroundImage}, BACKGROUND_IMAGE)
+
+        WHERE USERID = #{userId}
+    </update>
 
 </mapper>

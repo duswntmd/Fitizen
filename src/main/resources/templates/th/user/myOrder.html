@@ -4,6 +4,22 @@
     <meta charset="UTF-8">
     <title>주문 목록</title>
     <style>
+        .title-container {
+            background: linear-gradient(to left, #ffffff, #eceff1); /* 흰색에서 밝은 회색으로 그라데이션 */
+            display: flex;
+            align-items: flex-start;
+            margin: 10px auto;
+            padding: 10px 20px;
+            border-left: white;
+            border-right: white;
+            font-size: 25px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .title {
+            margin-right: 10px;
+        }
         /* 화면 3:7 분할 레이아웃 */
         .container {
             display: flex;
@@ -200,12 +216,18 @@
     </style>
 </head>
 <body>
-<h1>구매 내역</h1>
+<!-- 보유 포인트 영역 -->
+<div class="title-container">
+    <span class="title">구매 내역</span>
+</div>
 <div class="container">
     <!-- 주문 목록 영역 -->
     <div class="order-list">
         <h2>구매 목록</h2>
         <!-- 반복문으로 주문 출력 -->
+        <div th:if="${orders.isEmpty()}">
+            <p>구매 목록이 없습니다.</p>
+        </div>
         <div th:each="order : ${orders}" class="order-box"
              th:onclick="'showOrderDetail(' + ${order.orderId} + ')'">
             <h3 th:text="${order.paidAt}">2024-11-21</h3> <!-- 주문 날짜 -->
@@ -220,9 +242,12 @@
             </ul>
         </div>
         <h2>구매 취소목록</h2>
+        <div th:if="${cancellOrders.isEmpty()}">
+            <p>구매 취소 목록이 없습니다.</p>
+        </div>
         <!-- 반복문으로 주문 출력 -->
-        <div th:each="order : ${orders}" class="order-box"
-             th:onclick="'showOrderDetail(' + ${order.orderId} + ')'">
+        <div th:each="order : ${cancellOrders}" class="order-box"
+             th:onclick="'showCancellOrderDetail(' + ${order.orderId} + ')'">
             <h3 th:text="${order.paidAt}">2024-11-21</h3> <!-- 주문 날짜 -->
             <p>결제 금액: <span th:text="${order.totalPrice}">300</span>원</p>
             <ul>
@@ -248,6 +273,7 @@
 </div>
 <script th:inline="javascript">
     const orders = /*[[${orders}]]*/ [];
+    const cancellOrders =/*[[${cancellOrders}]]*/ [];
     // 주문 ID에 해당하는 상품 상세 정보 표시
     function showOrderDetail(orderId) {
         const order = orders.find(o => o.orderId === orderId); // 선택된 orderId 데이터 검색
@@ -267,7 +293,7 @@
                 productDetails += `
                     <div class="product-box">
                         <div class="product-image">
-                            <img src="${product.productImge}" alt="${product.productName}">
+                            <img src="/ShopImage/${product.productImge}" alt="${product.productName}">
                         </div>
                         <div class="product-info">
                             <h4>${product.productName}</h4>
@@ -290,10 +316,54 @@
         }
     }
 
+
+    function showCancellOrderDetail(orderId) {
+        const order = cancellOrders.find(o => o.orderId === orderId); // 선택된 orderId 데이터 검색
+        if (order) {
+            const detailDiv = document.getElementById("productDetail");
+            let productDetails = `
+                <h2>취소 상세 정보</h2>
+                <div class="order-summary">
+                    <p>취소 일자: <span>${order.paidAt}</span></p>
+                    <p>총 취소 금액: <span>${order.totalPrice}원</span></p>
+                </div>
+                <div class="product-container">
+            `;
+
+            // 주문에 포함된 상품 목록 추가
+            order.orderProductList.forEach(product => {
+                productDetails += `
+                    <div class="product-box">
+                        <div class="product-image">
+                            <img src="/ShopImage/${product.productImge}" alt="${product.productName}">
+                        </div>
+                        <div class="product-info">
+                            <h4>${product.productName}</h4>
+                            <p>${product.productDesc}</p>
+                            <p>수량: ${product.qty}</p>
+                            <p>가격: ${product.price}원</p>
+                            <p>총합계: ${product.totalPrice}원</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            detailDiv.innerHTML = productDetails;
+        } else {
+            alert("주문 데이터를 찾을 수 없습니다.");
+        }
+    }
+
     // 결제 취소 버튼 클릭 이벤트
     function cancelOrder(orderId) {
         const order = orders.find(o => o.orderId === orderId); // 해당 주문 검색
         if (order) {
+            // 확인 창 띄우기
+            const userConfirmed = confirm("결제를 정말로 취소하시겠습니까?");
+            if (!userConfirmed) {
+                return;
+            }
+            //console.log(order.impUid,order.merchantUid,order.totalPrice)
             // 결제 취소 데이터 구성
             const cancelRequest = {
 
@@ -312,6 +382,7 @@
                 dataType: "json",
                 success: function (response) {
                     alert("결제가 취소되었습니다.");
+                    location.reload();
 
                 },
                 error: function (xhr, status, error) {

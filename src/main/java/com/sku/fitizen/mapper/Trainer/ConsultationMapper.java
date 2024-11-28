@@ -13,6 +13,9 @@ public interface ConsultationMapper {
     // 상담 신청
     int saveConsultation(Consultation consult);
 
+    //상담 재신청
+    int reapplyConsultation(Consultation consult);
+
     // 이미 신청한 상담인지
     Integer existByUserId(Consultation consult);
 
@@ -20,9 +23,12 @@ public interface ConsultationMapper {
     List<String> getUserIdsByConsultId(int consultId);
     // 트레이너의 상담 유저 목록
     List<Map<String, Object>>  getMyUsers(int trainerNo);
+    List<Map<String, Object>> getMyUsersByApproved(int trainerNo);
+
 
     // 유저의 상담 트레이너 목록
     List<Map<String, Object>>  getMyTrainers(String userId);
+    List<Map<String, Object>> getMyTrainersByApproved(String userId);
     // 상담 취소
     int cancel(Consultation consult);
 

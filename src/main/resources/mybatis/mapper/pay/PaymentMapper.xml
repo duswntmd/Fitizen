@@ -50,9 +50,22 @@
 
     </select>
 
+    <resultMap id="SpendingPointResultMap" type="com.sku.fitizen.domain.pay.SpendingPoint">
+        <id property="spendingId" column="SPENDINGID"/>
+        <result property="userId" column="USERID"/>
+        <result property="spendingPoint" column="SPENT_POINT"/>
+        <result property="spentAt" column="SPENTAT"/>
+    </resultMap>
+
+    <select id="getSpendingPointList" resultMap="SpendingPointResultMap">
+        SELECT * FROM SPENDINGPOINT
+        WHERE USERID = #{userId}
+        ORDER BY SPENDINGID DESC
+    </select>
+
 
     <!--사용 포인트 기록 -->
-    <select id="saveSpendingPoint" parameterType="com.sku.fitizen.domain.SpendingPoint">
+    <select id="saveSpendingPoint" parameterType="com.sku.fitizen.domain.pay.SpendingPoint">
         INSERT  INTO  SPENDINGPOINT VALUES (SPENT_SEQ.nextval,#{userId},#{spendingPoint},SYSDATE)
     </select>
 
@@ -67,10 +80,11 @@
 
 
     <!-- 특정 사용자 주문과 주문상품 조회 -->
-    <select id="getOrderProductsByUserId" parameterType="String" resultMap="orderResultMap">
+    <select id="getOrderProductsByUserId" parameterType="map" resultMap="orderResultMap">
         SELECT
             o.ORDERID,
             o.USERID,
+            o.IMPUID,
             o.MERCHANTUID,
             o.TOTALPRICE AS ORDER_TOTAL,
             o.PAIDAT,
@@ -87,17 +101,26 @@
             ORDERPRODUCTS op ON o.ORDERID = op.ORDERID
                 JOIN PRODUCT p ON op.PRODUCTID = p.PRID
         WHERE
-            o.USERID = #{userId}
+            o.USERID = #{userId} AND
+            o.IS_CANCELLED = #{no}
         ORDER BY
             o.PAIDAT DESC,
             o.ORDERID
     </select>
 
+    <update id="cancelOrder" parameterType="map">
+        UPDATE orders
+        SET IS_CANCELLED = 1,
+            PAIDAT = SYSDATE
+        WHERE IMPUID = #{impUid}
+          AND MERCHANTUID = #{merchantUid}
+    </update>
     <!-- ResultMap 정의 -->
     <resultMap id="orderResultMap" type="com.sku.fitizen.domain.store.Order">
         <!-- 주문(Order) 매핑 -->
         <id property="orderId" column="ORDERID" />
         <result property="userId" column="USERID" />
+        <result property="impUid" column="IMPUID" />
         <result property="merchantUid" column="MERCHANTUID" />
         <result property="totalPrice" column="ORDER_TOTAL" />
         <result property="paidAt" column="PAIDAT" />

@@ -88,7 +88,6 @@ public class ChallengController {
     @GetMapping("/search")
     public String searchChallenges(@SessionAttribute(value = "user", required = false) User user,
                                    @RequestParam Map<String, String> info,
-
                                    Model model) {
 
         model.addAttribute("currentDate", LocalDate.now()); // 현재 날짜 추가
@@ -104,7 +103,7 @@ public class ChallengController {
         model.addAttribute("c", c);
         model.addAttribute("userChall", userChall);
         model.addAttribute("list", searchResults);
-        return "th/chall//challengePage"; // 검색 결과를 보여줄 페이지로 이동
+        return "th/chall/challengePage"; // 검색 결과를 보여줄 페이지로 이동
     }
 
 

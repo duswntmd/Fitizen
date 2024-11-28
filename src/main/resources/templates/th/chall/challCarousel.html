@@ -15,7 +15,7 @@
     <div class="challenge-banner">
         챌린지에 도전해서 <span>포인트</span>를 적립 받으세요!
         <a href="/challenge/add"><button class="category-button">챌린지 등록</button></a>
-        <a href="/challenge/myChall"><button class="category-button">참여 중인 챌린지</button></a>
+        <button class="category-button" onclick="navigateToTab('myChallengeList')">참여중인 챌린지</button>
     </div>
 
     <div class="carousel-container">
@@ -103,6 +103,14 @@
         }
 
         setInterval(nextSlide, 5000);
+
+
+        // 세션스토리지 업데이트 및 해당 탭으로 이동
+        function navigateToTab(tabId) {
+            // 세션스토리지에 탭 ID 저장
+            sessionStorage.setItem('activeTab', tabId);
+            location.href="user/myPage";
+        }
     </script>
 </div>
 </body>
