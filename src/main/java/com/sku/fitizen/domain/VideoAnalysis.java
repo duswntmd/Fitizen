@@ -15,6 +15,7 @@ public class VideoAnalysis {
     private String realvideoname;
     private String uuidvideoname;
     private String aivideourl;
+    private String aianswer;
     private String videoresult;
     private Date REGDATE;
 }

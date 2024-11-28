@@ -11,6 +11,7 @@
         <result property="uuidvideoname" column="uuidvideoname"/>
         <result property="videourl" column="videourl"/>
         <result property="aivideourl" column="aivideourl"/>
+        <result property="aianswer" column="aianswer"/>
         <result property="videoresult" column="videoresult"/>
         <result property="REGDATE" column="REGDATE"/>
     </resultMap>
@@ -25,7 +26,7 @@
 
     <!-- 특정 비디오 분석 정보 조회 -->
     <select id="getVideoAnalysdetail" parameterType="map" resultMap="VideoResultMap">
-        SELECT vnum, userid, realvideoname, uuidvideoname, aivideourl, videoresult, REGDATE
+        SELECT vnum, userid, realvideoname, uuidvideoname, aivideourl, aianswer, videoresult, REGDATE
         FROM video_analysis
         WHERE vnum = #{vnum} AND userid = #{userid}
     </select>
@@ -39,6 +40,7 @@
     <update id="updateVideoAnalysisResult" parameterType="VideoAnalysis">
         UPDATE video_analysis
         SET aivideourl = #{aivideourl},
+            aianswer = #{aianswer},
             videoresult = #{videoresult}
         WHERE uuidvideoname = #{uuidvideoname}
     </update>

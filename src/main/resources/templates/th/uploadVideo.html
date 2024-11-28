@@ -171,6 +171,33 @@
 <!-- 메인 컨테이너 -->
 <div id="main-container">
     <div class="page-contents">
+        <div>
+            <!-- 분석된 동영상이 있는 경우 표시 -->
+            <div th:if="${aivideourl}">
+                <h2>분석된 동영상:</h2>
+                <video controls th:src="${aivideourl}" width="600"></video>
+            </div>
+            <!-- 결과 또는 오류 메시지를 표시 -->
+            <p th:if="${result}" th:text="'분석 성공: ' + ${result}"></p>
+            <p th:if="${error}" th:text="'오류: ' + ${error}"></p>
+            <!-- 분석 완료 후 비디오 상세 보기로 이동 -->
+            <a id="viewDetailsButton" th:if="${aivideourl}" th:href="@{/ai/detailvideo/{vnum}(vnum=${vnum})}">비디오 상세 보기</a>
+        </div>
+
+        <h1>운동분석 가이드</h1>
+        <h2>사용자의 정확한 분석을 위해서 영상을 가이드에 맞춰주세요</h2>
+        <img src="/image/framespeed.png" width="800" height="500">
+        <p>영상을 업로드 후 Settings를 첫번째로 클릭해 주세요</p>
+        <p>두번쨰로 Frames Per Second에 30으로 맞춰주고 영상을 다운받아주세요</p>
+        <a href="https://www.veed.io/ko-KR/tools/video-frame-rate-converter" target="_blank"><button class="file-button">프레임속도변경</button></a>
+
+        <img src="/image/framesize.png" width="800" height="500">
+        <p>영상을 업로드 후 종황비를 사용자 정의로 맞춰주세요</p>
+        <p>폭은 640 높이는 480으로 맞춰주세요 잠금은 반드시 풀어주셔야 합니다!</p>
+        <p>비디오 비율을 제일 왼쪽으로 해주세요</p>
+        <p>전부 다하셨다면 다운로드하신 파일을 분석업로드에 넣고 분석 요청을 해주세요</p>
+        <a href="https://www.adobe.com/kr/express/feature/video/resize" target="_blank"><button class="file-button">프레임크기변경</button></a>
+
         <h1>운동 분석을 위한 동영상 업로드</h1>
         <div class="upload-container">
             <!-- 드래그 앤 드롭 영역 -->
@@ -198,18 +225,7 @@
             <div id="loadingText">분석 중입니다... 잠시만 기다려주세요.</div>
         </div>
 
-        <div>
-            <!-- 분석된 동영상이 있는 경우 표시 -->
-            <div th:if="${aivideourl}">
-                <h2>분석된 동영상:</h2>
-                <video controls th:src="${aivideourl}" width="600"></video>
-            </div>
-            <!-- 결과 또는 오류 메시지를 표시 -->
-            <p th:if="${result}" th:text="'분석 성공: ' + ${result}"></p>
-            <p th:if="${error}" th:text="'오류: ' + ${error}"></p>
-            <!-- 분석 완료 후 비디오 상세 보기로 이동 -->
-            <a id="viewDetailsButton" th:if="${aivideourl}" th:href="@{/ai/detailvideo/{vnum}(vnum=${vnum})}">비디오 상세 보기</a>
-        </div>
+
     </div>
 </div>
 
