@@ -26,8 +26,9 @@
     </div>
     <div>
         <button type="submit">임시 비밀번호 발급</button>
-        <div id="spinner" class="spinner"></div>
     </div>
+        <div id="spinner" class="spinner"></div>
+
 </form>
 
 <div id="result"></div>
