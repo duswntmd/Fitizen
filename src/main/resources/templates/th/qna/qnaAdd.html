@@ -1,20 +1,89 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>QnA 질문 추가</title>
     <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
 </head>
 <style>
-    .page-contents {
-        /*    font-family: Arial, sans-serif;*/
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        /*    height: 100vh;*/
-        /*    margin: 0;*/
-        min-height: 100vh;
-    }
+/* 전체 레이아웃 */
+.page-contents {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+min-height: 100vh; /* 화면 높이에 맞춤 */
+padding: 20px;
+background-color: #f9f9f9; /* 배경색 추가 */
+}
+
+/* 제목 스타일 */
+h1 {
+font-size: 24px;
+margin-bottom: 20px;
+}
+
+/* 폼 레이아웃 */
+form {
+width: 100%;
+max-width: 500px; /* 폼의 최대 너비 설정 */
+background: white;
+padding: 20px;
+border-radius: 8px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 레이블과 입력 필드 정렬 */
+form label {
+display: block;
+font-size: 14px;
+margin-bottom: 8px; /* 레이블과 필드 간 간격 */
+}
+
+form input[type="text"],
+form textarea {
+width: 100%; /* 입력 필드와 텍스트 영역의 너비 */
+height: 40px;
+padding: 8px;
+font-size: 14px;
+margin-bottom: 20px; /* 필드 간 간격 */
+border: 1px solid #ccc;
+border-radius: 5px;
+box-sizing: border-box; /* 전체 크기를 맞춤 */
+}
+
+form textarea {
+height: 100px; /* 텍스트 영역의 높이 */
+resize: vertical; /* 세로 크기 조정 허용 */
+}
+
+/* 제출 버튼 */
+form input[type="submit"] {
+width: 100%;
+height: 40px;
+background-color: #007bff;
+color: white;
+font-size: 16px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+background-color: #0056b3;
+}
+
+/* 돌아가기 링크 스타일 */
+.page-contents a {
+margin-top: 20px;
+display: inline-block;
+text-decoration: none;
+font-size: 14px;
+color: #007bff;
+}
+
+.page-contents a:hover {
+text-decoration: underline;
+}
 </style>
 <body>
 <div>
