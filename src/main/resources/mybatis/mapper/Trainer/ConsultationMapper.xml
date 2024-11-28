@@ -35,23 +35,39 @@
       INSERT  INTO TRAINERCONSULTATION (CONSULTID,USERID,TRAINERNO) VALUES (CONSULT_SEQ.nextval,#{userId},#{trainerNo})
     </insert>
 
+    <!--상담 재신청 -->
+    <update id="reapplyConsultation" parameterType="com.sku.fitizen.domain.Trainer.Consultation">
+        update TRAINERCONSULTATION SET  STATUS='REQUESTED' WHERE USERID=#{userId} AND TRAINERNO=#{trainerNo}
+    </update>
 
     <!--유저 :상담 신청에서-->
     <select id="existByUserId" parameterType="com.sku.fitizen.domain.Trainer.Consultation">
-        SELECT * FROM  TRAINERCONSULTATION WHERE  userId=#{userId} AND TRAINERNO =#{trainerNo}
+        SELECT COUNT(*) FROM  TRAINERCONSULTATION WHERE  userId=#{userId} AND TRAINERNO =#{trainerNo}
     </select>
 
 
     <!-- 트레이너에게 신청된 상담 유저 목록 조회 -->
     <select id="getMyUsers" resultType="map">
-        SELECT u.NAME AS "userName", tc.STATUS AS "status", tc.ISPAID AS "isPaid",
+        SELECT u.NAME AS "userName", tc.STATUS AS "status",
                tc.USERID AS "userId",
                tc.CONSULTID AS "consultId"
 
         FROM TRAINERCONSULTATION tc
                  JOIN TRAINERS t ON tc.TRAINERNO = t.TRAINERNO
                  JOIN USERS u ON tc.USERID = u.USERNAME
-        WHERE t.TRAINERNO = #{trainerNo}
+        WHERE t.TRAINERNO = #{trainerNo} AND (tc.STATUS= 'REQUESTED' or tc.STATUS= 'REJECTED')
+    </select>
+
+    <!-- 트레이너에게 신청된 상담 유저 목록 조회 -->
+    <select id="getMyUsersByApproved" resultType="map">
+        SELECT u.NAME AS "userName", tc.STATUS AS "status",
+               tc.USERID AS "userId",
+               tc.CONSULTID AS "consultId"
+
+        FROM TRAINERCONSULTATION tc
+                 JOIN TRAINERS t ON tc.TRAINERNO = t.TRAINERNO
+                 JOIN USERS u ON tc.USERID = u.USERNAME
+        WHERE t.TRAINERNO = #{trainerNo} AND tc.STATUS= 'APPROVED'
     </select>
 
     <!-- 일반 유저가 신청한 상담 트레이너 조회 -->
@@ -60,14 +76,28 @@
                t.WORKPLACENAME AS "workPlaceName",
                t.LOCATION AS "location",
                tc.STATUS AS "status",
-               tc.ISPAID AS "isPaid",
                tc.TRAINERNO AS "trainerNo",
                tc.CONSULTID AS "consultId"
 
         FROM TRAINERCONSULTATION tc
                  JOIN TRAINERS t ON tc.TRAINERNO = t.TRAINERNO
                  JOIN USERS u ON t.USERID = u.USERNAME
-        WHERE tc.USERID = #{userId}
+        WHERE tc.USERID = #{userId} and (tc.STATUS ='REQUESTED' OR tc.STATUS ='REJECTED')
+    </select>
+
+    <!-- 일반 유저가  신청한 승인된 상담 트레이너 조회 -->
+    <select id="getMyTrainersByApproved" resultType="map">
+        SELECT u.NAME AS "trainerName",
+               t.WORKPLACENAME AS "workPlaceName",
+               t.LOCATION AS "location",
+               tc.STATUS AS "status",
+               tc.TRAINERNO AS "trainerNo",
+               tc.CONSULTID AS "consultId"
+
+        FROM TRAINERCONSULTATION tc
+                 JOIN TRAINERS t ON tc.TRAINERNO = t.TRAINERNO
+                 JOIN USERS u ON t.USERID = u.USERNAME
+        WHERE tc.USERID = #{userId} and tc.STATUS ='APPROVED'
     </select>
 
     <!--상담 취소-->

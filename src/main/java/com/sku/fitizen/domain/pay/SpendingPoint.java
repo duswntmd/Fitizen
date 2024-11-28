@@ -1,4 +1,4 @@
-package com.sku.fitizen.domain;
+package com.sku.fitizen.domain.pay;
 
 
 import lombok.AllArgsConstructor;

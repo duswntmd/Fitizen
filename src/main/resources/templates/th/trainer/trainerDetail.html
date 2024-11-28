@@ -12,46 +12,107 @@
             padding: 0;
             background-color: #f9f9f9;
         }
+
+        /* 챌린지 문구 스타일 */
+        .trainer-banner {
+            width: 100%;
+            padding: 20px 0;
+            background-color: #f8f9fa;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+        }
         .container {
             max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
+            margin: 40px auto;
+            padding: 0;
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* 콘텐츠가 넘치지 않도록 설정 */
         }
-        .trainer-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
+
+        .header-background {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            background-size: cover; /* 이미지가 박스를 가득 채우도록 */
+            background-position: center; /* 이미지를 가운데 정렬 */
         }
-        .trainer-header img {
-            width: 100px;
-            height: 100px;
+
+        .profile-image {
+            position: absolute;
+            bottom: -60px; /* 배경 아래로 살짝 내려오도록 */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            margin-right: 20px;
             object-fit: cover;
+            border: 5px solid #fff; /* 이미지 주변에 흰색 테두리 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
         }
+
+        .trainer-content {
+            padding: 20px;
+            text-align: center; /* 내용 가운데 정렬 */
+        }
+
         .trainer-name {
-            font-size: 24px;
+            margin-top: 80px; /* 프로필 이미지와의 간격 */
+            font-size: 28px;
             font-weight: bold;
+            color: #333;
         }
+
         .trainer-info {
-            margin-bottom: 20px;
             font-size: 16px;
             color: #555;
+            line-height: 1.6;
+            margin-top: 20px;
+            text-align: left;
         }
-        .btn {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
+
+        .trainer-info p {
+            margin: 10px 0;
+        }
+
+        .highlight-section {
+            background-color: #f0f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
             font-size: 16px;
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
+            color: #555;
+            text-align: left;
+            height: 300px;
+
         }
-        .btn:hover {
-            background-color: #45a049;
+
+        .highlight-section p {
+            margin: 10px 0;
+        }
+
+        .pt-button {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 15px;
+            background-color: #6c757d;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .pt-button:hover {
+            background-color: #6c757d;
         }
     </style>
 </head>
@@ -59,21 +120,30 @@
 <div>
     <th:block th:replace="~{th/header :: header}"></th:block>
 </div>
-
+<div class="trainer-banner">
+    FITIZEN이 인증한  투명성있는 진짜 경력직 트레이너!<br>
+    물경력 트레이너는 이제 NO!NO!
+</div>
 <div class="container">
-    <div class="trainer-header">
-        <img  alt="트레이너 사진">
-        <div>
-            <div class="trainer-name" th:text="${trainer.userId}">트레이너 이름</div>
-            <div class="trainer-info">
-                <p>근무지: <span th:text="${trainer.workPlaceName}">근무지</span></p>
-                <p>경력: <span th:text="${trainer.workYears}">경력</span> 년</p>
-                <p>위치: <span th:text="${trainer.location}">주소</span></p>
-                <p>수상 기록: <span th:text="${trainer.awards}">수상 기록</span></p>
-            </div>
-        </div>
+    <!-- 배경 영역 -->
+    <div class="header-background" th:style="'background-image: url(/files/trainer/backGroundImage/' + ${trainer.backGroundImage} + '); background-size: cover; background-position: center; background-repeat: no-repeat;'">
+        <img th:src="@{'/files/trainer/profileImage/'+${trainer.profileImage}}" alt="프로필 이미지" class="profile-image">
     </div>
+    <!-- 트레이너 정보 -->
+    <div class="trainer-content">
+        <div class="trainer-name" th:text="${trainer.userName}">트레이너 이름</div>
 
+        <div class="trainer-info">
+            <p>근무지: <span th:text="${trainer.workPlaceName}">근무지</span></p>
+            <p>위치: <span th:text="${trainer.location}">주소</span></p>
+            <p>경력: <span th:text="${trainer.workYears}">경력</span> 년</p>
+        </div>
+
+        <div class="highlight-section" th:text="${trainer.introduction}">
+
+        </div>
+        <button class="pt-button" onclick="requestConsultation(${trainer.trainerNo})">상담 신청하기</button>
+    </div>
 </div>
 
 <div>
@@ -82,7 +152,6 @@
 
 <script>
     function requestConsultation(trainerNo) {
-        // 상담 신청 요청 로직을 여기에 추가
         alert('트레이너 ' + trainerNo + '에게 상담 신청합니다.');
     }
 </script>

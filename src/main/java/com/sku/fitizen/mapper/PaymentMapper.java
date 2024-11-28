@@ -4,7 +4,7 @@ import com.sku.fitizen.domain.store.Order;
 import org.apache.ibatis.annotations.Param;
 import com.sku.fitizen.Dto.orderProductDTO;
 import com.sku.fitizen.domain.pay.Payment;
-import com.sku.fitizen.domain.SpendingPoint;
+import com.sku.fitizen.domain.pay.SpendingPoint;
 import com.sku.fitizen.domain.store.CartItem;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -21,8 +21,12 @@ public interface PaymentMapper {
    int  savePayment(Payment payment);
    // 결제 기록 (개인) 불러오기
    List<Payment> getPaymentList(String userId);
+   // 포인트 사용 내역 불러오기
+   List<SpendingPoint> getSpendingPointList(String userId);
    // 결제 상품  구매목록
-   List<Order> getOrderProductsByUserId(String userId);
+   List<Order> getOrderProductsByUserId(@Param("userId") String userId, @Param("no") int no);
+
+   void cancelOrder(@Param("impUid") String impUid, @Param("merchantUid") String merchantUid);
    // 개인 보유 잔여 포인트 목록 조회
    int getBalanceByUserId(String userId);
    // 사용 포인트 기록

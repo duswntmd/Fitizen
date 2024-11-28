@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>트레이너 프로필</title>
+    <style>
+
+        .description {
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6; /* 읽기 쉽게 줄 간격 조정 */
+            font-style: italic; /* 기울임꼴로 살짝 강조 */
+            letter-spacing: 0.5px; /* 글자 간격을 살짝 넓게 */
+        }
+
+       .admin-status {
+           font-size: 18px;
+           font-weight: bold;
+           color: #333;
+           margin-bottom: 20px;
+           display: flex; /* 관리자 승인 여부와 상태를 나란히 배치 */
+           align-items: center;
+       }
+
+       .admin-status-label {
+           color: #444;
+           font-size: 20px;
+           font-weight: bold;
+           margin-right: 10px;
+           border-left: 4px solid #333;
+           padding: 5px 5px 5px 10px;
+           background-color: #f9f9f9;
+           border-radius: 3px;
+
+       }
+
+       .admin-status-value {
+           font-weight: bold;
+           padding: 5px 10px;
+           border-radius: 5px;
+       }
+
+        .admin-status-value.pending {
+            font-weight: bold;
+            color: #ff5722; /* 상태 강조 색상 */
+            background-color: #ffe6e6; /* 상태 배경색 */
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #ffb3b3; /* 테두리 색상 */
+        }
+
+        .admin-status-value.approved {
+            font-weight: bold;
+            color: #ffffff; /* 승인의 텍스트 색상 */
+            background-color: #a5d6a7; /* 승인 배경색 (파란색 대신 초록색) */
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #388e3c; /* 테두리 색상 */
+        }
+
+
+        /* 기존 CSS 유지 */
+        .title {
+            font-size: 25px;
+            color: #333;
+            text-align: left;
+            margin-bottom: 15px;
+            padding: 10px 20px;
+            background: linear-gradient(to left, #ffffff, #eceff1);
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .profile-container {
+            margin: 90px 50px 20px 50px; /* 아래쪽 마진을 20으로 설정 */
+            width: 1400px;
+            display: flex;
+            flex-direction: column; /* 세로 배치 */
+        }
+        .profile-top {
+            display: flex; /* 사진과 이름 나란히 배치 */
+            align-items: center;
+            width: 100%;
+        }
+        .profile-photo {
+            width: 40%; /* 사진의 너비 */
+            height: 200px;
+            background: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #555;
+        }
+        .workPlace-photo {
+            width: 60%; /* 사진의 너비 */
+            height: 200px;
+            background: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #555;
+        }
+        .profile-info {
+            width: 70%; /* 이름 영역 */
+            padding: 20px;
+        }
+        .profile-bottom {
+            border-top: 1px solid #ddd;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .profile-details {
+            margin-top: 10px;
+        }
+        .profile-details div {
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #333;
+        }
+        .highlight-section {
+            background-color: #f0f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 16px;
+            color: #555;
+            text-align: left;
+            height: 250px;
+            border: none; /* 기본 input 스타일 제거 */
+            outline: none; /* 포커스 시 파란 테두리 제거 */
+            box-shadow: none; /* 기본 그림자 제거 */
+            resize: none; /* 크기 조절 제거 */
+        }
+        .profile-info-item {
+            font-size: 18px;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            font-weight: bold;
+            color: #444;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between; /* 좌우로 배치 */
+            align-items: center;
+            border-left: 4px solid #333;
+            padding-left: 10px;
+            background-color: #f9f9f9;
+            border-radius: 3px;
+            padding-right: 10px;
+            width: 300px;
+        }
+
+        .input-edit {
+            width: 60%; /* 가로 크기 50% */
+            padding: 5px;
+            border: 1px solid red;
+            border-radius: 5px; /* 모서리 둥글게 */
+            background-color: white; /* 연한 배경색 */
+            outline: none; /* 포커스 시 기본 파란 테두리 제거 */
+
+
+        }
+        .input-edit2
+        {
+            width: 50%; /* 가로 크기 50% */
+            padding: 5px;
+            border: 1px solid red;
+            border-radius: 5px; /* 모서리 둥글게 */
+            background-color: white; /* 연한 배경색 */
+            outline: none; /* 포커스 시 기본 파란 테두리 제거 */
+        }
+
+    </style>
+</head>
+<body>
+<h1 class="title">정보 수정</h1>
+<div class="profile-container">
+    <div class="admin-status">
+        <span class="admin-status-label">관리자 승인 여부</span>
+        <span class="admin-status-value"
+              th:text="${#strings.trim(info.approved) == 'Y' ? '승인완료' : '미승인'}"
+              th:classappend="${#strings.trim(info.approved) == 'Y' ? 'approved' : 'pending'}">
+    </span>
+    </div>
+    <div class="profile-top">
+        <div class="profile-photo">
+            <span th:if="${info.profileImage == null}">프로필 이미지</span>
+            <img id="profileImagePreview"
+                 th:src="@{'/files/trainer/profileImage/'+${info.profileImage}}"
+                 style="width: 100%; height: 100%; object-fit: cover;"
+                 th:if="${info.profileImage != null}">
+        </div>
+        <div class="profile-info">
+            <div class="profile-info-item" th:text="'이름: ' + ${user.name}"></div>
+            <div class="profile-info-item" th:text="'아이디: '+${user.id}"></div>
+            <div class="profile-info-item" th:text="'이메일: '+${user.email}"></div>
+            <!-- 프로필 사진 업로드 -->
+            <button class="photo-upload-button" style="display: none;" onclick="document.getElementById('profilePhoto').click()">프로필 사진 업로드</button>
+            <input id="profilePhoto" type="file" accept="image/*" style="display: none;" onchange="previewImage(this, '.profile-photo')">
+        </div>
+        <div class="workPlace-photo">
+          <span th:if="${info.backGroundImage== null}">매장 이미지</span>
+            <img id="workPlaceImagePreview"
+                 th:src="@{'/files/trainer/backGroundImage/'+${info.backGroundImage}}"
+                 style="width: 100%; height: 100%; object-fit: cover;" th:if="${info.backGroundImage != null}">
+        </div>
+        <div class="profile-info">
+            <div class="profile-info-item">
+                <span class="label">근무지:</span>
+                <span class="value" id="workPlaceName" th:text="${info.workPlaceName}"></span>
+            </div>
+            <div class="profile-info-item">
+                <span class="label">위치:</span>
+                <span class="value" id="location" th:text="${info.location}"></span>
+            </div>
+
+            <!-- 매장 사진 업로드 -->
+            <button class="photo-upload-button" style="display: none;" onclick="document.getElementById('workPlacePhoto').click()">매장 사진 업로드</button>
+            <input id="workPlacePhoto" type="file" accept="image/*" style="display: none;" onchange="previewImage(this, '.workPlace-photo')">
+        </div>
+    </div>
+    <p class="description">
+        트레이너  프로필 이미지, 매장이미지, 경력,소개글 작성시 승인처리됩니다.<br>
+        *미작성시, 미승인 처리*
+    </p>
+    <!-- 나머지 정보 -->
+    <div class="profile-bottom">
+        <!--
+        <div class="subtitle">
+            수상이력
+            <span>없음</span>
+        </div>
+        -->
+        <div class="subtitle workYears">
+            <span class="label">경력:</span>
+            <span class="value" id="workYears" th:text="${info.workYears}">4</span>년
+        </div>
+        <div class="subtitle">
+            소개글 작성해주세요!
+        </div>
+        <div class="highlight-section" id="introduction">
+            [[${info.introduction}]]
+        </div>
+    </div>
+    <div class="button-group">
+        <button id="editButton" onclick="toggleEdit()">수정하기</button>
+        <button id="saveButton" style="display: none;" onclick="saveData()">저장하기</button>
+        <button id="cancelButton" style="display: none;" onclick="cancelEdit()">취소하기</button>
+    </div>
+</div>
+</body>
+<script  th:inline="javascript">
+    function toggleEdit()
+    {
+        const editButton = document.getElementById('editButton');
+        const saveButton = document.getElementById('saveButton');
+        const cancelButton = document.getElementById('cancelButton');
+        const photoButtons = document.querySelectorAll('.photo-upload-button'); // 사진 업로드 버튼 선택
+
+
+        // 사진 업로드 버튼 보이기
+        photoButtons.forEach(button => {
+            button.style.display = 'inline-block';
+        });
+
+        // 버튼 상태 전환
+        editButton.style.display = 'none';
+        saveButton.style.display = 'inline-block';
+        cancelButton.style.display = 'inline-block';
+
+        // 근무지와 위치 필드 수정 가능 상태로 전환
+        const workPlace = document.getElementById('workPlaceName');
+        const location = document.getElementById('location');
+        const workYears = document.getElementById('workYears');
+
+        const workPlaceText = workPlace.textContent.trim();
+        const locationText = location.textContent.trim();
+        const workYearsText = workYears.textContent.trim();
+
+        workPlace.innerHTML = `<input type="text" class="input-edit" value="${workPlaceText}">`;
+        location.innerHTML = `<input type="text" class="input-edit" value="${locationText}">`;
+        workYears.innerHTML = `<input type="number" class="input-edit2" value="${workYearsText}">`;
+
+        // 프로필 이미지와 매장 이미지에 테두리 추가
+        const profilePhoto = document.querySelector('.profile-photo');
+        const workPlacePhoto = document.querySelector('.workPlace-photo');
+
+        profilePhoto.style.border = '1px solid red';
+        workPlacePhoto.style.border = '1px solid red';
+
+
+        // 소개글을 textarea로 전환
+        const introduction = document.getElementById('introduction');
+        const introText = introduction.textContent.trim();
+
+        introduction.innerHTML = `<textarea  style="width: 100%; height: 100%;
+                                                     font-size: 16px;
+                                                     resize: none;background-color: #f0f4f8;
+                                                                 border: 1px solid red; /* 초록색 테두리 */
+
+                                                     outline: none;">${introText}</textarea>`;
+
+    }
+
+
+
+
+    // 사진 업로드 후 미리보기 기능 구현
+    function previewImage(input, targetSelector) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const target = document.querySelector(targetSelector);
+                target.style.backgroundImage = `url(${e.target.result})`;
+                target.style.backgroundSize = "cover";
+                target.style.backgroundPosition = "center";
+                target.textContent = ""; // 텍스트 제거
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    // 취소 버튼 클릭 시 처리
+    function cancelEdit() {
+        // 페이지를 리로드하여 원래 상태로 복원
+        location.reload();
+    }
+
+    function saveData() {
+        const profilePhoto = document.getElementById('profilePhoto').files[0];
+        const workPlacePhoto = document.getElementById('workPlacePhoto').files[0];
+        const workPlaceName = document.querySelector('#workPlaceName input').value;
+        const location = document.querySelector('#location input').value;
+        const workYears = document.querySelector('#workYears input').value;
+        const introduction = document.querySelector('#introduction textarea').value;
+
+        const existingProfileImage = [[${info.profileImage}]];  // 백엔드에서 넘어온 프로필 이미지
+        const existingBackGroundImage = [[${info.backGroundImage}]];  // 백엔드에서 넘어온 배경 이미지
+
+        // 초기에는 프로필 이미지와 배경 이미지가 null인 상태에서 파일을 두 개 선택해야 함
+        if (existingProfileImage === null && existingBackGroundImage === null) {
+            // 두 파일 모두 선택되지 않았을 때 경고
+            if (!profilePhoto || !workPlacePhoto) {
+                alert('프로필 이미지와 매장 이미지는 필수입니다.');
+                return false;
+            }
+        }
+
+        // 각 필드가 비어있지 않은지 체크
+        if (!workPlaceName || !location || !workYears || !introduction) {
+            alert('모든 필드를 채워주세요.');
+            return false;
+        }
+
+        // FormData 객체 생성
+        const formData = new FormData();
+        formData.append('profilePhoto', profilePhoto);
+        formData.append('workPlacePhoto', workPlacePhoto);
+        formData.append('workPlaceName', workPlaceName);
+        formData.append('location', location);
+        formData.append('workYears', workYears);
+        formData.append('introduction', introduction);
+
+        // jQuery AJAX 요청
+        $.ajax({
+            url: '../trainer/updateInfo', // 서버 URL
+            type: 'POST',
+            data: formData,
+            processData: false, // FormData를 문자열로 변환하지 않음
+            contentType: false, // Content-Type 헤더 설정을 비활성화 (브라우저가 설정)
+            success: function(res) {
+                if(res.saved) {
+                    alert('정보 수정완료 및 관리자가 검토할 예정입니다.');
+                    window.location.reload();
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('저장 중 오류가 발생했습니다: ' + error);
+            }
+        });
+    }
+
+
+</script>
+</html>

@@ -23,6 +23,8 @@ public class ConsultationService {
        if(row>0) return true;
        else return false;
     }
+    // 상담 재신청
+    public int reapplyConsultation(Consultation consult){return mapper.reapplyConsultation(consult);}
 
     // 상담 아이디로 유저 ,트레이너 아이디 한번에 가져오기  List<String>
     public List<String> getUserIdsByConsultId( int consultId)
@@ -44,9 +46,14 @@ public class ConsultationService {
 
     // 트레이너에게 신청된 상담 목록 조회
     public List<Map<String, Object>> getMyUsers(int trainerNo) {return mapper.getMyUsers(trainerNo);}
+    // 승인된
+    public List<Map<String, Object>> getMyUsersByApproved(int trainerNo) {return mapper.getMyUsersByApproved(trainerNo);}
 
-    // 일반 유저가 신청한 상담 목록 조회
+    // 일반 유저가 신청한 요청중인,거절된 상담 목록 조회
     public List<Map<String, Object>> getMyTrainers(String userId) {return mapper.getMyTrainers(userId);}
+
+    // 일반 유저가 신청한  승인된 상담 목록 조회
+    public List<Map<String, Object>> getMyTrainersByApproved(String userId) {return mapper.getMyTrainersByApproved(userId);}
 
     // 상담 취소
     public boolean cancel(Consultation consult)

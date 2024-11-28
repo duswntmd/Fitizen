@@ -4,22 +4,90 @@
     <meta charset="UTF-8">
     <title>결제 내역</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+
+        /* 보유 포인트 영역 */
+        .balance-container {
+            display: flex;
+            align-items: flex-start;
+            margin: 10px auto;
+            padding: 10px 20px;
+            border-left: white;
+            border-right: white;
+            font-size: 25px;
+            color: #333;
+            background: linear-gradient(to left, #ffffff, #eceff1); /* 흰색에서 밝은 회색으로 그라데이션 */
+            font-weight: bold;
         }
 
+        .balance-title {
+            margin-right: 10px;
+            color: firebrick;
+        }
+
+        .balance-value {
+            color: #333;
+        }
+        /* 상단 탭 스타일 */
+        .menu-container {
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            margin: 15px auto;
+            max-width: 940px;
+            background-color: #fff;
+            border-bottom: 2px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-container button {
+            flex: 1;
+            padding: 15px 0;
+            font-size: 16px;
+            font-weight: bold;
+            color: black;
+            border-radius: 8px;
+            background-color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .menu-container button:hover {
+            background-color: #e0e0e0;
+            color: black;
+            border-bottom: 1px solid black;
+
+        }
+
+        .menu-container button.active {
+            background-color: #e0e0e0;
+            color: black;
+            border-bottom: 1px solid black;
+        }
+
+        /* 결제 내역 섹션 */
         .payments-container {
+            margin: 0 auto;
             padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            max-width: 900px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .payments-container h3 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
         }
 
         .payment-row {
             display: flex;
             justify-content: space-between;
+            padding: 15px 10px;
+            border-bottom: 1px solid #eee;
             align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
         }
 
         .payment-row:last-child {
@@ -29,313 +97,267 @@
         .payment-item {
             flex: 1;
             text-align: center;
-            padding: 0 10px;
+            font-size: 14px;
+            color: #555;
         }
 
-        .payment-item:first-child {
-            flex: 2;
-            text-align: left;
+        .payment-item.amount {
+            font-weight: bold;
+
         }
 
-        .payment-item:last-child {
+        .payment-item.date {
+            color: #666;
+        }
+        /* 포인트 충전 영역 */
+        .point-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            margin: 30px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            max-width: 900px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .left-section {
             flex: 1;
         }
 
-        .payment-item span {
-            display: block;
+        .right-section {
+            height: 300px;
+            flex: 1;
+            padding: 15px 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+        }
+        .right-section h3 {
+            text-align: center; /* 제목 가운데 정렬 */
+            font-size: 18px; /* 제목 크기 */
+            color: #333; /* 제목 색상 */
+            margin-bottom: 20px; /* 제목과 리스트 간격 */
+        }
+
+        .right-section ul {
+            list-style: none; /* 기본 리스트 스타일 제거 */
+            padding: 0; /* 리스트 내부 여백 제거 */
+            margin: 0; /* 외부 여백 제거 */
+        }
+
+        .right-section ul li {
+            margin-bottom: 10px; /* 리스트 아이템 간 간격 */
+            font-size: 14px; /* 글씨 크기 */
+            color: #555; /* 텍스트 색상 */
+            padding-left: 10px; /* 내용 시작 위치 */
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .point-button {
+            padding: 15px 25px;
+            font-size: 16px;
             font-weight: bold;
-        }
-
-        .amount {
-            color: #2c3e50;
-        }
-
-        .date {
-            color: #7f8c8d;
-        }
-
-        /* 버튼 스타일 */
-        .payment-row button {
-            background-color: #28a745; /* 버튼 색상 */
-            color: #fff;
             border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            color: #1a1a1a;
             cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease;
         }
 
-        .payment-row button:hover {
-            background-color: #218838; /* 버튼 호버 색상 */
+        .point-button:hover {
+            background-color: #cfcfcf;
         }
-
-        /* 그래프 스타일 */
-        #circle {
-            width: 100%; /* 그래프 너비를 100%로 설정 */
-            max-width: 600px; /* 최대 너비 설정 */
-            height: 300px; /* 그래프 높이 설정 */
-            margin: 0 auto; /* 중앙 정렬 */
-        }
-
 
     </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            var svc = {
-                service_unit: 30,
-                service_inte: 40,
-                server_unit: 20,
-                server_inte: 10
-            };
-
-            var myCircle = echarts.init(document.getElementById('circle'));
-            var option = {
-                tooltip: {
-                    trigger: 'item'
-                },
-                legend: {
-                    top: 5,
-                    type: 'scroll'
-                },
-                series: [
-                    {
-                        name: '포인트',
-                        type: 'pie',
-                        radius: ['40%', '70%'],
-                        avoidLabelOverlap: false,
-                        itemStyle: {
-                            borderRadius: 10,
-                            borderColor: '#fff',
-                            borderWidth: 0
-                        },
-                        label: {
-                            show: false,
-                            position: 'center'
-                        },
-                        emphasis: {
-                            label: {
-                                show: true,
-                                fontSize: '15',
-                                fontWeight: 'bold'
-                            }
-                        },
-                        labelLine: {
-                            show: false
-                        },
-                        data: [
-                            { value: svc['service_unit'], name: '상점 포인트 적용' },
-                            { value: svc['service_inte'], name: '챌린지 포인트 사용' }
-                        ]
-                    }
-                ]
-            };
-            myCircle.setOption(option);
-
-            $(window).on('resize', function() {
-                myCircle.resize();
-
-            });
-        });
-    </script>
 </head>
 <body>
-<h1>보유 포인트: [[${balance}]] P</h1>
-<div class="point-box">
-    <h2>포인트 충전</h2>
-
-    <div class="button-container">
-        <button class="point-button" onclick="requestPay(100)">100포인트</button>
-        <button class="point-button" onclick="requestPay(300)">300포인트</button>
-        <button class="point-button" onclick="requestPay(500)">500 포인트</button>
-        <button class="point-button" onclick="requestPay(1000)">1000 포인트</button>
-    </div>
-
-    <div class="button-container">
-        <button class="point-button cancel-btn" onclick="cancelPay()">결제 취소</button>
-    </div>
-    테스트 결제이며 자동 환불 됩니다.
+<!-- 보유 포인트 영역 -->
+<div class="balance-container">
+    <span class="balance-title">보유 포인트</span>
+    <span class="balance-value">[[${balance}]] P</span>
 </div>
-<div>
-<h2>포인트 사용 현황</h2>
-<div id="circle" style="min-height: 205px;"></div>
-
+<div class="menu-container">
+    <button data-category-id="2">지급 내역</button>
+    <button class="active" data-category-id="2">충전 내역</button>
+    <button data-category-id="3">사용 내역</button>
 </div>
-<h2>결제 내역 ,청약 철회 1/3</h2>
-<h3>챌린지 포인트 결제 내역</h3>
+
+
 <div class="payments-container">
-    <div class="payment-row">
-        <div class="payment-item"><span>결제 번호</span></div>
-        <div class="payment-item"><span>결제 금액</span></div>
-        <div class="payment-item"><span>날짜</span></div>
-        <div class="payment-item"><span>문의</span></div> <!-- 작업 열 추가 -->
+    <h3 id="payments-title">충전 내역</h3>
+    <div id="payment-table">
+        <!-- 컬럼 헤더 -->
+        <div class="payment-row" id="payment-header">
+            <div class="payment-item"><strong>결제 번호</strong></div>
+            <div class="payment-item"><strong>결제 금액</strong></div>
+            <div class="payment-item"><strong>날짜</strong></div>
+        </div>
+        <!-- 데이터 영역 -->
+        <div id="payment-rows"></div>
     </div>
-    <div th:each="payment : ${payments}" class="payment-row">
-        <div class="payment-item" th:text="${payment.getMerchantUid()}"></div>
-        <div class="payment-item amount" th:text="${payment.paid_amount+ ' 원'}"></div>
-        <div class="payment-item date" th:text="${#dates.format(payment.paidAt, 'yyyy-MM-dd HH:mm:ss')}"></div>
-        <div class="payment-item">
-            <button>결제 취소 요청</button>
+    <!-- 합산 금액 표시 -->
+    <div style="text-align: left; margin-top: 20px; font-size: 16px; color: #333;">
+        <strong id="total-label">결제 금액 합산:</strong> <span id="total-amount"></span>
+    </div>
+</div>
+
+
+<!-- 포인트 충전 -->
+<div class="point-container">
+    <div class="left-section">
+        <h2 style="text-align: center; color: #333;">포인트 충전</h2>
+        <div class="button-container">
+            <button class="point-button" onclick="requestPay(500)">500포인트</button>
+            <button class="point-button" onclick="requestPay(1000)">1000포인트</button>
+            <button class="point-button" onclick="requestPay(10000)">10000포인트</button>
+            <button class="point-button" onclick="requestPay(20000)">20000포인트</button>
         </div>
     </div>
-</div>
-<h3>상점 결제 내역</h3>
-<div class="payments-container">
-    <div class="payment-row">
-        <div class="payment-item"><span>결제 번호</span></div>
-        <div class="payment-item"><span>결제 금액</span></div>
-        <div class="payment-item"><span>날짜</span></div>
-        <div class="payment-item"><span>문의</span></div> <!-- 작업 열 추가 -->
-    </div>
-    <div th:each="payment : ${payments}" class="payment-row">
-        <div class="payment-item" th:text="${payment.getMerchantUid()}"></div>
-        <div class="payment-item amount" th:text="${payment.paid_amount+ ' 원'}"></div>
-        <div class="payment-item date" th:text="${#dates.format(payment.paidAt, 'yyyy-MM-dd HH:mm:ss')}"></div>
-        <div class="payment-item">
-            <button>결제 취소 요청</button>
-        </div>
+    <div class="right-section">
+        <h3>*주의 사항*</h3>
+        <ul>
+            <li>충전한 포인트는 환불이 불가능합니다.</li>
+            <li>포인트는 개인 계정에 귀속됩니다.</li>
+            <li>포인트 충전 후 사용에 문제가 발생할 경우 1:1문의(Q&A)로 문의 바랍니다.</li>
+        </ul>
     </div>
 </div>
-</body>
+
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-<style>
-
-
-    .point-box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background-color: #fff;
-        padding: 30px;
-    }
-
-    .point-box h2 {
-        margin-bottom: 20px;
-        color: #333;
-    }
-
-    .button-container {
-        display: flex;
-        justify-content: center;
-        margin: 10px 0;
-        gap: 10px; /* 버튼 간격 */
-    }
-
-    .point-button {
-        padding: 12px;
-        width: 100px; /* 버튼 너비 */
-        font-size: 16px;
-        color: #fff;
-        background-color: #007bff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .point-button:hover {
-        background-color: #0056b3;
-    }
-
-    .point-button:active {
-        background-color: #003f7f;
-    }
-
-    .cancel-btn {
-        background-color: #dc3545;
-    }
-
-    .cancel-btn:hover {
-        background-color: #c82333;
-    }
-
-    .cancel-btn:active {
-        background-color: #a71d2a;
-    }
-</style>
 <script>
-    $(document).ready(function() {
-
+    $(document).ready(function () {
         var IMP = window.IMP;
-        IMP.init("imp38808434");// 가맹점 식별코드로 초기화
-
+        IMP.init("imp38808434");
     });
 
     function requestPay(amount) {
-
         const userEmail = '[[${user.email}]]';
-        const userId= '[[${user.id}]]';
-        IMP.init("imp38808434");
+        const userId = '[[${user.id}]]';
+
         IMP.request_pay(
             {
                 pg: 'html5_inicis',
                 name: "FITIZEN POINT",
-                amount: amount,
-                buyer_email:userEmail,
-                buyer_name:userId
-
+                amount: amount+(amount*0.15),
+                buyer_email: userEmail,
+                buyer_name: userId
             },
             function (rsp) {
                 console.log(rsp);
-                $.ajax({
-                    type: 'POST',
-                    url: '/verify/' + rsp.imp_uid
-                }).done(function(data) {
-                    console.log(data);
-                    if (rsp.paid_amount === data.response.amount) {
-                        //alert("imp_uid: " + data.impUid + " merchant_uid(orderKey) :" + data.merchantUid);
-                        console.log("결제 및 결제검증완료")
-                        // 결제 검증 성공 후, 추가 데이터 전송
-                        $.ajax({
-                            type: 'POST',
-                            url: '/savePayment',
-                            contentType: 'application/json',
-                            data: JSON.stringify({
-                                userId: userId,
-                                userEmail: userEmail,
-                                amount: rsp.paid_amount,
-                                impUid: rsp.imp_uid,
-                                merchantUid: rsp.merchant_uid,
-                                paidAt:data.paidAt
-
-                            }),
-                            dataType: 'json',
-                            success: function(success) {
-                                alert("결제 완료")
-                                console.log("결제 정보 저장 성공",success);
-                            },
-                            error: function(xhr, status, error) {
-                                console.error("결제 정보 저장 실패", error);
-                            }
-                        });
-                    } else {
-                        alert("결제 실패");
-                    }
-                });
-            });
+                if (rsp.success) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/verify/' + rsp.imp_uid,
+                        success: function (data) {
+                            alert("결제 완료!");
+                            location.reload();
+                        },
+                        error: function () {
+                            alert("결제 검증 실패");
+                        }
+                    });
+                } else {
+                    alert("결제 실패: " + rsp.error_msg);
+                }
+            }
+        );
     }
 
-    function cancelPay() {
-        jQuery.ajax({
-            url: "/cancel",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-                merchant_uid:"",
-                imp_uid:"imp_225364953329",
-                cancel_request_amount:0,
-                reason: "테스트 결제 환불"
-            }),
-            dataType: "json",
-            success: function(response) {
-                console.log("환불 성공", response);
+    function loadPayments(categoryId) {
+        $.ajax({
+            type: 'GET',
+            url: '/getMyPaymentsData',
+            data: { categoryId: categoryId },
+            success: function (response) {
+                const paymentRows = [];
+                const headerRow = $('#payment-header'); // 헤더 영역
+                const paymentRowsContainer = $('#payment-rows'); // 데이터 영역
+                let totalAmount = 0; // 합산 금액 초기화
+
+                paymentRowsContainer.empty(); // 기존 데이터 초기화
+
+                if (categoryId === 2) { // 충전 내역
+                    $('#payments-title').text('충전 내역');
+                    $('#total-label').text('결제 금액 합산:'); // 합산 금액 라벨 변경
+                    headerRow.html(`
+                    <div class="payment-item"><strong>결제 번호</strong></div>
+                    <div class="payment-item"><strong>결제 금액</strong></div>
+                    <div class="payment-item"><strong>날짜</strong></div>
+                `);
+
+                    if (response.payments.length > 0) {
+                        response.payments.forEach(payment => {
+                            totalAmount += payment.paid_amount; // 합산
+                            paymentRows.push(`
+                            <div class="payment-row">
+                                <div class="payment-item">${payment.merchantUid}</div>
+                                <div class="payment-item amount">${payment.paid_amount.toLocaleString()} 원</div>
+                                <div class="payment-item date">${new Date(payment.paidAt).toLocaleString()}</div>
+                            </div>`);
+                        });
+                    } else {
+                        paymentRows.push('<div class="no-data-message">충전 내역이 없습니다.</div>');
+                    }
+                } else if (categoryId === 3) { // 사용 내역
+                    $('#payments-title').text('사용 내역');
+                    $('#total-label').text('사용 포인트 합산:'); // 합산 금액 라벨 변경
+                    headerRow.html(`
+                    <div class="payment-item"><strong>사용 금액</strong></div>
+                    <div class="payment-item"><strong>사용 날짜</strong></div>
+                    <div class="payment-item"><strong> - </strong></div>
+                `);
+
+                    if (response.spendingPoints.length > 0) {
+                        response.spendingPoints.forEach(spending => {
+                            totalAmount += spending.spendingPoint; // 합산
+                            paymentRows.push(`
+                            <div class="payment-row">
+                                <div class="payment-item amount">${spending.spendingPoint.toLocaleString()} P</div>
+                                <div class="payment-item date">${new Date(spending.spentAt).toLocaleString()}</div>
+                                <div class="payment-item date">-</div>
+                            </div>`);
+                        });
+                    } else {
+                        paymentRows.push('<div class="no-data-message">사용 내역이 없습니다.</div>');
+                    }
+                }
+
+                paymentRowsContainer.append(paymentRows.join(''));
+
+                // 합산 금액 표시 (우측 정렬된 영역 업데이트)
+                $('#total-amount').html(`${totalAmount.toLocaleString()} `);
             },
-            error: function(xhr, status, error) {
-                console.error("환불 실패", error);
+            error: function () {
+                alert('내역을 불러오는 데 실패했습니다.');
             }
         });
     }
+
+    $(document).ready(function () {
+        // 기본 충전 내역 표시
+        loadPayments(2);
+
+        // 상단 탭 클릭 이벤트
+        $('.menu-container button').on('click', function () {
+            const categoryId = $(this).data('category-id');
+            $('.menu-container button').removeClass('active');
+            $(this).addClass('active');
+            loadPayments(categoryId);
+        });
+    });
+
+
 </script>
+</body>
 </html>
