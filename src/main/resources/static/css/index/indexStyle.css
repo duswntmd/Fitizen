@@ -122,11 +122,16 @@ footer {
     margin: 0 auto; /* 가운데 정렬 */
     border-collapse: collapse; /* 셀 간격 제거 */
     color: white; /* 테이블 텍스트 색상 */
+    border: none; /* 테이블의 경계선 제거 */
+
 }
 
 .footer-table td {
     padding: 10px; /* 셀 내부 간격 추가 */
     text-align: center; /* 텍스트 중앙 정렬 */
+    background-color: #1C1C3C;
+    border: none; /* 테이블의 경계선 제거 */
+
 }
 
 footer a{

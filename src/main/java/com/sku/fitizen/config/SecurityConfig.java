@@ -92,7 +92,7 @@ public class SecurityConfig {
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                         .requestMatchers("/", "/favicon.ico", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
                                 "/findME", "findResult", "/exerciseDetail/**",
-                                "/ShopImage/**", "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**",
+                                "/ShopImage/**", "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**", "/static/**",
                                 "/mail/**","favicon.ico", "/video_storage/**",
                                 "/ai/chatBot/**", "/shop/**","/ai/predict_result","/ai/predict_exercise","/ai/aiResult",
                                 "/trainer/**","/challenge","/challenge/detail/*","/challenge/search","/proofShot/*","/challenge/detail/*"
