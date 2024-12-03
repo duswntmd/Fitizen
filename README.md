@@ -1,32 +1,8 @@
-<div align="center">
-
-| **연주승** | **정재호** | **박성재** | 
-| :------: |  :------: | :------: | 
-| [<img src="https://github.com/user-attachments/assets/aaa23a35-67f2-456f-8c05-9bd8246ff60f" height=150 width=150> <br/> @duswntmd](https://github.com/duswntmd) |[<img src="https://github.com/user-attachments/assets/aaa23a35-67f2-456f-8c05-9bd8246ff60f" height=150 width=150> <br/> @JaehoHoya](https://github.com/JaehoHoya) |[<img src="[[https://github.com/user-attachments/assets/23b20910-100c-4646-8420-99b016ce8b54](https://github.com/user-attachments/assets/aaa23a35-67f2-456f-8c05-9bd8246ff60f)](https://github.com/user-attachments/assets/aaa23a35-67f2-456f-8c05-9bd8246ff60f)" height=150 width=150> <br/> @psjae98](https://github.com/psjae98) | 
-</div>
-
-# 프로젝트 개요
-# 기술 스택
-
-# 기술 소개
-# API 명세서
-
-<div align="center">
-  <h1 style="font-size: 2.5em; font-weight: bold;">🏋️ Fitizen</h1>
-  <p style="font-style: italic;">초보자를 위한 운동 웹사이트</p>
-  <p>
-    운동 루틴부터 식단 계획, <br>
-    그리고 운동 방법까지, <br>
-    초보자도 쉽게 따라할 수 있는 맞춤 정보를 제공합니다.
-  </p>
-</div>
-
-
 ## 목차 
 <details><summary>목차
 </summary>
-
-1. [Well-Fit 소개](#1-well-fit-소개)
+  
+1. [FITIZEN 소개](#1-FITIZEN-소개)
 2. [팀원 소개](#2-팀원-소개)
 3. [개발 기간](#3-개발-기간)
 4. [개발 환경 및 기술 스택](#4-개발-환경-및-기술-스택)
@@ -38,6 +14,28 @@
 10. [Refactoring 계획](#10-refactoring-계획)
 11. [느낀점](#11-느낀점)
 </details>
+
+
+## 1.🏋️ FITIZEN
+<img width="1705" alt="스크린샷 2024-12-03 오후 7 02 23" src="https://github.com/user-attachments/assets/4bcf76c8-cc43-4977-abb2-ddcf9f907d70">
+
+  <p>초보자를 위한 운동 웹사이트</p>
+  <p>
+    운동 루틴부터 식단 계획, <br>
+    그리고 운동 방법까지, <br>
+    초보자도 쉽게 따라할 수 있는 맞춤 정보를 제공합니다.임시 문구임
+  </p>
+
+## 2. 팀원 소개
+
+|연주승|정재호|박성재|
+|:---:|:---:|:---:|
+|[<img alt="연주승 프로필" src="https://github.com/user-attachments/assets/9d38466d-4fbf-42b0-a702-dff8bc411ff5" width="200" height="200"> <br/> @duswntmd](https://github.com/duswntmd)|[<img alt="정재호 프로필" src="https://github.com/user-attachments/assets/9d38466d-4fbf-42b0-a702-dff8bc411ff5" width="200" height="200"> <br/> @JaehoHoya](https://github.com/JaehoHoya)|[<img alt="박성재 프로필" src="https://github.com/user-attachments/assets/9d38466d-4fbf-42b0-a702-dff8bc411ff5" img width="200" height="200"> <br/> @psjae98](https://github.com/psjae98)|
+| - 프로젝트 관리 <br> - 예시 <br> - 예시  <br> - 예시 <br> - 예시 <br> - 별명 | - GitHub 관리  <br> - 리드미 위키 프로젝트 <br> - 예시  <br> - 별명| -예시 <br> - 예시 <br> - 예시 <br> - 예시 <br> -별명 |
+| <img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"> <br/> | <img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white">  | <img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"> |
+
+<br>
+
 
 ---
 ## 1.📱 Well-Fit 소개
@@ -53,7 +51,6 @@
 <br>
 
 
-
 > ### [🚀 배포 URL](https://well-fit-20.netlify.app/)
 
 ```
@@ -61,26 +58,11 @@
 ID: wellfit20@test.com
 PW: wellfit12!@
 ```
-
-
-## 2. 팀원 소개
-<div align="center">
-  
-|FE 연주승|FE 정재호|FE 박성재|
-|:---:|:---:|:---:|
-|<img alt="민재 프로필" src="https://github.com/user-attachments/assets/9d38466d-4fbf-42b0-a702-dff8bc411ff5" width="200" height="200">|<img width="200" height="200" alt="성우프로필" src="https://github.com/user-attachments/assets/9d38466d-4fbf-42b0-a702-dff8bc411ff5">|<img width="200" height="200" alt="예슬프로필" src="https://github.com/user-attachments/assets/9d38466d-4fbf-42b0-a702-dff8bc411ff5">|
-| - 프로젝트 관리 <br> - 예시 <br> - 예시  <br> - 예시 <br> - 예시 <br> - 별명 | - GitHub 관리  <br> - 리드미 위키 프로젝트 <br> - 예시  <br> - 별명| -예시 <br> - 예시 <br> - 예시 <br> - 예시 <br> -별명 |
-| <img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"><br /><img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"> | <img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"><br /><img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"> | <img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"><br /><img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white">|
-
-</div>
-<br>
-
 ### 😁 팀 목표
  - 열심히 운동하면서 작업하기
  - 건강하게 개발하기
  - 모든 구성원들이 운동을 좋아하기 때문에 저희가 만든 서비스를 실제로 사용하자
-
-
+ - 
 <br>
 
 
