@@ -1,4 +1,5 @@
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,7 +20,7 @@
     챌린지<span> 참여자</span>들의 인증샷!
     <div class="button-group" th:if="${!readOnly}">
         <a th:href="@{'/proofShot/addProofShotForm/'+${id}}"><button class="upload-btn">인증 사진 올리기</button></a>
-        <a th:href="@{'/proofShot/addProofShotForm/'+${id}}"><button class="upload-btn">내 인증 사진 </button></a>
+        <!--<a th:href="@{'/proofShot/addProofShotForm/'+${id}}"><button class="upload-btn">내 인증 사진 </button></a>-->
     </div>
 </div>
 <main class="container wrap">
@@ -28,7 +29,7 @@
         <!--my profile-->
         <div class="my_profile">
             <a href="#n" class="profile_img">
-                <img alt="User profile image" class="round_img"/>
+                <img src="/Assets/DefaultProfileImage.png" class="round_img"/>
             </a>
 
             <div th:if="${user != null}" class="my_id">
@@ -50,10 +51,11 @@
             <section class="list_story" >
                 <div class="story"  th:each="userId : ${userIds}">
                     <a href="#n" class="follower_img">
-                        <img alt="follower profile image" class="round_img"/>
+                        <img src="/Assets/DefaultProfileImage.png" class="round_img"/>
                     </a>
                     <span class="user_id">
                             <a href="#n" class="txt_id"  th:text="${userId}"></a>
+                            <p>아이디</p>
                         </span>
                 </div>
             </section>
@@ -61,48 +63,49 @@
 
 
 
-    <!--WIDGET - recommend-->
+    <!--WIDGET - recommend
     <article class="widget recommends">
         <div class="widget_ttl">
-            <span>임시 css</span>
-            <a href="#n">임시 css</a>
+            <span>달성자 TOP3</span>
+            <a href="#n">달성도</a>
         </div>
 
         <section class="list_recommend">
             <div class="recommend">
                 <a href="#n" class="recommend_img">
-                    <img alt="follower profile image" class="round_img" />
+                    <img src="/Assets/DefaultProfileImage.png" class="round_img" />
                 </a>
                 <span class="user_id">
                             <a href="#n" class="txt_id">김민지</a>
-                            <p>follwor list</p>
+                            <p>아이디</p>
                         </span>
-                <button type="button">팔로우</button>
+                <button type="button">82%</button>
             </div>
             <div class="recommend">
                 <a href="#n" class="recommend_img">
-                    <img alt="follower profile image" class="round_img" />
+                    <img src="/Assets/DefaultProfileImage.png" class="round_img" />
                 </a>
                 <span class="user_id">
                             <a href="#n" class="txt_id">하예성</a>
-                            <p>follwor list</p>
+                            <p>아이디</p>
                         </span>
-                <button type="button">팔로우</button>
+                <button type="button">80%</button>
             </div>
             <div class="recommend">
                 <a href="#n" class="recommend_img">
-                    <img alt="follower profile image" class="round_img" />
+                    <img src="/Assets/DefaultProfileImage.png" class="round_img" />
                 </a>
                 <span class="user_id">
                             <a href="#n" class="txt_id">김진</a>
-                            <p>follwor list</p>
+                            <p>아이디</p>
                         </span>
-                <button type="button">팔로우</button>
+                <button type="button">75%</button>
             </div>
         </section>
     </article>
-
+    -->
     </aside>
+
     <!--FEED BOARD-->
     <div class="feed_board">
 
@@ -110,11 +113,10 @@
             <!--top-->
             <div class="new_poster">
                 <div class="poster_img">
-                    <img alt="follower profile image" class="round_img"/>
+                    <img src="/Assets/DefaultProfileImage.png" class="round_img"/>
                 </div>
                 <a href="#n" class="poster_id txt_id">관리자</a>
                 <!-- <button><i class="fas fa-ellipsis-h"></i>옵션 더보기</button> -->
-                <i class="fa fa-trash" ></i>
             </div>
 
             <!--content-->
@@ -126,8 +128,10 @@
                 <div class="interactions">
                     <div class="my_emotion">
                         <!--위에서 cdn을 링크로 삽입해서 여기서 클래스명으로 가져오면 사용할 수 있다.-->
+                        <!--
                         <button type="button"><i class="far fa-heart"></i>like</button></span>
                         <button type="button"><i class="far fa-paper-plane"></i>send_DM</button></span>
+                        -->
                     </div>
                     <div class="pagnation"></div>
 
@@ -150,11 +154,13 @@
             <!--top-->
             <div class="new_poster">
                 <div class="poster_img">
-                    <img alt="follower profile image" class="round_img"/>
+                    <img src="/Assets/DefaultProfileImage.png" class="round_img"/>
                 </div>
                 <a href="#n" class="poster_id txt_id">[[${p.userId}]]</a>
-                <!-- <button><i class="fas fa-ellipsis-h"></i>옵션 더보기</button> -->
-                <i class="fa fa-trash" ></i>
+                <div th:if="${user != null && user.getId() == p.userId}">
+                    <i class="fa fa-trash" style="cursor: pointer;"
+                       th:onclick="|deletePost(${p.proofNum})|"></i>
+                </div>
             </div>
 
             <!--content-->
@@ -166,11 +172,13 @@
                 <div class="interactions">
                     <div class="my_emotion">
                         <!--위에서 cdn을 링크로 삽입해서 여기서 클래스명으로 가져오면 사용할 수 있다.-->
+                        <!--
                         <button type="button"><i class="far fa-heart"></i>like</button></span>
                         <button type="button"><i class="far fa-paper-plane"></i>send_DM</button></span>
+                        -->
                     </div>
                     <div class="pagnation"></div>
-                    <div th:if="${!readOnly} and (${user.id} != ${p.userId})">
+                    <div sec:authorize="hasRole('ADMIN')">
                         <button type="button" th:onclick="|verifyProof(${p.proofNum},${p.challengeId})|">
                             <i class="far fa-check-square"></i>&nbsp;<span style="color: #0095f6; font-size: 13px;">인증해주기</span>
                         </button>
@@ -187,34 +195,40 @@
 
             </section>
 
-
-            <!--comment-->
-            <div class="comments" >
-                <div id="listComment" class="list_comment" th:each="c : ${p.commentList}">
+            <div class="comments">
+                <div id="listComment" class="list_comment" th:each="c : ${p.commentList}" th:data-id="${c.proofCommentId}">
                     <div class="txt_comment">
-                            <span>
-                                <a href="#n" class="txt_id">[[${c.author}]]</a>
-                                <span>[[${c.proofComment}]]</span>
-                            </span>
+            <span>
+                <a href="#n" class="txt_id">[[${c.author}]]</a>
+                <span th:text="${c.proofComment}">댓글 내용</span>
+            </span>
                         <div th:if="${user != null && user.getId() == c.author}">
-                            <button type="button" th:onclick="|editComment(${c.proofCommentId})|">수정</button>
-                            <button type="button" th:onclick="|deleteComment(${c.proofCommentId})|">삭제</button>
+                            <button type="button" class="edit-btn" th:onclick="|startEditComment(${c.proofCommentId})|">수정</button>
+                            <button type="button" class="delete-btn" th:onclick="|deleteComment(${c.proofCommentId})|">삭제</button>
                         </div>
                     </div>
+                    <div class="edit_comment" style="display:none;">
+                        <input type="text" name="editedComment" th:value="${c.proofComment}" th:id="'editedCommentInput' + ${c.proofCommentId}" />
+                        <button type="button" th:onclick="|saveEditedComment(${c.proofCommentId})|">수정하기</button>
+                        <button type="button" th:onclick="|cancelEditComment(${c.proofCommentId})|">취소</button>
+                    </div>
+
                 </div>
+                <!-- 댓글 작성 폼 -->
                 <div th:if="${user != null} AND ${!readOnly}">
-                <form th:id="${p.proofNum}" class="post_comment">
-                    <input type="hidden" name="proofNo" th:value="${p.proofNum}">
-                    <input type="hidden" name="author" th:value="${user.getId()}">
-                    <input type="hidden" name="challId" th:value="${p.challengeId}">
-                    <textarea name="proofComment" placeholder="댓글을 작성하세요..."></textarea>
-                    <button class="comment-btn" type="button" th:onclick="|saveComment(${p.proofNum})|">댓글 등록</button>
-                </form>
+                    <form id="post_comment_form" th:id="${p.proofNum}" class="post_comment">
+                        <input type="hidden" name="proofNo" th:value="${p.proofNum}">
+                        <input type="hidden" name="author" th:value="${user.getId()}">
+                        <input type="hidden" name="challId" th:value="${p.challengeId}">
+                        <textarea name="proofComment" placeholder="댓글을 작성하세요..."></textarea>
+                        <button class="comment-btn" type="button" th:onclick="|saveComment(${p.proofNum})|">댓글 등록</button>
+                    </form>
                 </div>
             </div>
 
+
         </article>
-    </div>
+
     <!--//FEED BOARD-->
     <!-- 모달 -->
     <div id="myModal" class="modal">
@@ -228,6 +242,27 @@
 <th:block th:replace="~{th/footer :: footer}"></th:block>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
+    function deletePost(proofNum) {
+        if (confirm("정말로 이 게시물을 삭제하시겠습니까?")) {
+            $.ajax({
+                url: '/proofShot/deletePost/' + proofNum,  // proofNum을 경로에 포함
+                type: 'GET',  // HTTP 메소드 (DELETE로 요청)
+                success: function(response) {
+                    if (response.success) {
+                        alert('게시물이 삭제되었습니다.');
+                       location.reload();
+                    } else {
+                        alert('게시물 삭제에 실패했습니다.');
+                    }
+                },
+                error: function() {
+                    alert('서버와의 통신에 실패했습니다.');
+                }
+            });
+        }
+    }
+
 
 
 
@@ -312,6 +347,56 @@
             },
             error: function(xhr, status, error) {
                 alert('에러 발생: ' + error);
+            }
+        });
+    }
+
+
+    function startEditComment(commentId) {
+        const comment = $(`[data-id="${commentId}"]`);
+        comment.find('.txt_comment').hide(); // 원래 댓글 숨기기
+        comment.find('.edit_comment').show(); // 수정 폼 표시
+    }
+
+    function cancelEditComment(commentId) {
+        const comment = $(`[data-id="${commentId}"]`);
+        comment.find('.edit_comment').hide(); // 수정 폼 숨기기
+        comment.find('.txt_comment').show(); // 원래 댓글 다시 표시
+    }
+    function saveEditedComment(commentId) {
+        const input = document.getElementById(`editedCommentInput${commentId}`);
+
+        if (!input) {
+            alert(`수정할 댓글 입력 필드를 찾을 수 없습니다. commentId: ${commentId}`);
+            return;
+        }
+
+        const editedValue = input.value.trim();
+
+        if (editedValue === "") {
+            alert("댓글 내용을 입력하세요.");
+            return;
+        }
+
+        // 디버깅 로그 추가
+        console.log("Editing commentId:", commentId, "Value:", editedValue);
+
+        $.ajax({
+            url: `/proofComment/editComment/${commentId}`,
+            method: 'POST',
+            data: { proofComment: editedValue },
+            success: function (res) {
+                console.log("Response:", res); // 응답 확인
+                if (res.success) {
+                    alert('댓글이 수정되었습니다.');
+                    location.reload(); // 새로고침 대신 동적으로 업데이트 가능
+                } else {
+                    alert('댓글 수정에 실패했습니다.');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+                alert('오류가 발생했습니다.');
             }
         });
     }

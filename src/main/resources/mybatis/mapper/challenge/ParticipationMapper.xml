@@ -38,6 +38,12 @@
         WHERE userId=#{userId}
     </select>
 
+
+    <!--유저 챌린지 참여 취소-->
+    <delete id="cancelChallenge" parameterType="com.sku.fitizen.domain.challenge.Participation">
+        delete FROM PARTICIPATION WHERE CHALLENGEID=#{challengeId} AND USERID=#{userId}
+    </delete>
+
 </mapper>
 
 

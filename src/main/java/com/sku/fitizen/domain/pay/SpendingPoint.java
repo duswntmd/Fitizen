@@ -16,11 +16,14 @@ public class SpendingPoint {
    private String userId;
    private int spendingPoint;
    private Date spentAt;
+   private int status;
+   private String detail;
 
-
-   public SpendingPoint(String userId, int spendingPoint) {
+   public SpendingPoint(String userId, int spendingPoint, int status, String detail) {
       this.userId = userId;
       this.spendingPoint = spendingPoint;
+      this.status = status;
+      this.detail = detail;
    }
 }
 

@@ -102,5 +102,10 @@ public class ProofShotBoardService {
         return  false;
     }
 
+    //게시판 삭제
+    public boolean deleteProofShot(int proofNum)
+    {
+        return mapper.deleteProofShot(proofNum)>0;
+    }
 
 }

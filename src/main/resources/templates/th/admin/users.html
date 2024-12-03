@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+전체 유저 목록
+<div class="category-buttons">
+    <form action="../challenge/search" method="GET" onsubmit="saveScrollPosition()">
+        <input type="radio" id="title" name="searchType" value="title" checked>
+        <label for="title">유저아이디</label>
+
+        <input type="radio" id="creatorId" name="searchType" value="creatorId">
+        <label for="creatorId">유저이름</label>
+
+        <input type="radio" id="content" name="searchType" value="content">
+        <label for="content">유형</label>
+
+        <input type="text" name="keyword" placeholder="검색어 입력">
+        <button class="category-button"  type="submit">검색</button>
+        영구 정지
+    </form>
+</div>
+</body>
+</html>

@@ -4,6 +4,8 @@ import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.AccessToken;
 import com.sku.fitizen.Dto.orderProductDTO;
+import com.sku.fitizen.domain.User;
+import com.sku.fitizen.domain.challenge.Rewards;
 import com.sku.fitizen.domain.pay.Payment;
 import com.sku.fitizen.domain.pay.SpendingPoint;
 import com.sku.fitizen.domain.store.CartItem;
@@ -18,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -48,8 +51,9 @@ public class PaymentService {
     @Transactional
     public  boolean saveOrderPayment (orderProductDTO dto)
     {
+
         // 결제 정보  오더 테이블, 주문 상품들 테이블 , 장바구니 제거 3젝션
-        // System.out.println(dto);
+
         paymentMapper.insertOrder(dto);
         int orderId =dto.getOrderId();
         // orderProduct 테이블에 저장
@@ -63,6 +67,7 @@ public class PaymentService {
                 cartItem.setUser_id(dto.getUserId());
                 cartMapper.deleteCartItemsByUserId(cartItem); // 장바구니 항목 삭제
             });
+            paymentMapper.saveSpendingPoint(new SpendingPoint(dto.getUserId(),dto.getAppliedPoints(),0,"상점결제"));
             return true;
         }
 
@@ -78,16 +83,16 @@ public class PaymentService {
 
         if(result == 1) return true;
         return  false;
+
     }
     // 결제 기록 불러오기
     public List<Payment> getPaymentList(String userId) {return paymentMapper.getPaymentList(userId);}
     // 포인트 사용 내역 불러오기
     public List<SpendingPoint> getSpendingPointList(String userId) {return paymentMapper.getSpendingPointList(userId);}
     // 잔액 포인트 불러오기
-    public  int  getBalanceBYUserId(String userId)
-    {
-        return paymentMapper.getBalanceByUserId(userId);
-    }
+    public  int  getBalanceBYUserId(String userId) {return paymentMapper.getBalanceByUserId(userId);}
+    // 지급된 포인트 내역
+    public  List<Rewards> myRewards(String userId){return paymentMapper.myRewards(userId);}
 
     // 유저 결제 상품 목록
     public List<Order> getOrderProductsByUserId(String userId, int no){ return paymentMapper.getOrderProductsByUserId(userId ,no);}
@@ -107,7 +112,7 @@ public class PaymentService {
 
 
     // 결제 취소 요청 메서드
-    public Map<String, Object> cancelPayment(String token,String impUid, String merchantUid, int cancelAmount, String reason) {
+    public Map<String, Object> cancelPayment(User user, int usePoint, String token, String impUid, String merchantUid, int cancelAmount, String reason) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token); // 발급받은 토큰을 헤더에 추가
@@ -131,6 +136,8 @@ public class PaymentService {
         if (code ==0)
         {
             paymentMapper.cancelOrder(impUid,merchantUid);
+            paymentMapper.saveSpendingPoint(new SpendingPoint(user.getId(),usePoint,1,"상점 결제포인트"));
+
         }
 
         return response.getBody(); // 응답 데이터를 반환

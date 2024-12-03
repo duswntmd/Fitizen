@@ -19,32 +19,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChallengeScheduler {
 
-    @Value("${challenge.points.award}")
-    private int pointsToAward;
-
-
     private static final Logger log = LoggerFactory.getLogger(ChallengeScheduler.class);
     private  final ChallengeService challengeService;
-    private final UserService userService;
-    private final ProofShotBoardService boardService;
-    private final ParticipationService participationService;
 
-
-
-    @Scheduled(cron = "0 23 18 * * ?")
+    @Scheduled(cron = "0 38 13 * * ?")
     public  void test()
     {
-        log.info("스케줄러 포인트 지급 시작!");
-        List<Integer> endedChallengeIds =challengeService.getChallengesEndingToday();
-        for (Integer challengeId : endedChallengeIds) {
-            // 해당 챌린지에 참여한 사용자 목록을 가져옵니다.
-            List<String> userIds = participationService.getUserIdsByChallengeId(challengeId);
-
-            // 각 사용자에게 포인트를 지급합니다.
-            for (String userId : userIds) {
-                userService.addPointsToUser(userId,pointsToAward);
-
-            }
-        }
+        System.err.println(" 포인트 자급 로직 시작");
+        challengeService.challengeScheduler();
     }
 }

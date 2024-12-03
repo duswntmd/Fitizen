@@ -6,14 +6,69 @@
     <title>트레이너 정보</title>
     <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
     <style>
+        /* 모달 스타일 */
+        .modal {
+            display: none; /* 기본적으로 숨김 */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* 반투명 배경 */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff; /* 모달 배경 색 */
+            padding: 15px; /* 패딩 */
+            border: 1px solid #888;
+            border-radius: 8px; /* 모서리 둥글게 */
+            width: 80%; /* 모달 너비 조정 (작게) */
+            max-width: 500px; /* 최대 너비 설정 */
+            max-height: 80%; /* 최대 높이 설정 */
+            overflow: auto; /* 내용이 넘칠 경우 스크롤 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative; /* 닫기 버튼을 위해 상대 위치 설정 */
+        }
+
+        .modal img {
+            width: 100%; /* 모달 내 이미지 크기 조정 */
+            height: auto; /* 비율 유지 */
+        }
+
+        .close {
+            position: absolute;
+            top: 10px; /* 위쪽 여백 */
+            right: 15px; /* 오른쪽 여백 */
+            color: #fff; /* 글자 색을 흰색으로 */
+            font-size: 30px; /* 버튼 크기 */
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.5); /* 배경을 반투명하게 */
+            border-radius: 50%; /* 원형 버튼 */
+            width: 40px; /* 버튼 너비 */
+            height: 40px; /* 버튼 높이 */
+            display: flex; /* 중앙 정렬을 위해 flex 사용 */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .close:hover {
+            background-color: rgba(0, 0, 0, 0.7); /* 호버 시 색상 변화 */
+        }
+
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f9f9f9;
         }
+        .banner-highlight {
+            color: #007bff;
+        }
 
-        /* 챌린지 문구 스타일 */
         .trainer-banner {
             width: 100%;
             padding: 20px 0;
@@ -41,18 +96,43 @@
             background-size: cover; /* 이미지가 박스를 가득 채우도록 */
             background-position: center; /* 이미지를 가운데 정렬 */
         }
-
-        .profile-image {
+        .profile-image-container {
             position: absolute;
-            bottom: -60px; /* 배경 아래로 살짝 내려오도록 */
+            bottom: -60px; /* 프로필 이미지 위치 */
             left: 50%;
             transform: translateX(-50%);
             width: 120px;
             height: 120px;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 5px solid #fff; /* 이미지 주변에 흰색 테두리 */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+            border: 5px solid #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2; /* hover-text보다 앞에 표시 */
+        }
+
+        .hover-text {
+            display: none; /* 기본적으로 숨김 */
+            position: absolute;
+            top: 100px; /* 프로필 이미지 바로 아래 */
+            left: 65px;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+            z-index: 100;
+        }
+
+        .profile-image-container:hover .hover-text {
+            display: block; /* 마우스 호버 시 표시 */
         }
 
         .trainer-content {
@@ -67,17 +147,66 @@
             color: #333;
         }
 
+
+
         .trainer-info {
-            font-size: 16px;
-            color: #555;
-            line-height: 1.6;
             margin-top: 20px;
-            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* 항목 간의 간격 */
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
         }
 
-        .trainer-info p {
-            margin: 10px 0;
+        .trainer-info-item {
+            font-size: 18px;
+            font-weight: normal;
+            color: #333;
+            display: flex;
+            align-items: center;
         }
+
+        .trainer-info-item strong {
+            color: #333; /* 제목 강조색 */
+            font-weight: bold;
+            margin-right: 10px;
+            width: 100px; /* 고정 너비로 정렬을 맞춤 */
+        }
+
+        .trainer-info-item span {
+            color: #555; /* 설명 텍스트 색상 */
+            font-weight: normal;
+            flex-grow: 1; /* 남은 공간을 차지 */
+            text-align: left;
+            border-bottom: 1px dashed #ccc; /* 하단 점선으로 구분 */
+            padding-bottom: 3px;
+        }
+
+
+        .highlight-section-container {
+            position: relative; /* 부모 컨테이너를 기준으로 자식 요소 위치 조정 */
+            margin-top: 30px;
+        }
+
+            .highlight-section-title {
+                position: absolute;
+                top: -15px; /* 타이틀 위치 조정 */
+                left: 50%; /* 중앙 정렬 */
+                transform: translateX(-50%); /* 중앙 정렬 */
+
+                padding: 5px 20px; /* 더 넉넉한 좌우 여백 */
+                font-size: 20px; /* 텍스트 크기 조금 키움 */
+                font-weight: bold; /* 텍스트 굵기 */
+                color: #ffffff; /* 텍스트 색상 */
+                background: linear-gradient(90deg, #6c757d, #495057); /* 그라데이션 배경 */
+                border: none; /* 테두리 제거 */
+                border-radius: 20px; /* 더 둥근 모서리 */
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* 더 부드러운 그림자 */
+                text-transform: uppercase; /* 텍스트 대문자로 */
+                white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+            }
+
+
 
         .highlight-section {
             background-color: #f0f4f8;
@@ -91,9 +220,7 @@
 
         }
 
-        .highlight-section p {
-            margin: 10px 0;
-        }
+
 
         .pt-button {
             display: block;
@@ -121,39 +248,99 @@
     <th:block th:replace="~{th/header :: header}"></th:block>
 </div>
 <div class="trainer-banner">
-    FITIZEN이 인증한  투명성있는 진짜 경력직 트레이너!<br>
-    물경력 트레이너는 이제 NO!NO!
-</div>
+    무료 상담을 통해<span class="banner-highlight">트레이너</span>, <span class="banner-highlight">식단</span>, <span class="banner-highlight">운동방법</span>, <span class="banner-highlight">헬스장 정보</span>를 얻어가세요!</div>
 <div class="container">
     <!-- 배경 영역 -->
     <div class="header-background" th:style="'background-image: url(/files/trainer/backGroundImage/' + ${trainer.backGroundImage} + '); background-size: cover; background-position: center; background-repeat: no-repeat;'">
-        <img th:src="@{'/files/trainer/profileImage/'+${trainer.profileImage}}" alt="프로필 이미지" class="profile-image">
+        <div class="profile-image-container">
+            <img ondblclick="openModal(this.src)" th:src="@{'/files/trainer/profileImage/'+${trainer.profileImage}}" alt="프로필 이미지" class="profile-image">
+            <div class="hover-text">더블클릭 확대</div>
+        </div>
     </div>
+
     <!-- 트레이너 정보 -->
     <div class="trainer-content">
         <div class="trainer-name" th:text="${trainer.userName}">트레이너 이름</div>
 
         <div class="trainer-info">
-            <p>근무지: <span th:text="${trainer.workPlaceName}">근무지</span></p>
-            <p>위치: <span th:text="${trainer.location}">주소</span></p>
-            <p>경력: <span th:text="${trainer.workYears}">경력</span> 년</p>
+            <div class="trainer-info-item">
+                <strong>근무지</strong>
+                <span th:text="${trainer.workPlaceName}">서울 강남구</span>
+            </div>
+            <div class="trainer-info-item">
+                <strong>위치</strong>
+                <span th:text="${trainer.location}">테헤란로 123</span>
+            </div>
+            <div class="trainer-info-item">
+                <strong>경력</strong>
+                <span th:text="${trainer.workYears} + '년'">5년</span>
+            </div>
         </div>
 
-        <div class="highlight-section" th:text="${trainer.introduction}">
-
+        <div class="highlight-section-container">
+            <div class="highlight-section-title">소개</div>
+            <div class="highlight-section" th:text="${trainer.introduction}">
+            </div>
         </div>
-        <button class="pt-button" onclick="requestConsultation(${trainer.trainerNo})">상담 신청하기</button>
+
+
+    </div>
+
+    <button class="pt-button" th:onclick="|consultation(${trainer.trainerNo})|">상담 신청하기</button>
     </div>
 </div>
-
+<div th:if="${user !=null}">
+    <th:block th:replace="~{th/chatUsers :: chatUsers}"></th:block>
+</div>
 <div>
     <th:block th:replace="~{th/footer :: footer}"></th:block>
 </div>
 
+<!-- 모달 -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" src="" alt="큰 이미지">
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     function requestConsultation(trainerNo) {
         alert('트레이너 ' + trainerNo + '에게 상담 신청합니다.');
     }
+
+    function openModal(src) {
+        var modal = document.getElementById("myModal");
+        var modalImg = document.getElementById("modalImage");
+        modal.style.display = "flex"; // 모달 표시
+        modalImg.src = src; // 이미지 소스 설정
+    }
+
+    function closeModal() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "none"; // 모달 숨김
+    }
+
+    function consultation(trainerNo) {
+        $.ajax({
+            url: '/consultation/' + trainerNo,
+            method: 'GET',
+            cache: false,
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    alert("상담 신청 완료!");
+                    alert("마이페이지에서 상담 승인 여부를 확인해주세요!");
+                } else {
+                    alert(res.message);  // 서버에서 전달된 메시지 표시
+                }
+            },
+            error: function (xhr, status, err) {
+                alert("상담 신청 중 오류가 발생했습니다. 다시 시도해주세요.");
+            }
+        });
+    }
+
 </script>
 </body>
 </html>

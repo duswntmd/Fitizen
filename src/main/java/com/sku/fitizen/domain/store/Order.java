@@ -12,6 +12,7 @@ public class Order {
     private String merchantUid;
     private int totalPrice;
     private Date paidAt;
+    private int usePoint;
     private List<OrderProduct> orderProductList;
 
 }

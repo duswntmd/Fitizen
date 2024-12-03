@@ -91,6 +91,7 @@
 <script>
 
 
+
     $(document).ready(function() {
         var IMP = window.IMP;
         IMP.init("imp38808434");// 가맹점 식별코드로 초기화
@@ -98,6 +99,10 @@
 
 
     function requestPay() {
+
+
+        // 적용된 포인트 값을 콘솔에 출력
+        const appliedPoints = parseInt(document.getElementById("appliedPoints").textContent) || 0;
 
         if ($('input[name="selectedProductIds"]:checked').length === 0) {
             alert('결제할 상품을 선택하세요.');
@@ -157,7 +162,8 @@
                                 impUid: rsp.imp_uid,
                                 merchantUid: rsp.merchant_uid,
                                 paidAt: data.paidAt,
-                                orderProducts: selectedItems
+                                orderProducts: selectedItems,
+                                appliedPoints:appliedPoints
                             }),
                             dataType: 'json',
                             success: function(success) {
@@ -167,10 +173,12 @@
                             },
                             error: function(xhr, status, error) {
                                 console.error("결제 정보 저장 실패", error);
+                                location.reload();
                             }
                         });
                     } else {
                         alert("결제 실패");
+                        location.reload();
                     }
                 });
             });

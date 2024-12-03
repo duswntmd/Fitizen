@@ -12,7 +12,7 @@ public interface ProofCommentMapper {
     int addComment(ProofComment proofComment);
 
     //사진 인증 게시판 댓글 수정하기
-
+    int editComment(int proofCommentId, String proofComment);
     //사진 인증 게시판 댓글 삭제하기
     int deleteProofComment(int proofCommentId);
 }

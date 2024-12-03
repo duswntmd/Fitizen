@@ -42,6 +42,12 @@
         // 이미 적용된 포인트 가져오기
         const appliedPoints = parseInt(document.getElementById("appliedPoints").textContent) || 0;
 
+
+        // 최대 5000원까지만 사용 가능
+        if (usePoints > 5000) {
+            alert("포인트는 최대 5000원까지 사용 가능합니다.");
+            return;
+        }
         // 입력된 포인트가 사용 가능한 포인트를 초과하는 경우 처리
         if (usePoints > availablePoints) {
             alert("사용 가능한 포인트를 초과할 수 없습니다.");

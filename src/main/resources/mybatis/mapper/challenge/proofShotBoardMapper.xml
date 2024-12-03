@@ -45,9 +45,12 @@
     <insert id="verifyProofShot" parameterType="com.sku.fitizen.domain.challenge.PhotoVerification">
         INSERT INTO  PHOTOVERIFICATION (PROOFNUM, VERIFIERID, CHALLENGEID)
         VALUES (#{proofNum},#{verifierId},#{challengeId})
-
-
     </insert>
+
+    <!--등록된 인증게시판 삭제-->
+    <delete id="deleteProofShot" parameterType="int">
+        delete FROM PROOFSHOTBOARD WHERE PROOFNUM=#{proofNum}
+    </delete>
 
 </mapper>
 

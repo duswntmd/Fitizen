@@ -157,9 +157,7 @@
             letter-spacing: 0.5px; /* 글자 간격을 살짝 넓게 */
         }
 
-        .challenge-banner span {
-            color: #007bff;
-        }
+
 
         .category-buttons {
             display: flex;
@@ -261,8 +259,11 @@
         }
 
 
-        /* 챌린지 문구 스타일 */
-        .challenge-banner {
+        .banner-highlight {
+            color: #007bff;
+        }
+
+        .trainer-banner {
             width: 100%;
             padding: 20px 0;
             background-color: #f8f9fa;
@@ -363,6 +364,7 @@
         .trainer-buttons .btn.btn-info {
             background-color: #6c757d; /* 정보 보기 버튼 색상 */
             color: white;
+            text-decoration: none; /* 밑줄 제거 */
         }
 
         .trainer-buttons .btn.btn-info:hover {
@@ -378,8 +380,8 @@
 <div>
     <th:block th:replace="~{th/trainer/trainerCarousel :: trainerCarousel}"></th:block>
 </div>
-<div class="challenge-banner">
-    현직 트레이너
+<div class="trainer-banner">
+    지역별<span class="banner-highlight"> 트레이너 </span>검색
 </div>
 <div class="category-buttons">
 
@@ -415,6 +417,9 @@
             <a th:href="@{/trainer/detail/{trainerNo}(trainerNo=${trainer.trainerNo})}" class="btn btn-info">정보 보기</a>
         </div>
     </div>
+</div>
+<div th:if="${user !=null}">
+    <th:block th:replace="~{th/chatUsers :: chatUsers}"></th:block>
 </div>
 <div>
     <th:block th:replace="~{th/footer :: footer}"></th:block>

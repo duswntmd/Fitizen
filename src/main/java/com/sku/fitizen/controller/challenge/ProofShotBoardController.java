@@ -123,4 +123,25 @@ public class ProofShotBoardController {
 
     }
 
+    // 인증 게시판 삭제
+    @GetMapping("/deletePost/{proofNum}")
+    @ResponseBody
+    public Map<String, Object> deletePost(@PathVariable int proofNum) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            boolean isDeleted = service.deleteProofShot(proofNum);  // 서비스에서 삭제 처리
+            if (isDeleted) {
+                response.put("success", true);
+            } else {
+                response.put("success", false);
+            }
+        } catch (Exception e) {
+            response.put("success", false);
+        }
+
+        return response;
+    }
+
+
 }

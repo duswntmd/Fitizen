@@ -8,8 +8,8 @@
     <!--결제 정보저장(fitizen store)-->
 
     <insert id="insertOrder" parameterType="com.sku.fitizen.Dto.orderProductDTO" useGeneratedKeys="true" keyProperty="orderId" keyColumn="orderId">
-        INSERT INTO orders (ORDERID, USERID, IMPUID, MERCHANTUID, TOTALPRICE, PAIDAT)
-        VALUES (ORDER_SEQ.nextval, #{userId}, #{impUid}, #{merchantUid}, #{totalPrice}, SYSDATE)
+        INSERT INTO orders (ORDERID, USERID, IMPUID, MERCHANTUID, TOTALPRICE, PAIDAT ,USEPOINT)
+        VALUES (ORDER_SEQ.nextval, #{userId}, #{impUid}, #{merchantUid}, #{totalPrice}, SYSDATE,#{appliedPoints})
     </insert>
 
 
@@ -57,6 +57,7 @@
         <result property="spentAt" column="SPENTAT"/>
     </resultMap>
 
+
     <select id="getSpendingPointList" resultMap="SpendingPointResultMap">
         SELECT * FROM SPENDINGPOINT
         WHERE USERID = #{userId}
@@ -66,16 +67,32 @@
 
     <!--사용 포인트 기록 -->
     <select id="saveSpendingPoint" parameterType="com.sku.fitizen.domain.pay.SpendingPoint">
-        INSERT  INTO  SPENDINGPOINT VALUES (SPENT_SEQ.nextval,#{userId},#{spendingPoint},SYSDATE)
+        INSERT  INTO  SPENDINGPOINT VALUES (SPENT_SEQ.nextval,#{userId},#{spendingPoint},SYSDATE,#{status},#{detail})
     </select>
 
-    <!--개인 보유 잔액(포인트)-->
     <select id="getBalanceByUserId" parameterType="String" resultType="Integer">
         SELECT
             NVL((SELECT SUM(PAYMENT.POINT) FROM PAYMENT WHERE USERID = #{userId}), 0)
-                - NVL((SELECT SUM(SPENT_POINT) FROM SPENDINGPOINT WHERE USERID = #{userId}), 0)
-                AS balance
+                -
+            NVL((SELECT NVL(SUM(SPENT_POINT), 0)
+                 FROM SPENDINGPOINT
+                 WHERE USERID = #{userId}
+                   AND STATUS = 0), 0)
+                +
+            NVL((SELECT NVL(SUM(SPENT_POINT), 0)
+                 FROM SPENDINGPOINT
+                 WHERE USERID = #{userId}
+                   AND STATUS = 1), 0)
+                +
+        NVL((SELECT NVL(SUM(REWARDS.REWARDPOINTS), 0)
+             FROM REWARDS
+             WHERE USERID = #{userId}), 0) AS balance
         FROM DUAL
+    </select>
+
+    <!--지급된 포인트 목록:유저 마이페이지 -->
+    <select id="myRewards"  parameterType="String" resultType="com.sku.fitizen.domain.challenge.Rewards">
+        SELECT * FROM  REWARDS WHERE USERID=#{userId}
     </select>
 
 
@@ -88,6 +105,7 @@
             o.MERCHANTUID,
             o.TOTALPRICE AS ORDER_TOTAL,
             o.PAIDAT,
+            o.usePoint,
             op.PRODUCTID,
             op.PRODUCTNAME,
             op.QTY,
@@ -123,6 +141,7 @@
         <result property="impUid" column="IMPUID" />
         <result property="merchantUid" column="MERCHANTUID" />
         <result property="totalPrice" column="ORDER_TOTAL" />
+        <result property="usePoint" column="USEPOINT"/>
         <result property="paidAt" column="PAIDAT" />
 
         <!-- 주문상품(OrderProduct) 매핑 -->

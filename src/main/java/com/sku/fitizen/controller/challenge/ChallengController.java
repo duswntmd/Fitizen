@@ -9,8 +9,11 @@ import com.sku.fitizen.service.PaymentService;
 import com.sku.fitizen.service.board.PageService;
 import com.sku.fitizen.service.challenge.ChallCommentService;
 import com.sku.fitizen.service.challenge.ChallengeService;
+import com.sku.fitizen.service.challenge.ParticipationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +37,7 @@ public class ChallengController {
     ChallCommentService challCommentService;
 
     @Autowired
-    private PageService pageService;
+    ParticipationService participationService;
 
     @Autowired
     private PaymentService paymentService;
@@ -210,15 +213,55 @@ public class ChallengController {
         if (user == null || user.getId() == null) {
             return "redirect:/login/login";
         }
-
         String userId = user.getId();
+
+        // 내가 작성한 챌린지
+        List<Challenge> CreatedByMe=service.getChallengeCreatedByMe(userId);
+
+        // 내가 참가한  (유저 , 공식 ) 챌린지
         List<Challenge> myChall=service.getMyChallengeList(userId);
-        model.addAttribute("userId",userId);
+        model.addAttribute("user", user);
         model.addAttribute("myChall",myChall);
+        model.addAttribute("createdByMe",CreatedByMe);
+
+        // 달성한 챌린지
         return "th/user/myChallenges";
     }
 
+    // 챌린지 수정하기
+    @GetMapping("/edit")
+    public String editForm(@SessionAttribute(value = "user") User user)
+    {
+        return "th/chall/challengeEdit";
+    }
 
+
+    @GetMapping("/delete/{challengeId}")
+    @ResponseBody
+    public Map<String,Boolean> deleteMyChallenge(
+            @SessionAttribute("user") User user, @PathVariable int challengeId)
+    {
+
+
+
+        boolean deleted = service.deleteChallenge(challengeId);
+        Map<String,Boolean> response = new HashMap<>();
+        response.put("ok",deleted);
+        return response;
+
+    }
+
+
+   // 참여 취소
+    @GetMapping("cancel/{challengeId}")
+    @ResponseBody
+    public Map<String,Boolean> cancelMyChallenge(@SessionAttribute("user") User user, @PathVariable int challengeId)
+    {
+        boolean cancelled = participationService.cancelChallenge(new Participation(challengeId,user.getId()));
+        Map<String,Boolean> response = new HashMap<>();
+        response.put("cancelled",cancelled);
+        return response;
+    }
 
 
 }

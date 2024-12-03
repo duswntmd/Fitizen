@@ -10,19 +10,7 @@ public class OrderProduct {
     private String productName;
     private int price;
     private int totalPrice; // 수량 *가격
-    private String productImge;
+    private String productImage;
     private String productDesc;
 
-    @Override
-    public String toString() {
-        return "OrderProduct{" +
-                "productId=" + productId +
-                ", qty=" + qty +
-                ", productName='" + productName + '\'' +
-                ", price=" + price +
-                ", totalPrice=" + totalPrice +
-                ", productImge='" + productImge + '\'' +
-                ", productDesc='" + productDesc + '\'' +
-                '}';
-    }
 }

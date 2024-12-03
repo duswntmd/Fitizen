@@ -24,10 +24,13 @@ public class TrainerController
 
 
     @GetMapping("")
-    public String trainerList(Model model)
+    public String trainerList(Model model,@SessionAttribute(value = "user" ,required = false)User user)
     {
         List<Trainer> list =service.getTrainersByApproved();
 
+        if (user !=null){
+            model.addAttribute("user",user);
+        }
         model.addAttribute("trainers", list);
         return "th/trainer/trainerList";
     }
@@ -37,13 +40,19 @@ public class TrainerController
                                     Model model)
     {
         //System.out.println(info);
+        if (user !=null){
+            model.addAttribute("user",user);
+        }
         List<Trainer> searchResults = service.searchTrainerList(info);
         model.addAttribute("trainers",searchResults);
         return "th/trainer/trainerList";
     }
     @GetMapping("/detail/{trainerNo}")
-    public String trainerDetail(Model model, @PathVariable("trainerNo") int trainerNo)
+    public String trainerDetail(Model model, @PathVariable("trainerNo") int trainerNo,@SessionAttribute("user")User user)
     {
+        if (user !=null){
+            model.addAttribute("user",user);
+        }
         Trainer trainer =service.getTrainerDetailById(trainerNo);
         model.addAttribute("trainer", trainer);
         return "th/trainer/trainerDetail";

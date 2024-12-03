@@ -246,7 +246,10 @@ public class AiServer {
     }
 
     @GetMapping("/chatBot")
-    public String chatBot() {
+    public String chatBot(@SessionAttribute(value = "user" ,required = false)User user, Model model) {
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
         return "th/chatBot";
     }
 

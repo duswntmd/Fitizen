@@ -14,6 +14,12 @@
     </c:otherwise>
 </c:choose>
 
+<script>
+    // 로그아웃 링크 클릭 시 세션 스토리지 삭제
+    function clearSessionStorage() {
+        sessionStorage.clear();  // 세션 스토리지 비우기
+    }
+</script>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -48,7 +54,7 @@
 
                 </ul>
             </li>
-            <li><a href="${loginOutLink}">${loginOut}</a></li>
+            <li><a href="${loginOutLink}" onclick="clearSessionStorage()">${loginOut}</a></li>
             <c:if test="${user == null}">
              <li>   <a href="/register/add">회원가입</a></li>
             </c:if>

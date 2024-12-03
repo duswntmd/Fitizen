@@ -188,7 +188,7 @@
     <span class="balance-value">[[${balance}]] P</span>
 </div>
 <div class="menu-container">
-    <button data-category-id="2">지급 내역</button>
+    <button data-category-id="1">지급 내역</button>
     <button class="active" data-category-id="2">충전 내역</button>
     <button data-category-id="3">사용 내역</button>
 </div>
@@ -249,7 +249,7 @@
             {
                 pg: 'html5_inicis',
                 name: "FITIZEN POINT",
-                amount: amount+(amount*0.15),
+                amount: amount + (amount * 0.15),
                 buyer_email: userEmail,
                 buyer_name: userId
             },
@@ -258,23 +258,50 @@
                 if (rsp.success) {
                     $.ajax({
                         type: 'POST',
-                        url: '/verify/' + rsp.imp_uid,
-                        success: function (data) {
-                            alert("결제 완료!");
-                            location.reload();
-                        },
-                        error: function () {
-                            alert("결제 검증 실패");
+                        url: '/verify/' + rsp.imp_uid
+                    }).done(function (data) {
+                        console.log(data);
+                        if (rsp.paid_amount === data.response.amount) {
+                            //  alert("imp_uid: " + data.imp_uid + " merchant_uid(orderKey): " + data.merchant_uid);
+                            console.log("결제 및 결제 검증 완료");
+
+                            // 결제 검증 성공 후, 추가 데이터 전송
+                            $.ajax({
+                                type: 'POST',
+                                url: '/savePayment',
+                                contentType: 'application/json',
+                                data: JSON.stringify({
+                                    userId: userId,
+                                    userEmail: userEmail,
+                                    paid_amount: amount + (amount * 0.15),
+                                    point: amount,
+                                    impUid: rsp.imp_uid,
+                                    merchantUid: rsp.merchant_uid,
+                                    paidAt: data.paidAt
+                                }),
+                                dataType: 'json',
+                                success: function (success) {
+                                    alert("결제 완료");
+                                    console.log("결제 정보 저장 성공", success);
+                                    location.reload(); // 결제 성공 시 페이지 새로고침
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("결제 정보 저장 실패", error);
+                                }
+                            });
+                        } else {
+                            alert("결제 실패");
                         }
                     });
-                } else {
-                    alert("결제 실패: " + rsp.error_msg);
                 }
             }
         );
     }
 
-    function loadPayments(categoryId) {
+
+
+
+        function loadPayments(categoryId) {
         $.ajax({
             type: 'GET',
             url: '/getMyPaymentsData',
@@ -293,6 +320,7 @@
                     headerRow.html(`
                     <div class="payment-item"><strong>결제 번호</strong></div>
                     <div class="payment-item"><strong>결제 금액</strong></div>
+                    <div class="payment-item"><strong>포인트</strong></div>
                     <div class="payment-item"><strong>날짜</strong></div>
                 `);
 
@@ -303,33 +331,66 @@
                             <div class="payment-row">
                                 <div class="payment-item">${payment.merchantUid}</div>
                                 <div class="payment-item amount">${payment.paid_amount.toLocaleString()} 원</div>
+                                <div class="payment-item amount">${payment.point.toLocaleString()} 원</div>
                                 <div class="payment-item date">${new Date(payment.paidAt).toLocaleString()}</div>
                             </div>`);
                         });
                     } else {
                         paymentRows.push('<div class="no-data-message">충전 내역이 없습니다.</div>');
                     }
-                } else if (categoryId === 3) { // 사용 내역
+                } else if (categoryId === 3)
+                { // 사용 내역
                     $('#payments-title').text('사용 내역');
                     $('#total-label').text('사용 포인트 합산:'); // 합산 금액 라벨 변경
                     headerRow.html(`
                     <div class="payment-item"><strong>사용 금액</strong></div>
                     <div class="payment-item"><strong>사용 날짜</strong></div>
-                    <div class="payment-item"><strong> - </strong></div>
+                    <div class="payment-item"><strong>환불 여부</strong></div>
+                    <div class="payment-item"><strong>상세</strong></div>
+
                 `);
 
                     if (response.spendingPoints.length > 0) {
                         response.spendingPoints.forEach(spending => {
-                            totalAmount += spending.spendingPoint; // 합산
+                            let statusText = spending.status === 1 ? `<span style="color: red;">환불처리됨</span>` : "-";
+                            if (spending.status === 0) {
+                                totalAmount += spending.spendingPoint; // 사용 금액 합산
+                            } else if (spending.status === 1) {
+                                totalAmount -= spending.spendingPoint; // 환불 금액 차감
+                            }
+
                             paymentRows.push(`
                             <div class="payment-row">
                                 <div class="payment-item amount">${spending.spendingPoint.toLocaleString()} P</div>
                                 <div class="payment-item date">${new Date(spending.spentAt).toLocaleString()}</div>
-                                <div class="payment-item date">-</div>
+                                <div class="payment-item date">${statusText}</div>
+                                <div class="payment-item date">${spending.detail}</div>
                             </div>`);
                         });
                     } else {
                         paymentRows.push('<div class="no-data-message">사용 내역이 없습니다.</div>');
+                    }
+                }else if (categoryId===1){
+                    $('#payments-title').text('지급 내역');
+                    $('#total-label').text('지급 포인트 합산:'); // 지급 포인트 합산 라벨 변경
+                    headerRow.html(`
+                    <div class="payment-item"><strong>챌린지 아이디</strong></div>
+                    <div class="payment-item"><strong>지급 포인트</strong></div>
+                    <div class="payment-item"><strong>지급 날짜</strong></div>
+                `);
+
+                    if (response.myRewards && response.myRewards.length > 0) {
+                        response.myRewards.forEach(reward => {
+                            totalAmount += reward.rewardPoints; // 지급 포인트 합산
+                            paymentRows.push(`
+                            <div class="payment-row">
+                                <div class="payment-item">${reward.challengeId}</div>
+                                <div class="payment-item amount">${reward.rewardPoints.toLocaleString()} P</div>
+                                <div class="payment-item date">${new Date(reward.rewardDate).toLocaleString()}</div>
+                            </div>`);
+                        });
+                    } else {
+                        paymentRows.push('<div class="no-data-message">지급 내역이 없습니다.</div>');
                     }
                 }
 

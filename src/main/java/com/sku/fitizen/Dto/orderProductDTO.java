@@ -19,6 +19,7 @@ public class orderProductDTO {
   private  int totalPrice;
   private Date paidAt; // 결제 날짜
   private List<CartItem> orderProducts ;
+  private int appliedPoints;
 
   @Override
   public String toString() {
@@ -30,6 +31,7 @@ public class orderProductDTO {
             ", totalPrice=" + totalPrice +
             ", paidAt=" + paidAt +
             ", orderProducts=" + orderProducts +
+            ", appliedPoints=" + appliedPoints +
             '}';
   }
 }

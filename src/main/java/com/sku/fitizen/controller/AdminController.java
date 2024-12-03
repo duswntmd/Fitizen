@@ -53,4 +53,10 @@ public class AdminController {
         return result;
     }
 
+    @GetMapping("/getUsers")
+    public String getUsers(Model model,@SessionAttribute("user")User user)
+    {
+        return "th/admin/users";
+    }
+
 }
