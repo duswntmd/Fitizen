@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +38,16 @@ public class ShopController {
     }
 
     @GetMapping("")
-    public String list(Model model, HttpSession session) {
+    public String list(Authentication authentication, Model model, HttpSession session) {
+        if (authentication != null) {
+            // 사용자 권한 리스트 가져오기
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                if (authority.getAuthority().equals("ROLE_ADMIN")) {
+                    model.addAttribute("userRole", "ROLE_ADMIN");
+                    break;
+                }
+            }
+        }
         String userId = (String) session.getAttribute("userId");
         model.addAttribute("list",shopService.getAllProducts());
         return "shopList";

@@ -2,6 +2,8 @@ package com.sku.fitizen.controller;
 
 import com.sku.fitizen.domain.QNA;
 import com.sku.fitizen.service.QnaService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +13,12 @@ import org.springframework.web.bind.annotation.*;
 public class QnaController {
     private QnaService qnaService;
 
+
     public QnaController(QnaService qnaService) {
         this.qnaService = qnaService;
     }
+    @Autowired
+    private HttpSession session;
 
     @GetMapping("")
     public String list(Model model) {
@@ -22,7 +27,12 @@ public class QnaController {
     }
     @GetMapping("/add")
     public String add(Model model) {
-        model.addAttribute("qna",new QNA());
+        QNA qna = new QNA();
+        String userId = (String) session.getAttribute("userId");  // 세션에서 userId 값을 가져옴
+        if (userId != null) {
+            qna.setAuthor(userId);  // 가져온 userId를 author 필드에 설정
+        }
+        model.addAttribute("qna",qna);
         return "th/qna/qnaAdd";
     }
     @PostMapping("/add")
