@@ -46,7 +46,15 @@
     <!-- 트레이너 추가 -->
     <insert id="insertTrainer" parameterType="com.sku.fitizen.domain.User">
         INSERT INTO TRAINERS (TRAINERNO, USERID, WORKPLACENAME, LOCATION, WORKYEARS, ZIPCODE, LOCATIONDETAIL)
-        VALUES (TRAINER_SEQ.nextval, #{id}, #{workPlaceName}, #{location}, #{workYears}, #{zipCode}, #{locationDetail})
+        VALUES (
+                   TRAINER_SEQ.nextval,
+                   #{id},
+                   #{workPlaceName, jdbcType=VARCHAR},
+                   #{location, jdbcType=VARCHAR},
+                   #{workYears, jdbcType=INTEGER},
+                   #{zipCode, jdbcType=VARCHAR},
+                   #{locationDetail, jdbcType=VARCHAR}
+               )
     </insert>
 
     <!-- 사용자 목록 찾기 (로그인 등) -->

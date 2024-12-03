@@ -22,7 +22,7 @@ import java.util.Map;
 @Slf4j
 @Controller
 @RequestMapping("/register")
-@SessionAttributes("user")  // 'user'를 세션에 저장하도록 설정
+//@SessionAttributes("user")  // 'user'를 세션에 저장하도록 설정
 public class RegisterController {
 
     @Autowired
