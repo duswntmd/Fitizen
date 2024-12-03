@@ -54,9 +54,9 @@ public class ChatController {
         List<Map<String, Object>> data;
         if (isTrainer) { // 트레이너일 경우
             int trainerNo = tService.getTrainerNoByUserId(user.getId());
-            data = cService.getMyUsers(trainerNo);
+            data = cService.getMyUsersByApproved(trainerNo);
         } else { // 일반 유저일 경우
-            data = cService.getMyTrainers(user.getId());
+            data = cService.getMyTrainersByApproved(user.getId());
         }
         response.addAll(data); // 리스트에 데이터를 추가
 
