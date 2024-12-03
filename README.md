@@ -65,11 +65,13 @@ PW: wellfit12!@
 
 ## 2. 팀원 소개
 <div align="center">
+  
 |FE 연주승|FE 정재호|FE 박성재|
 |:---:|:---:|:---:|
 |<img alt="민재 프로필" src="https://github.com/user-attachments/assets/9d38466d-4fbf-42b0-a702-dff8bc411ff5" width="200" height="200">|<img width="200" height="200" alt="성우프로필" src="https://github.com/user-attachments/assets/9d38466d-4fbf-42b0-a702-dff8bc411ff5">|<img width="200" height="200" alt="예슬프로필" src="https://github.com/user-attachments/assets/9d38466d-4fbf-42b0-a702-dff8bc411ff5">|
 | - 프로젝트 관리 <br> - 예시 <br> - 예시  <br> - 예시 <br> - 예시 <br> - 별명 | - GitHub 관리  <br> - 리드미 위키 프로젝트 <br> - 예시  <br> - 별명| -예시 <br> - 예시 <br> - 예시 <br> - 예시 <br> -별명 |
 | <img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"><br /><img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"> | <img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"><br /><img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"> | <img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"><br /><img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white">|
+
 </div>
 <br>
 
