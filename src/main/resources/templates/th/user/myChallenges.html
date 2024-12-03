@@ -370,8 +370,6 @@
                     onclick="deleteChallenge(this)">
                 삭제하기
             </button>
-            <button class="challenge-button disabled" style="display:none;">진행중</button>
-            <button class="challenge-button disabled" style="display:none;">챌린지 종료됨</button>
             <a class="challenge-button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">상세보기</a>
             <a class="challenge-button" th:href="@{/proofShot/{id}(id=${c.challengeId})}">인증 게시판</a>
         </div>
@@ -411,7 +409,7 @@
                 <div class="challenge-actions">
                     <a class="challenge-button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
                     <a class="challenge-button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
-                    <button class="challenge-cancel-button" style="display:none;">참여 취소</button>
+                    <button class="challenge-cancel-button" style="display:none;"  th:data-challenge-id="${m.challengeId}">참여 취소</button>
                     <button class="challenge-button disabled" style="display:none;">취소 불가</button>
                     <button class="challenge-button disabled" style="display:none;">챌린지 종료됨</button>
                 </div>
@@ -449,7 +447,7 @@
                     <a class="challenge-button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
                     <a class="challenge-button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
                     <div th:if="${m.creatorId} != ${user.id}">
-                        <button class="challenge-cancel-button" style="display:none;">참여 취소</button>
+                        <button class="challenge-cancel-button" style="display:none;"  th:data-challenge-id="${m.challengeId}">참여 취소</button>
                         <button class="challenge-button disabled" style="display:none;">취소 불가</button>
                         <button class="challenge-button disabled" style="display:none;">챌린지 종료됨</button>
                     </div>
