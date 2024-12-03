@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" xmlns:sec="http://www.w3.org/1999/xhtml"
+      lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon-96x96.png"/>
+    <title>챌린지 수정하기</title>
+    <link rel="stylesheet" th:href="@{/css/index/indexStyle.css}">
+    <link th:href="@{/css/challenge/challAdd.css}" rel="stylesheet" />
+    <style>
+
+    </style>
+    <!-- flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+</head>
+<body>
+
+<div>
+    <th:block th:replace="~{th/header :: header}"></th:block>
+</div>
+
+
+<div class="page-contents">
+
+    <!-- 챌린지 문구 -->
+    <div class="challenge-banner">
+        챌린지 수정하기 , 참여기간에만 수정 및 삭제 가능합니다
+    </div>
+    <div class="container">
+        <!-- 폼 시작 -->
+        <a href="/challenge" class="btn-back-container">
+            <button class="btn-back">뒤로가기(마이페이지)</button>
+        </a>
+        <form id="addForm"  enctype="multipart/form-data">
+            <div sec:authorize="hasRole('ADMIN')">
+                관리자 챌린지 작성페이지 입니다.
+            </div>
+            <div class="form-group">
+                <label for="title">챌린지 제목</label>
+                <input type="text" id="title" name="title">
+            </div>
+
+            <div sec:authorize="hasRole('ADMIN')">
+                <div class="form-group">
+                    <label for="entryPoint">포인트</label>
+                    <input type="number" id="entryPoint" name="entryPoint" min="0" value="0" placeholder="사용자는 포인트를 사용하여야 챌린지를 참여할 수 있습니다.">
+                </div>
+            </div>
+            <div class="form-group" id="coverImageWrapper" style="position: relative;">
+                <input type="file" id="file" name="file" accept="image/*" style="display: none;">
+                <img id="imagePreview" src="" alt="미리보기 이미지" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                <button type="button" class="btn-register" id="fileSelectButton" onclick="document.getElementById('file').click();">커버 이미지 선택</button>
+                <button type="button" id="removeImageButton" style="display:none; position: absolute; top: 10px; right: 10px; background-color: #f0f0f0; color: black; border: none; border-radius: 50%; width: 30px; height: 30px;">X</button>
+            </div>
+
+            <div class="form-group inline-fields">
+
+                <div>
+                    <label for="startDate">시작일</label>
+                    <input type="date" id="startDate" name="startDate"/>
+                </div>
+                <div>
+                    <label for="endDate">종료일</label>
+                    <input type="date" id="endDate" name="endDate" />
+                </div>
+
+                <div>
+                    <label for="week"> 기간</label>
+                    <input type="number" id="week" name="week"  readonly style="text-align: center; width: 60px; display: inline-block; border: none; color: red; background: none;"> <!-- 테두리 없애고 색상 변경 -->
+                    <span style="display: inline-block; margin-left: 5px;">주</span> <!-- 주라는 텍스트 추가 -->
+                </div>
+
+
+                <div>
+                    <label for="limitUser">인원수 제한:</label>
+                    <input type="number" id="limitUser" name="limitUser">
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label>카테고리 선택</label>
+                <div id="category-buttons">
+                    <div th:each="category : ${category}">
+                        <input type="radio" th:id="'category-' + ${category.categoryId}"
+                               name="categoryId"
+                               th:value="${category.categoryId}"
+                               class="custom-radio">
+                        <label th:for="'category-' + ${category.categoryId}"
+                               class="category-button"
+                               th:text="${category.categoryName}"
+                               th:attr="data-category-id=${category.categoryId}"></label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="title">인증 업로드 요일</label>
+                <div class="day-buttons">
+                    <div class="day-button" data-day="월" onclick="toggleDay('월')">월</div>
+                    <div class="day-button" data-day="화" onclick="toggleDay('화')">화</div>
+                    <div class="day-button" data-day="수" onclick="toggleDay('수')">수</div>
+                    <div class="day-button" data-day="목" onclick="toggleDay('목')">목</div>
+                    <div class="day-button" data-day="금" onclick="toggleDay('금')">금</div>
+                    <div class="day-button" data-day="토" onclick="toggleDay('토')">토</div>
+                    <div class="day-button" data-day="일" onclick="toggleDay('일')">일</div>
+                </div>
+                <input type="hidden" id="proofDays" name="proofDays">
+                <input type="hidden" id="proofCount" name="proofCount">
+            </div>
+
+
+            <div class="form-group">
+                <label for="content">챌린지 방법</label>
+                <textarea id="content" name="content"></textarea>
+            </div>
+
+            <!-- 폼 전송 버튼 -->
+            <div class="form-group">
+                <button type="button" class="btn-register" onclick="submitChallenge()">수정하기</button>
+                <button type="button" class="btn-register" onclick="submitChallenge()">삭제하기</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="challenge-banner">
+  지나친 수정은 사람들이 떠나요
+</div>
+
+<th:block th:replace="~{th/footer :: footer}"></th:block>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link
+        rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+/>
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const categoryButtons = document.querySelectorAll('.category-button');
+
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // 선택된 카테고리 ID 가져오기
+                const selectedCategoryId = this.getAttribute('data-category-id');
+
+                // 선택된 카테고리 ID 로그
+                console.log("선택된 카테고리 ID:", selectedCategoryId);
+
+                // 모든 버튼 초기화
+                categoryButtons.forEach(btn => {
+                    btn.style.backgroundColor = '#f0f0f0'; // 기본 배경색
+                    btn.style.color = '#333'; // 기본 텍스트 색상
+                });
+
+                // 선택된 버튼의 스타일 변경
+                this.style.backgroundColor = '#333'; // 선택된 버튼의 배경색
+                this.style.color = 'white'; // 선택된 버튼의 텍스트 색상
+
+
+                // 선택된 카테고리 라디오 버튼 체크
+                const radioButtonId = `category-${selectedCategoryId}`;
+                console.log("찾고 있는 라디오 버튼 ID:", radioButtonId);
+
+                const radioInput = document.getElementById(radioButtonId);
+                if (radioInput) {
+                    radioInput.checked = true; // 라디오 버튼 체크
+                    console.log(`라디오 버튼 ${radioButtonId} 체크됨`);
+                } else {
+                    console.error("라디오 버튼을 찾을 수 없습니다.");
+                }
+            });
+        });
+    });
+
+
+    // 7일 간격 날짜 선택을 위한 함수
+    function generateDisabledDates(startDate) {
+        const disabledDates = [];
+        const today = new Date(startDate);
+        const daysToCheck = 365; // 1년(365일) 간의 날짜를 체크
+
+        for (let i = 0; i <= daysToCheck; i++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() + i);
+            if (i % 7 !== 0) { // 7일 간격이 아닌 경우
+                disabledDates.push(date);
+            }
+        }
+        return disabledDates;
+    }
+
+    // 주 수 계산 함수
+    function calculateWeeks(startDate, endDate) {
+        const diffTime = endDate - startDate; // 밀리초 차이
+        const diffDays = diffTime / (1000 * 60 * 60 * 24); // 일 수 차이
+        return Math.floor(diffDays / 7); // 주 수 계산
+    }
+
+    // flatpickr 설정
+    flatpickr("#startDate", {
+        locale: {
+            firstDayOfWeek: 1, // 월요일을 첫 번째 요일로 설정
+            weekdays: {
+                shorthand: ['일', '월', '화', '수', '목', '금', '토'],
+                longhand: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+            },
+            months: {
+                shorthand: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                longhand: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            }
+        },
+        minDate: new Date(new Date().setDate(new Date().getDate() + 7)), // 현재 날짜에서 7일 이후부터 선택 가능
+        maxDate: new Date(new Date().setMonth(new Date().getMonth() + 2, 0)), // 현재 달의 마지막 날까지 선택 가능
+        dateFormat: "Y-m-d",
+        onReady: function(selectedDates) {
+            // 시작일 초기값 설정 (오늘 날짜로부터 7일 후)
+            const today = new Date();
+            const startDate = new Date(today.setDate(today.getDate() + 7)); // 오늘로부터 7일 후
+            this.setDate(startDate, true); // 시작일 설정
+
+            // 종료일 초기값 설정 (시작일로부터 7일 후)
+            const endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + 7); // 시작일로부터 7일 후
+            flatpickr("#endDate").setDate(endDate, true); // 종료일 설정
+
+            flatpickr("#endDate", {
+                minDate: new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 7), // 시작일로부터 7일 이후부터 선택 가능
+                disable: generateDisabledDates(startDate), // 비활성화할 날짜
+                maxDate: new Date(today.getFullYear(), today.getMonth() + 3, 0), // 현재 월에서 3개월 후의 마지막 날까지 선택 가능
+                locale: {
+                    firstDayOfWeek: 1,
+                    weekdays: {
+                        shorthand: ['일', '월', '화', '수', '목', '금', '토'],
+                        longhand: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+                    },
+                    months: {
+                        shorthand: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                        longhand: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                    }
+                },
+                onChange: function(selectedDates) {
+                    // 주 수 계산 및 표시
+                    if (selectedDates.length) {
+                        const endDate = selectedDates[0]; // 선택된 종료 날짜
+                        const weeks = calculateWeeks(startDate, endDate);
+                        document.getElementById("week").value = weeks+1; // 주 수를 input 필드에 표시
+                    }
+                }
+            });
+
+            document.getElementById("week").value = 1; // 초기 주 수 설정
+        },
+        onChange: function(selectedDates) {
+            // 종료일 설정
+            if (selectedDates.length) {
+                const today = new Date();
+                const startDate = new Date(selectedDates[0]);
+                const endDatePicker = flatpickr("#endDate", {
+                    locale: {
+                        firstDayOfWeek: 1,
+                        weekdays: {
+                            shorthand: ['일', '월', '화', '수', '목', '금', '토'],
+                            longhand: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+                        },
+                        months: {
+                            shorthand: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                            longhand: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                        }
+                    },
+                    minDate: new Date(startDate).fp_incr(7), // 시작일로부터 7일 이후부터 선택 가능
+                    disable: generateDisabledDates(startDate), // 비활성화할 날짜
+                    dateFormat: "Y-m-d",
+                    maxDate: new Date(today.getFullYear(), today.getMonth() + 3, 0), // 현재 월에서 3개월 후의 마지막 날까지 선택 가능
+                    onChange: function(endDates) {
+                        // 주 수 계산 및 표시
+                        if (endDates.length) {
+                            const endDate = new Date(endDates[0]);
+                            const weeks = calculateWeeks(startDate, endDate);
+                            document.getElementById("week").value = weeks; // 주 수를 input 필드에 표시
+                        }
+                    }
+                });
+                endDatePicker.setDate(new Date(startDate).fp_incr(7), true); // 선택된 시작일에 7일 추가하여 종료일 설정
+            }
+        }
+    });
+
+
+    document.getElementById('file').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('imagePreview');
+        const removeButton = document.getElementById('removeImageButton');
+        const fileSelectButton = document.getElementById('fileSelectButton');
+
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block'; // 이미지 보이기
+                fileSelectButton.style.display = 'none'; // 파일 선택 버튼 숨기기
+                removeButton.style.display = 'block'; // X 버튼 보이기
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '';
+            preview.style.display = 'none';
+            fileSelectButton.style.display = 'block';
+            removeButton.style.display = 'none';
+        }
+    });
+
+    // X 버튼 클릭 시 이미지 미리보기와 관련된 요소들 초기화
+    document.getElementById('removeImageButton').addEventListener('click', function () {
+        const preview = document.getElementById('imagePreview');
+        const fileSelectButton = document.getElementById('fileSelectButton');
+        const removeButton = document.getElementById('removeImageButton');
+        const fileInput = document.getElementById('file');
+
+        // 이미지 미리보기 숨기기 및 파일 선택 버튼 다시 보이기
+        preview.src = '';
+        preview.style.display = 'none';
+        fileSelectButton.style.display = 'block';
+        removeButton.style.display = 'none';
+
+        // 파일 선택 필드 초기화
+        fileInput.value = '';
+    });
+
+
+    function submitChallenge() {
+
+        const titleInput = document.getElementById('title').value.trim();
+        const contentInput = document.getElementById('content').value.trim();
+        const selectedCategory = document.querySelector('input[name="categoryId"]:checked');
+        const fileInput = document.getElementById('file').files.length;
+        const limitUser= document.getElementById('limitUser').value;
+        const entryPoint = document.getElementById('entryPoint'); // 포인트 입력란 가져오기
+
+
+// 선택된 카테고리 ID 로그
+        console.log("선택된 카테고리 ID:", selectedCategory.value);
+
+        if(titleInput === "" || contentInput === "")
+        {
+            alert("제목 또는 챌린지 방법을 모두 입력해주세요!");
+            return;
+        }
+
+        if (!selectedCategory) {
+            alert("카테고리를 선택해야 합니다.");
+            return;
+        }
+
+        if(limitUser <10 ||isNaN(limitUser))
+        {
+            alert("인원수 최소 10명 이상이여야 합니다")
+            return;
+        }
+
+        if (fileInput === 0) {
+            alert("커버이미지를 선택 해주세요.");
+            return;
+        }
+
+        // 최소 2개의 요일이 선택되지 않으면 경고
+        if (selectedDaysArray.length < 2) {
+            alert("최소 2개의 요일을 선택해야 합니다.");
+            return; // 폼 전송 중단
+        }
+        // 인증 사진 최대 개수 계산 (최신 값 업데이트)
+        calculateProofCount();
+
+        if (!confirm('챌린지를 등록하시겠습니까?')) return;
+
+
+        if (entryPoint) { // pointInput 요소가 존재할 때만 검사를 수행
+
+
+            if (entryPoint.value === ""||isNaN(entryPoint.value) ||parseInt(entryPoint.value) === 0) {
+                alert("포인트를 입력해주세요.");
+                return;
+            }
+        }
+
+        var form = document.getElementById('addForm');
+
+
+
+        var formData = new FormData(form);
+
+
+        $.ajax({
+            url: '/challenge/save',
+            method: 'POST', // POST 용
+            enctype: "multipart/form-data",
+            processData: false,
+            contentType: false,
+            data: formData,
+            dataType: 'json',
+            success: function (res) {
+                alert(res.saved ? '챌린지 등록 성공' : '챌린지 등록 실패');
+                if (res.saved) {
+                    location.href = "../challenge";
+                }
+            },
+            error: function (err) {
+                alert('챌린지 작성 실패, 서버 오류');
+            }
+        });
+    }
+
+
+
+
+
+
+    let selectedDaysArray = [];
+
+    // 요일의 순서를 정의 (일요일부터 토요일까지)
+    const dayOrder = ['일', '월', '화', '수', '목', '금', '토'];
+
+    function toggleDay(day) {
+        const selectedDaysInput = document.getElementById('proofDays');
+
+        // 이미 선택한 요일인지 확인
+        if (selectedDaysArray.includes(day)) {
+            // 선택 해제 (배열에서 제거)
+            selectedDaysArray = selectedDaysArray.filter(d => d !== day);
+            updateDayButtonStyle(day, false);
+        } else {
+            // 선택한 요일이 3개가 넘으면 경고 표시
+            if (selectedDaysArray.length >= 3) {
+                alert("최대 3개의 요일만 선택할 수 있습니다.");
+                return;
+            }
+            // 새 요일 추가
+            selectedDaysArray.push(day);
+            updateDayButtonStyle(day, true);
+        }
+
+        // 선택된 요일을 정렬한 후 문자열로 변환하여 input에 저장
+        selectedDaysArray.sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b)); // 요일 순서대로 정렬
+        selectedDaysInput.value = selectedDaysArray.join('');
+        console.log("선택된 요일:", selectedDaysInput.value);
+    }
+
+    // 선택된 버튼의 스타일 업데이트 함수
+    function updateDayButtonStyle(day, isSelected) {
+        const dayButton = document.querySelector(`.day-button[data-day="${day}"]`);
+
+        if (isSelected) {
+            dayButton.style.backgroundColor = '#333';
+            dayButton.style.color = 'white';
+        } else {
+            dayButton.style.backgroundColor = '#f0f0f0';
+            dayButton.style.color = '#333';
+        }
+    }
+
+
+    function calculateProofCount() {
+        const startDateInput = document.getElementById('startDate').value;
+        const weekCount = parseInt(document.getElementById('week').value, 10);
+        const proofCountInput = document.getElementById('proofCount');
+
+        // 만약 시작날짜와 선택된 요일이 없으면 리턴
+        if (!startDateInput || selectedDaysArray.length === 0) return;
+
+        const startDate = new Date(startDateInput);
+        let totalProofCount = 0;
+
+        // 요일 인덱스 (0: 일요일, 1: 월요일, ..., 6: 토요일)
+        const startDayIndex = startDate.getDay(); // 시작일의 요일 인덱스
+        const dayOrder = ['일', '월', '화', '수', '목', '금', '토']; // 요일 순서 배열
+
+        // 선택된 요일 인덱스
+        const selectedDayIndices = selectedDaysArray.map(day => dayOrder.indexOf(day));
+
+        console.log("시작요일:", startDayIndex);
+        console.log("선택된 요일 인덱스:", selectedDayIndices);
+
+        // 총 인증 사진 개수 계산
+        for (let week = 0; week < weekCount; week++) {
+            // 현재 주의 시작 날짜
+            const currentWeekStartDate = new Date(startDate);
+            currentWeekStartDate.setDate(startDate.getDate() + week * 7);
+
+            // 현재 주의 인증 사진 업로드 가능 개수 계산
+            let proofsThisWeek = 0;
+
+            // 이번 주의 인증 사진 개수 계산
+            for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
+                const currentDayIndex = (startDayIndex + dayOffset) % 7; // 현재 주의 요일 인덱스
+
+                // 이번 주에 가능한 인증 사진 개수 카운트
+                if (selectedDayIndices.includes(currentDayIndex)) {
+                    proofsThisWeek++;
+                }
+            }
+
+            // 첫 주의 경우 시작일이 포함되므로 수정
+            if (week === 0) {
+                // 시작일이 선택된 요일인 경우도 포함
+                if (selectedDayIndices.includes(startDayIndex)) {
+                    proofsThisWeek++; // 시작일 포함
+                }
+            }
+
+            // 이번 주에서 가능한 인증 사진 개수 추가
+            totalProofCount += proofsThisWeek;
+        }
+
+        // 인증 사진 최대 개수를 hidden input에 저장
+        proofCountInput.value = totalProofCount;
+        console.log("인증 사진 최대 개수:", totalProofCount);
+    }
+
+
+</script>
+</body>
+</html>

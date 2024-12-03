@@ -12,7 +12,9 @@
     </insert>
 
     <!--사진 인증 게시판 댓글 수정하기-->
-
+    <update id="editComment" >
+        UPDATE PROOFCOMMENT SET PROOFCOMMENT=#{proofComment} WHERE PROOFCOMMENTID=#{proofCommentId}
+    </update>
     <!--사진 인증 게시판 댓글 삭제하기-->
 
     <delete id="deleteProofComment" parameterType="int">

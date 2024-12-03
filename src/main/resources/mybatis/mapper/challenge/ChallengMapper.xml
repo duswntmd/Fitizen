@@ -4,6 +4,83 @@
 
 <mapper namespace="com.sku.fitizen.mapper.challenge.ChallengeMapper">
 
+
+    <!--챌린지 종료 시키기-->
+    <update id="endChallenge">
+    <![CDATA[
+        UPDATE CHALLENGE
+        SET ISENDED = 1
+        WHERE ENDDATE < SYSDATE
+          AND ISENDED = 0
+        ]]>
+    </update>
+
+    <!--포인트 지급 되지않은 종료된 공식 챌린지 ids-->
+    <select id="getEndedChallenges" resultType="Integer">
+
+        SELECT CHALLENGEID
+        FROM CHALLENGE
+        WHERE ISENDED = 1
+          AND ISREWARDED = 0
+          AND ENTRYPOINT > 0
+   </select>
+
+    <select id="getPercentageForChallengesByUser" parameterType="java.util.List" resultType="com.sku.fitizen.Dto.SchedulerDTO">
+        SELECT
+        p.USERID,
+        p.CHALLENGEID,
+        pv.VERIFIED_COUNT AS "verifiedCount",
+        c.PROOFCOUNT,
+        ROUND(
+        (NVL(pv.VERIFIED_COUNT, 0) / c.PROOFCOUNT) * 100, 2
+        ) AS "percentage"
+        FROM
+        PARTICIPATION p
+        JOIN
+        CHALLENGE c ON p.CHALLENGEID = c.CHALLENGEID
+        LEFT JOIN
+        (
+        SELECT
+        pv.CHALLENGEID,
+        psb.USERID,
+        COUNT(psb.PROOFNUM) AS VERIFIED_COUNT  <!-- 인증 게시판 번호별 인증 횟수를 카운트 -->
+        FROM
+        PHOTOVERIFICATION pv
+        JOIN
+        PROOFSHOTBOARD psb ON pv.PROOFNUM = psb.PROOFNUM  <!-- 인증된 게시판 번호와 작성자(USERID) 연결 -->
+        WHERE
+        pv.CHALLENGEID = psb.CHALLENGEID  <!-- 해당 챌린지에 속하는 게시판 번호만 선택 -->
+        GROUP BY
+        pv.CHALLENGEID, psb.USERID  <!-- 각 사용자별로 인증된 횟수 계산 -->
+        ) pv ON p.CHALLENGEID = pv.CHALLENGEID AND p.USERID = pv.USERID
+        WHERE
+        p.CHALLENGEID IN
+        <foreach item="item" collection="ids" open="(" separator="," close=")">
+            #{item}  <!-- 공식 챌린지 번호들에 대해서만 처리 -->
+        </foreach>
+    </select>
+
+
+    <!--포인트 지급-->
+
+    <insert id="insertRewards" parameterType="java.util.List">
+        INSERT INTO REWARDS (REWARDID,USERID, CHALLENGEID, REWARDPOINTS, REWARDDATE)
+        VALUES
+        <foreach collection="list" item="reward" separator=",">
+            (REWARD_SEQ.nextval,#{reward.userId}, #{reward.challengeId}, #{reward.rewardPoints}, SYSDATE)
+        </foreach>
+    </insert>
+
+    <!--챌린지 포인트 지급됨 처리 -->
+    <update id="updatePointGranted" parameterType="java.util.List">
+        UPDATE CHALLENGE
+        SET ISREWARDED = 1
+        WHERE CHALLENGEID IN
+        <foreach item="item" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
     <!-- 챌린지 등록 -->
     <insert id="saveChallenge" parameterType="com.sku.fitizen.domain.challenge.Challenge">
         <!-- 시퀀스를 사용하여 챌린지 ID를 가져오기 -->
@@ -148,12 +225,40 @@
         WHERE challengeId=#{challengeId}
     </update>
 
+    <!--챌린지 참여자 수 감소 -->
+    <update id="decreaseMembers" parameterType="Integer">
+        update CHALLENGE SET MEMBERS=MEMBERS-1
+        WHERE CHALLENGEID=#{challengId}
+    </update>
+
     <!--내가 참여한 챌린지 목록 불러오기-->
     <select id="getMyChallengeList" parameterType="com.sku.fitizen.domain.challenge.Challenge"
             resultType="com.sku.fitizen.domain.challenge.Challenge">
-        SELECT * FROM challenge  c
-            INNER JOIN participation p on c.challengeId = p.challengeId
-            WHERE p.userId =#{userId}
+        SELECT
+            c.*,
+            COALESCE(pv.VERIFIED_COUNT, 0) AS verifiedCount
+        FROM
+            CHALLENGE c
+                LEFT JOIN (
+                SELECT
+                    pv.CHALLENGEID,
+                    COUNT(pv.PROOFNUM) AS VERIFIED_COUNT
+                FROM
+                    PHOTOVERIFICATION pv
+                GROUP BY
+                    pv.CHALLENGEID
+            ) pv ON c.CHALLENGEID = pv.CHALLENGEID
+        WHERE
+            c.CHALLENGEID IN (
+                SELECT DISTINCT p.CHALLENGEID
+                FROM PARTICIPATION p
+                WHERE p.USERID = #{userId}
+            )
+    </select>
+
+    <!--내가 작성한 챌린지-->
+    <select id="getChallengeCreatedByMe" parameterType="string" resultType="com.sku.fitizen.domain.challenge.Challenge">
+        SELECT *FROM  CHALLENGE WHERE CREATORID=#{userId}
     </select>
 
 
@@ -162,6 +267,46 @@
         SELECT challengeId
         FROM Challenge
         WHERE TRUNC(endDate) = TRUNC(SYSDATE)
+    </select>
+
+
+    <!-- 여러 테이블에서 이미지 파일 이름과 소스를 가져오는 쿼리 -->
+    <select id="getImageList" resultMap="imageResultMap" parameterType="Integer">
+        SELECT 'challenge' AS source, UCOVERIMG AS image_filename
+        FROM challenge
+        WHERE CHALLENGEID = #{challengeId}
+
+        UNION ALL
+
+        SELECT 'chat_message' AS source, UIMG AS image_filename
+        FROM MESSAGE
+        WHERE ROOMID = #{challengeId}
+
+        UNION ALL
+
+        SELECT 'proofShot' AS source, UPHOTO AS image_filename
+        FROM PROOFSHOTBOARD
+        WHERE CHALLENGEID= #{challengeId}
+    </select>
+
+    <!-- resultMap을 이용하여 Map 형태로 반환 -->
+    <resultMap id="imageResultMap" type="java.util.HashMap">
+        <result property="source" column="source"/>
+        <result property="image_filename" column="image_filename"/>
+    </resultMap>
+
+    <!--챌린지 삭제-->
+<delete id="deleteChallenge" parameterType="Integer" >
+    DELETE FROM CHALLENGE WHERE CHALLENGEID =#{challengeId}
+</delete>
+
+    <select id="isOfficial" parameterType="int" resultType="int">
+        SELECT CASE
+                   WHEN entryPoint > 0 THEN entryPoint
+                   ELSE 0
+                   END AS is_official
+        FROM CHALLENGE
+        WHERE challengeId = #{challengeId}
     </select>
 
 

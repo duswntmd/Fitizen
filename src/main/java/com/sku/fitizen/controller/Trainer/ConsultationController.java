@@ -26,7 +26,7 @@ public class ConsultationController {
     // 트레이너 상담신청
     @GetMapping("/{trainerNo}")
     @ResponseBody
-    public Map<String,Object> consultation(@SessionAttribute(value = "user") User user, @PathVariable int trainerNo)
+    public Map<String,Object> consultation(@SessionAttribute(value = "user" ,required = false) User user, @PathVariable int trainerNo)
     {
 
         Map<String, Object> result = new HashMap<>();

@@ -6,6 +6,7 @@ import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import com.sku.fitizen.Dto.orderProductDTO;
 import com.sku.fitizen.domain.User;
+import com.sku.fitizen.domain.challenge.Rewards;
 import com.sku.fitizen.domain.pay.SpendingPoint;
 import com.sku.fitizen.domain.store.Order;
 import com.sku.fitizen.service.PaymentService;
@@ -89,18 +90,18 @@ public class PaymentController {
 
 
     @PostMapping("/cancel")
-    public ResponseEntity<Map<String, Object>> cancelPayment(@RequestBody Map<String, Object> cancelRequest) {
+    public ResponseEntity<Map<String, Object>> cancelPayment(@SessionAttribute("user") User user,@RequestBody Map<String, Object> cancelRequest) {
         // 클라이언트에서 넘어온 데이터
         String impUid = (String) cancelRequest.get("imp_uid");
         String merchantUid = (String) cancelRequest.get("merchant_uid");
         int cancelAmount = (int) cancelRequest.get("cancel_request_amount");
         String reason = (String) cancelRequest.get("reason");
-
+        int usePoint =(int)  cancelRequest.get("cancel_point");
         // 포트원 토큰 발급
         String token = paymentService.getPortOneToken();
 
         // 결제 취소 요청
-        Map<String, Object> response = paymentService.cancelPayment(token,impUid ,merchantUid, cancelAmount, reason);
+        Map<String, Object> response = paymentService.cancelPayment(user,usePoint,token,impUid ,merchantUid, cancelAmount, reason);
 
         // 응답 결과 반환
         return ResponseEntity.ok(response);
@@ -114,9 +115,6 @@ public class PaymentController {
        if(categoryId == 2) {
            List<com.sku.fitizen.domain.pay.Payment> list = paymentService.getPaymentList(user.getId());
            model.addAttribute("payments", list);
-       } else if (categoryId == 3) {
-           List<SpendingPoint> list = paymentService.getSpendingPointList(user.getId());
-           model.addAttribute("SpendingPoint", list);
        }
         model.addAttribute("user", user);
        int balance =paymentService.getBalanceBYUserId(user.getId());
@@ -139,6 +137,9 @@ public class PaymentController {
             // 사용 내역 데이터
             List<SpendingPoint> spendingPoints = paymentService.getSpendingPointList(user.getId());
             response.put("spendingPoints", spendingPoints);
+        } else if (categoryId==1) {
+            List<Rewards> myRewards= paymentService.myRewards(user.getId());
+            response.put("myRewards", myRewards);
         }
         return response;
     }
@@ -150,7 +151,6 @@ public class PaymentController {
 
         List<Order> myOrders =paymentService.getOrderProductsByUserId(user.getId(),0);
         List<Order> myCancelledOrders =paymentService.getOrderProductsByUserId(user.getId(),1);
-        //System.out.println(myOrders);
         model.addAttribute("orders", myOrders);
         model.addAttribute("cancellOrders", myCancelledOrders);
         return "th/user/myOrder";

@@ -2,18 +2,24 @@
 <html lang="en">
 <head>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(window).ready(function(){
-            draw(80, '.pie-chart1', '#a2d9a2');
-            draw(50, '.pie-chart2', '#d3b8ff');
-            draw(30, '.pie-chart3','#ff0');
-        })
+    <script th:inline="javascript">
 
-        function draw(max, classname, colorname){
+        $(window).ready(function(){
+
+            // div 안의 텍스트 값(퍼센트)을 읽어옵니다.
+            var percentageText = $(".pie-chart1 .center").text();  // 이 부분에서 텍스트 값 가져옴
+            // 퍼센트를 숫자로 변환하여 사용
+            var percentage = parseFloat(percentageText.replace('%', ''));  // '%' 기호를 제거하고 숫자로 변환
+
+            drawPieChart('.pie-chart1', '#a2d9a2', percentage);  // 예시로 70%로 설정
+        });
+
+        // 파이차트를 그리는 함수
+        function drawPieChart(classname, color, percentage) {
             var i = 1;
-            var func1 = setInterval(function(){
-                if(i <= max){
-                    color1(i, classname, colorname);
+            var func1 = setInterval(function() {
+                if (i <= percentage) {
+                    colorPieChart(i, classname, color);
                     i++;
                 } else {
                     clearInterval(func1);
@@ -21,9 +27,10 @@
             }, 10);
         }
 
-        function color1(i, classname, colorname){
+        // 파이차트의 색상과 배경 설정
+        function colorPieChart(i, classname, color) {
             $(classname).css({
-                "background": "conic-gradient(" + colorname + " 0% " + i + "%, #ffffff " + i + "% 100%)"
+                "background": "conic-gradient(" + color + " 0% " + i + "%, #ffffff " + i + "% 100%)"
             });
         }
     </script>
@@ -93,7 +100,7 @@
         .challenge-item {
             width: calc(50% - 20px); /* 2개씩 배치 */
             height: 250px;
-            min-width: 300px; /* 최소 너비 설정 */
+            min-width: 350px; /* 최소 너비 설정 */
             border: 1px solid #ddd;
             border-radius: 8px;
             background-color: #fff;
@@ -152,6 +159,8 @@
             color: #007bff; /* 파란색으로 강조 */
             margin-bottom: 10px;
             text-align: center;
+            overflow: hidden; /* 넘치는 텍스트를 숨김 */
+            display: inline-block; /* 한 줄 유지 */
         }
 
         .challenge-user-id,
@@ -159,7 +168,7 @@
             font-size: 14px;
             color: #555; /* 부드러운 회색 */
             margin-bottom: 5px;
-            text-align: center;
+            white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
         }
 
         /* 챌린지 버튼 */
@@ -214,6 +223,9 @@
 
 
         .description {
+            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+            overflow: hidden; /* 넘치는 텍스트 숨김 */
+            text-overflow: ellipsis; /* 필요하면 말줄임표(...) 추가 */
             text-align: center;
             font-size: 14px;
             color: #555;
@@ -250,6 +262,24 @@
             pointer-events: none; /* 숨겨진 요소 클릭 방지 */
         }
 
+        /* 공식 챌린지에만 차트 표시 */
+        .official-challenge:hover .pie-chart-container {
+            opacity: 1; /* 보이도록 설정 */
+            visibility: visible;
+        }
+
+        /* 공식 챌린지에 마우스를 올렸을 때 다른 레이아웃 숨김 */
+        .official-challenge:hover .challenge-layout {
+            opacity: 0; /* 숨김 */
+            pointer-events: none; /* 클릭 방지 */
+        }
+
+        /* 유저 챌린지(비공식)에는 차트 관련 효과 적용 안 됨 */
+        .user-challenge:hover .pie-chart-container,
+        .user-challenge:hover .challenge-layout {
+            opacity: 1; /* 변경 없음 */
+            pointer-events: auto; /* 기본 동작 유지 */
+        }
 
 
         /* 달성도 라벨 */
@@ -295,7 +325,7 @@
         }
 
         /* 버튼 스타일 */
-        .challenge-button {
+        .challenge-button,.challenge-cancel-button {
             display: inline-block;
             text-align: center;
             padding: 10px 15px; /* 버튼 내부 여백 */
@@ -311,47 +341,39 @@
         }
 
 
+
+
     </style>
 </head>
 <body>
-<h1 class="challenge-title-header">달성한 챌린지 - 공식 챌린지 X2 ,유저 챌린지 X1 </h1>
+<h1 class="challenge-title-header">달성한 공식 챌린지</h1>
 <p class="description">
-    달성한 챌린지에요!<br>
-    당신의 노력의 성과를 확인하세요!
+    달성한 공식 챌린지 포인트 지급내역 창에서 확인하세요!
 </p>
-
-<div class="my-challenges">
-    <div th:each="m : ${myChall}" class="my-challenge-item">
-        <div class="challenge-info">
-            <div class="challenge-image">
-                <img src="/files/challengeCover/500.jpeg" alt="챌린지 이미지">
-            </div>
-            <div class="challenge-title" th:text="${m.title}">챌린지 제목</div>
-        </div>
-        <div class="my-challenge-actions">
-            <a class="challenge-button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
-            <a class="challenge-button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
-        </div>
-    </div>
-</div>
-
 <h1 class="challenge-title-header">내가 작성한 챌린지 </h1>
 
 <div class="my-challenges">
-    <div th:each="m : ${myChall}" class="my-challenge-item">
+    <div th:each="c : ${createdByMe}" class="my-challenge-item">
         <div class="challenge-info">
             <div class="challenge-image">
                 <img src="/files/challengeCover/500.jpeg" alt="챌린지 이미지">
             </div>
-            <div class="challenge-title" th:text="${m.title}">챌린지 제목</div>
+            <div class="challenge-title" th:text="${c.title}">챌린지 제목</div>
             <div class="challenge-user-id" th:text="'진행자:나'"></div>
-            <div class="challenge-date-range" th:text="'기간: ' + ${m.startDate} + ' ~ ' + ${m.endDate}">기간</div>
+            <div class="challenge-date-range" th:text="'기간: ' + ${c.startDate} + ' ~ ' + ${c.endDate}">기간</div>
         </div>
         <div class="my-challenge-actions">
-            <button class="challenge-button">수정하기</button>
-            <button class="challenge-button">삭제하기</button>
-            <a class="challenge-button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
-            <a class="challenge-button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
+            <!--<button class="challenge-button">수정하기</button>-->
+            <button
+                    class="challenge-button delete-button"
+                    th:attr="data-challenge-id=${c.challengeId}"
+                    onclick="deleteChallenge(this)">
+                삭제하기
+            </button>
+            <button class="challenge-button disabled" style="display:none;">진행중</button>
+            <button class="challenge-button disabled" style="display:none;">챌린지 종료됨</button>
+            <a class="challenge-button" th:href="@{/challenge/detail/{id}(id=${c.challengeId})}">상세보기</a>
+            <a class="challenge-button" th:href="@{/proofShot/{id}(id=${c.challengeId})}">인증 게시판</a>
         </div>
     </div>
 </div>
@@ -363,10 +385,15 @@
         <h2 class="section-title">공식 챌린지</h2>
         <p class="description"> 챌린지 종료 후 ,해당 종료일에 자정 12시에 달성도에 따라 포인트가 지급됩니다.</p>
         <div class="challenge-list">
-            <div th:each="m : ${myChall}" class="challenge-item">
+            <div th:each="m : ${myChall}" class="challenge-item official-challenge" th:if="${m.entryPoint>0}"
+                 th:data-start-date="${m.startDate}"
+                 th:data-end-date="${m.endDate}"
+                 th:data-status="${m.isEnded}"
+                 th:data-challenge-id="${m.challengeId}"
+            >
                 <div class="pie-chart-container">
                     <div class="achievement-label">달성도</div> <!-- 달성도 라벨 -->
-                    <div class="pie-chart pie-chart1"><span class="center">80%</span></div>
+                    <div class="pie-chart pie-chart1"><span class="center" th:text="${(m.verifiedCount * 100) / m.proofCount} + '%'"></span></div>
                 </div>
                 <div class="challenge-layout">
                     <!-- 이미지 영역 -->
@@ -384,10 +411,13 @@
                 <div class="challenge-actions">
                     <a class="challenge-button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
                     <a class="challenge-button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
-                    <a class="challenge-button" th:href="@{/challenge/cancel/{id}(id=${m.challengeId})}">챌린지 취소</a>
+                    <button class="challenge-cancel-button" style="display:none;">참여 취소</button>
+                    <button class="challenge-button disabled" style="display:none;">취소 불가</button>
+                    <button class="challenge-button disabled" style="display:none;">챌린지 종료됨</button>
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- 비공식(유저) 챌린지 -->
@@ -395,13 +425,11 @@
         <h2 class="section-title">유저 챌린지 </h2>
         <p class="description">비공식 챌린지이며 포인트가 지급되지 않습니다.</p>
         <div class="challenge-list">
-            <div th:each="m : ${myChall}" class="challenge-item">
-                <!-- 차트 영역 -->
-                <div class="pie-chart-container">
-                    <div class="achievement-label">달성도</div> <!-- 달성도 라벨 -->
-                    <div class="pie-chart pie-chart2"><span class="center">50%</span></div>
-                </div>
-
+            <div th:each="m : ${myChall}" class="challenge-item user-challenge" th:if="${m.entryPoint==0}"
+                 th:data-start-date="${m.startDate}"
+                 th:data-end-date="${m.endDate}"
+                 th:data-status="${m.isEnded}"
+                 th:data-challenge-id="${m.challengeId}">
                 <div class="challenge-layout">
                     <!-- 이미지 영역 -->
                     <div class="challenge-image">
@@ -420,12 +448,108 @@
                 <div class="challenge-actions">
                     <a class="challenge-button" th:href="@{/challenge/detail/{id}(id=${m.challengeId})}">상세보기</a>
                     <a class="challenge-button" th:href="@{/proofShot/{id}(id=${m.challengeId})}">인증 게시판</a>
-                    <a class="challenge-button" th:href="@{/challenge/cancel/{id}(id=${m.challengeId})}">챌린지 취소</a>
+                    <div th:if="${m.creatorId} != ${user.id}">
+                        <button class="challenge-cancel-button" style="display:none;">참여 취소</button>
+                        <button class="challenge-button disabled" style="display:none;">취소 불가</button>
+                        <button class="challenge-button disabled" style="display:none;">챌린지 종료됨</button>
+                    </div>
+
                 </div>
           </div>
         </div>
     </div>
 </div>
 </body>
+<script>
+
+    $(document).ready(function () {
+        // 현재 날짜 가져오기
+        const now = new Date();
+
+        $('.challenge-item').each(function () {
+            // 데이터 속성 가져오기
+            const startDate = new Date($(this).data('start-date'));
+            const endDate = new Date($(this).data('end-date'));
+            const isEnded = $(this).data('status');
+
+            // 모든 버튼 초기화
+            $(this).find('.challenge-cancel-button').hide();
+            $(this).find('.challenge-button.disabled').hide();
+
+            // 조건에 따라 버튼 표시
+            if (now < startDate) {
+                $(this).find('.challenge-cancel-button').show(); // 참여 취소 버튼
+            } else if (now >= startDate && now <= endDate && isEnded === 0) {
+                $(this).find('.challenge-button.disabled').eq(0).show().text('취소 불가'); // 취소 불가 버튼
+            } else if (isEnded === 1) {
+                $(this).find('.challenge-button.disabled').eq(1).show().text('챌린지 종료됨'); // 챌린지 종료됨 버튼
+            }
+        });
+    });
+
+
+    $(document).ready(function () {
+        // 챌린지 취소 버튼 클릭 이벤트
+        $('.challenge-cancel-button').on('click', function () {
+            const challengeId = $(this).data('challenge-id'); // 버튼에서 챌린지 ID 가져오기
+
+            if (!confirm('챌린지를 정말 취소하시겠습니까?')) {
+                return; // 사용자 확인 취소 시 종료
+            }
+
+            // AJAX 요청
+            $.ajax({
+                type: 'GET',
+                url: `../challenge/cancel/${challengeId}`,
+                success: function (response) {
+                    if (response.cancelled) {
+                        alert('챌린지가 성공적으로 취소되었습니다.');
+                        location.reload(); // 페이지 새로고침 또는 동적 UI 업데이트
+                    } else {
+                        alert('챌린지 취소에 실패했습니다. 다시 시도해주세요.');
+                    }
+                },
+                error: function () {
+                    alert('서버 요청 중 오류가 발생했습니다.');
+                }
+            });
+        });
+    });
+
+
+    function deleteChallenge(button) {
+        // 버튼의 data-challenge-id 속성에서 챌린지 ID 가져오기
+        const challengeId = button.getAttribute("data-challenge-id");
+
+        // 확인 메시지
+        if (!confirm("정말로 이 챌린지를 삭제하시겠습니까?")) {
+            return;
+        }
+
+        // AJAX 요청 보내기
+        fetch(`../challenge/delete/${challengeId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => response.json()) // JSON으로 응답 받기
+            .then((data) => {
+                if (data.ok) {
+                    // 삭제 성공 시 처리
+                    alert("챌린지가 성공적으로 삭제되었습니다.");
+                    location.reload();
+                } else {
+                    // 삭제 실패 시 처리
+                    alert("챌린지 삭제에 실패했습니다.");
+                }
+            })
+            .catch((error) => {
+                // 네트워크 오류 또는 기타 예외 처리
+                alert("오류 발생: " + error.message);
+            });
+    }
+
+</script>
 </html>
 

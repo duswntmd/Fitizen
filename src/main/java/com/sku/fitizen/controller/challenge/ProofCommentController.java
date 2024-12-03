@@ -5,6 +5,7 @@ import com.sku.fitizen.domain.challenge.ProofComment;
 import com.sku.fitizen.domain.User;
 import com.sku.fitizen.service.challenge.ProofCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +49,13 @@ public class ProofCommentController {
     }
 
     //사진 인증 게시판 댓글 수정하기
+    @PostMapping("/editComment/{commentId}")
+    public ResponseEntity<?> editComment(@PathVariable int commentId, @RequestParam String proofComment) {
+        System.out.println("Received commentId: " + commentId + ", proofComment: " + proofComment);
+        boolean success = service.editComment(commentId, proofComment);
+        return ResponseEntity.ok(Map.of("success", success));
 
+    }
 
 
 }

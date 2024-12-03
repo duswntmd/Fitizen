@@ -31,7 +31,11 @@
                     <li><a href="/qna">Q&A</a></li>
                 </ul>
             </li>
-            <li><a th:href="@{${session.user != null ? '/login/logout' : '/login/login'}}" th:text="${session.user != null ? 'Logout (' + session.user.id + ')' : 'Login'}"></a></li>
+            <li>
+                <a th:href="@{${session.user != null ? '/login/logout' : '/login/login'}}"
+                   th:text="${session.user != null ? 'Logout (' + session.user.id + ')' : 'Login'}"
+                   th:attr="onclick=${session.user != null ? 'clearSessionStorage();' : ''}"></a>
+            </li>
             <li th:if="${session.user == null}">
                 <a href="/register/add">회원가입</a>
             </li>
@@ -46,6 +50,12 @@
             </li>
         </ul>
     </div>
+    <script>
+        // 세션 스토리지를 삭제하는 함수
+        function clearSessionStorage() {
+            sessionStorage.clear(); // 세션 스토리지를 삭제
+        }
+    </script>
 </header>
 <!-- 페이지 컨텐츠 -->
 </body>

@@ -99,6 +99,21 @@ $(document).ready(function() {
         });
     });
 })
+$(document).ready(function() {
+    $('#getUsers').on('click', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/admin/getUsers',
+            method: 'GET',
+            success: function(response) {
+                $('.content').html(response);
+            },
+            error: function() {
+                alert(response);
+            }
+        });
+    });
+})
 
 $(document).ready(function() {
     $('#updateInfo').on('click', function(e) {

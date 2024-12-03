@@ -110,10 +110,10 @@ public class SecurityConfig {
                                 "/kakao/deleteReview").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/ai/userVideos", "/ai/uploadVideo", "/ai/analyzeVideo", "/ai/detailvideo/**").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/ws/**","/chat", "/tChat", "/alarm").hasAnyRole("USER","ADMIN")
-                        .requestMatchers("/consultation").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/consultation/**").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/challenge/add","/challenge/save","/challenge/participate/*","/challenge/participate",
-                                "challenge/myChall","/chellComment/**").hasAnyRole("USER","ADMIN")
-                        .requestMatchers("/proofComment/**","proofShot/addProofShotForm/*","proofShot/add/","proofShot/addChatProof","proofShot/verify").hasAnyRole("USER","ADMIN")
+                                "challenge/myChall","/chellComment/**","/challenge/delete/*","/challenge/edit","/challenge/cancel/*").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/proofComment/**","/proofComment/editComment/*","proofShot/addProofShotForm/*","proofShot/add/","proofShot/addChatProof","proofShot/verify","proofShot/deletePost/*").hasAnyRole("USER","ADMIN")
                         .requestMatchers("pay/*","cancel/**" ,"verify/**","/savePayment","/orderPayment","/getMyPayments","/myOrder","/getMyPaymentsData").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                         .requestMatchers("/user/myPage").hasAnyRole("USER","ADMIN")

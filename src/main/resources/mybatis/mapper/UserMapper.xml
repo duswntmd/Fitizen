@@ -93,12 +93,6 @@
         SELECT PASSWORD FROM USERS WHERE EMAIL = #{email} AND USERNAME = #{id}
     </select>
 
-    <!-- 사용자 포인트 적립  2024.10.30: 수정할 예정-jaeho -->
-    <update id="addPointsToUser" parameterType="map">
-        UPDATE USERS
-        SET POINTS = POINTS + #{points}
-        WHERE USERNAME = #{userId}
-    </update>
 
     <!-- 이메일 찾기 -->
     <select id="findEmailByIdAndName" parameterType="com.sku.fitizen.domain.User" resultType="String">

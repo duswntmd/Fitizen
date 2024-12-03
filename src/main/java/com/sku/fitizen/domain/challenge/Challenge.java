@@ -38,15 +38,10 @@ public class Challenge {
 
     private String proofDays;
 
-    private int  categoryId;
+    private int categoryId;
 
     private int entryPoint;
+    private int verifiedCount; // 각 챌린지별 인증받은 개수
+    private int isEnded;
 
-    @Override
-    public String toString() {
-        return "Challenge [challengeId=" + challengeId + ", title=" + title + ", startDate="+ startDate +
-                ", endDate="+ endDate + ", limitUser="+limitUser+", creatorId=" + creatorId + ", content="
-                + content + ", members="+ ",week=" + week + ", poofCount="
-                + proofCount + ", proofDays="+proofDays + ", categoryId=" + categoryId + "point="+entryPoint+"]";
-    }
 }

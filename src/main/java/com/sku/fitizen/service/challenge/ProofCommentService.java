@@ -21,7 +21,6 @@ public class ProofCommentService {
         return false;
     }
 
-    //사진 인증 게시판 댓글 수정하기
 
     //사진 인증 게시판 댓글 삭제하기
     public boolean deleteProofComment(int proofCommentId)
@@ -31,5 +30,12 @@ public class ProofCommentService {
         if(result == 1) return true;
         return false;
     }
+
+    // 댓글 수정
+   public boolean editComment(int proofCommentId, String proofComment)
+   {
+       return  mapper.editComment(proofCommentId,proofComment)>0;
+
+   }
 }
 

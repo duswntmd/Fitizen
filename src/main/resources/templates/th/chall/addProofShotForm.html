@@ -73,7 +73,7 @@
 
     function submitProofShotBoard() {
         if(!confirm('인증 사진을 올리시겠습니까?'))return;
-
+        var challengeId = document.getElementById('challengeId').value; // 챌린지 ID 가져오기
         var form = document.getElementById('addForm');
         var formData = new FormData(form);
 
@@ -86,9 +86,12 @@
             data: formData,
             dataType: 'json',
             success: function(res) {
-                alert(res.saved ? '인증 사진 등록 성공' : '인증 사진 등록 실패');
                 if (res.saved) {
-                    location.href = "/"; // 리다이렉트할 URL
+                    alert('인증 사진 등록 성공');
+                    // 성공 시 챌린지 ID를 포함한 URL로 리다이렉트
+                    location.href = `../../proofShot/${challengeId}`;
+                } else {
+                    alert('인증 사진 등록 실패');
                 }
             },
             error: function(err) {

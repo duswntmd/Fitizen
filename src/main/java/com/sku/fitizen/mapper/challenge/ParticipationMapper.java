@@ -21,7 +21,8 @@ public interface ParticipationMapper {
 
   // 유저가 참가한 날짜
   Date getUserJoinDate (Participation parti);
-
+  // 유저 챌린지 참여 취소
+  int cancelChallenge(Participation parti);
 
   // 유저가 참가한 챌린지 번호 리스트
   List<Integer> getChallengeIdsByUser(@Param("userId") String userId);

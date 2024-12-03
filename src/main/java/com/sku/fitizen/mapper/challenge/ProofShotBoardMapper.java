@@ -19,6 +19,7 @@ public interface ProofShotBoardMapper {
     // 사진 인증 해주기
     int verifyProofShot(PhotoVerification verify);
 
-
+    // 인증 사진 삭제
+    int deleteProofShot(int proofNum);
 
 }
