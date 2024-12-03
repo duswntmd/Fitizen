@@ -1,6 +1,3 @@
-# Fitizen
-팀프로젝트 저장소
-
 <div align="center">
 
 | **연주승** | **정재호** | **박성재** | 
@@ -13,10 +10,18 @@
 
 # 기술 소개
 # API 명세서
-# 리드미 작성할게요 
 
-# 🏋️ Well-Fit
----
+<div align="center">
+  <h1 style="font-size: 2.5em; font-weight: bold;">🏋️ Fitizen</h1>
+  <p style="font-style: italic;">초보자를 위한 운동 웹사이트</p>
+  <p>
+    운동 루틴부터 식단 계획, <br>
+    그리고 운동 방법까지, <br>
+    초보자도 쉽게 따라할 수 있는 맞춤 정보를 제공합니다.
+  </p>
+</div>
+
+
 ## 목차 
 <details><summary>목차
 </summary>
