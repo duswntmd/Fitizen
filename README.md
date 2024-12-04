@@ -60,14 +60,6 @@ AWS 도 마찬가지 모두에 해당함
 
 
 
-
-
-
-
-
-
-
-
 # FITIZEN
 ## 목차 
 <details><summary>목차
@@ -101,7 +93,7 @@ AWS 도 마찬가지 모두에 해당함
 
 |연주승|정재호|박성재|
 |:---:|:---:|:---:|
-|[<img alt="연주승 프로필" src="https://github.com/user-attachments/assets/dd9639d0-70a4-424b-8060-2ffe21b0725b" width="200" height="200"> <br/> @duswntmd](https://github.com/duswntmd)|[<img alt="정재호 프로필" src="https://github.com/user-attachments/assets/9d38466d-4fbf-42b0-a702-dff8bc411ff5" width="200" height="200"> <br/> @JaehoHoya](https://github.com/JaehoHoya)|[<img alt="박성재 프로필" src="https://github.com/user-attachments/assets/645d27c7-617c-4397-b527-f10bf110fb24" img width="200" height="200"> <br/> @psjae98](https://github.com/psjae98)|
+|[<img alt="연주승 프로필" src="https://github.com/user-attachments/assets/dd9639d0-70a4-424b-8060-2ffe21b0725b" width="200" height="200"> <br/> @duswntmd](https://github.com/duswntmd)|[<img alt="정재호 프로필" src="https://github.com/user-attachments/assets/063b5649-ea79-466b-9976-5c677e91d599" width="200" height="200"> <br/> @JaehoHoya](https://github.com/JaehoHoya)|[<img alt="박성재 프로필" src="https://github.com/user-attachments/assets/645d27c7-617c-4397-b527-f10bf110fb24" img width="200" height="200"> <br/> @psjae98](https://github.com/psjae98)|
 | 팀장 |팀원|팀원|
 | <img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"> <br/> | <br> <img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=Spring%20Boot&logoColor=white"> <br><img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"> <br><img src="https://img.shields.io/badge/Javascript-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white"><br/><img src="https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=Oracle&logoColor=white"><br/>| <img alt="파이썬" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"> |
 
