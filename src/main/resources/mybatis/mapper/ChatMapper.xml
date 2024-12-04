@@ -82,12 +82,6 @@
             resultType="Message">
             SELECT * FROM  message
             WHERE roomId=#{challengeId}
-            AND sentAt >=(
-                SELECT MIN(sentAt)
-                FROM message
-                WHERE  roomId=#{challengeId}
-                AND senderID=#{userId}
-                )
             ORDER BY sentAt,messageId
 
 

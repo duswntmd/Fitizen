@@ -72,7 +72,7 @@ public class WebSocketHandler extends TextWebSocketHandler
         roomMap.putIfAbsent(roomId, new HashMap<>());
         roomMap.get(roomId).put(user.getId(), session);
         // 상담 방에 사용자 추가
-        consultMap.put(consultId,new HashMap<>());
+        consultMap.putIfAbsent(consultId,new HashMap<>());
         consultMap.get(consultId).put(user.getId(), session);
 
 
@@ -253,6 +253,15 @@ public class WebSocketHandler extends TextWebSocketHandler
                 userSessions.remove(user.getId());
                 log.info("사용자 {}가 방 {}에서 나갔습니다.",user.getId(), roomId);
 
+            }
+        }
+
+        // consultId에 해당하는 상담방에서 사용자 세션 제거
+        if (StringUtils.hasText(consultId) && consultMap.containsKey(consultId)) {
+            Map<String, WebSocketSession> consultSessions = consultMap.get(consultId);
+            if (consultSessions != null) {
+                consultSessions.remove(user.getId());
+                log.info("사용자 {}가 상담방 {}에서 나갔습니다.", user.getId(), consultId);
             }
         }
     }
