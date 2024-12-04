@@ -95,8 +95,7 @@ text-decoration: underline;
     <label for="title">제목:</label>
     <input type="text" id="title" th:field="*{title}" required/><br/>
 
-    <label for="author">작성자:</label>
-    <input type="text" id="author" th:field="*{author}" required/><br/>
+    <input type="hidden" id="author" th:field="*{author}"/><br/>
 
     <label for="contents">질문 내용:</label>
     <textarea id="contents" th:field="*{contents}" required></textarea><br/>

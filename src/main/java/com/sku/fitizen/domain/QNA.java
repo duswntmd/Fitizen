@@ -16,5 +16,5 @@ public class QNA {
     private Date qdate;
 
         // Getters and Setters
-    }
+}
 

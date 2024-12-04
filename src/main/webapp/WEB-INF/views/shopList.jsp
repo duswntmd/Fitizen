@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%@ include file="header.jsp" %> <!-- 헤더 파일 포함 -->
 <!DOCTYPE html>
 <html lang="ko">
@@ -16,7 +17,9 @@
     <div>
         <h1> 상점 페이지</h1>
     </div>
-    <a href="shop/addProduct">상품 추가하기</a>
+    <c:if test="${userRole == 'ROLE_ADMIN'}">
+            <a href="shop/addProduct">상품 추가하기</a>
+    </c:if>
     <div id="main">
 
         <table>
