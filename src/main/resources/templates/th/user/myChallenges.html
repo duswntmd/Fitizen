@@ -356,7 +356,7 @@
     <div th:each="c : ${createdByMe}" class="my-challenge-item">
         <div class="challenge-info">
             <div class="challenge-image">
-                <img src="/files/challengeCover/500.jpeg" alt="챌린지 이미지">
+                <img th:src="@{'/files/challengeCover/' + ${m.getUCoverImg()}}">
             </div>
             <div class="challenge-title" th:text="${c.title}">챌린지 제목</div>
             <div class="challenge-user-id" th:text="'진행자:나'"></div>
@@ -396,8 +396,9 @@
                 <div class="challenge-layout">
                     <!-- 이미지 영역 -->
                     <div class="challenge-image">
-                        <img src="/files/challengeCover/exer.png" alt="챌린지 이미지">
+                        <img th:src="@{'/files/challengeCover/' + ${m.getUCoverImg()}}" />
                     </div>
+
 
                     <!-- 챌린지 정보 -->
                     <div class="challenge-info">
@@ -431,7 +432,7 @@
                 <div class="challenge-layout">
                     <!-- 이미지 영역 -->
                     <div class="challenge-image">
-                        <img src="/files/challengeCover/500.jpeg" alt="챌린지 이미지">
+                        <img th:src="@{'/files/challengeCover/' + ${m.getUCoverImg()}}">
                     </div>
 
                     <!-- 챌린지 정보 -->
