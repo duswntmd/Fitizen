@@ -1,8 +1,8 @@
 # FITIZEN
 ## 목차 
-<details><summary>목차
-</summary>
-  프로젝트 소개 (영상)</br>
+- [프로젝트 소개](#1-fitizen)
+- [팀원 소개](#2-팀원-소개)
+프로젝트 소개 (영상)</br>
 팀원소개 </br>
 개발기간</br>
 개발환경( 스프링 등등 파이썬 포함) </br>
@@ -13,10 +13,8 @@
 전체 페이지 짤 기능별 (ai먼저 ,다음 각자 기능 짤 )</br>
 느낀점 </br>
 
-</details>
+## 1. FITIZEN
 
-
-## 1.🏋️ FITIZEN
 <img width="1705" alt="스크린샷 2024-12-03 오후 7 02 23" src="https://github.com/user-attachments/assets/4bcf76c8-cc43-4977-abb2-ddcf9f907d70">
 
   <p>초보자를 위한 운동 웹사이트</p>
@@ -45,19 +43,14 @@
  - 열심히 운동하면서 작업하기
  - 건강하게 개발하기
  - 모든 구성원들이 운동을 좋아하기 때문에 저희가 만든 서비스를 실제로 사용하자
- - 
+
 <br>
 
 ## 3.📆 개발 기간
----
 ### 2024년 09월 09일 ~ 2024 12월 18일 
-
 <img width="913" alt="스크린샷 2024-12-05 오전 11 36 21" src="https://github.com/user-attachments/assets/fd5641cc-7d0b-4b16-87b3-b152f4b2dc84">
 
-
 ## 4.⚙️ 개발 환경 및 기술 스택
----
-
 <img width="1190" alt="스크린샷 2024-12-05 오후 1 01 47" src="https://github.com/user-attachments/assets/6e7408e5-22db-4ec4-9b46-984c4fca9482">
 
 
