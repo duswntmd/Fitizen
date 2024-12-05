@@ -37,7 +37,9 @@
     <a href="javascript:void(0);" id="addCartBtn" class="button">장바구니에 추가</a>
     <br>
     <a href="${pageContext.request.contextPath}/shop" class="button">상품 목록으로 돌아가기</a>
+    <c:if test="${userRole == 'ROLE_ADMIN'}">
     <button id="deleteButton" class="button">삭제</button>
+    </c:if>
 </div>
 <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

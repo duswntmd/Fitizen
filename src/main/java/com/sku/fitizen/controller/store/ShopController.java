@@ -111,8 +111,17 @@ public class ShopController {
     }
 
         @GetMapping("/shopDetail/{prid}")
-        public String showProductDetail ( @PathVariable int prid, Model model, HttpSession session){
-            Product product = shopService.getProductById(prid);
+        public String showProductDetail ( @PathVariable int prid, Authentication authentication, Model model, HttpSession session){
+            if (authentication != null) {
+                // 사용자 권한 리스트 가져오기
+                for (GrantedAuthority authority : authentication.getAuthorities()) {
+                    if (authority.getAuthority().equals("ROLE_ADMIN")) {
+                        model.addAttribute("userRole", "ROLE_ADMIN");
+                        break;
+                    }
+                }
+            }
+        Product product = shopService.getProductById(prid);
             String userId = (String) session.getAttribute("userId");
             model.addAttribute("product", product);
             model.addAttribute("userId", userId);
