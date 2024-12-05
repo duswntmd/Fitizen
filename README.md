@@ -41,73 +41,12 @@
 |[<img alt="연주승 프로필" src="https://github.com/user-attachments/assets/dd9639d0-70a4-424b-8060-2ffe21b0725b" width="200" height="200"> <br/> @duswntmd](https://github.com/duswntmd)|[<img alt="정재호 프로필" src="https://github.com/user-attachments/assets/063b5649-ea79-466b-9976-5c677e91d599" width="200" height="200"> <br/> @JaehoHoya](https://github.com/JaehoHoya)|[<img alt="박성재 프로필" src="https://github.com/user-attachments/assets/645d27c7-617c-4397-b527-f10bf110fb24" img width="200" height="200"> <br/> @psjae98](https://github.com/psjae98)|
 | 팀장 |팀원|팀원|
 
-<br>
-
-
-
----
-## 1.📱 Well-Fit 소개
----
-![Well-Fit](https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/dcdc2dac-6b25-4cd9-b461-9f3f6af3c7d7)
-웰핏(Well-Fit)은 운동과 다이어트에 관심 있는 이들을 위한 SNS 플랫폼으로, 운동 인플루언서와 강사들이 제공하는 다양한 서비스를 구매할 수 있으며 사용자 스스로도 자신의 서비스를 등록해 판매할 기회를 가집니다. 
-
-이 플랫폼에서는 상품 판매 외에도 다른 이용자들과 교류하며 운동 루틴, 식단 정보, 진행 중인 운동 목표 등의 일상을 글이나 사진으로 공유할 수 있습니다. 팔로우 기능을 통해 관심 있는 이들의 게시물을 홈 피드에서 살펴보고, 마음에 드는 콘텐츠에는 좋아요나 댓글을 남겨 소통을 더욱 활발하게 만들 수 있습니다. 
-
-또한, 개인 대 개인 메시지 기능을 통해 특정 사용자와 더 깊은 대화를 나눌 수 있는 공간도 제공됩니다. 초보자부터 운동 마니아까지, 모든 사람이 운동에 대한 열정을 공유하고 소통할 수 있는 웰핏은 운동에 관한 다양한 정보와 동기부여를 제공하는 커뮤니티입니다.
-
-
-<br>
-
 ### 😁 팀 목표
  - 열심히 운동하면서 작업하기
  - 건강하게 개발하기
  - 모든 구성원들이 운동을 좋아하기 때문에 저희가 만든 서비스를 실제로 사용하자
  - 
 <br>
-
-
-
-<details>
-  <summary>  🔥우리의 추억(?)🔥</summary>
-  <div markdown="1">
-
-  <br>
-
-  
-  <img width="254" alt="스크린샷 2023-11-08 오후 5 09 56" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/cfd4d059-cce1-462f-ab4a-f433317c1a48"> <br>
-😬 이렇게 어색하게 만난게 엊그제 같은데.. <br>
-
-<br>
-
-
-<img width="261" alt="image" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/42eebbbc-4819-4c88-9d56-9fb005903697"> <br>
-😩 설상가상으로 다 다른 성향을 가진 우리.. 잘 할 수 있을까? <br>
-
-
-<br>
-
-
-<img width="359" alt="image" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/aee9082a-bb87-4ca6-bdb1-6725d278bbcc">
-<img width="360" alt="영수증" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/2de563e0-e3e7-404a-b2da-eb2b56961f49"> <br>
-🤤 하지만 식성이 같은 저흰 바로 첫 오프라인 만남을 가졌고! (음식 사진 안찍고 영수증 찍는 우리)<br>
-
-
-<br>
-
-
-<img width="693" alt="image" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/06cb719a-ea28-4568-8ad5-8d796ec74f4f"> <br>
-🤒 실연이 다가와도 격려와 응원하는 마음과 함께 프로젝트를 진행했습니다!
-<br>
-
-
-<br> 저희가 함께 작업한 결과물을 함께 보시죠!
-
-</div>
-</details>
-
-
-<br>
-
 
 ## 3.📆 개발 기간
 ---
@@ -248,52 +187,12 @@
 
 ## 7.🔧 서비스 기능 소개
 
+연주승 </br>
 |스플래쉬|로그인|회원가입|
 |---|---|---|
 |<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/5afd2eed-10e3-4c9a-a9aa-fbe4daa76537">|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/b24e6c3f-41da-4c79-9f99-829112f4f5b8">|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/991228dd-042a-40c4-a3a5-dc52dca175d2">|
-
-
-|회원가입 프로필 설정|계정 검색|팔로잉&팔로워|
-|---|---|---|
-|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/5cf9c671-cd99-4b02-bbd8-d4e6ae58ecad">|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/5be61739-0dd0-41a6-8c28-67308bdb9e2a">|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/8b340152-b5e3-4ad2-924f-6bde7efae1a9">|
-
-
-|메인|좋아요|댓글 등록|
-|---|---|---|
-|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/6912266a-aa31-4bf2-b516-4e8eba3fd6bf">|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/a4241065-494c-4fe0-9c8b-d79879a8194b">|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/23458e8c-b1f1-40b6-b77a-78494559e152">|
-
-
-|상품 등록|게시글 등록|내 프로필|
-|---|---|---|
-|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/c9bb9883-c6dd-40b1-9b7b-5fe1100281ae">|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/2c0c8d22-1344-45c1-993a-3c02916f34ea">|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/20fae851-3d27-4900-8358-90a5645552d2">|
-
-
-|유저 프로필|로그아웃|더보기(캘린더+할일)|
-|---|---|---|
-|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/0308bd1d-cda3-4c6f-9891-c8b8c2e619fb">|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/e27b4d56-e9f0-419e-bdbe-2e431aa60317">|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/a586aa3c-74a3-4bb4-86f8-14a7258d75bd">|
-
-
-
-<br>
-
-## 10.♻️ Refactoring 계획
-<details><summary>반응형 작업
-</summary>
-다양한 기기가 많아진 만큼 다양한 사용자들이 편하게 이용할 수 있게 만들고 싶습니다. 시간과 역량이 조금 부족해 마크업 작업 시, 고정값으로 작업한 것이 많이 아쉬웠습니다. 반응형을 고려해서 우선 크게 태플릿부터 시작해서 pc까지 확장해 볼 예정입니다.
-</details>
-<details><summary>선택기능과 부가적인 기능 추가
-</summary>
-- 필수기능부터 하는 것이 목표로 잡아 선택기능 중 기능 구현을 못한 것이 있습니다. 
-- 선택기능을 구현을 하여 완성도를 더 높일 예정입니다. 구체적으로 좋아요, 팔로우, 언팔로우기능과 같이 선택기능을 구현할 예정입니다. 선택 기능을 하면서 홈페이지 무한 스크롤 구현하기와 검색기능 중 불필요한 API 요청 줄여볼 예정입니다. 
-- 추가적으로 넣은 더보기 페이지에서는 기능을 더 구현할 예정입니다. 식약처 오픈 API를 사용하여 식단별 칼로리 계산하는 기능을 넣고 유튜브 API 사용하여 원하는 운동부위나 음악을 선택하면 관련된 영상을 보여주는 기능도 넣을 예정입니다. 
-- 오운완 커뮤니티도 만들어 볼 예정입니다.
-</details>
-<details><summary>UI 수정
-</summary>
-- 페이지 전반적으로 수정할 부분이 있어 리팩토링 작업을 하게 되면 우선 순위로 작업을 할 것입니다. 홈페이지, 피드 상세페이지, 게시글 등록페이지, 채팅방 페이지의 구조 수정을 할 예정입니다. 모달창과 페이지간 이동에서도 수정해야할 부분이 있어 이것도 추가적으로 수정을 할 입니다. 
-- 동일한 스타일로 사용할 수 있고 컴포넌트화 할 수 있는 것들은 정리를 해서 코드를 깔끔하게 볼 수 있도록 할 예정입니다.
-</details>
-
+정재호  </br>
+박성재 </br>
 <br>
 
 
