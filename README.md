@@ -177,7 +177,7 @@ PW: wellfit12!@
 
 ## 3.📆 개발 기간
 ---
-### 2023년 10월 16일 ~ 2023 11월 8일 
+### 2024년 09월 09일 ~ 2024 12월 18일 
 
 <img width="913" alt="스크린샷 2024-12-05 오전 11 36 21" src="https://github.com/user-attachments/assets/fd5641cc-7d0b-4b16-87b3-b152f4b2dc84">
 
