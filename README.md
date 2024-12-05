@@ -310,60 +310,6 @@ PW: wellfit12!@
 
 
 <br>
-
-
-
-## 8.📂 프로젝트 폴더 구조
-
- ```
-📦wellfit-react
- ┣ 📂node_modules
- ┣ 📂public
- ┣ 📂src
- ┃ ┣ 📂Components
- ┃ ┃ ┣ 📂Button
- ┃ ┃ ┣ 📂Follow
- ┃ ┃ ┣ 📂Home
- ┃ ┃ ┣ 📂Input
- ┃ ┃ ┣ 📂More
- ┃ ┃ ┣ 📂Post
- ┃ ┃ ┣ 📂Profile
- ┃ ┃ ┣ 📂Search
- ┃ ┃ ┗ 📂common
- ┃ ┃ ┃ ┣ 📂Footer
- ┃ ┃ ┃ ┣ 📂Header
- ┃ ┃ ┃ ┣ 📂Loading
- ┃ ┃ ┃ ┗ 📂Modal
- ┃ ┣ 📂Contexts
- ┃ ┣ 📂Pages
- ┃ ┃ ┣ 📂404
- ┃ ┃ ┣ 📂Chatting
- ┃ ┃ ┣ 📂Follow
- ┃ ┃ ┣ 📂Home
- ┃ ┃ ┣ 📂Login
- ┃ ┃ ┣ 📂More
- ┃ ┃ ┣ 📂Post
- ┃ ┃ ┣ 📂Profile
- ┃ ┃ ┣ 📂Search
- ┃ ┃ ┣ 📂Signup
- ┃ ┃ ┗ 📂Splash
- ┃ ┣ 📂Router
- ┃ ┣ 📂api
- ┃ ┣ 📂images
- ┃ ┣ 📂resetcss
- ┃ ┣ 📜App.js
- ┃ ┗ 📜index.js
- ┣ 📜.gitignore
- ┣ 📜README.md
- ┣ 📜package-lock.json
- ┗ 📜package.json
-```
-
-
-<br>
-
-
-
 ## 9.⭐️ 핵심 코드
 
 
