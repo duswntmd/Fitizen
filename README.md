@@ -185,6 +185,9 @@ PW: wellfit12!@
 ## 4.⚙️ 개발 환경 및 기술 스택
 ---
 
+<img width="1190" alt="스크린샷 2024-12-05 오후 1 01 47" src="https://github.com/user-attachments/assets/6e7408e5-22db-4ec4-9b46-984c4fca9482">
+
+
 
 <details>
 <summary>협업 관련 링크</summary>
