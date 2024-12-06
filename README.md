@@ -1,4 +1,4 @@
-# FITIZEN
+# FITIZEN  AI 프로젝트 
 
 <details>
 <summary>목차</summary>
