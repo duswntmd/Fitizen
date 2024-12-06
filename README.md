@@ -135,11 +135,9 @@ https://fitizen.store
       - Q&A 게시판
       - 상점, 장바구니
 
-
+```
 # AI 상세설명 
 https://github.com/duswntmd/Fitizen/wiki/AI
-```
-
 
 <br>
 
