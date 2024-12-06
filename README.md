@@ -53,15 +53,6 @@
 
 
 
-<details>
-<summary>협업 관련 링크</summary>
-<div markdown="1">
-
-- [🔗노션링크](https://www.notion.so/20-63d462131a87436ab106cf24cff6c93c?pvs=4) <br>
-- [🔗Figma링크](https://www.figma.com/files/project/111509269/Team-project?fuid=1257889962084175927)
-
-</div>
-</details>
 
 
 ### 기술 스택
@@ -170,14 +161,9 @@
 
 ## 7.🔧 서비스 기능 소개
 
-연주승 </br>
-|스플래쉬|로그인|회원가입|
-|---|---|---|
-|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/5afd2eed-10e3-4c9a-a9aa-fbe4daa76537">|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/b24e6c3f-41da-4c79-9f99-829112f4f5b8">|<img width="270" height="570" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/991228dd-042a-40c4-a3a5-dc52dca175d2">|
-정재호  </br>
-박성재 </br>
-<br>
-
+- 연주승 
+- 박성재
+- 정재호
 
 ## 8. 느낀점
 
