@@ -21,12 +21,13 @@
     초보자도 쉽게 따라할 수 있는 맞춤 정보를 제공합니다.임시 문구임
   </p>
 
-> ### [🚀 배포 URL](https://well-fit-20.netlify.app/)
+> ### [🚀 배포 URL](https://fitizen.store )
 
 ```
-피티즌 url 
-테스트 계정 어드민 , 유저 ,트레이너 
-아이디 비번 적기
+DOMAIN : https://fitizen.store 
+테스트 계정
+트레이너 : trainer1 , trainer1
+유저 : user1 ,user1 
 ```
 
 ## 2. 팀원 소개
