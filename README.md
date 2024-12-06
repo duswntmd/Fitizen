@@ -136,8 +136,8 @@ https://fitizen.store
       - 상점, 장바구니
 
 
-<br>
-각각 맨밑에 AI 위키 링크  위키 하나 페이지에 3개 AI  상단에 파이썬 ,사용된 모듈 ㅂ전 및 자세히 소개 자기가한거 
+# AI 상세설명 
+https://github.com/duswntmd/Fitizen/wiki/AI
 ```
 
 
