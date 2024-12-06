@@ -24,7 +24,7 @@
 > ### [🚀 배포 URL](https://fitizen.store )
 
 ```
-DOMAIN : https://fitizen.store 
+https://fitizen.store 
 테스트 계정
 트레이너 : trainer1 , trainer1
 유저 : user1 ,user1 
