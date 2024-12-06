@@ -62,11 +62,9 @@ https://fitizen.store
 <tr>
  <td align="center">Front-End</td>
  <td>
-  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white"/>&nbsp 
   <img src="https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=HTML5&logoColor=white"/>&nbsp
   <img src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=CSS3&logoColor=white"/>&nbsp
   <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"/>&nbsp
-  <img src="https://img.shields.io/badge/styled--Components-db7093?style=for-the-badge&logo=styled-Components&logoColor=black"/>&nbsp 
   <img src="https://img.shields.io/badge/Axios-white?style=for-the-badge&logo=Axios&logoColor=black"/>&nbsp 
  </td>
 </tr>
@@ -74,32 +72,29 @@ https://fitizen.store
  <td align="center">협업</td>
  <td>
     <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"/>&nbsp
-    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>&nbsp 
-    <img src="https://img.shields.io/badge/Notion-5a5d69?style=for-the-badge&logo=Notion&logoColor=white"/>&nbsp
-    <img src="https://img.shields.io/badge/Discord-4263f5?style=for-the-badge&logo=Discord&logoColor=white"/>&nbsp 
+    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>
  </td>
 </tr>
 <tr>
  <td align="center">디자인</td>
  <td>
-    <img src="https://img.shields.io/badge/Figma-d90f42?style=for-the-badge&logo=Figma&logoColor=white"/>&nbsp  
-    <img src="https://img.shields.io/badge/Adobe-FF0000?style=for-the-badge&logo=Adobe&logoColor=white"/>&nbsp  
+  
  </td>
 </tr>
 <tr>
  <td align="center">IDE</td>
  <td>
-    <img src="https://img.shields.io/badge/VSCode-007ACC?style=for-the-badge&logo=Visual%20Studio%20Code&logoColor=white"/>&nbsp
+ 
 </tr>
 <tr>
  <td align="center">컨벤션</td>
  <td>
-    <img src="https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=Prettier&logoColor=white"/>&nbsp
+   
 </tr>
 <tr>
  <td align="center">배포</td>
  <td>
-    <img src="https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=Netlify&logoColor=white"/>&nbsp
+   
 </tr>
 </table>
 
@@ -152,9 +147,6 @@ https://fitizen.store
 
 ## 6. 서비스 정보 구조도
 ---
-
-<img width="1600" alt="정보구조도" src="https://github.com/FRONTENDSCHOOL7/final-20-Well-Fit/assets/122437649/7b613213-0ceb-4352-a245-57355b0288ce">
-
 
 <br>
 
