@@ -4,7 +4,6 @@ import com.sku.fitizen.handler.CustomAuthenticationSuccessHandler;
 import jakarta.servlet.DispatcherType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
 import javax.sql.DataSource;
 
 @Slf4j
@@ -23,11 +21,18 @@ import javax.sql.DataSource;
 public class SecurityConfig {
 
     @Autowired
-    DataSource dataSource;
+    private DataSource dataSource;
 
-    public static void main(String[] args) {
-        SpringApplication.run(SecurityConfig.class, args);
-    }
+    // 생성자 주입
+//    @Autowired
+//    public SecurityConfig(DataSource dataSource) {
+//        this.dataSource = dataSource;
+//    }
+
+
+//    public static void main(String[] args) {
+//        SpringApplication.run(SecurityConfig.class, args);
+//    }
 
 //    @Bean
 //    public ServletWebServerFactory servletContainer() {

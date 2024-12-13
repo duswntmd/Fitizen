@@ -35,9 +35,9 @@ public class AiServer {
     private final HttpClient client;
     //private final String pythonServerUrl = "http://127.0.0.1:8000/"; //박성재테스트용 파이썬url
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String pythonServerUrl = "http://220.67.113.237:8000/";
-    private final String analyzeVideoUrl = "http://220.67.113.237:8000/videos/";
-    private final String uuidUrl = "http://220.67.113.236/video_storage/";
+    private final String pythonServerUrl = "http://52.68.111.22:8080/";
+    private final String analyzeVideoUrl = "http://52.68.111.22:8080/videos/";
+    private final String uuidUrl = "http://52.68.111.22/video_storage/";
     private final VideoAnalysisService videoAnalysisService;
 
     @Autowired
