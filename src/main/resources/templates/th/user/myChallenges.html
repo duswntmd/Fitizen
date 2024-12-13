@@ -356,7 +356,7 @@
     <div th:each="c : ${createdByMe}" class="my-challenge-item">
         <div class="challenge-info">
             <div class="challenge-image">
-                <img th:src="@{'/files/challengeCover/' + ${m.getUCoverImg()}}">
+                <img th:src="@{'/files/challengeCover/' + ${c.getUCoverImg()}}">
             </div>
             <div class="challenge-title" th:text="${c.title}">챌린지 제목</div>
             <div class="challenge-user-id" th:text="'진행자:나'"></div>

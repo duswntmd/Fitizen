@@ -127,7 +127,7 @@
             </div>
         </div>
 
-        <button type="submit">검사 결과로 이동</button>
+        <!-- <button type="submit">검사 결과로 이동</button> -->
         <button type="button" data-action="alternate" onclick="saveResultAndRedirectAlternate()">AI검사결과로 이동</button>
     </form>
 </div>
