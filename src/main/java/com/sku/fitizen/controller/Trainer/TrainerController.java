@@ -48,7 +48,7 @@ public class TrainerController
         return "th/trainer/trainerList";
     }
     @GetMapping("/detail/{trainerNo}")
-    public String trainerDetail(Model model, @PathVariable("trainerNo") int trainerNo,@SessionAttribute("user")User user)
+    public String trainerDetail(Model model, @PathVariable("trainerNo") int trainerNo,@SessionAttribute(value = "user" ,required = false)User user)
     {
         if (user !=null){
             model.addAttribute("user",user);

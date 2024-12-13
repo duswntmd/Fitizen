@@ -35,9 +35,9 @@ public class AiServer {
     private final HttpClient client;
     //private final String pythonServerUrl = "http://127.0.0.1:8000/"; //박성재테스트용 파이썬url
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String pythonServerUrl = "http://220.67.113.237:8000/";
-    private final String analyzeVideoUrl = "http://220.67.113.237:8000/videos/";
-    private final String uuidUrl = "http://220.67.113.236/video_storage/";
+    private final String pythonServerUrl = "http://13.40.95.69:8080/";
+    private final String analyzeVideoUrl = "http://13.40.95.69:8080/videos/";
+    private final String uuidUrl = "http://13.40.95.69:8080/video_storage/";
     private final VideoAnalysisService videoAnalysisService;
 
     @Autowired
@@ -264,7 +264,7 @@ public class AiServer {
         }
         String question = request.get("question");
         String json = String.format("{\"question\": \"%s\"}", question);
-        System.out.println("Generated JSON: " + json);
+        //System.out.println("Generated JSON: " + json);
 
 
         // HttpRequest 생성 (POST 요청)

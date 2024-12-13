@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -38,14 +39,20 @@ public class ProofShotBoardService {
     }
 
     // 인증 사진 올리기
-    public Boolean addProofShot(ProofShotBoard proofShotBoard, MultipartFile file)
-    {
+    public Boolean addProofShot(ProofShotBoard proofShotBoard, MultipartFile file) {
 
         if (!file.isEmpty()) {
             try {
                 // 파일 이름 및 경로 설정
                 String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-                Path filePath = Paths.get(uploadDir + "proofShot/", fileName);
+                Path directoryPath = Paths.get(uploadDir, "proofShot").toAbsolutePath().normalize();
+
+                // 디렉토리가 존재하지 않으면 생성
+                if (!Files.exists(directoryPath)) {
+                    Files.createDirectories(directoryPath);
+                }
+
+                Path filePath = directoryPath.resolve(fileName);
 
                 // 파일 저장
                 file.transferTo(filePath.toFile());
@@ -54,11 +61,10 @@ public class ProofShotBoardService {
                 proofShotBoard.setUPhoto(fileName);
                 proofShotBoard.setPhoto(file.getOriginalFilename());
 
-                } catch (IOException e)
-                  {
-                    e.printStackTrace();
-                    return false; // 파일 저장 실패 시 false 반환
-                  }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false; // 파일 저장 실패 시 false 반환
+            }
 
             int result = mapper.addProofShot(proofShotBoard);
             if (result == 1) return true;
@@ -67,6 +73,7 @@ public class ProofShotBoardService {
 
         return false;
     }
+
 
 
      // 채팅에서 바로 인증 샷 올리기
