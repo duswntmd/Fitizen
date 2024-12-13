@@ -95,7 +95,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(authz -> authz
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/", "/favicon.ico", "/login/**", "/register/add", "/board/list", "/comments/list", "/user/myPage",
+                        .requestMatchers("/", "/favicon.ico", "/login/**", "/register/add", "/board/list", "/comments/list",
                                 "/findME", "findResult", "/exerciseDetail/**",
                                 "/ShopImage/**", "/css/**", "/Assets/**", "/boardimages/**", "/files/**", "/image/**", "/js/**", "/static/**",
                                 "/mail/**","favicon.ico", "/video_storage/**",

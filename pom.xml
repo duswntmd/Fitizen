@@ -214,6 +214,12 @@
             <version>20240303</version>
         </dependency>
 
+        <dependency>
+            <groupId>jakarta.websocket</groupId>
+            <artifactId>jakarta.websocket-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+
         <!--결제-->
         <dependency>
             <groupId>com.github.iamport</groupId>
@@ -269,6 +275,16 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+
     </build>
 
 </project>

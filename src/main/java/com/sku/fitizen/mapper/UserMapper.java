@@ -14,7 +14,7 @@ public interface UserMapper {
 
     // 권한 정보 저장
     void insertUserRole(@Param("id") String username, @Param("authority") String authority);
-
+   
     // 트레이너 추가
     int insertTrainer(User user);
 
