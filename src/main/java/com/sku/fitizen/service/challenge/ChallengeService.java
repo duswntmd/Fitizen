@@ -114,27 +114,30 @@ public class ChallengeService {
         //saveChallenge를 @Transactional 할경우  챌린지 등록이 커밋 안된상태라 참여목록에서 FK를 참조 못함
         String creatorId = challenge.getCreatorId(); //참여자에 작성자 아이디도 넣기 위해
 
-        if (!file.isEmpty()) {
+        if (!file.isEmpty())
+        {
             try {
+                // 파일 이름 및 경로 설정
                 String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-                Path directoryPath = Paths.get(uploadDir, "challengeCover").toAbsolutePath().normalize();
+                Path filePath = Paths.get(uploadDir+"challengeCover/", fileName)
+                        .toAbsolutePath()
+                        .normalize();
 
                 // 디렉토리 생성
-                if (!Files.exists(directoryPath)) {
-                    Files.createDirectories(directoryPath);
+                if (!Files.exists(filePath)) {
+                    Files.createDirectories(filePath);
                 }
-
-                Path filePath = directoryPath.resolve(fileName);
 
                 // 파일 저장
                 file.transferTo(filePath.toFile());
 
+                // 챌린지 객체에 파일 경로 및 원본 파일명 저장
                 challenge.setUCoverImg(fileName);
                 challenge.setCoverImg(file.getOriginalFilename());
 
             } catch (IOException e) {
                 e.printStackTrace();
-                return false;
+                return false; // 파일 저장 실패 시 false 반환
             }
 
 
@@ -197,55 +200,55 @@ public class ChallengeService {
 
             return success;
         }
+    @Transactional
+    public boolean deleteChallenge(int challengeId) {
+        List<Map<String, String>> imageInfoList = challengeMapper.getImageList(challengeId);
 
-        // 챌린지 시작전 삭제
-        @Transactional
-        public boolean deleteChallenge(int challengeId) {
-            //fk참조 관계:챌린지(이미지),챌알림,챌댓글,메세지(이미지),참여테이블,인증게시판댓글,인증게시판(이미지)
-            // 이미지 먼저 삭제 및 caseCade 진행
+        if (imageInfoList == null || imageInfoList.isEmpty()) {
+            //System.err.println("No images found for challengeId: " + challengeId);
+            return false;
+        }
 
-            // 이미지 파일 이름과 소스를 DB에서 가져오기
-            List<Map<String, String>> imageInfoList = challengeMapper.getImageList(challengeId);
+        for (Map<String, String> imageInfo : imageInfoList) {
+            String source = imageInfo.get("source");
+            String filename = imageInfo.get("image_filename");
 
-            System.out.println(imageInfoList);
-            // 이미지 파일 삭제
-            for (Map<String, String> imageInfo : imageInfoList) {
-                String source = imageInfo.get("source");  // 어떤 테이블에서 나왔는지 구분
-                String filename = imageInfo.get("image_filename");  // 이미지 파일 이름
-                // 각 테이블에 맞는 이미지 경로 설정
-                // 각 테이블에 맞는 이미지 경로 설정
-                Path basePath;
-                switch (source) {
-                    case "challenge":
-                        basePath = Paths.get(uploadDir, "challengeCover").toAbsolutePath().normalize(); // UCOVERIMG 경로
-                        break;
-                    case "chat_message":
-                        basePath = Paths.get(uploadDir, "chatImg").toAbsolutePath().normalize(); // UIMG 경로
-                        break;
-                    case "proofShot":
-                        basePath = Paths.get(uploadDir, "proofShot").toAbsolutePath().normalize(); // UPHOTO 경로
-                        break;
-                    default:
-                        // 해당 테이블에 대한 경로가 없으면 무시
-                        continue;
-                }
-
-                Path imagePath = basePath.resolve(filename).toAbsolutePath().normalize();
-                File imageFile = imagePath.toFile();
-
-                if (imageFile.exists()) {
-                    try {
-                        Files.delete(imagePath); // 이미지 파일 삭제
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+            if (source == null || source.isEmpty() || filename == null || filename.isEmpty()) {
+              //  System.err.println("Invalid image info: " + imageInfo);
+                continue;
             }
 
-            // 챌린지 삭제
-            challengeMapper.deleteChallenge(challengeId);
-            return true;
+            Path basePath;
+            switch (source) {
+                case "challenge":
+                    basePath = Paths.get(uploadDir, "challengeCover").toAbsolutePath().normalize();
+                    break;
+                case "chat_message":
+                    basePath = Paths.get(uploadDir, "chatImg").toAbsolutePath().normalize();
+                    break;
+                case "proofShot":
+                    basePath = Paths.get(uploadDir, "proofShot").toAbsolutePath().normalize();
+                    break;
+                default:
+                    System.err.println("Unknown source: " + source);
+                    continue;
+            }
+
+            Path imagePath = basePath.resolve(filename).toAbsolutePath().normalize();
+            File imageFile = imagePath.toFile();
+
+            if (imageFile.exists()) {
+                try {
+                    Files.delete(imagePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
+        challengeMapper.deleteChallenge(challengeId);
+        return true;
+    }
 
 
 }
