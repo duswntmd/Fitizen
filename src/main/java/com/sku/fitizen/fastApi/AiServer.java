@@ -37,7 +37,7 @@ public class AiServer {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String pythonServerUrl = "http://52.68.111.22:8080/";
     private final String analyzeVideoUrl = "http://52.68.111.22:8080/videos/";
-    private final String uuidUrl = "http://52.68.111.22/video_storage/";
+    private final String uuidUrl = "http://43.207.41.33:81/video_storage/";
     private final VideoAnalysisService videoAnalysisService;
 
     @Autowired
@@ -173,10 +173,10 @@ public class AiServer {
                             .GET()
                             .build();
 
-//                    System.out.println("Sending HTTP request to: " + fileUrl);
+                    System.out.println("Sending HTTP request to: " + fileUrl);
 
                     HttpResponse<String> fileCheckResponse = tempClient.send(fileCheckRequest, HttpResponse.BodyHandlers.ofString());
-//                    System.out.println("Response Code: " + fileCheckResponse.statusCode());
+                    System.out.println("Response Code: " + fileCheckResponse.statusCode());
 //                    System.out.println("Response Body: " + fileCheckResponse.body());
 
                     if (fileCheckResponse.statusCode() == 200) {
