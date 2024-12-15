@@ -37,7 +37,7 @@ public class AiServer {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String pythonServerUrl = "http://52.68.111.22:8080/";
     private final String analyzeVideoUrl = "http://52.68.111.22:8080/videos/";
-    private final String uuidUrl = "http://43.207.41.33/video_storage/";
+    private final String uuidUrl = "https://43.207.41.33/video_storage/";
     private final VideoAnalysisService videoAnalysisService;
 
     @Autowired
