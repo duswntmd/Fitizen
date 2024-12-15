@@ -22,7 +22,7 @@ public class ChallengeScheduler {
     private static final Logger log = LoggerFactory.getLogger(ChallengeScheduler.class);
     private  final ChallengeService challengeService;
 
-    @Scheduled(cron = "0 38 13 * * ?")
+    @Scheduled(cron = "0 0 12 * * ?")
     public  void test()
     {
         System.err.println(" 포인트 자급 로직 시작");
