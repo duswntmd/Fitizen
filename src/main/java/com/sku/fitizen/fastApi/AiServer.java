@@ -37,7 +37,7 @@ public class AiServer {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String pythonServerUrl = "http://52.68.111.22:8080/";
     private final String analyzeVideoUrl = "http://52.68.111.22:8080/videos/";
-    private final String uuidUrl = "http://43.207.41.33:81/video_storage/";
+    private final String uuidUrl = "https://43.207.41.33/video_storage/";
     private final VideoAnalysisService videoAnalysisService;
 
     @Autowired
@@ -136,7 +136,8 @@ public class AiServer {
             String uuidFilename = UUID.randomUUID().toString() + "_" + originalFilename;
             String staticFilePath = new File("src/main/resources/static/video_storage/" + uuidFilename).getAbsolutePath();
             String fileUrl = uuidUrl + uuidFilename;
-//            System.out.println("Checking file URL: " + fileUrl);
+            System.out.println("staticFilePath file URL: " + staticFilePath);
+            System.out.println("Checking file URL: " + fileUrl);
             // 파일 저장
             file.transferTo(new File(staticFilePath));
 
