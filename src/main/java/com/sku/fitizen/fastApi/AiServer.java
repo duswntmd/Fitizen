@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -24,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.util.*;
 
@@ -37,13 +37,21 @@ public class AiServer {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String pythonServerUrl = "http://52.68.111.22:8080/";
     private final String analyzeVideoUrl = "http://52.68.111.22:8080/videos/";
-    private final String uuidUrl = "https://43.207.41.33/video_storage/";
+    private final String uuidUrl = "https://fitizen.store/video_storage/";
     private final VideoAnalysisService videoAnalysisService;
+    private final Path fileStoragePath;
 
     @Autowired
     public AiServer(VideoAnalysisService videoAnalysisService) {
         this.client = HttpClient.newHttpClient();
         this.videoAnalysisService = videoAnalysisService;
+        this.fileStoragePath = Paths.get("src/main/resources/static/video_storage").toAbsolutePath().normalize();
+        System.out.println("Current file storage path: " + this.fileStoragePath);
+        try {
+            Files.createDirectories(this.fileStoragePath); // 디렉터리가 없으면 생성
+        } catch (IOException ex) {
+            throw new RuntimeException("파일 저장 경로를 생성할 수 없습니다.", ex);
+        }
     }
 
     @GetMapping("/userVideos")
@@ -134,26 +142,30 @@ public class AiServer {
             // 1. 파일 저장 경로 설정
             String originalFilename = file.getOriginalFilename();
             String uuidFilename = UUID.randomUUID().toString() + "_" + originalFilename;
-            String staticFilePath = new File("src/main/resources/static/video_storage/" + uuidFilename).getAbsolutePath();
+            Path targetLocation = this.fileStoragePath.resolve(uuidFilename);
+
+            // 파일 저장
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("File saved at: " + targetLocation);
             String fileUrl = uuidUrl + uuidFilename;
-            System.out.println("staticFilePath file URL: " + staticFilePath);
+            System.out.println("staticFilePath file URL: " + targetLocation);
             System.out.println("Checking file URL: " + fileUrl);
             // 파일 저장
-            file.transferTo(new File(staticFilePath));
+//            file.transferTo(new File(targetLocation));
 
             // 2. 파일 저장 상태 및 크기 확인
-            Path path = Paths.get(staticFilePath);
+            long actualSize = Files.size(targetLocation);
             long expectedSize = file.getSize();
             int maxRetries = 50;
             int retries = 0;
 
-            while (Files.size(path) < expectedSize) {
-                Thread.sleep(100);
-                retries++;
-                if (retries >= maxRetries) {
-                    throw new IOException("파일 저장이 완료되지 않았습니다.");
-                }
-            }
+//            while (Files.size(path) < expectedSize) {
+//                Thread.sleep(100);
+//                retries++;
+//                if (retries >= maxRetries) {
+//                    throw new IOException("파일 저장이 완료되지 않았습니다.");
+//                }
+//            }
 
             // 3. HTTP 접근 가능 여부 확인
             boolean fileReady = false;
