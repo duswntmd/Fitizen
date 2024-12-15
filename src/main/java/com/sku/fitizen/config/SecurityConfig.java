@@ -114,7 +114,7 @@ public class SecurityConfig {
                         .requestMatchers("/kakao/map/**", "/kakao/reviewDetail/**", "/kakao/addReview/**", "/kakao/editReview/**",
                                 "/kakao/deleteReview").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/ai/userVideos", "/ai/uploadVideo", "/ai/analyzeVideo", "/ai/detailvideo/**").hasAnyRole("USER","ADMIN")
-                        .requestMatchers("/ws/**","/chat", "/tChat", "/alarm").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/wss/**","/chat", "/tChat", "/alarm").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/consultation/**").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/challenge/add","/challenge/save","/challenge/participate/*","/challenge/participate",
                                 "challenge/myChall","/chellComment/**","/challenge/delete/*","/challenge/edit","/challenge/cancel/*").hasAnyRole("USER","ADMIN")

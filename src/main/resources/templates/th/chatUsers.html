@@ -154,7 +154,7 @@
 
         }
         function connectAlarmSocket() {
-            alarmSocket = new WebSocket("ws://" +project+ "/alarm");
+            alarmSocket = new WebSocket("wss://" +project+ "/alarm");
 
 
 
@@ -381,7 +381,7 @@
             currentChallengeTitle.innerText = "\""+title+"\"";  // 제목 설정
             currentChallengeTitle.style.display = 'block';  // 챌린지 제목 보이기
 
-            g_webSocket = new WebSocket("ws://" +project + "/chat?" + "roomId=" + roomId+"&consultId="+consultId);
+            g_webSocket = new WebSocket("wss://" +project + "/chat?" + "roomId=" + roomId+"&consultId="+consultId);
             g_webSocket.onopen = function (message) {
 
 
