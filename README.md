@@ -34,8 +34,7 @@
 | 트레이너   | trainer1      | trainer1     |
 | 유저       | user1         | user1        |
 
-사이트 링크: [https://fitizen.store](https://fitizen.store)
-
+<sub>2024.12.18 일부로 서버 종료됨</sub>
 
 ## 2. 팀원 소개
 
