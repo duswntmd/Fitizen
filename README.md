@@ -111,7 +111,7 @@ https://fitizen.store
       - logBack
       - AI : 운동 자세분석 
       - 메인페이지(최종 점검 및 수정)
-      - (https 안쓴거면 트러불 이슈에 적어줄것 이상) 
+      - FastApi(파이썬 서버) ,AWS
 
 정재호
       - 로그인 (트레이너)
@@ -123,6 +123,7 @@ https://fitizen.store
       - 채팅
       - AI: 챗봇 
       - 결제
+      - Nginx ,AWS
 
 박성재
       - 회원 가입, 로그인, 아이디/비밀번호 찾기 css
