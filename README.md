@@ -122,7 +122,7 @@ https://fitizen.store
       - 트레이너 
       - 채팅
       - AI: 챗봇 
-      - 결제
+      - 결제 ,결제 기록 
       - Nginx ,AWS
 
 박성재
