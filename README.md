@@ -56,7 +56,7 @@
 <img width="913" alt="스크린샷 2024-12-05 오전 11 36 21" src="https://github.com/user-attachments/assets/fd5641cc-7d0b-4b16-87b3-b152f4b2dc84">
 
 ## 4. 개발 환경 및 기술 스택
-<img width="1147" alt="스크린샷 2024-12-06 오전 9 13 18" src="https://github.com/user-attachments/assets/b8a46510-c7c2-4db3-b6dd-de6d3730506a">
+<img width="1119" alt="image" src="https://github.com/user-attachments/assets/273139a1-bb4c-4ded-b812-3d4df60676c1" />
 
 
 
