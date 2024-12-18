@@ -29,12 +29,13 @@
 
 > ### [🚀 배포 URL](https://fitizen.store )
 
-```
-https://fitizen.store 
-테스트 계정
-트레이너 : trainer1 , trainer1
-유저 : user1 ,user1 
-```
+| **역할**   | **아이디**    | **비밀번호** |
+|------------|---------------|--------------|
+| 트레이너   | trainer1      | trainer1     |
+| 유저       | user1         | user1        |
+
+사이트 링크: [https://fitizen.store](https://fitizen.store)
+
 
 ## 2. 팀원 소개
 
