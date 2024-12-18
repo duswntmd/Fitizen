@@ -85,7 +85,7 @@
 <tr>
  <td align="center">IDE</td>
  <td>
- 
+   인텔리제이
 </tr>
  <td align="center">배포</td>
  <td>
