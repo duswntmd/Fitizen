@@ -143,15 +143,30 @@ https://github.com/duswntmd/Fitizen/wiki/AI
 
 <br>
 
-
-
 ## 7.🔧 서비스 기능 소개
 
-- 연주승 
-- 박성재
-- 정재호
+|챌린지|챌린지상세|인증게시판|
+|---|---|---|
+|<img width="1710" alt="스크린샷 2024-12-17 오전 10 38 35" src="https://github.com/user-attachments/assets/7b92ad6b-5099-4b82-b2f8-22a31aeb65c1" />|<img width="1710" alt="스크린샷 2024-12-17 오전 10 39 38" src="https://github.com/user-attachments/assets/a24a6c08-38d9-4d07-af9c-969405a4cda1" />|<img width="1710" alt="스크린샷 2024-12-17 오전 10 41 00" src="https://github.com/user-attachments/assets/085dbcbc-a18c-4d02-8713-e54b567f62f2" />|
+
+
+|트레이너|트레이너상세|트레이너|
+|---|---|---|
+|<img width="853" alt="스크린샷 2024-12-17 오전 10 36 37" src="https://github.com/user-attachments/assets/39cd44bb-e293-4132-b1ff-422b326d60c6" />|<img width="853" alt="스크린샷 2024-12-17 오전 10 37 08" src="https://github.com/user-attachments/assets/755fb23d-bee8-4b4d-addc-2f31ebf4937e" />|<img width="1710" alt="스크린샷 2024-12-17 오전 11 17 19" src="https://github.com/user-attachments/assets/3856ee09-3628-4ff8-b9f8-9bc6a2a4eba4" />|
+
+
+|챌린지(1:N)채팅|트레이너상담(1:1)|
+|---|---|
+|<img width="817" alt="스크린샷 2024-12-17 오전 11 14 20" src="https://github.com/user-attachments/assets/955fd1b0-a533-4389-a681-d62fd96b137e" />|<img width="540" alt="스크린샷 2024-12-17 오전 11 14 32" src="https://github.com/user-attachments/assets/7e781e6a-8caf-48ef-9e8c-f8777564c653" />|
+
+
+
+|마이페이지|포인트내역|구매내역|
+|---|---|---|
+|<img width="1710" alt="스크린샷 2024-12-17 오전 11 16 28" src="https://github.com/user-attachments/assets/34b46d29-58ea-4be0-bf33-eb8a5600090c" />|<img width="1710" alt="스크린샷 2024-12-17 오전 11 16 11" src="https://github.com/user-attachments/assets/55efdcc0-8a32-4aa1-8ab7-18046a5840ef" />|<img width="1710" alt="스크린샷 2024-12-17 오전 11 16 18" src="https://github.com/user-attachments/assets/f2d191f7-8067-420f-a8b3-3871d9bd2a7e" />|
 
 ## 8. 느낀점
+
 
 #### 연주승
 - FITIZEN 프로젝트에서 팀장으로서 전체 진행 상황을 관리하고 방향을 제시하는 역할을 맡으며 책임감의 중요성을 깊이 느꼈습니다. 프로젝트가 원활히 진행되기 위해서는 팀원들이 각자의 역할을 명확히 이해하고 서로 협력하며 문제를 해결할 수 있어야 한다고 생각했습니다. 이를 위해 전반적인 상황을 꾸준히 체크하고 팀원들과의 토의를 통해 각자가 맡은 역할과 목표를 명확히 전달하는 데 주력했습니다. 특히 팀원 간의 관점을 조율하고 서로 다른 생각들을 조화롭게 엮어내는 과정이 중요했습니다. 문제 상황에서는 다양한 가설을 함께 고민하며 팀원들의 문제 해결 능력을 끌어내기 위해 자율성을 최대한 보장했습니다. 필요할 때 도움을 주되 팀원들이 스스로 해결책을 찾을 수 있도록 자신감을 심어주는 것이 더 큰 성장을 이끌어낸다는 점을 깨달았습니다. 또한 프로젝트의 일정이 타이트했던 만큼 우선순위를 명확히 설정하고 작업을 효율적으로 분배하는 것이 중요했습니다. 한 사람에게 일이 몰리지 않도록 균형을 맞추고 기능의 중요한 작업에 집중시켜야 프로젝트를 효과적으로 관리할 수 있음을 배웠습니다. 이러한 과정은 팀원들 간의 협력과 신뢰를 강화하고 프로젝트를 성공적으로 완수할 수 있는 원동력이 되었습니다. FITIZEN 프로젝트를 통해 단순히 결과물을 만들어내는 것 이상의 중요한 가치를 배울 수 있었습니다. 팀워크와 리더십의 중요성을 다시 한번 깨닫고 이번 경험이 앞으로의 목표를 이루는 데 중요한 밑거름이 되어 더욱 발전할 수 있었던 계기가 되었다고 생각합니다.
