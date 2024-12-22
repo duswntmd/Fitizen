@@ -145,6 +145,9 @@ https://github.com/duswntmd/Fitizen/wiki/AI
 
 ## 7.🔧 서비스 기능 소개
 
+### AI
+![image](https://github.com/user-attachments/assets/2d6300cd-7a7d-4d12-9711-890c0e0b1e83)
+
 |챌린지|챌린지상세|인증게시판|
 |---|---|---|
 |<img width="1710" alt="스크린샷 2024-12-17 오전 10 38 35" src="https://github.com/user-attachments/assets/7b92ad6b-5099-4b82-b2f8-22a31aeb65c1" />|<img width="1710" alt="스크린샷 2024-12-17 오전 10 39 38" src="https://github.com/user-attachments/assets/a24a6c08-38d9-4d07-af9c-969405a4cda1" />|<img width="1710" alt="스크린샷 2024-12-17 오전 10 41 00" src="https://github.com/user-attachments/assets/085dbcbc-a18c-4d02-8713-e54b567f62f2" />|
