@@ -11,7 +11,6 @@
     <script src="/js/users/findPwd.js"></script>
 </head>
 <body>
-
 <h2>비밀번호 찾기</h2>
 <div class="page-contents">
 <form id="findPwdForm">
