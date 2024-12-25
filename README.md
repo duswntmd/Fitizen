@@ -18,7 +18,7 @@
 
 ## 1. 프로젝트 소개
 
-<img width="1705" alt="스크린샷 2024-12-03 오후 7 02 23" src="https://github.com/user-attachments/assets/4bcf76c8-cc43-4977-abb2-ddcf9f907d70">
+[![Video Label](http://img.youtube.com/vi/w0-uvxb35qE/0.jpg)](https://youtu.be/w0-uvxb35qE)
 
   <p>초보자를 위한 운동 웹사이트</p>
   <p>
