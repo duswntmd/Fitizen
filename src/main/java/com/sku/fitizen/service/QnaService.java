@@ -45,4 +45,5 @@ import java.util.List;
         public void deleteById(int qid) {
             qnaMapper.deleteById(qid);
         }
+
 }
