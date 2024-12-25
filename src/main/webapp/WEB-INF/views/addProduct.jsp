@@ -30,7 +30,6 @@
     <div id="result"></div>
 </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 </body>
 <%@ include file="footer.jsp" %> <!-- 푸터 파일 포함 -->
 </html>
