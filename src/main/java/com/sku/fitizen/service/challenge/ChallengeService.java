@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static net.sf.jsqlparser.util.validation.metadata.NamedObject.user;
-
 @Service
 public class ChallengeService {
 
@@ -39,6 +37,7 @@ public class ChallengeService {
 
     @Value("${file.upload-dir}")
     private String uploadDir;
+
     @Autowired
     private ChallengeMapper challengeMapper;
 
