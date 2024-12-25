@@ -18,7 +18,6 @@ public interface PaymentMapper {
    int insertOrder(orderProductDTO dto);
    int insertOrderProduct(@Param("product") CartItem product, @Param("orderId") int orderId);
 
-
    // 결제 기록 저장
    int  savePayment(Payment payment);
    // 결제 기록 (개인) 불러오기
