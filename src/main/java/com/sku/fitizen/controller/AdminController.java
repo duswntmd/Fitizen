@@ -22,6 +22,7 @@ public class AdminController {
     @Autowired
     private TrainerService tService;
 
+
     @GetMapping("/getTrainers")
     public String getTrainers(@SessionAttribute(value = "user") User user, Model model)
     {
