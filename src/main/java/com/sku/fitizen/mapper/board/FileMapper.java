@@ -22,4 +22,5 @@ public interface FileMapper {
 
     // 특정 게시글의 모든 파일 삭제
     void deleteFilesByBoard(Long bno);
+
 }
