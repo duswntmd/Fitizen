@@ -26,6 +26,7 @@ public class ChatService {
 
     @Autowired
     ChatMapper mapper;
+
     @Autowired
     UserService userService;
     @Autowired
