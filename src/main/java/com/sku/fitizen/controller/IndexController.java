@@ -45,7 +45,6 @@ public class IndexController {
     }
 
 
-
     @GetMapping("/exerciseDetail")
     public String exerciseDetail(@RequestParam("exercise") String sport, Model model) {
         model.addAttribute("sport", sport);  // 운동 이름을 모델에 추가
