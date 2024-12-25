@@ -19,4 +19,5 @@ public interface ChallCommentMapper {
     int  deleteChallComment(Map<String,Object> map);
 
     int  editChallComment(ChallComment comment);
+
 }
