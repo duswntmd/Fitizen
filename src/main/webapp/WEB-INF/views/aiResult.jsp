@@ -29,7 +29,6 @@
     <canvas id="exerciseChart" width="500" height="500"></canvas> <!-- 차트 크기 조정 -->
 </div>
 
-
 <script>
     // 운동에 대한 링크 설정
     const exerciseLinks = {
