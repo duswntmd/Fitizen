@@ -37,6 +37,7 @@ public class BoardService {
         this.boardCommentMapper = boardCommentMapper;
     }
 
+
     // 게시글 조회
     public Board getBoard(Long bno) {
         Board board = boardMapper.getBoard(bno);
