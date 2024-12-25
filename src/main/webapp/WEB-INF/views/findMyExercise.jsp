@@ -11,7 +11,6 @@
 
 </head>
 <body>
-
 <div class="container">
     <h1>맞춤 운동 검사</h1>
     <form id="quizForm" onsubmit="return saveResultAndRedirect();">
