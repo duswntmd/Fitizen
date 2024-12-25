@@ -22,7 +22,6 @@ public class TrainerController
     @Autowired
     TrainerService service;
 
-
     @GetMapping("")
     public String trainerList(Model model,@SessionAttribute(value = "user" ,required = false)User user)
     {
