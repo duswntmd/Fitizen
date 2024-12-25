@@ -10,7 +10,6 @@
 
 </head>
 <body>
-
 <div class="container">
     <h1>운동 검사 결과(추천 운동)</h1>
     <span id="resultText"></span>
