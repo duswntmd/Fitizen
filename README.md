@@ -60,64 +60,62 @@
 
 ## 4. 개발 환경 및 기술 스택
 
+### 개발 환경
 <img width="970" alt="스크린샷 2024-12-18 오전 11 11 23" src="https://github.com/user-attachments/assets/a54208b3-1d75-4557-8b62-89c18b88e6a7" />
 
-
 ### 기술 스택
-![JSP](https://img.shields.io/badge/-JSP-FFAA00?style=flat-square&logo=java&logoColor=white)
-![Thymeleaf](https://img.shields.io/badge/-Thymeleaf-005F0F?style=flat-square&logo=thymeleaf&logoColor=white)
-![HTML](https://img.shields.io/badge/-HTML-E34F26?style=flat-square&logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/-CSS-1572B6?style=flat-square&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
-![Java](https://img.shields.io/badge/-Java-007396?style=flat-square&logo=java&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/-Spring_Boot-6DB33F?style=flat-square&logo=springboot&logoColor=white)
-![Docker](https://img.shields.io/badge/-Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
-![Jenkins](https://img.shields.io/badge/-Jenkins-D24939?style=flat-square&logo=jenkins&logoColor=white)
-![Git](https://img.shields.io/badge/-Git-F05032?style=flat-square&logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/-GitHub-181717?style=flat-square&logo=github&logoColor=white)
-![IntelliJ IDEA](https://img.shields.io/badge/-IntelliJ_IDEA-000000?style=flat-square&logo=intellijidea&logoColor=white)
-![AWS](https://img.shields.io/badge/-AWS-FF9900?style=flat-square&logo=amazonaws&logoColor=white)
-![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python&logoColor=white)
-![Oracle](https://img.shields.io/badge/-Oracle-F80000?style=flat-square&logo=oracle&logoColor=white)
-![Anaconda](https://img.shields.io/badge/-Anaconda-44A833?style=flat-square&logo=anaconda&logoColor=white)
-![Redis](https://img.shields.io/badge/-Redis-DC382D?style=flat-square&logo=redis&logoColor=white)
-![Nginx](https://img.shields.io/badge/-Nginx-009639?style=flat-square&logo=nginx&logoColor=white)
-![OpenCV](https://img.shields.io/badge/-OpenCV-5C3EE8?style=flat-square&logo=opencv&logoColor=white)
-![Blender](https://img.shields.io/badge/-Blender-F5792A?style=flat-square&logo=blender&logoColor=white)
-
-
 <table>
-<tr>
- <td align="center">Front-End</td>
- <td>
-  <img src="https://img.shields.io/badge/Thymeleaf-005F0F?style=for-the-badge&logo=Thymeleaf&logoColor=white">
-  <img src="https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=HTML5&logoColor=white"/>&nbsp
-  <img src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=CSS3&logoColor=white"/>&nbsp
-  <img src="https://img.shields.io/badge/Axios-white?style=for-the-badge&logo=Axios&logoColor=black"/>&nbsp 
-   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white">
- </td>
-</tr>
-<tr>
- <td align="center">협업</td>
- <td>
-    <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"/>&nbsp
-    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>
- </td>
-</tr>
-<tr>
- <td align="center">IDE</td>
- <td>
-   인텔리제이
-</tr>
- <td align="center">배포</td>
- <td>
-     <img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=flat-square&logo=amazonaws&logoColor=white"/>
- </td>
-</tr>
+  <tr>
+    <td><strong></strong></td>
+    <td>
+      <img src="https://img.shields.io/badge/-JSP-FFAA00?style=flat-square&logo=java&logoColor=white" alt="JSP">
+      <img src="https://img.shields.io/badge/-Thymeleaf-005F0F?style=flat-square&logo=thymeleaf&logoColor=white" alt="Thymeleaf">
+      <img src="https://img.shields.io/badge/-HTML-E34F26?style=flat-square&logo=html5&logoColor=white" alt="HTML">
+      <img src="https://img.shields.io/badge/-CSS-1572B6?style=flat-square&logo=css3&logoColor=white" alt="CSS">
+      <img src="https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript">
+      <img src="https://img.shields.io/badge/-Java-007396?style=flat-square&logo=java&logoColor=white" alt="Java">
+      <img src="https://img.shields.io/badge/-Spring_Boot-6DB33F?style=flat-square&logo=springboot&logoColor=white" alt="Spring Boot">
+      <img src="https://img.shields.io/badge/-Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
+      <img src="https://img.shields.io/badge/-Jenkins-D24939?style=flat-square&logo=jenkins&logoColor=white" alt="Jenkins">
+      <img src="https://img.shields.io/badge/-Git-F05032?style=flat-square&logo=git&logoColor=white" alt="Git">
+      <img src="https://img.shields.io/badge/-GitHub-181717?style=flat-square&logo=github&logoColor=white" alt="GitHub">
+      <img src="https://img.shields.io/badge/-IntelliJ_IDEA-000000?style=flat-square&logo=intellijidea&logoColor=white" alt="IntelliJ IDEA">
+      <img src="https://img.shields.io/badge/-AWS-FF9900?style=flat-square&logo=amazonaws&logoColor=white" alt="AWS">
+      <img src="https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
+      <img src="https://img.shields.io/badge/-Oracle-F80000?style=flat-square&logo=oracle&logoColor=white" alt="Oracle">
+      <img src="https://img.shields.io/badge/-Anaconda-44A833?style=flat-square&logo=anaconda&logoColor=white" alt="Anaconda">
+      <img src="https://img.shields.io/badge/-Redis-DC382D?style=flat-square&logo=redis&logoColor=white" alt="Redis">
+      <img src="https://img.shields.io/badge/-Nginx-009639?style=flat-square&logo=nginx&logoColor=white" alt="Nginx">
+      <img src="https://img.shields.io/badge/-OpenCV-5C3EE8?style=flat-square&logo=opencv&logoColor=white" alt="OpenCV">
+      <img src="https://img.shields.io/badge/-Blender-F5792A?style=flat-square&logo=blender&logoColor=white" alt="Blender">
+    </td>
+  </tr>
 </table>
 
 
-<br>
+
+#### Back-End
+
+- Java: `JDK 11`
+- SpringBoot: `ver. 2.7.12`
+- MySQL: `ver. 8.0.32`
+- Amazon AWS: `EC2`, `S3`, `RDS`, `CodeDeploy`
+
+
+#### Front-End
+
+- CRA (Create React App)
+- CSS Modules
+- Typescript: `^5.0.2`
+- @types/node: `^20.3.1`
+- @types/react: `^18.2.13`
+- @types/react-dom: `^18.2.6`
+- react: `^18.2.0`
+- react-dom: `^18.2.0`
+- react-scripts: `5.0.1`
+
+
+<br/>
 
 
 ## 5. 역할 분담
@@ -169,29 +167,6 @@ https://github.com/duswntmd/Fitizen/wiki/AI
 
 ## 7.🔧 서비스 기능 소개
 
-### AI
-![image](https://github.com/user-attachments/assets/2d6300cd-7a7d-4d12-9711-890c0e0b1e83)
-https://github.com/duswntmd/Fitizen/wiki/AI
-
-|챌린지|챌린지상세|인증게시판|
-|---|---|---|
-|<img width="1710" alt="스크린샷 2024-12-17 오전 10 38 35" src="https://github.com/user-attachments/assets/7b92ad6b-5099-4b82-b2f8-22a31aeb65c1" />|<img width="1710" alt="스크린샷 2024-12-17 오전 10 39 38" src="https://github.com/user-attachments/assets/a24a6c08-38d9-4d07-af9c-969405a4cda1" />|<img width="1710" alt="스크린샷 2024-12-17 오전 10 41 00" src="https://github.com/user-attachments/assets/085dbcbc-a18c-4d02-8713-e54b567f62f2" />|
-
-
-|트레이너|트레이너상세|트레이너|
-|---|---|---|
-|<img width="853" alt="스크린샷 2024-12-17 오전 10 36 37" src="https://github.com/user-attachments/assets/39cd44bb-e293-4132-b1ff-422b326d60c6" />|<img width="853" alt="스크린샷 2024-12-17 오전 10 37 08" src="https://github.com/user-attachments/assets/755fb23d-bee8-4b4d-addc-2f31ebf4937e" />|<img width="1710" alt="스크린샷 2024-12-17 오전 11 17 19" src="https://github.com/user-attachments/assets/3856ee09-3628-4ff8-b9f8-9bc6a2a4eba4" />|
-
-
-|챌린지(1:N)채팅|트레이너상담(1:1)|
-|---|---|
-|<img width="817" alt="스크린샷 2024-12-17 오전 11 14 20" src="https://github.com/user-attachments/assets/955fd1b0-a533-4389-a681-d62fd96b137e" />|<img width="540" alt="스크린샷 2024-12-17 오전 11 14 32" src="https://github.com/user-attachments/assets/7e781e6a-8caf-48ef-9e8c-f8777564c653" />|
-
-
-
-|마이페이지|포인트내역|구매내역|
-|---|---|---|
-|<img width="1710" alt="스크린샷 2024-12-17 오전 11 16 28" src="https://github.com/user-attachments/assets/34b46d29-58ea-4be0-bf33-eb8a5600090c" />|<img width="1710" alt="스크린샷 2024-12-17 오전 11 16 11" src="https://github.com/user-attachments/assets/55efdcc0-8a32-4aa1-8ab7-18046a5840ef" />|<img width="1710" alt="스크린샷 2024-12-17 오전 11 16 18" src="https://github.com/user-attachments/assets/f2d191f7-8067-420f-a8b3-3871d9bd2a7e" />|
 
 ## 8. Wiki
     
