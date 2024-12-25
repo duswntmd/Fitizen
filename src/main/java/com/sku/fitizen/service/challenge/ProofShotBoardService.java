@@ -29,7 +29,6 @@ public class ProofShotBoardService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-
     // 챌린지 마다 인증 게시판 불러오기
     public List<ProofShotBoard> getProofShotListById(int id)
     {
