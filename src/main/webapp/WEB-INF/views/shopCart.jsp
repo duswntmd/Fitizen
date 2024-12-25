@@ -13,7 +13,6 @@
 <body>
 <h1>${user.id}님의 장바구니</h1>
 
-
 <table>
     <thead>
     <tr style="text-align: center">
