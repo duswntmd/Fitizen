@@ -6,7 +6,6 @@ import com.sku.fitizen.service.store.CartService;
 import com.sku.fitizen.service.store.ShopService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +26,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/shop")
 public class ShopController {
+
     @Autowired
     private CartService cartService;
     private  ShopService shopService;
