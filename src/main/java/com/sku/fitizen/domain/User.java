@@ -20,7 +20,6 @@ public class User {
     private String authority;
     private int enabled;
 
-
     private String workPlaceName; // 근무지
     private int zipCode; // 우편번호
     private String location; // 주소
