@@ -117,27 +117,22 @@
   </tr>
 </table>
 
+#### Front-End
+
 
 #### Back-End
 
-- Java: `JDK 11`
-- SpringBoot: `ver. 2.7.12`
-- MySQL: `ver. 8.0.32`
-- Amazon AWS: `EC2`, `S3`, `RDS`, `CodeDeploy`
+- Java: `JDK 21`
+- SpringBoot: `ver. 3.3.3`
 
+#### Database 
 
-#### Front-End
+- Oracle: `ver. 11g`
+- Oracle: `sqldeveloper`
 
-- CRA (Create React App)
-- CSS Modules
-- Typescript: `^5.0.2`
-- @types/node: `^20.3.1`
-- @types/react: `^18.2.13`
-- @types/react-dom: `^18.2.6`
-- react: `^18.2.0`
-- react-dom: `^18.2.0`
-- react-scripts: `5.0.1`
+#### Database 
 
+- Amazon AWS: `EC2`, `RDS`, `Route 53`, `VPC`
 
 <br/>
 
