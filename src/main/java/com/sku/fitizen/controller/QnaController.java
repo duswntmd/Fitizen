@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class QnaController {
     private QnaService qnaService;
 
-
     public QnaController(QnaService qnaService) {
         this.qnaService = qnaService;
     }
