@@ -37,7 +37,6 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
-
     @GetMapping("/myConsultation")
     @ResponseBody
     public List<Map<String, Object>> myConsult(@SessionAttribute(value = "user") User user)
