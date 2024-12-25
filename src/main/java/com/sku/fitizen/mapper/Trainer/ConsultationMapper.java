@@ -43,6 +43,5 @@ public interface ConsultationMapper {
     // 상담 거절
     int reject(Consultation consult);
 
-
 }
 
