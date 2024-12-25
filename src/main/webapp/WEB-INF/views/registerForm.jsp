@@ -11,7 +11,6 @@
     <link rel="stylesheet" type="text/css" href="/resources/static/css/indexStyle.css">
     <title>회원가입</title>
     <link rel="stylesheet" type="text/css" href="/css/users/registerForm.css">
-
 </head>
 
 <body>
