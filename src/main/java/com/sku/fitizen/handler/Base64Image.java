@@ -3,7 +3,6 @@ package com.sku.fitizen.handler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,6 +37,7 @@ public class Base64Image {
             fos.write(imageBytes);
         }
     }
+
 
     public void saveToProofShotBoard(String img, String UUIDImgName) throws IOException {
         // Base64 문자열에서 prefix 제거 (예: data:image/png;base64,)
