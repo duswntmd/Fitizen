@@ -61,7 +61,6 @@ public interface ChallengeMapper {
   List<Integer> getChallengesEndingToday();
   // uuId 이미지가져오기
   List<Map<String, String>> getImageList(int challengeId);
-
   //챌린지 삭제
   void deleteChallenge(int challengeId);
 }
