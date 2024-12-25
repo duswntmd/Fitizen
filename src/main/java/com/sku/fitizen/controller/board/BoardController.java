@@ -41,6 +41,7 @@ public class BoardController {
         this.boardCommentService = boardCommentService;
     }
 
+
     // 게시글 목록 조회
     @GetMapping("/list")
     public String list(
