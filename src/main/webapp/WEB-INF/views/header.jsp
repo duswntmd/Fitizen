@@ -20,6 +20,7 @@
         sessionStorage.clear();  // 세션 스토리지 비우기
     }
 </script>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
