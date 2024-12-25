@@ -1,6 +1,5 @@
 package com.sku.fitizen.handler;
 
-import com.sku.fitizen.Dto.ConsultLastMessageDTO;
 import com.sku.fitizen.domain.User;
 import com.sku.fitizen.domain.challenge.Message;
 import com.sku.fitizen.service.ChatService;
@@ -24,7 +23,6 @@ public class AlarmWebSocketHandler extends TextWebSocketHandler {
 
     @Autowired
     private ChatService chatService;
-
 
     // 알림 WebSocket 세션 관리
     private static Map<String, WebSocketSession> alarmSessions = new HashMap<>();
