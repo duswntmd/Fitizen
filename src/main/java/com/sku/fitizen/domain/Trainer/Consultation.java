@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Consultation {
 
-
     private  int consultId;
     private String userId;
     private int trainerNo;
