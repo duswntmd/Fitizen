@@ -152,7 +152,7 @@
 
 ---
 
-### [정재호(팀원원)](https://github.com/JaehoHoya)
+### [정재호(팀원)](https://github.com/JaehoHoya)
 - **로그인 (트레이너)**
 - **마이페이지**: 사용자 개인 페이지 관리
 - **GitHub 관리**: 리드미 및 위키 작성
