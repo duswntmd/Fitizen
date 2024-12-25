@@ -21,7 +21,6 @@ import java.util.Map;
 @RequestMapping("/proofShot")
 public class ProofShotBoardController {
 
-
     @Autowired
     ProofShotBoardService service;
 
