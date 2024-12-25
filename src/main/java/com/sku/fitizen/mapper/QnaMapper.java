@@ -14,4 +14,5 @@ public interface QnaMapper {
     void addComment(QNA qna);
     boolean update(QNA qna);
     boolean deleteById(int qid);
+
 }
