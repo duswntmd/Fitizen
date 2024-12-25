@@ -28,4 +28,5 @@ public class ChallengeScheduler {
         System.err.println(" 포인트 자급 로직 시작");
         challengeService.challengeScheduler();
     }
+
 }
