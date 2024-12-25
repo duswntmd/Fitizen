@@ -21,7 +21,6 @@ public class ProofCommentService {
         return false;
     }
 
-
     //사진 인증 게시판 댓글 삭제하기
     public boolean deleteProofComment(int proofCommentId)
     {
