@@ -15,5 +15,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 // 2. 외부 파일 경로 (대체 경로)
                 .addResourceLocations("file:/app/files/");
 
+
     }
 }
