@@ -28,7 +28,6 @@ public class EmailController
     @Autowired
     private UserService userService;
 
-
     @GetMapping("/findId")
     public String findId(Model model) {
         model.addAttribute("user", new User());
