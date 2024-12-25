@@ -2,7 +2,6 @@ package com.sku.fitizen.controller;
 
 
 import com.sku.fitizen.domain.User;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,5 +17,6 @@ public class UserController {
         model.addAttribute("user", user);
         return "th/user/myPage";
     }
+
 
 }
