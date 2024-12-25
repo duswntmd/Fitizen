@@ -18,7 +18,9 @@
 
 ## 1. 프로젝트 소개
 
-[![Video Label](http://img.youtube.com/vi/w0-uvxb35qE/0.jpg)](https://youtu.be/w0-uvxb35qE)
+<a href="https://youtu.be/w0-uvxb35qE" target="_blank">
+    <img src="http://img.youtube.com/vi/w0-uvxb35qE/0.jpg" alt="Video Label" width="1000" height="500">
+</a>
 
   <p>초보자를 위한 운동 웹사이트</p>
   <p>
