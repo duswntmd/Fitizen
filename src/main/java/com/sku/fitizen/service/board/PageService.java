@@ -25,4 +25,5 @@ public class PageService {
         return new PageInfo<>(boards);  // 페이지 정보 반환
     }
 
+
 }
