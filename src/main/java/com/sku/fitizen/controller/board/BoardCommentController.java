@@ -23,6 +23,7 @@ public class BoardCommentController {
         this.boardCommentService = boardCommentService;
     }
 
+
     // 댓글 조회
     @GetMapping("/list")
     @ResponseBody
