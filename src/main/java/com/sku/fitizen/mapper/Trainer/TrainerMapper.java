@@ -9,7 +9,6 @@ import java.util.Map;
 
 @Mapper
 public interface TrainerMapper {
-
     // 승인되지 않은 트레이너 리스트
     List<Trainer> getTrainersByUnapproved();
     // 트레이너 등록 승인 처리
