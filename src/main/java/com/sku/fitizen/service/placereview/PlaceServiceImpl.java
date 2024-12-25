@@ -35,4 +35,5 @@ public class PlaceServiceImpl implements PlaceService {
     public Place findPlaceById(Long id) {
         return placeMapper.findPlaceById(id);
     }
+
 }
