@@ -21,4 +21,5 @@ public interface VideoAnalysisMapper {
     // 특정 비디오 상세 정보 조회
     VideoAnalysis getVideoAnalysdetail(Map<String, Object> params);
 
+
 }
