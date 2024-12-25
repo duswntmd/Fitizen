@@ -50,5 +50,4 @@ public class CartService {
         cartMapper.deleteCartItemsByUserId(cartItem);
     }
 
-
 }
