@@ -43,7 +43,6 @@
     </style>
 </head>
 <body>
-
 <footer>
     <div class="footer-container">
         <ul class="footer-list">
