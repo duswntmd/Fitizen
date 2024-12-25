@@ -1,10 +1,5 @@
 package com.sku.fitizen.service;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import jakarta.activation.DataHandler;
 import jakarta.activation.FileDataSource;
 import jakarta.mail.BodyPart;
@@ -16,13 +11,16 @@ import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import jakarta.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -53,6 +51,7 @@ public class EmailService
 
         return true;
     }
+
 
     private String createRandomStr()
     {
