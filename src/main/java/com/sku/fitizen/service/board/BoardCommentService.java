@@ -38,6 +38,7 @@ public class BoardCommentService {
         return boardCommentMapper.select(cno);
     }
 
+
     // 댓글 추가
     @Transactional
     public int addComment(BoardComment comments) {
