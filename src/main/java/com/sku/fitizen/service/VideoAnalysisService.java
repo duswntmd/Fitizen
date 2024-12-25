@@ -30,7 +30,6 @@ public class VideoAnalysisService {
         return videoAnalysisMapper.getVideoAnalysdetail(params);
     }
 
-
     public int insertVideoAnalysis(VideoAnalysis videoAnalysis) {
         return videoAnalysisMapper.insertVideoAnalysis(videoAnalysis);
     }
