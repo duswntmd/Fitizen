@@ -25,7 +25,6 @@
         <table>
             <tr>
                 <th>이미지</th>
-
                 <th>상품명</th>
                 <th>가격</th>
 
