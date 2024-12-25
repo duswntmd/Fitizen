@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static net.sf.jsqlparser.util.validation.metadata.NamedObject.role;
-
 @Slf4j
 @Component
 public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -37,7 +35,6 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         } else {
             log.warn("User object is null, userId not set in session.");
         }
-
 
         String prevPage = (String) request.getSession().getAttribute("prevPage");
         log.info("Previous page: " + prevPage);
