@@ -44,4 +44,5 @@ public class ReviewService {
         return reviewMapper.getRatingCounts(placeId);
     }
 
+
 }
