@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class ConsultMessage {
-
     private int messageId;
     private int consultId;
     private String senderId;
