@@ -49,4 +49,5 @@ public interface UserMapper {
 
     // 유저가 트레이너인지 Y ,N 조회
     char isTrainer(String userId);
+
 }
