@@ -22,7 +22,6 @@ public class ChallCommentService {
 
         List<ChallComment> list =commentMapper.challCommentList(challId);
 
-
        return list;
    }
 
