@@ -12,4 +12,5 @@ public interface PlaceMapper {
     Place findPlaceByNameAndAddress(@Param("name") String name, @Param("address") String address);
 
     Place findPlaceById(Long id);
+
 }
