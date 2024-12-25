@@ -134,47 +134,6 @@ public class UserService {
     }
 
 
-    //    public String findIdByEmailAndName(String email, String name) throws Exception {
-//        String id = userDao.findIdByEmailAndName(email, name);
-//
-//        if (id != null) {
-//            // 비밀번호를 이메일로 전송
-//            EmailDto emailDto = new EmailDto();
-//            emailDto.setSenderName("Your Application");
-//            emailDto.setSenderMail("your-application@example.com");
-//            emailDto.setReceiveMail(email);
-//            emailDto.setSubject("Your id Recovery");
-//            emailDto.setMessage("Your id is: " + id);
-//
-//            emailService.sendMail(emailDto); // 이메일 전송
-//        } else {
-//            // 해당 이메일과 아이디로 가입된 사용자가 없는 경우 처리
-//        }
-//
-//        return id;
-//    }
-
-
-//    public String findPasswordByEmailAndId(String email, String id) throws Exception {
-//        String password = userDao.findPasswordByEmailAndId(email, id);
-//
-//        if (password != null) {
-//            // 비밀번호를 이메일로 전송
-//            EmailDto emailDto = new EmailDto();
-//            emailDto.setSenderName("Your Application");
-//            emailDto.setSenderMail("your-application@example.com");
-//            emailDto.setReceiveMail(email);
-//            emailDto.setSubject("Your Password Recovery");
-//            emailDto.setMessage("Your password is: " + password);
-//
-//            emailService.sendMail(emailDto); // 이메일 전송
-//        } else {
-//            // 해당 이메일과 아이디로 가입된 사용자가 없는 경우 처리
-//        }
-//
-//        return password;
-//    }
-
     //  유저 아이디로 is trainer  Y or N 조회
     public char isTrainer (String userId)
     {
