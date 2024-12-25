@@ -24,4 +24,5 @@ public interface ReviewMapper {
 
     List<Map<String, Object>> getRatingCounts(Long placeId);
 
+
 }
