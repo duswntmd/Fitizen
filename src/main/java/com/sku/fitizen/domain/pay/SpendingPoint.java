@@ -25,5 +25,6 @@ public class SpendingPoint {
       this.status = status;
       this.detail = detail;
    }
+
 }
 
