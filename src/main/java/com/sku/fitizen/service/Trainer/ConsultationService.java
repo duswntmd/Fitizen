@@ -32,8 +32,6 @@ public class ConsultationService {
         return mapper.getUserIdsByConsultId(consultId);
     }
 
-
-
     // 이미 신청한 상담인지
     public Integer existByUserId(Consultation consult) {
 
