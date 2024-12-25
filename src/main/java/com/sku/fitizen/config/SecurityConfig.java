@@ -88,7 +88,6 @@ public class SecurityConfig {
        */
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationSuccessHandler successHandler) throws Exception {
         log.info("접근제한 설정");
