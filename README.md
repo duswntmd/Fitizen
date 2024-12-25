@@ -60,11 +60,10 @@
 
 ## 4. 개발 환경 및 기술 스택
 
+### 개발 환경
 <img width="970" alt="스크린샷 2024-12-18 오전 11 11 23" src="https://github.com/user-attachments/assets/a54208b3-1d75-4557-8b62-89c18b88e6a7" />
 
-
 ### 기술 스택
-
 <table>
   <tr>
     <td><strong></strong></td>
@@ -93,7 +92,30 @@
   </tr>
 </table>
 
-<br>
+
+
+#### Back-End
+
+- Java: `JDK 11`
+- SpringBoot: `ver. 2.7.12`
+- MySQL: `ver. 8.0.32`
+- Amazon AWS: `EC2`, `S3`, `RDS`, `CodeDeploy`
+
+
+#### Front-End
+
+- CRA (Create React App)
+- CSS Modules
+- Typescript: `^5.0.2`
+- @types/node: `^20.3.1`
+- @types/react: `^18.2.13`
+- @types/react-dom: `^18.2.6`
+- react: `^18.2.0`
+- react-dom: `^18.2.0`
+- react-scripts: `5.0.1`
+
+
+<br/>
 
 
 ## 5. 역할 분담
