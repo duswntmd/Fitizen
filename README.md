@@ -148,7 +148,7 @@
 - **메인 페이지**: 최종 점검 및 수정
 - **FastAPI (파이썬 서버 구축)**: FastAPI 서버 개발 및 관리
 - **AWS**: 클라우드 배포 및 관리
-> #### [AI 상세설명](https://github.com/duswntmd/Fitizen/wiki/AI-%EA%B0%9C%EB%B0%9C-%EA%B3%BC%EC%A0%95) 
+> #### [AI 상세설명](https://github.com/duswntmd/Fitizen/wiki/AI-%EA%B0%9C%EB%B0%9C-%EA%B3%BC%EC%A0%95#%EC%9A%B4%EB%8F%99-%EC%9E%90%EC%84%B8-%EB%B6%84%EC%84%9D-ai) 
 
 ---
 
@@ -164,7 +164,7 @@
 - **결제 및 결제 기록**: 결제 시스템 및 기록 관리
 - **Nginx**: 웹 서버 설정 및 관리
 - **AWS**: 클라우드 배포 및 관리
-> #### [AI 상세설명](https://github.com/duswntmd/Fitizen/wiki/AI-%EA%B0%9C%EB%B0%9C-%EA%B3%BC%EC%A0%95) 
+> #### [AI 상세설명](https://github.com/duswntmd/Fitizen/wiki/AI-%EA%B0%9C%EB%B0%9C-%EA%B3%BC%EC%A0%95#%EC%B1%97%EB%B4%87-ai) 
 
 ---
 
