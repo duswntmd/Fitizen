@@ -12,5 +12,4 @@ public class OrderProduct {
     private int totalPrice; // 수량 *가격
     private String productImage;
     private String productDesc;
-
 }
