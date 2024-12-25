@@ -39,6 +39,7 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor
         return true;
     }
 
+
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
                                org.springframework.web.socket.WebSocketHandler wsHandler, Exception exception) {
