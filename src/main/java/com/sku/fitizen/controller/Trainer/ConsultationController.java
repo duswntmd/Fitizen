@@ -74,6 +74,7 @@ public class ConsultationController {
         return result;
     }
 
+
     //일반유저: 내가 신청한  트레이너 상담 ,트레이너: 상담신청한 유저목록
     @GetMapping("/myConsultation")
     public String consultation(@SessionAttribute("user")User user,  Model model)
