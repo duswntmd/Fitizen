@@ -14,5 +14,4 @@ public class Order {
     private Date paidAt;
     private int usePoint;
     private List<OrderProduct> orderProductList;
-
 }
