@@ -1,14 +1,13 @@
 package com.sku.fitizen.controller.challenge;
 
 
-import com.sku.fitizen.domain.challenge.ChallComment;
 import com.sku.fitizen.domain.User;
+import com.sku.fitizen.domain.challenge.ChallComment;
 import com.sku.fitizen.service.challenge.ChallCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +32,7 @@ public class ChallCommentController {
 
             return map;
         }
+
 
         // 댓글 삭제
         @GetMapping("/deleteChallComment/{commentId}")
