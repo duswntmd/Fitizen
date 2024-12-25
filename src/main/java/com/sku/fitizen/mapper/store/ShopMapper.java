@@ -20,4 +20,5 @@ public interface ShopMapper {
    boolean deleteProduct(int prid);
 
    int getPridByProductName(String prname);
+
 }
