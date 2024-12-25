@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface ProofCommentMapper {
 
-
     //사진 인증 게시판 댓글 작성하기
     int addComment(ProofComment proofComment);
 
