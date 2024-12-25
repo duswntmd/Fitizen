@@ -6,7 +6,6 @@ import org.springframework.validation.Validator;
 
 public class UserValidator implements Validator {
 
-
     @Override
     //이 검증기로 검증가능한 객체인지 알려주는 메서드
     public boolean supports(Class<?> clazz) {
