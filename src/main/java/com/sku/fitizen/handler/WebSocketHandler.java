@@ -1,7 +1,6 @@
 package com.sku.fitizen.handler;
 
 import com.sku.fitizen.domain.Trainer.ConsultMessage;
-import com.sku.fitizen.domain.Trainer.Consultation;
 import com.sku.fitizen.domain.User;
 import com.sku.fitizen.domain.challenge.Message;
 import com.sku.fitizen.service.ChatService;
@@ -39,7 +38,6 @@ public class WebSocketHandler extends TextWebSocketHandler
     ConsultationService consultService;
     @Autowired
     AlarmWebSocketHandler alarmHandler;
-
 
    // private static Map<String, WebSocketSession> userMap = new HashMap<>();
     private static Map<String, Map<String, WebSocketSession>> roomMap = new HashMap<>(); // roomId 별로 사용자 저장
