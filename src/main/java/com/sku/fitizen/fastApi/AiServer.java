@@ -6,6 +6,7 @@ import com.sku.fitizen.service.VideoAnalysisService;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -23,7 +25,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.util.*;
 
@@ -33,26 +34,20 @@ import java.util.*;
 public class AiServer {
 
     private final HttpClient client;
-    //private final String pythonServerUrl = "http://127.0.0.1:8000/"; //박성재테스트용 파이썬url
     private final RestTemplate restTemplate = new RestTemplate();
     private final String pythonServerUrl = "http://52.68.111.22:8080/";
     private final String analyzeVideoUrl = "http://52.68.111.22:8080/videos/";
-    private final String uuidUrl = "https://fitizen.store/video_storage/";
+    private final String uuidUrl = "https://fitizen.store/files/video_storage/";
     private final VideoAnalysisService videoAnalysisService;
-    private final Path fileStoragePath;
 
     @Autowired
     public AiServer(VideoAnalysisService videoAnalysisService) {
         this.client = HttpClient.newHttpClient();
         this.videoAnalysisService = videoAnalysisService;
-        this.fileStoragePath = Paths.get("src/main/resources/static/video_storage").toAbsolutePath().normalize();
-        System.out.println("Current file storage path: " + this.fileStoragePath);
-        try {
-            Files.createDirectories(this.fileStoragePath); // 디렉터리가 없으면 생성
-        } catch (IOException ex) {
-            throw new RuntimeException("파일 저장 경로를 생성할 수 없습니다.", ex);
-        }
     }
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
     @GetMapping("/userVideos")
     public String userVideoList(@SessionAttribute(value = "user", required = false) User user, Model model) {// 로그인한 사용자 ID 가져오기
@@ -68,7 +63,7 @@ public class AiServer {
 
         VideoAnalysis videoAnalysis = videoAnalysisService.getVideoAnalysisDetail(vnum, user.getId());
         String[] resultPairs = videoAnalysis.getVideoresult().split(",");
-        String baseUrl = "/video_storage/";
+        String baseUrl = "/files/video_storage/";
         List<Integer> frames = new ArrayList<>();
         List<Integer> values = new ArrayList<>();
         List<String> valuesLabels = new ArrayList<>();  // 라벨링된 자세 리스트
@@ -142,30 +137,26 @@ public class AiServer {
             // 1. 파일 저장 경로 설정
             String originalFilename = file.getOriginalFilename();
             String uuidFilename = UUID.randomUUID().toString() + "_" + originalFilename;
-            Path targetLocation = this.fileStoragePath.resolve(uuidFilename);
-
-            // 파일 저장
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("File saved at: " + targetLocation);
+            String staticFilePath = new File(uploadDir+"video_storage/", uuidFilename).getAbsolutePath();
             String fileUrl = uuidUrl + uuidFilename;
-            System.out.println("staticFilePath file URL: " + targetLocation);
+            System.out.println("staticFilePath file URL: " + staticFilePath);
             System.out.println("Checking file URL: " + fileUrl);
             // 파일 저장
-//            file.transferTo(new File(targetLocation));
+            file.transferTo(new File(staticFilePath));
 
             // 2. 파일 저장 상태 및 크기 확인
-            long actualSize = Files.size(targetLocation);
+            Path path = Paths.get(staticFilePath);
             long expectedSize = file.getSize();
             int maxRetries = 50;
             int retries = 0;
 
-//            while (Files.size(path) < expectedSize) {
-//                Thread.sleep(100);
-//                retries++;
-//                if (retries >= maxRetries) {
-//                    throw new IOException("파일 저장이 완료되지 않았습니다.");
-//                }
-//            }
+            while (Files.size(path) < expectedSize) {
+                Thread.sleep(100);
+                retries++;
+                if (retries >= maxRetries) {
+                    throw new IOException("파일 저장이 완료되지 않았습니다.");
+                }
+            }
 
             // 3. HTTP 접근 가능 여부 확인
             boolean fileReady = false;
@@ -420,4 +411,3 @@ public class AiServer {
 //    }
 
 }
-
