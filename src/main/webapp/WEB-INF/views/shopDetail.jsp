@@ -10,8 +10,6 @@
 </head>
 <link rel="stylesheet" type="text/css" href="/css/shop/shopDetail.css">
 
-
-
 <body>
 <div class="page-contents">
 <h1>상품 상세 정보</h1>
