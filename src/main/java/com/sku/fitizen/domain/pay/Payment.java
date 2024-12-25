@@ -17,7 +17,6 @@ public class Payment {
   private  int  point;
   private Date paidAt; // 결제 날짜
 
-
 }
 
 
