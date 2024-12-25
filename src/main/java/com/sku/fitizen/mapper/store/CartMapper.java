@@ -24,4 +24,5 @@ public interface CartMapper {
     void deleteCartItemsByUserId(CartItem cartItem);
 
     List<CartItem> findSelectedCartItems(String user_id,List<Integer> product_id);
+
 }
