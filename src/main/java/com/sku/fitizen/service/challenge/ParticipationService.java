@@ -5,12 +5,10 @@ import com.sku.fitizen.domain.pay.SpendingPoint;
 import com.sku.fitizen.mapper.PaymentMapper;
 import com.sku.fitizen.mapper.challenge.ChallengeMapper;
 import com.sku.fitizen.mapper.challenge.ParticipationMapper;
-import com.sku.fitizen.service.PaymentService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,11 +17,13 @@ public class ParticipationService
 {
     @Autowired
     ParticipationMapper mapper;
+
     @Autowired
     ChallengeService challengeService;
 
     @Autowired
     ChallengeMapper challengeMapper;
+
     @Autowired
     PaymentMapper paymentMapper;
 
