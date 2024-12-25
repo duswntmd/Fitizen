@@ -149,6 +149,7 @@ https://github.com/duswntmd/Fitizen/wiki/AI
 
 ### AI
 ![image](https://github.com/user-attachments/assets/2d6300cd-7a7d-4d12-9711-890c0e0b1e83)
+https://github.com/duswntmd/Fitizen/wiki/AI
 
 |챌린지|챌린지상세|인증게시판|
 |---|---|---|
