@@ -117,9 +117,6 @@
   </tr>
 </table>
 
-#### Front-End
-
-
 #### Back-End
 
 - Java: `JDK 21`
