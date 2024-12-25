@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="/css/map/map.css">
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=be5e9a482ef1bcad0ca4d349481aac7a&libraries=services"></script>
 </head>
+
 <body>
 <div class="page-contents">
 <form id="placeForm" action="/kakao/reviewDetail" method="post" style="display:none;">
