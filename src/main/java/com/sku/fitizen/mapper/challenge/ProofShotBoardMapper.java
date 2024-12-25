@@ -9,7 +9,6 @@ import java.util.List;
 @Mapper
 public interface ProofShotBoardMapper {
 
-
     // 챌린지별 인증게시판 리스트 가져오기
     List<ProofShotBoard> getProofShotListById(int id);
 
