@@ -10,7 +10,8 @@
 - [역할 분담](#5-역할-분담)
 - [서비스 정보 구조도](#6-서비스-정보-구조도)
 - [서비스 기능 소개](#7-서비스-기능-소개)
-- [느낀점](#8-느낀점)
+- [Wiki](#8-Wiki)
+- [느낀점](#9-느낀점)
 
 </details>
 
@@ -192,7 +193,17 @@ https://github.com/duswntmd/Fitizen/wiki/AI
 |---|---|---|
 |<img width="1710" alt="스크린샷 2024-12-17 오전 11 16 28" src="https://github.com/user-attachments/assets/34b46d29-58ea-4be0-bf33-eb8a5600090c" />|<img width="1710" alt="스크린샷 2024-12-17 오전 11 16 11" src="https://github.com/user-attachments/assets/55efdcc0-8a32-4aa1-8ab7-18046a5840ef" />|<img width="1710" alt="스크린샷 2024-12-17 오전 11 16 18" src="https://github.com/user-attachments/assets/f2d191f7-8067-420f-a8b3-3871d9bd2a7e" />|
 
-## 8. 느낀점
+## 8. Wiki
+    
+- [Home](https://github.com/duswntmd/Fitizen/wiki/Home)
+- [AI](https://github.com/duswntmd/Fitizen/wiki/AI)
+- [Trouble Shooting](https://github.com/duswntmd/Fitizen/wiki/Trouble-Shooting)
+- [API](https://github.com/duswntmd/Fitizen/wiki/API)
+- [SQL QUERY](https://github.com/duswntmd/Fitizen/wiki/SQL-QUERY)
+- [ERD](https://github.com/duswntmd/Fitizen/wiki/ERD)
+- [Project Tree](https://github.com/duswntmd/Fitizen/wiki/Project-Tree)
+
+## 9. 느낀점
 
 
 #### 연주승
