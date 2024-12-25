@@ -15,6 +15,5 @@ public class QNA {
     private String comments;
     private Date qdate;
 
-        // Getters and Setters
 }
 
