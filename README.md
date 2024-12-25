@@ -187,7 +187,7 @@ https://github.com/duswntmd/Fitizen/wiki/AI
 ## 8. Wiki
     
 - [Home](https://github.com/duswntmd/Fitizen/wiki/Home)
-- [AI](https://github.com/duswntmd/Fitizen/wiki/AI)
+- [AI 개발과정](https://github.com/duswntmd/Fitizen/wiki/AI-%EA%B0%9C%EB%B0%9C-%EA%B3%BC%EC%A0%95)
 - [Trouble Shooting](https://github.com/duswntmd/Fitizen/wiki/Trouble-Shooting)
 - [API](https://github.com/duswntmd/Fitizen/wiki/API)
 - [SQL QUERY](https://github.com/duswntmd/Fitizen/wiki/SQL-QUERY)
