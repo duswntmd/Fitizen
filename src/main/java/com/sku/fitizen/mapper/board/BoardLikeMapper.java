@@ -21,4 +21,5 @@ public interface BoardLikeMapper {
     // 게시판 좋아요 전부 삭제
     void deleteAllByBoard(Long bno);
 
+
 }
