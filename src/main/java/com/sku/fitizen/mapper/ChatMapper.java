@@ -21,7 +21,6 @@ public interface ChatMapper {
    List<Map<Integer,Message>> getLastMessage(List<Integer> ids);
    List<Map<Integer,Message>> getLastConsultMessage(List<Integer> ids);
 
-
    // 유저 개인이 안읽은 전체 챌린지 메세지 개수
    int countUnreadMessages(@Param("userId") String userId);
 
