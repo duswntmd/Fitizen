@@ -10,7 +10,6 @@
 
 </head>
 <body>
-
 <div class="container">
     <h1 id="exerciseTitle">운동법</h1>
     <span id="exerciseDescription"></span>
