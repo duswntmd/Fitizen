@@ -40,4 +40,5 @@ public interface BoardCommentMapper {
     boolean isDeleted(Long cno);
 
     void deleteAllByBoard(Long bno);
+
 }
