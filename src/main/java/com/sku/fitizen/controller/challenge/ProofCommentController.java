@@ -32,6 +32,7 @@ public class ProofCommentController {
         return map;
     }
 
+
     //사진 인증 게시판 댓글 삭제하기
     @GetMapping("/deleteComment/{proofCommentId}")
     @ResponseBody
