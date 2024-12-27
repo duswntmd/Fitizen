@@ -180,6 +180,11 @@
 <br>
 
 ## 6.🔧 서비스 기능 소개
+![chatbot (2)](https://github.com/user-attachments/assets/2402444c-ac9e-42cf-aa92-e4cd982f95ff)
+
+
+
+
 
 
 ## 7. Wiki
