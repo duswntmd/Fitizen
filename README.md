@@ -182,6 +182,7 @@
 ## 6.🔧 서비스 기능 소개
 ![chatbot](https://github.com/user-attachments/assets/cba6c486-6971-4163-a72c-ed96b4ce3501)
 ![challenge](https://github.com/user-attachments/assets/e00594ed-6f19-47e3-8fb5-3b6889df5e39)
+![게시판](https://github.com/user-attachments/assets/9d5919aa-78a9-4e6a-953d-ccc04139c063)
 
 
 
