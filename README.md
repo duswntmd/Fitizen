@@ -183,7 +183,7 @@
 ### 사용자 주요 서비스 
 ---
 ### 자세분석AI 페이지
-![자세분석페이지 - Made with Clipchamp (1)](https://github.com/user-attachments/assets/6357c6e0-92c3-475a-8f8b-5a937ea66050)
+![Untitled video - Made with Clipchamp](https://github.com/user-attachments/assets/b1e764ba-b85e-4ef1-904f-4b662b8a8186)
 ### 챗봇AI 페이지 
 ![chatbot](https://github.com/user-attachments/assets/cba6c486-6971-4163-a72c-ed96b4ce3501)
 ### 챌린지 페이지
@@ -198,7 +198,6 @@
 ![mypagevideo](https://github.com/user-attachments/assets/e4ab1e12-9175-4fd4-a96b-50df821b950f)
 ### 관리자 페이지
 <img width="1710" alt="관리자페이지" src="https://github.com/user-attachments/assets/e32a17ee-34b4-4c54-9fc7-bec98a600fd9" />
-
 ## 7. Wiki
     
 - [Home](https://github.com/duswntmd/Fitizen/wiki/Home)
