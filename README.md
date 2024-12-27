@@ -198,6 +198,7 @@
 ![mypagevideo](https://github.com/user-attachments/assets/e4ab1e12-9175-4fd4-a96b-50df821b950f)
 ### 관리자 페이지
 <img width="1710" alt="관리자페이지" src="https://github.com/user-attachments/assets/e32a17ee-34b4-4c54-9fc7-bec98a600fd9" />
+
 ## 7. Wiki
     
 - [Home](https://github.com/duswntmd/Fitizen/wiki/Home)
