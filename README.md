@@ -180,19 +180,16 @@
 <br>
 
 ## 6.🔧 서비스 기능 소개
+
+![자세분석페이지 - Made with Clipchamp](https://github.com/user-attachments/assets/b0ef2e71-6f50-4b61-a71d-8710eaef31a3)
+
 ![chatbot](https://github.com/user-attachments/assets/cba6c486-6971-4163-a72c-ed96b4ce3501)
 ![challenge](https://github.com/user-attachments/assets/e00594ed-6f19-47e3-8fb5-3b6889df5e39)
 ![게시판](https://github.com/user-attachments/assets/9d5919aa-78a9-4e6a-953d-ccc04139c063)
 ![trainer](https://github.com/user-attachments/assets/721f1f9a-fe27-4b4f-a5c5-772ea6db60b7)
 ![Untitled video - Made with Clipchamp](https://github.com/user-attachments/assets/653fdb47-c267-488c-95ab-535c1d7d2701)
 ![mypagevideo](https://github.com/user-attachments/assets/e4ab1e12-9175-4fd4-a96b-50df821b950f)
-
 <img width="1710" alt="관리자페이지" src="https://github.com/user-attachments/assets/e32a17ee-34b4-4c54-9fc7-bec98a600fd9" />
-
-
-
-
-
 ## 7. Wiki
     
 - [Home](https://github.com/duswntmd/Fitizen/wiki/Home)
