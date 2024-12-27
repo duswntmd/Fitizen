@@ -184,20 +184,51 @@
 ---
 ### 자세분석AI 페이지
 ![Untitled video - Made with Clipchamp](https://github.com/user-attachments/assets/b1e764ba-b85e-4ef1-904f-4b662b8a8186)
+
+<br>
+<br>
+
 ### 챗봇AI 페이지 
 ![chatbot](https://github.com/user-attachments/assets/cba6c486-6971-4163-a72c-ed96b4ce3501)
+
+<br>
+<br>
+
 ### 챌린지 페이지
 ![challenge](https://github.com/user-attachments/assets/e00594ed-6f19-47e3-8fb5-3b6889df5e39)
+
+<br>
+<br>
+
 ### 운동 게시판 페이지
 ![게시판](https://github.com/user-attachments/assets/9d5919aa-78a9-4e6a-953d-ccc04139c063)
+
+<br>
+<br>
+
 ### 트레이너 페이지
 ![trainer](https://github.com/user-attachments/assets/721f1f9a-fe27-4b4f-a5c5-772ea6db60b7)
+
+<br>
+<br>
+
 ### 리뷰 페이지
 ![리뷰](https://github.com/user-attachments/assets/653fdb47-c267-488c-95ab-535c1d7d2701)
+
+<br>
+<br>
+
 ### 사용자 마이페이지
 ![mypagevideo](https://github.com/user-attachments/assets/e4ab1e12-9175-4fd4-a96b-50df821b950f)
+
+<br>
+<br>
+
 ### 관리자 페이지
 <img width="1710" alt="관리자페이지" src="https://github.com/user-attachments/assets/e32a17ee-34b4-4c54-9fc7-bec98a600fd9" />
+
+<br>
+<br>
 
 ## 7. Wiki
     
