@@ -183,6 +183,8 @@
 ### 사용자 주요 서비스 
 ---
 ### 자세분석AI 페이지
+> 자세분석AI는 유저의 운동 동영상과 학습된 정자세 운동 모델 데이터를 비교해서 유저에게 솔류션을 주는 기능이다
+
 ![Untitled video - Made with Clipchamp](https://github.com/user-attachments/assets/b1e764ba-b85e-4ef1-904f-4b662b8a8186)
 
 <br>
@@ -207,6 +209,9 @@
 <br>
 
 ### 운동 게시판 페이지
+> 운동 게시판은 유저와 유저간의 정보 소통을 공유하는 기능이다
+> 유저는 동영상 사진 댓글등 자유롭게 이용할 수 있다
+
 ![게시판](https://github.com/user-attachments/assets/9d5919aa-78a9-4e6a-953d-ccc04139c063)
 
 <br>
@@ -222,6 +227,9 @@
 <br>
 
 ### 리뷰 페이지
+> 시설 리뷰는 유저가 맞춤형 운동 추천을 진행 후 집 주위의 시설을 찾기를 진행
+> 집 주변의 시설을 유저가 사용하고 평가하는 기능이다
+
 ![리뷰](https://github.com/user-attachments/assets/653fdb47-c267-488c-95ab-535c1d7d2701)
 
 <br>
