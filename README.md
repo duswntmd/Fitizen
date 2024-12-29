@@ -19,7 +19,7 @@
 ---
 
 ## 1. 프로젝트 소개
-> Fitizen 프로젝트의 기능 소개 동영상입니다
+> Fitizen 프로젝트의 주요 기능을 소개하는 동영상입니다!
 
 <a href="https://youtu.be/w0-uvxb35qE" target="_blank">
     <img src="http://img.youtube.com/vi/w0-uvxb35qE/0.jpg" alt="Video Label" width="1000" height="500">
