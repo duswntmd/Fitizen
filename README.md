@@ -19,6 +19,7 @@
 ---
 
 ## 1. 프로젝트 소개
+> Fitizen 프로젝트의 기능 소개 동영상입니다
 
 <a href="https://youtu.be/w0-uvxb35qE" target="_blank">
     <img src="http://img.youtube.com/vi/w0-uvxb35qE/0.jpg" alt="Video Label" width="1000" height="500">
@@ -26,8 +27,8 @@
 
   <p>초보자를 위한 운동 웹사이트</p>
   <p>
-    운동 루틴부터 식단 계획, <br>
-    그리고 운동 방법까지, <br>
+    처음부터 시작할 수 있다 <br>
+    운동 추천부터 운동 방법까지<br>
     초보자도 쉽게 따라할 수 있는 맞춤 정보를 제공합니다.
   </p>
 
@@ -183,7 +184,7 @@
 ### 사용자 주요 서비스 
 ---
 ### 자세분석AI 페이지
-> 자세분석AI는 유저의 운동 동영상과 학습된 정자세 운동 모델 데이터를 비교해서 유저에게 솔류션을 주는 기능이다
+> 자세분석AI는 유저 운동 동영상과 학습된 정자세 운동 모델 데이터를 비교해서 유저에게 솔류션을 주는 기능이다
 
 ![Untitled video - Made with Clipchamp](https://github.com/user-attachments/assets/b1e764ba-b85e-4ef1-904f-4b662b8a8186)
 
